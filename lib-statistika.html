@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Statistika &amp; Peluang - Library SNBT 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        html, body { max-width: 100%; overflow-x: hidden; }
+        * { -webkit-tap-highlight-color: transparent !important; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+        :root { --accent: #2563eb; --accent2: #06b6d4; --bg: #f0f2f8; --surface: rgba(255,255,255,0.72); --border: rgba(0,0,0,0.08); --text: #1a1a2e; --text2: #4b5563; --text3: #9ca3af; --glow: rgba(124,58,237,0.18); --radius: 20px }
+        body.dark { --bg: #050a15; --surface: rgba(255,255,255,0.055); --border: rgba(255,255,255,0.09); --text: #f0edff; --text2: rgba(240,237,255,0.65); --text3: rgba(240,237,255,0.35); --glow: rgba(124,58,237,0.28) }
+        html { scroll-behavior: smooth }
+        body { font-family: 'Bricolage Grotesque', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background .4s, color .4s; overflow-x: hidden }
+        .noise-overlay { position: fixed; inset: 0; z-index: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; opacity: .35 }
+        .topnav { position: sticky; top: 0; z-index: 100; background: var(--surface); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 16px 40px; display: flex; align-items: center; gap: 16px }
+        .topnav a { text-decoration: none; color: var(--accent); font-weight: 700; font-size: .9rem; display: flex; align-items: center; gap: 6px; transition: all .2s }
+        .topnav a:hover { gap: 10px }
+        .topnav-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--text); margin-left: auto }
+        .theme-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; width: 36px; height: 36px; cursor: pointer; font-size: 1rem; display: grid; place-items: center; transition: all .2s; margin-left: 8px }
+        .theme-btn:hover { border-color: var(--accent) }
+        .wrapper { max-width: 900px; margin: 0 auto; padding: 40px 30px 80px; position: relative; z-index: 1 }
+        .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(251,146,60,.12); color: #f59e0b; border: 1px solid rgba(251,146,60,.25); border-radius: 30px; padding: 5px 14px; font-size: .72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px }
+        .page-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: var(--text); line-height: 1.15; margin-bottom: 14px }
+        .page-title .grad { background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent }
+        .page-desc { font-size: 1.05rem; color: var(--text2); line-height: 1.8; margin-bottom: 40px; max-width: 700px }
+        .toc { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 40px }
+        .toc-title { font-weight: 800; font-size: .9rem; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px }
+        .toc ol { padding-left: 20px; display: flex; flex-direction: column; gap: 6px }
+        .toc li { color: var(--text2); font-size: .88rem }
+        .toc a { color: var(--accent); text-decoration: none; font-weight: 600; transition: color .2s }
+        .toc a:hover { color: var(--accent2) }
+        .section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 24px; transition: all .3s }
+        .section:hover { box-shadow: 0 10px 40px var(--glow); border-color: rgba(124,58,237,.2) }
+        .section h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 10px }
+        .section h3 { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin: 20px 0 10px }
+        .section p, .section li { font-size: .92rem; color: var(--text2); line-height: 1.85 }
+        .section ul, .section ol { padding-left: 20px; margin: 10px 0 }
+        .section li { margin-bottom: 6px }
+        .example { background: rgba(124,58,237,.06); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 16px 0; font-size: .88rem; color: var(--text2); line-height: 1.75 }
+        .example strong { color: var(--text) }
+        .tip { background: rgba(6,182,212,.08); border-left: 3px solid var(--accent2); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 16px 0; font-size: .88rem; color: var(--text2); line-height: 1.75 }
+        .tip strong { color: var(--accent2) }
+        .warning { background: rgba(244,63,94,.08); border-left: 3px solid #f43f5e; border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 16px 0; font-size: .88rem; color: var(--text2); line-height: 1.75 }
+        .warning strong { color: #f43f5e }
+        .nav-buttons { display: flex; gap: 14px; margin-top: 40px; flex-wrap: wrap }
+        .nav-btn { flex: 1; min-width: 200px; padding: 16px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; text-decoration: none; color: var(--text); font-weight: 700; font-size: .9rem; display: flex; align-items: center; gap: 10px; transition: all .3s }
+        .nav-btn:hover { border-color: var(--accent); box-shadow: 0 8px 24px var(--glow); transform: translateY(-2px) }
+        .nav-btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; border: none; box-shadow: 0 4px 16px rgba(124,58,237,.4) }
+        .nav-btn.primary:hover { box-shadow: 0 8px 28px rgba(124,58,237,.5); transform: translateY(-3px) }
+        .nav-btn-label { font-size: .7rem; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: .5px }
+        .nav-btn.primary .nav-btn-label { color: rgba(255,255,255,.7) }
+        footer { text-align: center; color: var(--text3); font-size: .8rem; padding: 20px; border-top: 1px solid var(--border); margin-top: 40px }
+        @media(max-width:768px) { .topnav { padding: 14px 16px } .wrapper { padding: 24px 16px 60px } .section { padding: 20px } .nav-buttons { flex-direction: column } }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">&#8592; Kembali ke Library</a>
+        <span class="topnav-title">Statistika &amp; Peluang</span>
+        <button class="theme-btn" onclick="document.body.classList.toggle('dark')">&#127769;</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">Penalaran Matematika</div>
+        <h1 class="page-title">Statistika &amp; <span class="grad">Peluang</span></h1>
+        <p class="page-desc">Mean, median, modus, simpangan baku, distribusi data, kaidah pencacahan, dan konsep peluang dasar hingga lanjut untuk SNBT 2025.</p>
+
+        <div class="toc">
+            <div class="toc-title">&#128203; Daftar Isi</div>
+            <ol>
+                <li><a href="#pusat">Ukuran Pemusatan Data</a></li>
+                <li><a href="#sebar">Ukuran Penyebaran Data</a></li>
+                <li><a href="#kaidah">Kaidah Pencacahan</a></li>
+                <li><a href="#peluang">Peluang &amp; Frekuensi Harapan</a></li>
+                <li><a href="#tips">Strategi Menjawab SNBT</a></li>
+            </ol>
+        </div>
+
+        <div class="section" id="pusat">
+            <h2>&#128640; 1. Ukuran Pemusatan Data</h2>
+            <p>Tiga besaran utama untuk menentukan letak pusat sekumpulan data.</p>
+            
+            <h3>A. Mean (Rata-rata)</h3>
+            <p>Jumlah seluruh data dibagi banyak data. Sangat <strong>rentan terhadap pencilan (outlier)</strong>.</p>
+            <div class="example">
+                <strong>Rumus:</strong> Mean = (x&#8321; + x&#8322; + ... + x&#8345;) / n<br><br>
+                <strong>Contoh:</strong> Data: 5, 7, 8, 9, 11<br>
+                Mean = (5+7+8+9+11) / 5 = 40/5 = <strong>8</strong>
+            </div>
+
+            <h3>B. Median (Nilai Tengah)</h3>
+            <p>Nilai tengah data yang sudah <strong>diurutkan</strong>. Stabil terhadap pencilan ekstrim.</p>
+            <ul>
+                <li>Data ganjil: ambil data paling tengah</li>
+                <li>Data genap: rata-rata dari dua data tengah</li>
+            </ul>
+            <div class="example">
+                <strong>Data ganjil:</strong> 3, 5, <b>7</b>, 9, 12 &#8594; Median = 7<br>
+                <strong>Data genap:</strong> 3, 5, <b>7, 9</b>, 12, 15 &#8594; Median = (7+9)/2 = 8
+            </div>
+
+            <h3>C. Modus</h3>
+            <p>Nilai yang frekuensinya <strong>paling sering muncul</strong>.</p>
+            <div class="example">
+                Data: 3, 5, 5, 7, 5, 9, 7 &#8594; Modus = <strong>5</strong> (muncul 3 kali)
+            </div>
+
+            <h3>D. Rata-rata Gabungan (Sering Muncul di SNBT!)</h3>
+            <div class="example">
+                <strong>Soal:</strong> Kelas A (20 siswa) rata-rata 70, Kelas B (30 siswa) rata-rata 80. Berapa rata-rata gabungan?<br><br>
+                <strong>Cara:</strong> Rata-rata gabungan = (n&#8321; &times; x&#8321; + n&#8322; &times; x&#8322;) / (n&#8321; + n&#8322;)<br>
+                = (20 &times; 70 + 30 &times; 80) / (20 + 30)<br>
+                = (1400 + 2400) / 50 = 3800/50 = <strong>76</strong>
+            </div>
+
+            <h3>E. Rata-rata Data Berkelompok</h3>
+            <p>Jika data disajikan dalam tabel distribusi frekuensi, gunakan <strong>titik tengah kelas</strong>.</p>
+            <div class="tip">
+                <strong>&#128161; Rumus:</strong> Mean = &#931;(f&#7522; &times; x&#7522;) / &#931;f&#7522;<br>
+                Dimana f&#7522; = frekuensi kelas ke-i, x&#7522; = titik tengah kelas ke-i.
+            </div>
+        </div>
+
+        <div class="section" id="sebar">
+            <h2>&#127775; 2. Ukuran Penyebaran Data</h2>
+            <p>Menunjukkan seberapa <strong>bervariasinya</strong> data tersebut.</p>
+            
+            <h3>A. Jangkauan (Range)</h3>
+            <p><strong>Range = Data Maksimum - Data Minimum</strong></p>
+            <div class="example">
+                Data: 45, 50, 55, 60, 95 &#8594; Range = 95 - 45 = <strong>50</strong>
+            </div>
+
+            <h3>B. Kuartil &amp; Jangkauan Interkuartil (IQR)</h3>
+            <ul>
+                <li><strong>Q1 (Kuartil Bawah):</strong> Median dari setengah data bagian bawah</li>
+                <li><strong>Q2 (Kuartil Tengah):</strong> Median seluruh data</li>
+                <li><strong>Q3 (Kuartil Atas):</strong> Median dari setengah data bagian atas</li>
+                <li><strong>IQR = Q3 - Q1</strong> (mengukur sebaran 50% data tengah)</li>
+            </ul>
+            <div class="example">
+                <strong>Data terurut:</strong> 2, 4, 6, 8, 10, 12, 14, 16<br>
+                Q1 = (4+6)/2 = 5 | Q2 = (8+10)/2 = 9 | Q3 = (12+14)/2 = 13<br>
+                IQR = 13 - 5 = <strong>8</strong>
+            </div>
+
+            <h3>C. Simpangan Baku (Standard Deviation)</h3>
+            <p>Mengukur seberapa jauh data menyimpang dari rata-rata. <strong>Semakin kecil = semakin homogen/seragam</strong>.</p>
+            <div class="tip">
+                <strong>&#128161; Sifat Penting:</strong><br>
+                &#8226; Jika setiap data <strong>ditambah/dikurangi</strong> konstanta c, simpangan baku TIDAK berubah<br>
+                &#8226; Jika setiap data <strong>dikalikan</strong> konstanta c, simpangan baku menjadi |c| &times; s
+            </div>
+
+            <div class="warning">
+                <strong>&#128721; Jebakan SNBT:</strong> Soal sering menanyakan: "Jika setiap nilai ditambah 5, bagaimana simpangan bakunya?" Jawabannya: <strong>TETAP SAMA!</strong> Karena menambah/mengurangi konstanta tidak mengubah persebaran data.
+            </div>
+        </div>
+
+        <div class="section" id="kaidah">
+            <h2>&#10024; 3. Kaidah Pencacahan (Kombinatorika)</h2>
+            
+            <h3>A. Aturan Perkalian &amp; Penjumlahan</h3>
+            <ul>
+                <li><strong>Aturan Perkalian (DAN):</strong> Jika ada langkah berurutan, kalikan jumlah pilihannya.<br>
+                <em>3 baju DAN 4 celana = 3 &times; 4 = 12 cara berpakaian</em></li>
+                <li><strong>Aturan Penjumlahan (ATAU):</strong> Jika ada pilihan alternatif, jumlahkan.<br>
+                <em>Pergi naik bus (5 rute) ATAU kereta (3 rute) = 5 + 3 = 8 cara</em></li>
+            </ul>
+
+            <h3>B. Permutasi (Urutan PENTING)</h3>
+            <p>Susunan objek dimana <strong>urutan membedakan</strong> hasil.</p>
+            <div class="example">
+                <strong>P(n,r) = n! / (n-r)!</strong><br><br>
+                <strong>Contoh:</strong> Memilih ketua, wakil, dan sekretaris dari 10 orang.<br>
+                P(10,3) = 10!/(10-3)! = 10 &times; 9 &times; 8 = <strong>720 cara</strong>
+            </div>
+
+            <h3>C. Kombinasi (Urutan BEBAS)</h3>
+            <p>Pemilihan objek dimana <strong>urutan tidak penting</strong>.</p>
+            <div class="example">
+                <strong>C(n,r) = n! / [r! &times; (n-r)!]</strong><br><br>
+                <strong>Contoh:</strong> Memilih 3 bola dari kantong berisi 10 bola.<br>
+                C(10,3) = 10! / (3! &times; 7!) = (10&times;9&times;8)/(3&times;2&times;1) = <strong>120 cara</strong>
+            </div>
+
+            <div class="warning">
+                <strong>&#128721; Permutasi vs Kombinasi:</strong><br>
+                &#8226; Gunakan <b>Permutasi</b> jika URUTAN PENTING: memilih juara 1, 2, 3; menyusun password; plat nomor<br>
+                &#8226; Gunakan <b>Kombinasi</b> jika URUTAN BEBAS: mengambil bola; memilih anggota panitia; jabat tangan
+            </div>
+
+            <h3>D. Permutasi Siklis (Lingkaran)</h3>
+            <p>Menyusun n objek dalam posisi melingkar = <strong>(n-1)!</strong></p>
+            <div class="example">
+                <strong>Contoh:</strong> 5 orang duduk melingkar di meja bundar.<br>
+                Cara = (5-1)! = 4! = 4 &times; 3 &times; 2 &times; 1 = <strong>24 cara</strong>
+            </div>
+        </div>
+
+        <div class="section" id="peluang">
+            <h2>&#128293; 4. Peluang &amp; Frekuensi Harapan</h2>
+            
+            <h3>A. Peluang Dasar</h3>
+            <p><strong>P(A) = n(A) / n(S)</strong><br>
+            Dimana n(A) = banyak kejadian A, n(S) = banyak seluruh kejadian (ruang sampel).</p>
+            <div class="example">
+                <strong>Contoh:</strong> Melempar 1 dadu. Peluang muncul angka genap?<br>
+                A = {2, 4, 6} &#8594; n(A) = 3<br>
+                S = {1, 2, 3, 4, 5, 6} &#8594; n(S) = 6<br>
+                P(A) = 3/6 = <strong>1/2</strong>
+            </div>
+
+            <h3>B. Peluang Kejadian Saling Lepas (ATAU)</h3>
+            <p>Dua kejadian yang <strong>tidak bisa terjadi bersamaan</strong>.</p>
+            <p><strong>P(A atau B) = P(A) + P(B)</strong></p>
+            <div class="example">
+                Peluang muncul angka 1 ATAU 6 pada dadu = 1/6 + 1/6 = <strong>2/6 = 1/3</strong>
+            </div>
+
+            <h3>C. Peluang Kejadian Tidak Saling Lepas</h3>
+            <p><strong>P(A atau B) = P(A) + P(B) - P(A dan B)</strong></p>
+            <div class="example">
+                Dari 52 kartu, peluang mengambil kartu As ATAU kartu hati?<br>
+                P(As) = 4/52, P(Hati) = 13/52, P(As Hati) = 1/52<br>
+                P = 4/52 + 13/52 - 1/52 = <strong>16/52 = 4/13</strong>
+            </div>
+
+            <h3>D. Peluang Kejadian Saling Bebas (DAN)</h3>
+            <p>Dua kejadian yang <strong>tidak mempengaruhi satu sama lain</strong>.</p>
+            <p><strong>P(A dan B) = P(A) &times; P(B)</strong></p>
+            <div class="example">
+                Melempar koin DAN dadu sekaligus. Peluang muncul Kepala DAN angka 5?<br>
+                P = 1/2 &times; 1/6 = <strong>1/12</strong>
+            </div>
+
+            <h3>E. Peluang Komplemen</h3>
+            <p><strong>P(A') = 1 - P(A)</strong></p>
+            <div class="tip">
+                <strong>&#128161; Trik Cepat:</strong> Jika soal menanyakan "peluang <em>setidaknya</em> 1 kali...", hitung peluang komplementernya!<br>
+                P(setidaknya 1) = 1 - P(tidak sama sekali)<br>
+                Ini jauh lebih cepat daripada menghitung satu per satu.
+            </div>
+
+            <h3>F. Frekuensi Harapan</h3>
+            <p><strong>Frekuensi Harapan = P(A) &times; n</strong> (n = jumlah percobaan)</p>
+            <div class="example">
+                Dadu dilempar 120 kali. Berapa kali diharapkan muncul angka 6?<br>
+                Frekuensi = 1/6 &times; 120 = <strong>20 kali</strong>
+            </div>
+        </div>
+        
+        <div class="section" id="tips">
+            <h2>&#127919; 5. Strategi Menjawab SNBT</h2>
+            <ol>
+                <li><strong>Hati-hati soal rata-rata dengan "data hilang":</strong> Jika satu data salah dicatat, hitung selisih nyata (data benar - data salah), lalu sesuaikan total.</li>
+                <li><strong>Hafal ruang sampel umum:</strong> 1 dadu = 6, 2 dadu = 36, 1 koin = 2, 2 koin = 4, 3 koin = 8, 1 kartu remi = 52.</li>
+                <li><strong>Kata kunci Permutasi:</strong> "susunan", "urutan", "barisan", "password", "kode", "peringkat".</li>
+                <li><strong>Kata kunci Kombinasi:</strong> "memilih", "mengambil", "kelompok", "tim", "himpunan", "jabat tangan".</li>
+                <li><strong>Gunakan P(komplemen)</strong> untuk soal "setidaknya" dan "paling sedikit" &mdash; selalu lebih cepat!</li>
+                <li><strong>Perhatikan "dengan/tanpa pengembalian":</strong> Mengambil bola DENGAN pengembalian = peluang tetap. TANPA pengembalian = total berkurang setiap pengambilan.</li>
+            </ol>
+            <div class="tip">
+                <strong>&#128161; Time Saver:</strong> Untuk soal kombinasi besar, batalkan faktor yang sama di pembilang dan penyebut SEBELUM mengalikan. Contoh: C(10,3) = (10&times;9&times;8)/(3&times;2&times;1) = 10&times;3&times;4 = 120. Jangan hitung 720/6!</div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="library.html" class="nav-btn">
+                <div>
+                    <div class="nav-btn-label">&#8592; Kembali</div>Library SNBT
+                </div>
+            </a>
+            <a href="lib-aritmatika.html" class="nav-btn primary">
+                <div>
+                    <div class="nav-btn-label">Materi Selanjutnya &rarr;</div>Aritmatika &amp; Bilangan
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>&copy; 2025 QuizNation &mdash; Library SNBT 2025</footer>
+    <script>if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark')</script>
+</body>
+
+</html>

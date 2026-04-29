@@ -1,0 +1,2194 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Tenses: Present & Past - QuizNation</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&display=swap"
+        rel="stylesheet">
+
+    <style>
+        /* Mobile Optimization */
+        html, body { max-width: 100%; overflow-x: hidden; }
+        * { -webkit-tap-highlight-color: transparent !important; }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #f7f6f2;
+            --surface: #ffffff;
+            --surface2: #f0efe9;
+            --border: #e5e4dc;
+            --text: #1a1916;
+            --text2: #5a5850;
+            --text3: #9a9888;
+            --ink: #1a1916;
+
+            --accent: #1d4ed8;
+            --accent-mid: #2563eb;
+            --accent-light: #dbeafe;
+            --accent-glow: rgba(37, 99, 235, 0.12);
+
+            --past: #2563eb;
+            --past-light: #dbeafe;
+            --present: #0369a1;
+            --present-light: #e0f2fe;
+            --continuous: #0f766e;
+            --continuous-light: #ccfbf1;
+            --red: #b91c1c;
+            --red-light: #fee2e2;
+            --amber: #92400e;
+            --amber-light: #fef3c7;
+            --green: #166534;
+            --green-light: #dcfce7;
+
+            --sidebar-w: 260px;
+            --r: 20px;
+            --r-sm: 12px;
+            --shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.09);
+        }
+
+        body.dark {
+            --bg: #0d0d0f;
+            --surface: #16151a;
+            --surface2: #1e1d24;
+            --border: #2a2830;
+            --text: #f0eff8;
+            --text2: #a09db8;
+            --text3: #475569;
+            --ink: #f0eff8;
+            --accent-light: rgba(29, 78, 216, 0.2);
+            --past-light: rgba(124, 58, 237, 0.2);
+            --present-light: rgba(3, 105, 161, 0.2);
+            --continuous-light: rgba(15, 118, 110, 0.15);
+            --red-light: rgba(185, 28, 28, 0.2);
+            --amber-light: rgba(146, 64, 14, 0.2);
+            --green-light: rgba(22, 101, 52, 0.2);
+            --shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            transition: background 0.4s, color 0.4s;
+            overflow-x: hidden;
+        }
+
+        /* -- Sidebar -- */
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 90;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+        }
+
+        .backdrop.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-w);
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            z-index: 100;
+            padding: 28px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media(min-width: 1024px) {
+            .sidebar {
+                transform: translateX(0);
+            }
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 28px;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-close {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text2);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 8px;
+            line-height: 1;
+        }
+
+        @media(max-width: 1023px) {
+            .logo-close {
+                display: block;
+            }
+        }
+
+        .nav-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text3);
+            padding: 16px 12px 6px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--r-sm);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text2);
+            transition: 0.15s;
+        }
+
+        .nav-link:hover {
+            background: var(--surface2);
+            color: var(--text);
+        }
+
+        .nav-link.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .hamburger {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--text);
+            box-shadow: var(--shadow);
+        }
+
+        @media(max-width: 1023px) {
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+        }
+
+        .main {
+            flex: 1;
+            margin-left: 0;
+            transition: margin 0.4s;
+            min-width: 0;
+        }
+
+        @media(min-width: 1024px) {
+            .main {
+                margin-left: var(--sidebar-w);
+            }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--past));
+            z-index: 200;
+            transition: width 0.15s;
+            border-radius: 0 2px 2px 0;
+        }
+
+        /* -- Hero -- */
+        .hero {
+            padding: 80px 48px 56px;
+            max-width: 840px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: rise 0.7s 0.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @media(max-width: 768px) {
+            .hero {
+                padding: 72px 24px 40px;
+            }
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text3);
+            margin-bottom: 28px;
+            font-weight: 500;
+        }
+
+        .breadcrumb span {
+            color: var(--text2);
+        }
+
+        .module-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 100px;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border: 1px solid rgba(29, 78, 216, 0.15);
+        }
+
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--text);
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text2);
+            max-width: 560px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 36px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text2);
+            font-weight: 500;
+        }
+
+        .stat-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        /* -- Content -- */
+        .content {
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 0 48px 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        @media(max-width: 768px) {
+            .content {
+                padding: 0 20px 80px;
+            }
+        }
+
+        /* -- Cards -- */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 36px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(24px);
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        @media(max-width: 768px) {
+            .card {
+                padding: 24px;
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: var(--accent-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .card-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+
+        .card-subtitle {
+            font-size: 0.82rem;
+            color: var(--text3);
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        .body-text {
+            font-size: 0.97rem;
+            line-height: 1.8;
+            color: var(--text2);
+            margin-bottom: 24px;
+        }
+
+        .body-text strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        /* -- Tense Overview Grid -- */
+        .tense-overview {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        @media(max-width: 560px) {
+            .tense-overview {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tense-card {
+            border-radius: 16px;
+            padding: 22px;
+            border: 1.5px solid transparent;
+            cursor: default;
+            transition: 0.25s;
+        }
+
+        .tense-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .tense-card.ps {
+            background: var(--present-light);
+            border-color: rgba(3, 105, 161, 0.2);
+        }
+
+        .tense-card.pc {
+            background: var(--continuous-light);
+            border-color: rgba(15, 118, 110, 0.2);
+        }
+
+        .tense-card.pts {
+            background: var(--past-light);
+            border-color: rgba(124, 58, 237, 0.2);
+        }
+
+        .tense-card.ptc {
+            background: var(--accent-light);
+            border-color: rgba(29, 78, 216, 0.15);
+        }
+
+        .tc-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 8px;
+        }
+
+        .tc-label.ps {
+            color: var(--present);
+        }
+
+        .tc-label.pc {
+            color: var(--continuous);
+        }
+
+        .tc-label.pts {
+            color: var(--past);
+        }
+
+        .tc-label.ptc {
+            color: var(--accent);
+        }
+
+        .tc-name {
+            font-family: 'Fraunces', serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .tc-formula {
+            font-size: 0.8rem;
+            color: var(--text2);
+            font-family: monospace;
+            margin-bottom: 8px;
+            background: rgba(0, 0, 0, 0.04);
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .tc-ex {
+            font-size: 0.82rem;
+            color: var(--text2);
+            font-style: italic;
+        }
+
+        /* -- Formula Box -- */
+        .formula-strip {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+
+        .formula-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text3);
+            margin-bottom: 12px;
+        }
+
+        .formula-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .f-chip {
+            padding: 8px 16px;
+            border-radius: 9px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: 1.5px solid transparent;
+            cursor: default;
+            transition: transform 0.2s;
+            font-family: monospace;
+        }
+
+        .f-chip:hover {
+            transform: translateY(-2px);
+        }
+
+        .f-chip.sub {
+            background: var(--present-light);
+            color: var(--present);
+            border-color: rgba(3, 105, 161, 0.2);
+        }
+
+        .f-chip.vrb {
+            background: var(--red-light);
+            color: var(--red);
+            border-color: rgba(185, 28, 28, 0.2);
+        }
+
+        .f-chip.obj {
+            background: var(--green-light);
+            color: var(--green);
+            border-color: rgba(22, 101, 52, 0.2);
+        }
+
+        .f-chip.aux {
+            background: var(--past-light);
+            color: var(--past);
+            border-color: rgba(124, 58, 237, 0.2);
+        }
+
+        .f-chip.tme {
+            background: var(--amber-light);
+            color: var(--amber);
+            border-color: rgba(146, 64, 14, 0.15);
+        }
+
+        .f-chip.neu {
+            background: var(--surface);
+            color: var(--text2);
+            border-color: var(--border);
+        }
+
+        .plus-sign {
+            color: var(--text3);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .formula-note {
+            font-size: 0.82rem;
+            color: var(--text3);
+            margin-top: 4px;
+        }
+
+        .formula-note strong {
+            color: var(--text2);
+        }
+
+        /* -- Section Heading -- */
+        .section-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            margin-top: 8px;
+        }
+
+        .sh-badge {
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .sh-badge.present {
+            background: var(--present-light);
+            color: var(--present);
+        }
+
+        .sh-badge.past {
+            background: var(--past-light);
+            color: var(--past);
+        }
+
+        .sh-badge.continuous {
+            background: var(--continuous-light);
+            color: var(--continuous);
+        }
+
+        .sh-badge.note {
+            background: var(--amber-light);
+            color: var(--amber);
+        }
+
+        .sh-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* -- Example Block -- */
+        .example-block {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 12px;
+        }
+
+        .ex-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text3);
+            margin-bottom: 10px;
+        }
+
+        .sentence {
+            font-family: 'Fraunces', serif;
+            font-size: 1.2rem;
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--text);
+            margin-bottom: 10px;
+            letter-spacing: 0.01em;
+        }
+
+        .word {
+            display: inline-block;
+            padding: 2px 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.15s;
+            position: relative;
+        }
+
+        .word.s {
+            color: var(--present);
+        }
+
+        .word.v {
+            color: var(--red);
+        }
+
+        .word.a {
+            color: var(--past);
+        }
+
+        .word.o {
+            color: var(--green);
+        }
+
+        .word.t {
+            color: var(--amber);
+        }
+
+        .word:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .word::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%) scale(0.85);
+            background: var(--ink);
+            color: var(--bg);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            white-space: nowrap;
+            letter-spacing: 0.04em;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.18s;
+            z-index: 10;
+        }
+
+        .word:hover::after {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+
+        .ex-translation {
+            font-size: 0.83rem;
+            color: var(--text3);
+            font-style: italic;
+        }
+
+        /* -- Grid -- */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+        }
+
+        .mini-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            transition: 0.25s;
+            cursor: default;
+        }
+
+        .mini-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 20px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        .mini-icon {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+        }
+
+        .mini-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text);
+            margin-bottom: 7px;
+        }
+
+        .mini-text {
+            font-size: 0.82rem;
+            line-height: 1.6;
+            color: var(--text2);
+        }
+
+        .mini-text em {
+            font-style: normal;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* -- Signal Words -- */
+        .signals-wrap {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .signal-tag {
+            padding: 5px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border: 1px solid transparent;
+            transition: 0.2s;
+        }
+
+        .signal-tag:hover {
+            transform: translateY(-1px);
+        }
+
+        .signal-tag.ps {
+            background: var(--present-light);
+            color: var(--present);
+            border-color: rgba(3, 105, 161, 0.2);
+        }
+
+        .signal-tag.pc {
+            background: var(--continuous-light);
+            color: var(--continuous);
+            border-color: rgba(15, 118, 110, 0.2);
+        }
+
+        .signal-tag.pts {
+            background: var(--past-light);
+            color: var(--past);
+            border-color: rgba(124, 58, 237, 0.2);
+        }
+
+        .signal-tag.ptc {
+            background: var(--accent-light);
+            color: var(--accent);
+            border-color: rgba(29, 78, 216, 0.15);
+        }
+
+        /* -- Comparison Table -- */
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        .compare-table th {
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .compare-table th:nth-child(1) {
+            color: var(--text3);
+        }
+
+        .compare-table th:nth-child(2) {
+            color: var(--present);
+            background: var(--present-light);
+            border-radius: 8px 0 0 0;
+        }
+
+        .compare-table th:nth-child(3) {
+            color: var(--continuous);
+            background: var(--continuous-light);
+        }
+
+        .compare-table th:nth-child(4) {
+            color: var(--past);
+            background: var(--past-light);
+        }
+
+        .compare-table th:nth-child(5) {
+            color: var(--accent);
+            background: var(--accent-light);
+            border-radius: 0 8px 0 0;
+        }
+
+        .compare-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text2);
+            vertical-align: top;
+            line-height: 1.5;
+        }
+
+        .compare-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .compare-table tr:hover td {
+            background: var(--surface2);
+        }
+
+        .compare-table td:first-child {
+            font-weight: 700;
+            color: var(--text3);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .em-word {
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        /* -- Highlight box -- */
+        .highlight-box {
+            background: var(--accent-light);
+            border: 1px solid rgba(29, 78, 216, 0.15);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .hl-icon {
+            font-size: 1.05rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .hl-text {
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .hl-text strong {
+            font-weight: 700;
+        }
+
+        .warn-box {
+            background: var(--amber-light);
+            border: 1px solid rgba(146, 64, 14, 0.15);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .warn-text {
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: var(--amber);
+            font-weight: 500;
+        }
+
+        .warn-text strong {
+            font-weight: 700;
+        }
+
+        /* -- Tab -- */
+        .tab-bar {
+            display: flex;
+            gap: 4px;
+            background: var(--surface2);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 9px;
+            border: none;
+            background: none;
+            border-radius: 9px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text2);
+            transition: 0.2s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .tab-btn.active {
+            background: var(--surface);
+            color: var(--accent);
+            box-shadow: var(--shadow);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* -- Tips -- */
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tip-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 14px 16px;
+            background: var(--surface2);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .tip-num {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--accent-light);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 0.88rem;
+            line-height: 1.65;
+            color: var(--text2);
+        }
+
+        .tip-text strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        /* -- Quiz -- */
+        .quiz-card {
+            background: linear-gradient(135deg, #1d4ed8, #2563eb);
+            border-radius: 20px;
+            padding: 36px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-card::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .quiz-card::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -5%;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .quiz-prompt {
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.65;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-q {
+            font-family: 'Fraunces', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.45;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .q-option {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1.5px solid rgba(255, 255, 255, 0.22);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .q-option:hover {
+            background: rgba(255, 255, 255, 0.22);
+            transform: translateY(-1px);
+        }
+
+        .q-option.correct {
+            background: rgba(255, 255, 255, 0.28);
+            border-color: white;
+        }
+
+        .q-option.wrong {
+            background: rgba(185, 28, 28, 0.35);
+            border-color: rgba(255, 100, 100, 0.5);
+        }
+
+        .quiz-feedback {
+            margin-top: 14px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: 0.3s;
+            position: relative;
+            z-index: 1;
+            line-height: 1.5;
+        }
+
+        .quiz-feedback.show {
+            opacity: 1;
+        }
+
+        .quiz-next {
+            margin-top: 16px;
+            background: white;
+            color: #1d4ed8;
+            border: none;
+            padding: 11px 26px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: none;
+            transition: 0.2s;
+            position: relative;
+            z-index: 1;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .quiz-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* -- CTA -- */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--text3);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.25s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.25s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="backdrop" id="backdrop" onclick="closeSidebar()"></div>
+
+        <nav class="sidebar" id="sidebar">
+        <div class="logo">QuizNation <button class="logo-close" onclick="closeSidebar()">✕</button></div>
+        <div class="nav-label">Menu Utama</div>
+        <a href="index.html" class="nav-link">🏠 Beranda</a>
+        <a href="statistik.html" class="nav-link">📊 Statistik</a>
+        <a href="evaluasi.html" class="nav-link">🎓 Evaluasi SNBT</a>
+        <a href="pencapaian.html" class="nav-link">🏆 Pencapaian</a>
+        <a href="materi.html" class="nav-link active">📚 Materi</a>
+        <a href="library.html" class="nav-link">📖 Library</a>
+        <div class="nav-label" style="margin-top:10px">Bantuan</div>
+        <a href="pengaturan.html" class="nav-link">⚙️ Pengaturan</a>
+        <a href="panduan.html" class="nav-link">📋 Panduan</a>
+        <a href="feedback.html" class="nav-link">💬 Feedback</a>
+    </nav>
+
+    <button class="hamburger" onclick="openSidebar()">☰</button>
+    <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</div>
+
+    <main class="main">
+
+        <section class="hero">
+            <div class="breadcrumb">
+                <span>📚 Materi</span> - <span>Grammar Menengah</span> - Modul 2
+            </div>
+            <div class="module-tag">🧩 Grammar Menengah - Modul 2</div>
+            <h1>Tenses: <em>Present</em><br>& Past</h1>
+            <p>Kuasai present simple, present continuous, past simple, dan past continuous dengan penjelasan terstruktur
+                dan latihan interaktif.</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-dot"></div> 4 Jenis Tenses
+                </div>
+                <div class="stat">
+                    <div class="stat-dot" style="background:var(--past)"></div> Latihan Mini Quiz
+                </div>
+                <div class="stat">
+                    <div class="stat-dot" style="background:var(--amber)"></div> -20 menit baca
+                </div>
+            </div>
+        </section>
+
+        <div class="content">
+
+            <!-- 1. Overview -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">🔹?</div>
+                    <div>
+                        <div class="card-title">Peta Tenses di Modul Ini</div>
+                        <div class="card-subtitle">4 tenses yang paling sering dipakai</div>
+                    </div>
+                </div>
+                <p class="body-text">Tenses adalah sistem waktu dalam bahasa Inggris. Tidak seperti bahasa Indonesia
+                    yang menggunakan kata seperti "sudah" atau "sedang", bahasa Inggris <strong>mengubah bentuk kata
+                        kerja itu sendiri</strong> untuk menunjukkan waktu. Di modul ini kita fokus pada 4 tenses inti:
+                </p>
+
+                <div class="tense-overview">
+                    <div class="tense-card ps">
+                        <div class="tc-label ps">Present Simple</div>
+                        <div class="tc-name">Kebiasaan & Fakta</div>
+                        <div class="tc-formula">S + V1 (s/es)</div>
+                        <div class="tc-ex">"She reads every day."</div>
+                    </div>
+                    <div class="tense-card pc">
+                        <div class="tc-label pc">Present Continuous</div>
+                        <div class="tc-name">Sedang Terjadi Kini</div>
+                        <div class="tc-formula">S + am/is/are + V-ing</div>
+                        <div class="tc-ex">"She is reading now."</div>
+                    </div>
+                    <div class="tense-card pts">
+                        <div class="tc-label pts">Past Simple</div>
+                        <div class="tc-name">Selesai di Masa Lalu</div>
+                        <div class="tc-formula">S + V2</div>
+                        <div class="tc-ex">"She read yesterday."</div>
+                    </div>
+                    <div class="tense-card ptc">
+                        <div class="tc-label ptc">Past Continuous</div>
+                        <div class="tc-name">Sedang Terjadi di Masa Lalu</div>
+                        <div class="tc-formula">S + was/were + V-ing</div>
+                        <div class="tc-ex">"She was reading at 8pm."</div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="hl-icon">🔹</div>
+                    <div class="hl-text"><strong>Kunci utama:</strong> Setiap tenses punya <strong>makna</strong>,
+                        <strong>rumus</strong>, dan <strong>kata sinyal (signal words)</strong> yang khas. Menghafal
+                        ketiganya sekaligus adalah cara belajar tenses yang paling efektif.
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Present Simple -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon" style="background:var(--present-light)">🔹</div>
+                    <div>
+                        <div class="card-title">Present Simple</div>
+                        <div class="card-subtitle">Kebiasaan, rutinitas, dan fakta umum</div>
+                    </div>
+                </div>
+
+                <div class="section-head">
+                    <div class="sh-badge present">Kapan Dipakai</div>
+                    <div class="sh-line"></div>
+                </div>
+                <div class="grid-2" style="margin-bottom:22px">
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Kebiasaan & Rutinitas</div>
+                        <div class="mini-text">Sesuatu yang dilakukan secara berulang atau terjadwal.<br><br><em>I wake
+                                up at 6 every morning.</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Fakta & Kebenaran Umum</div>
+                        <div class="mini-text">Pernyataan yang selalu benar secara ilmiah atau umum.<br><br><em>The
+                                earth orbits the sun.</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Jadwal Tetap</div>
+                        <div class="mini-text">Kegiatan yang sudah terjadwal resmi (transportasi, dll).<br><br><em>The
+                                train leaves at 7 AM.</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Perasaan & Opini</div>
+                        <div class="mini-text">Stative verbs seperti know, like, want, believe.<br><br><em>She loves
+                                coffee.</em></div>
+                    </div>
+                </div>
+
+                <div class="section-head">
+                    <div class="sh-badge present">Rumus</div>
+                    <div class="sh-line"></div>
+                </div>
+
+                <div class="formula-strip" style="margin-bottom:14px">
+                    <div class="formula-label">Positif</div>
+                    <div class="formula-row">
+                        <span class="f-chip sub">Subject</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip vrb">V1</span>
+                        <span class="plus-sign">(+</span>
+                        <span class="f-chip neu">s / es</span>
+                        <span class="plus-sign">jika He/She/It)</span>
+                    </div>
+                    <div class="formula-note"><strong>Tambahkan -s/-es</strong> pada kata kerja jika subjeknya He, She,
+                        atau It. Contoh: play ? plays, go ? goes, watch ? watches</div>
+                </div>
+                <div class="formula-strip" style="margin-bottom:14px">
+                    <div class="formula-label">Negatif</div>
+                    <div class="formula-row">
+                        <span class="f-chip sub">Subject</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip aux">do not / does not</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip vrb">V1</span>
+                    </div>
+                    <div class="formula-note">Gunakan <strong>does not (doesn't)</strong> untuk He/She/It. Gunakan
+                        <strong>do not (don't)</strong> untuk I/You/We/They.
+                    </div>
+                </div>
+                <div class="formula-strip">
+                    <div class="formula-label">Interogatif (Pertanyaan)</div>
+                    <div class="formula-row">
+                        <span class="f-chip aux">Do / Does</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip sub">Subject</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip vrb">V1</span>
+                        <span class="plus-sign">+ ?</span>
+                    </div>
+                    <div class="formula-note">Contoh: <strong>Does she like coffee?</strong> ? Yes, she does. / No, she
+                        doesn't.</div>
+                </div>
+
+                <div class="section-head" style="margin-top:22px">
+                    <div class="sh-badge present">Contoh Kalimat</div>
+                    <div class="sh-line"></div>
+                </div>
+                <div class="example-block">
+                    <div class="ex-label">Positif</div>
+                    <div class="sentence">
+                        <span class="word s" data-label="Subject">He</span>
+                        <span> </span>
+                        <span class="word v" data-label="V1 + s (He/She/It)">plays</span>
+                        <span> </span>
+                        <span class="word o" data-label="Object">football</span>
+                        <span> </span>
+                        <span class="word t" data-label="Signal Word">every weekend.</span>
+                    </div>
+                    <div class="ex-translation">? Dia bermain sepak bola setiap akhir pekan. (rutinitas)</div>
+                </div>
+                <div class="example-block">
+                    <div class="ex-label">Negatif</div>
+                    <div class="sentence">
+                        <span class="word s" data-label="Subject">She</span>
+                        <span> </span>
+                        <span class="word a" data-label="Auxiliary (does not)">doesn't</span>
+                        <span> </span>
+                        <span class="word v" data-label="V1 (bare)">eat</span>
+                        <span> </span>
+                        <span class="word o" data-label="Object">meat.</span>
+                    </div>
+                    <div class="ex-translation">? Dia tidak makan daging.</div>
+                </div>
+                <div class="example-block">
+                    <div class="ex-label">Interogatif</div>
+                    <div class="sentence">
+                        <span class="word a" data-label="Auxiliary">Do</span>
+                        <span> </span>
+                        <span class="word s" data-label="Subject">you</span>
+                        <span> </span>
+                        <span class="word v" data-label="V1">know</span>
+                        <span> </span>
+                        <span class="word o" data-label="Object">the answer?</span>
+                    </div>
+                    <div class="ex-translation">? Apakah kamu tahu jawabannya?</div>
+                </div>
+
+                <div class="section-head" style="margin-top:22px">
+                    <div class="sh-badge present">Signal Words</div>
+                    <div class="sh-line"></div>
+                </div>
+                <p style="font-size:0.85rem; color:var(--text2); margin-bottom:10px">Kata-kata ini sering menjadi
+                    penanda bahwa kalimat menggunakan Present Simple:</p>
+                <div class="signals-wrap">
+                    <span class="signal-tag ps">always</span>
+                    <span class="signal-tag ps">usually</span>
+                    <span class="signal-tag ps">often</span>
+                    <span class="signal-tag ps">sometimes</span>
+                    <span class="signal-tag ps">rarely</span>
+                    <span class="signal-tag ps">never</span>
+                    <span class="signal-tag ps">every day</span>
+                    <span class="signal-tag ps">every week</span>
+                    <span class="signal-tag ps">in general</span>
+                    <span class="signal-tag ps">normally</span>
+                </div>
+            </div>
+
+            <!-- 3. Present Continuous -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon" style="background:var(--continuous-light)">🔹</div>
+                    <div>
+                        <div class="card-title">Present Continuous</div>
+                        <div class="card-subtitle">Sedang terjadi saat ini atau sementara</div>
+                    </div>
+                </div>
+
+                <div class="section-head">
+                    <div class="sh-badge continuous">Kapan Dipakai</div>
+                    <div class="sh-line"></div>
+                </div>
+                <div class="grid-2" style="margin-bottom:22px">
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Sedang Berlangsung Kini</div>
+                        <div class="mini-text">Tindakan yang terjadi tepat saat berbicara.<br><br><em>I am eating right
+                                now.</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">?</div>
+                        <div class="mini-title">Situasi Sementara</div>
+                        <div class="mini-text">Tindakan yang terjadi "akhir-akhir ini" tapi tidak
+                            permanen.<br><br><em>She is staying at a hotel.</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Rencana Mendatang</div>
+                        <div class="mini-text">Rencana yang sudah pasti di waktu dekat.<br><br><em>We are leaving
+                                tomorrow.</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Perilaku Menjengkelkan</div>
+                        <div class="mini-text">Dengan <em>always</em>, menyatakan kebiasaan buruk yang
+                            berulang.<br><br><em>He is always complaining!</em></div>
+                    </div>
+                </div>
+
+                <div class="section-head">
+                    <div class="sh-badge continuous">Rumus</div>
+                    <div class="sh-line"></div>
+                </div>
+                <div class="formula-strip" style="margin-bottom:14px">
+                    <div class="formula-label">Positif</div>
+                    <div class="formula-row">
+                        <span class="f-chip sub">Subject</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip aux">am / is / are</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip vrb">V-ing</span>
+                    </div>
+                    <div class="formula-note">Gunakan <strong>am</strong> (I), <strong>is</strong> (He/She/It),
+                        <strong>are</strong> (You/We/They). Tambahkan <strong>-ing</strong> pada kata kerja utama.
+                    </div>
+                </div>
+                <div class="formula-strip">
+                    <div class="formula-label">Negatif & Interogatif</div>
+                    <div class="formula-row">
+                        <span class="f-chip sub">S</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip aux">am/is/are</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip neu">not</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip vrb">V-ing</span>
+                    </div>
+                    <div class="formula-note">Tanya: <strong>Are you sleeping?</strong> ? Yes, I am. / No, I'm not.
+                    </div>
+                </div>
+
+                <div class="section-head" style="margin-top:22px">
+                    <div class="sh-badge continuous">Contoh Kalimat</div>
+                    <div class="sh-line"></div>
+                </div>
+                <div class="example-block">
+                    <div class="ex-label">Positif</div>
+                    <div class="sentence">
+                        <span class="word s" data-label="Subject">They</span>
+                        <span> </span>
+                        <span class="word a" data-label="Auxiliary: are">are</span>
+                        <span> </span>
+                        <span class="word v" data-label="V-ing">studying</span>
+                        <span> </span>
+                        <span class="word o" data-label="Object">for the exam</span>
+                        <span> </span>
+                        <span class="word t" data-label="Signal Word">right now.</span>
+                    </div>
+                    <div class="ex-translation">? Mereka sedang belajar untuk ujian sekarang.</div>
+                </div>
+                <div class="example-block">
+                    <div class="ex-label">Situasi Sementara</div>
+                    <div class="sentence">
+                        <span class="word s" data-label="Subject">My sister</span>
+                        <span> </span>
+                        <span class="word a" data-label="Auxiliary: is">is</span>
+                        <span> </span>
+                        <span class="word v" data-label="V-ing">working</span>
+                        <span> </span>
+                        <span class="word o" data-label="Object">at a caf-</span>
+                        <span> </span>
+                        <span class="word t" data-label="Signal: temporary">this month.</span>
+                    </div>
+                    <div class="ex-translation">? Kakak perempuanku sedang bekerja di kafe bulan ini. (sementara)</div>
+                </div>
+
+                <div class="warn-box">
+                    <div class="hl-icon">🔹</div>
+                    <div class="warn-text"><strong>Stative Verbs tidak bisa pakai -ing!</strong> Kata kerja seperti
+                        <em>know, like, love, hate, want, need, believe, understand</em> menggambarkan kondisi, bukan
+                        tindakan. Jadi kita tidak bisa berkata <s>"I am knowing"</s> - cukup <strong>"I know"</strong>.
+                    </div>
+                </div>
+
+                <div class="section-head">
+                    <div class="sh-badge continuous">Signal Words</div>
+                    <div class="sh-line"></div>
+                </div>
+                <div class="signals-wrap">
+                    <span class="signal-tag pc">now</span>
+                    <span class="signal-tag pc">right now</span>
+                    <span class="signal-tag pc">at the moment</span>
+                    <span class="signal-tag pc">currently</span>
+                    <span class="signal-tag pc">this week</span>
+                    <span class="signal-tag pc">today</span>
+                    <span class="signal-tag pc">listen!</span>
+                    <span class="signal-tag pc">look!</span>
+                </div>
+            </div>
+
+            <!-- 4. Past Simple -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon" style="background:var(--past-light)">🔹</div>
+                    <div>
+                        <div class="card-title">Past Simple</div>
+                        <div class="card-subtitle">Kejadian yang selesai di masa lalu</div>
+                    </div>
+                </div>
+
+                <div class="section-head">
+                    <div class="sh-badge past">Kapan Dipakai</div>
+                    <div class="sh-line"></div>
+                </div>
+                <div class="grid-2" style="margin-bottom:22px">
+                    <div class="mini-card">
+                        <div class="mini-icon">?</div>
+                        <div class="mini-title">Kejadian Selesai</div>
+                        <div class="mini-text">Tindakan yang sudah tuntas di waktu lampau yang spesifik.<br><br><em>I
+                                visited Bali last year.</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Cerita / Narasi</div>
+                        <div class="mini-text">Urutan peristiwa dalam cerita atau pengalaman masa lalu.<br><br><em>She
+                                woke up, ate, and left.</em></div>
+                    </div>
+                </div>
+
+                <div class="section-head">
+                    <div class="sh-badge past">Rumus</div>
+                    <div class="sh-line"></div>
+                </div>
+                <div class="formula-strip" style="margin-bottom:14px">
+                    <div class="formula-label">Positif</div>
+                    <div class="formula-row">
+                        <span class="f-chip sub">Subject</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip vrb">V2</span>
+                        <span class="plus-sign">(regular: +ed / irregular: berubah)</span>
+                    </div>
+                    <div class="formula-note">Regular: <strong>play ? played</strong>, <strong>walk ? walked</strong>.
+                        Irregular: <strong>go ? went</strong>, <strong>eat ? ate</strong>.</div>
+                </div>
+                <div class="formula-strip">
+                    <div class="formula-label">Negatif & Interogatif</div>
+                    <div class="formula-row">
+                        <span class="f-chip sub">S</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip aux">did not</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip vrb">V1</span>
+                    </div>
+                    <div class="formula-note">Penting: setelah <strong>did/didn't</strong>, kata kerja kembali ke bentuk
+                        V1! Contoh: <em>She didn't <strong>go</strong></em> (bukan ~~didn't went~~)</div>
+                </div>
+
+                <div class="section-head" style="margin-top:22px">
+                    <div class="sh-badge past">Contoh Kalimat</div>
+                    <div class="sh-line"></div>
+                </div>
+                <div class="example-block">
+                    <div class="ex-label">Positif - Irregular Verb</div>
+                    <div class="sentence">
+                        <span class="word s" data-label="Subject">We</span>
+                        <span> </span>
+                        <span class="word v" data-label="V2 (Irregular: go?went)">went</span>
+                        <span> </span>
+                        <span class="word o" data-label="Object">to the beach</span>
+                        <span> </span>
+                        <span class="word t" data-label="Signal Word">last Sunday.</span>
+                    </div>
+                    <div class="ex-translation">? Kami pergi ke pantai Minggu lalu.</div>
+                </div>
+                <div class="example-block">
+                    <div class="ex-label">Positif - Regular Verb</div>
+                    <div class="sentence">
+                        <span class="word s" data-label="Subject">She</span>
+                        <span> </span>
+                        <span class="word v" data-label="V2 (Regular: study?studied)">studied</span>
+                        <span> </span>
+                        <span class="word o" data-label="Object">all night</span>
+                        <span> </span>
+                        <span class="word t" data-label="Signal Word">yesterday.</span>
+                    </div>
+                    <div class="ex-translation">? Dia belajar sepanjang malam kemarin.</div>
+                </div>
+                <div class="example-block">
+                    <div class="ex-label">Negatif</div>
+                    <div class="sentence">
+                        <span class="word s" data-label="Subject">He</span>
+                        <span> </span>
+                        <span class="word a" data-label="did not">didn't</span>
+                        <span> </span>
+                        <span class="word v" data-label="V1 (kembali ke bentuk dasar)">finish</span>
+                        <span> </span>
+                        <span class="word o" data-label="Object">his homework.</span>
+                    </div>
+                    <div class="ex-translation">? Dia tidak menyelesaikan PR-nya.</div>
+                </div>
+
+                <div class="section-head" style="margin-top:22px">
+                    <div class="sh-badge past">Signal Words</div>
+                    <div class="sh-line"></div>
+                </div>
+                <div class="signals-wrap">
+                    <span class="signal-tag pts">yesterday</span>
+                    <span class="signal-tag pts">last night</span>
+                    <span class="signal-tag pts">last week</span>
+                    <span class="signal-tag pts">last year</span>
+                    <span class="signal-tag pts">ago</span>
+                    <span class="signal-tag pts">in 2020</span>
+                    <span class="signal-tag pts">just now</span>
+                    <span class="signal-tag pts">once</span>
+                    <span class="signal-tag pts">when I was young</span>
+                </div>
+            </div>
+
+            <!-- 5. Past Continuous -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon" style="background:var(--accent-light)">🔹</div>
+                    <div>
+                        <div class="card-title">Past Continuous</div>
+                        <div class="card-subtitle">Sedang berlangsung di waktu tertentu di masa lalu</div>
+                    </div>
+                </div>
+
+                <div class="section-head">
+                    <div class="sh-badge note">Kapan Dipakai</div>
+                    <div class="sh-line"></div>
+                </div>
+                <div class="grid-2" style="margin-bottom:22px">
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Sedang Terjadi di Titik Waktu</div>
+                        <div class="mini-text">Menggambarkan aktivitas yang tengah berjalan pada waktu spesifik di masa
+                            lalu.<br><br><em>At 8 PM, I was watching TV.</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">?</div>
+                        <div class="mini-title">Latar Cerita + Interupsi</div>
+                        <div class="mini-text">Kombinasi dengan Past Simple: satu kejadian menginterupsi kejadian yang
+                            sedang berjalan.<br><br><em>I was sleeping when he called.</em></div>
+                    </div>
+                </div>
+
+                <div class="section-head">
+                    <div class="sh-badge note">Rumus</div>
+                    <div class="sh-line"></div>
+                </div>
+                <div class="formula-strip" style="margin-bottom:14px">
+                    <div class="formula-label">Positif</div>
+                    <div class="formula-row">
+                        <span class="f-chip sub">Subject</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip aux">was / were</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip vrb">V-ing</span>
+                    </div>
+                    <div class="formula-note">Gunakan <strong>was</strong> untuk I/He/She/It. Gunakan
+                        <strong>were</strong> untuk You/We/They.
+                    </div>
+                </div>
+                <div class="formula-strip">
+                    <div class="formula-label">Kombinasi dengan Past Simple (Interupsi)</div>
+                    <div class="formula-row">
+                        <span class="f-chip sub">S</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip aux">was/were</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip vrb">V-ing</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip neu">when</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip sub">S</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip vrb">V2</span>
+                    </div>
+                    <div class="formula-note">Contoh: <strong>I was cooking when the phone rang.</strong> - "was
+                        cooking" = sedang terjadi, "rang" = interupsi (Past Simple).</div>
+                </div>
+
+                <div class="section-head" style="margin-top:22px">
+                    <div class="sh-badge note">Contoh Kalimat</div>
+                    <div class="sh-line"></div>
+                </div>
+                <div class="example-block">
+                    <div class="ex-label">Titik Waktu Spesifik</div>
+                    <div class="sentence">
+                        <span class="word s" data-label="Subject">She</span>
+                        <span> </span>
+                        <span class="word a" data-label="Auxiliary: was">was</span>
+                        <span> </span>
+                        <span class="word v" data-label="V-ing">studying</span>
+                        <span> </span>
+                        <span class="word t" data-label="Signal: specific past time">at midnight last night.</span>
+                    </div>
+                    <div class="ex-translation">? Dia sedang belajar pada tengah malam tadi malam.</div>
+                </div>
+                <div class="example-block">
+                    <div class="ex-label">Past Continuous + Interupsi (Past Simple)</div>
+                    <div class="sentence">
+                        <span class="word s" data-label="Subject">I</span>
+                        <span> </span>
+                        <span class="word a" data-label="Auxiliary: was">was</span>
+                        <span> </span>
+                        <span class="word v" data-label="V-ing (aktivitas berlangsung)">walking</span>
+                        <span> </span>
+                        <span class="word o" data-label="Object">home</span>
+                        <span> </span>
+                        <span class="word t" data-label="Conjunction: interupsi">when</span>
+                        <span> </span>
+                        <span class="word s" data-label="Subject 2">it</span>
+                        <span> </span>
+                        <span class="word v" data-label="V2 Past Simple (interupsi)">started</span>
+                        <span> </span>
+                        <span class="word o" data-label="Object">to rain.</span>
+                    </div>
+                    <div class="ex-translation">? Saya sedang berjalan pulang ketika hujan mulai turun.</div>
+                </div>
+
+                <div class="section-head" style="margin-top:22px">
+                    <div class="sh-badge note">Signal Words</div>
+                    <div class="sh-line"></div>
+                </div>
+                <div class="signals-wrap">
+                    <span class="signal-tag ptc">when</span>
+                    <span class="signal-tag ptc">while</span>
+                    <span class="signal-tag ptc">as</span>
+                    <span class="signal-tag ptc">at that moment</span>
+                    <span class="signal-tag ptc">at 8 PM</span>
+                    <span class="signal-tag ptc">all day long</span>
+                    <span class="signal-tag ptc">the whole evening</span>
+                </div>
+            </div>
+
+            <!-- 6. Comparison Table -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Perbandingan 4 Tenses</div>
+                        <div class="card-subtitle">Ringkasan visual dalam satu tabel</div>
+                    </div>
+                </div>
+                <p class="body-text">Gunakan tabel ini sebagai referensi cepat saat mengerjakan soal atau menulis
+                    kalimat.</p>
+
+                <div style="overflow-x:auto">
+                    <table class="compare-table">
+                        <tr>
+                            <th>Aspek</th>
+                            <th>Present Simple</th>
+                            <th>Present Continuous</th>
+                            <th>Past Simple</th>
+                            <th>Past Continuous</th>
+                        </tr>
+                        <tr>
+                            <td>Makna</td>
+                            <td>Rutinitas / fakta</td>
+                            <td>Sedang terjadi kini</td>
+                            <td>Selesai di lampau</td>
+                            <td>Sedang terjadi di lampau</td>
+                        </tr>
+                        <tr>
+                            <td>Rumus</td>
+                            <td><em class="em-word">S + V1(s/es)</em></td>
+                            <td><em class="em-word">S + am/is/are + V-ing</em></td>
+                            <td><em class="em-word">S + V2</em></td>
+                            <td><em class="em-word">S + was/were + V-ing</em></td>
+                        </tr>
+                        <tr>
+                            <td>Contoh (+)</td>
+                            <td>She <em class="em-word">reads</em> daily.</td>
+                            <td>She <em class="em-word">is reading</em> now.</td>
+                            <td>She <em class="em-word">read</em> yesterday.</td>
+                            <td>She <em class="em-word">was reading</em> at 9 PM.</td>
+                        </tr>
+                        <tr>
+                            <td>Contoh (-)</td>
+                            <td>She <em class="em-word">doesn't read</em>.</td>
+                            <td>She <em class="em-word">isn't reading</em>.</td>
+                            <td>She <em class="em-word">didn't read</em>.</td>
+                            <td>She <em class="em-word">wasn't reading</em>.</td>
+                        </tr>
+                        <tr>
+                            <td>Signal Words</td>
+                            <td>always, every day, usually</td>
+                            <td>now, at the moment, look!</td>
+                            <td>yesterday, ago, last-</td>
+                            <td>when, while, at that time</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 7. Tips -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Tips & Kesalahan Umum</div>
+                        <div class="card-subtitle">Yang sering salah di ujian SNBT</div>
+                    </div>
+                </div>
+                <div class="tips-list">
+                    <div class="tip-item">
+                        <div class="tip-num">1</div>
+                        <div class="tip-text"><strong>Jangan lupa -s/-es di Present Simple untuk He/She/It.</strong>
+                            "She play football" ? ? "She <em>plays</em> football" ?. Ini adalah kesalahan paling umum
+                            nomor 1.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">2</div>
+                        <div class="tip-text"><strong>Setelah did/didn't, kata kerja kembali ke V1.</strong> "He didn't
+                            went" ? ? "He didn't <em>go</em>" ?. Auxiliary did sudah menanggung unsur lampaunya.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">3</div>
+                        <div class="tip-text"><strong>Stative verbs tidak pakai -ing.</strong> "I am knowing the answer"
+                            ? ? "I <em>know</em> the answer" ?. Kata kerja seperti know, love, want, need tidak bisa
+                            continuous.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">4</div>
+                        <div class="tip-text"><strong>Bedakan "when" vs "while".</strong> <em>When</em> biasanya diikuti
+                            Past Simple (kejadian singkat). <em>While</em> biasanya diikuti Past Continuous (aktivitas
+                            berlangsung). Contoh: "I called <em>while</em> she was sleeping."</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">5</div>
+                        <div class="tip-text"><strong>Cari signal words dulu saat mengerjakan soal pilihan
+                                ganda.</strong> Kata seperti "yesterday", "right now", "every day" adalah petunjuk kuat
+                            tenses yang dipakai. Ini menghemat waktu secara signifikan.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. Mini Quiz -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Mini Quiz</div>
+                        <div class="card-subtitle">7 soal pilihan ganda - uji pemahamanmu</div>
+                    </div>
+                </div>
+                <p class="body-text" style="margin-bottom:20px">Pilih jawaban yang paling tepat. Perhatikan signal words
+                    dalam setiap kalimat!</p>
+
+                <div class="quiz-card" id="quizCard">
+                    <div class="quiz-prompt">Pertanyaan <span id="qNum">1</span> dari <span id="qTotal">7</span></div>
+                    <div class="quiz-q" id="qText">Loading...</div>
+                    <div class="quiz-options" id="qOptions"></div>
+                    <div class="quiz-feedback" id="qFeedback"></div>
+                    <button class="quiz-next" id="qNext" onclick="nextQuestion()">Pertanyaan Berikutnya ?</button>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="section-divider">Selesai Membaca</div>
+            <div class="card" data-card style="text-align:center; padding:40px">
+                <div style="font-size:2rem; margin-bottom:14px">🔹</div>
+                <div class="card-title" style="margin-bottom:10px">Modul 2 selesai!</div>
+                <p class="body-text" style="margin-bottom:0; max-width:480px; margin-left:auto; margin-right:auto">
+                    Kamu sudah menguasai 4 tenses dasar. Lanjutkan ke Modul 3 untuk belajar Perfect Tenses, atau kembali
+                    ke Modul 1.
+                </p>
+                <div class="cta-row" style="justify-content:center; margin-top:24px">
+                    <a href="materi-pengenalan-kalimat.html" class="btn-secondary">? Modul 1: Kalimat</a>
+                    <a href="materi-modal-verbs.html" class="btn-primary">Modul 3: Modal Verbs ?</a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Theme
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') { document.body.classList.add('dark'); document.getElementById('themeBtn').textContent = '🔹'; }
+        function toggleTheme() {
+            if (typeof window.__quizNationApplyGlobalPreferences === 'function') { window.__quizNationApplyGlobalPreferences(); }
+            const d = document.body.classList.toggle('dark');
+            localStorage.setItem('theme', d ? 'dark' : 'light');
+            document.getElementById('themeBtn').textContent = d ? '🔹' : '🔹';
+        }
+
+        // Sidebar
+        function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('backdrop').classList.add('open'); }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('backdrop').classList.remove('open'); }
+
+        // Progress Bar
+        window.addEventListener('scroll', () => {
+            const el = document.documentElement;
+            document.getElementById('progressBar').style.width = (el.scrollTop / (el.scrollHeight - el.clientHeight) * 100) + '%';
+        });
+
+        // Scroll reveal
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach((e, i) => {
+                if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 55); obs.unobserve(e.target); }
+            });
+        }, { threshold: 0.07 });
+        document.querySelectorAll('[data-card]').forEach(c => obs.observe(c));
+
+        // Quiz
+        const questions = [
+            {
+                q: "She _____ English every morning. (rutinitas)",
+                opts: ["is studying", "studies", "studied", "was studying"],
+                ans: 1,
+                exp: "? 'studies' - Present Simple untuk rutinitas. She (He/She/It) ? tambah -s/-es."
+            },
+            {
+                q: "Look! The baby _____ right now.",
+                opts: ["sleeps", "slept", "is sleeping", "was sleeping"],
+                ans: 2,
+                exp: "? 'is sleeping' - Present Continuous. Signal words: 'Look!' dan 'right now' menunjukkan sedang terjadi."
+            },
+            {
+                q: "I _____ my keys yesterday morning.",
+                opts: ["lose", "am losing", "was losing", "lost"],
+                ans: 3,
+                exp: "? 'lost' - Past Simple (irregular: lose?lost). Signal word: 'yesterday'."
+            },
+            {
+                q: "They _____ dinner when the electricity went out.",
+                opts: ["eat", "ate", "are eating", "were eating"],
+                ans: 3,
+                exp: "? 'were eating' - Past Continuous. Pola klasik: aktivitas berlangsung (were eating) diinterupsi Past Simple (went out)."
+            },
+            {
+                q: "Manakah kalimat yang SALAH?",
+                opts: ["He doesn't like spicy food.", "She is knowing the answer.", "They didn't go yesterday.", "I was cooking at noon."],
+                ans: 1,
+                exp: "? 'She is knowing' ? - 'know' adalah stative verb, tidak bisa memakai bentuk continuous. Yang benar: 'She knows the answer.'"
+            },
+            {
+                q: "Water _____ at 100°C. (fakta ilmiah)",
+                opts: ["boiled", "is boiling", "boils", "was boiling"],
+                ans: 2,
+                exp: "? 'boils' - Present Simple untuk menyatakan fakta ilmiah yang selalu benar."
+            },
+            {
+                q: "What _____ you _____ at 9 PM last night?",
+                opts: ["do / do", "are / doing", "were / doing", "did / do"],
+                ans: 2,
+                exp: "? 'were / doing' - Past Continuous. Pertanyaan tentang aktivitas yang sedang berlangsung di waktu spesifik di masa lalu."
+            }
+        ];
+
+        let current = 0, score = 0, answered = false;
+
+        function renderQuestion() {
+            const q = questions[current];
+            document.getElementById('qNum').textContent = current + 1;
+            document.getElementById('qTotal').textContent = questions.length;
+            document.getElementById('qText').textContent = q.q;
+            document.getElementById('qFeedback').textContent = '';
+            document.getElementById('qFeedback').classList.remove('show');
+            document.getElementById('qNext').style.display = 'none';
+            answered = false;
+            const optDiv = document.getElementById('qOptions');
+            optDiv.innerHTML = '';
+            q.opts.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'q-option';
+                btn.textContent = opt;
+                btn.onclick = () => selectAnswer(i);
+                optDiv.appendChild(btn);
+            });
+        }
+
+        function selectAnswer(i) {
+            if (answered) return;
+            answered = true;
+            const q = questions[current];
+            const opts = document.querySelectorAll('.q-option');
+            opts[i].classList.add(i === q.ans ? 'correct' : 'wrong');
+            if (i !== q.ans) opts[q.ans].classList.add('correct');
+            else score++;
+            const fb = document.getElementById('qFeedback');
+            fb.textContent = i === q.ans ? q.exp : '? Kurang tepat. ' + q.exp;
+            fb.classList.add('show');
+            const nxt = document.getElementById('qNext');
+            nxt.style.display = 'inline-block';
+            if (current === questions.length - 1) nxt.textContent = `Lihat Hasil (${score + (i === q.ans ? 1 : 0)}/${questions.length})`;
+        }
+
+        function nextQuestion() {
+            current++;
+            if (current < questions.length) { renderQuestion(); return; }
+            const grade = score >= 6 ? '🔹' : score >= 4 ? '🔹' : '🔹';
+            const msg = score === 7 ? 'Sempurna! Kamu siap ke Modul 3.' : score >= 5 ? 'Bagus! Tinggal sedikit lagi.' : 'Ayo pelajari ulang signal words & rumusnya.';
+            document.getElementById('quizCard').innerHTML = `
+    <div class="quiz-prompt" style="position:relative;z-index:1">Hasil Akhir</div>
+    <div class="quiz-q" style="position:relative;z-index:1;font-size:2.8rem">${grade}</div>
+    <div class="quiz-q" style="position:relative;z-index:1">Skor: ${score} / ${questions.length}</div>
+    <p style="position:relative;z-index:1;opacity:0.82;font-size:0.88rem;margin-top:6px">${msg}</p>
+    <button class="quiz-next" style="display:inline-block;margin-top:16px" onclick="restartQuiz()">Ulangi Quiz</button>
+ - `;
+        }
+
+        function restartQuiz() {
+            current = 0; score = 0;
+            document.getElementById('quizCard').innerHTML = `
+    <div class="quiz-prompt">Pertanyaan <span id="qNum">1</span> dari <span id="qTotal">7</span></div>
+    <div class="quiz-q" id="qText"></div>
+    <div class="quiz-options" id="qOptions"></div>
+    <div class="quiz-feedback" id="qFeedback"></div>
+    <button class="quiz-next" id="qNext" onclick="nextQuestion()">Pertanyaan Berikutnya ?</button>
+ - `;
+            renderQuestion();
+        }
+
+        renderQuestion();
+    </script>
+</body>
+
+</html>
+
+
+
+

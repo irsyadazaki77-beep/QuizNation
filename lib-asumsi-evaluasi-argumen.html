@@ -1,0 +1,191 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Asumsi & Evaluasi Argumen - Library SNBT 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        html, body { max-width: 100%; overflow-x: hidden; }
+        * { -webkit-tap-highlight-color: transparent !important; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --accent:#2563eb; --accent2:#06b6d4; --bg:#f0f2f8; --surface:rgba(255,255,255,.72); --border:rgba(0,0,0,.08); --text:#1a1a2e; --text2:#4b5563; --text3:#9ca3af; --glow:rgba(124,58,237,.18); --radius:20px; }
+        body.dark { --bg:#050a15; --surface:rgba(255,255,255,.055); --border:rgba(255,255,255,.09); --text:#f0edff; --text2:rgba(240,237,255,.68); --text3:rgba(240,237,255,.36); --glow:rgba(124,58,237,.28); }
+        body { font-family:'Bricolage Grotesque',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; transition:background .3s,color .3s; }
+        .noise-overlay { position:fixed; inset:0; z-index:0; opacity:.35; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); }
+        .topnav { position:sticky; top:0; z-index:10; display:flex; align-items:center; gap:14px; padding:16px 20px; background:var(--surface); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); }
+        .topnav a { text-decoration:none; color:var(--accent); font-weight:800; }
+        .topnav-title { margin-left:auto; font-family:'Playfair Display',serif; font-weight:700; }
+        .theme-btn { width:36px; height:36px; border-radius:10px; border:1px solid var(--border); background:var(--surface); cursor:pointer; }
+        .wrapper { max-width:920px; margin:0 auto; padding:34px 18px 70px; position:relative; z-index:1; }
+        .hero-badge { display:inline-flex; padding:6px 14px; border-radius:999px; background:rgba(251,146,60,.12); color:#f59e0b; border:1px solid rgba(251,146,60,.24); font-size:.74rem; font-weight:800; margin-bottom:14px; }
+        .page-title { font-family:'Playfair Display',serif; font-size:clamp(2rem,4vw,3rem); line-height:1.15; margin-bottom:12px; }
+        .page-title .grad { background:linear-gradient(135deg,var(--accent),#60a5fa,var(--accent2)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+        .page-desc { color:var(--text2); line-height:1.8; margin-bottom:26px; }
+        .toc, .section { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); }
+        .toc { padding:22px 24px; margin-bottom:24px; }
+        .toc-title { font-weight:800; margin-bottom:10px; }
+        .toc ol { padding-left:20px; display:grid; gap:6px; color:var(--text2); }
+        .toc a { color:var(--accent); text-decoration:none; font-weight:700; }
+        .section { padding:24px; margin-bottom:18px; }
+        .section h2 { font-family:'Playfair Display',serif; margin-bottom:12px; font-size:1.45rem; }
+        .section h3 { color:var(--accent); margin:16px 0 8px; font-size:1.02rem; }
+        .section p, .section li { color:var(--text2); line-height:1.8; font-size:.94rem; }
+        .section ul, .section ol { padding-left:20px; margin:10px 0; }
+        .example, .tip, .warning { padding:14px 16px; border-radius:12px; margin:14px 0; line-height:1.75; font-size:.9rem; }
+        .example { background:rgba(124,58,237,.07); border-left:3px solid var(--accent); }
+        .tip { background:rgba(6,182,212,.08); border-left:3px solid var(--accent2); }
+        .warning { background:rgba(244,63,94,.08); border-left:3px solid #f43f5e; }
+        .nav-buttons { display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; }
+        .nav-btn { flex:1 1 220px; padding:14px 16px; border-radius:14px; text-decoration:none; border:1px solid var(--border); background:var(--surface); color:var(--text); font-weight:800; }
+        .nav-btn.primary { color:#fff; border:none; background:linear-gradient(135deg,var(--accent),var(--accent2)); }
+        footer { text-align:center; color:var(--text3); padding:18px; margin-top:22px; border-top:1px solid var(--border); }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">? Kembali ke Library</a>
+        <span class="topnav-title">Asumsi & Evaluasi Argumen</span>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">Penalaran Umum</div>
+        <h1 class="page-title">Asumsi & <span class="grad">Evaluasi Argumen</span></h1>
+        <p class="page-desc">Materi ini membantumu membaca argumen secara lebih kritis: menemukan asumsi tersembunyi, menilai kualitas bukti, dan memutuskan apakah sebuah kesimpulan benar-benar didukung oleh premisnya. Topik ini tetap sangat relevan untuk pola soal SNBT 2026 yang menekankan penalaran berbasis bukti, validitas data, dan keputusan paling masuk akal.</p>
+
+        <div class="toc">
+            <div class="toc-title">📑 Daftar Isi</div>
+            <ol>
+                <li><a href="#konsep">Konsep dasar asumsi</a></li>
+                <li><a href="#jenis">Pola kelemahan argumen</a></li>
+                <li><a href="#uji">Teknik uji asumsi</a></li>
+                <li><a href="#kuat-lemah">Cara memperkuat dan melemahkan</a></li>
+                <li><a href="#strategi">Strategi cepat model SNBT 2026</a></li>
+                <li><a href="#latihan">Latihan bertahap</a></li>
+            </ol>
+        </div>
+
+        <section class="section" id="konsep">
+            <h2>1. Apa itu asumsi?</h2>
+            <p>Asumsi adalah gagasan yang <strong>tidak selalu ditulis secara eksplisit</strong>, tetapi diam-diam dipakai agar kesimpulan argumen terasa masuk akal. Dalam soal SNBT, kamu sering diminta mencari asumsi paling penting yang menghubungkan premis dan kesimpulan.</p>
+            <div class="example"><strong>Contoh:</strong> -Sekolah perlu menambah jam latihan soal karena nilai tryout menurun.-<br>Asumsi tersembunyinya: <em>menambah jam latihan memang akan membantu meningkatkan nilai</em>.</div>
+            <h3>Ciri asumsi penting</h3>
+            <ul>
+                <li>Menjadi jembatan antara premis dan kesimpulan.</li>
+                <li>Jika dihapus, argumen terasa lemah atau tidak nyambung.</li>
+                <li>Sering berupa hubungan sebab-akibat, kualitas sampel, atau generalisasi.</li>
+            </ul>
+            <h3>Asumsi perlu vs asumsi tambahan</h3>
+            <ul>
+                <li><strong>Asumsi perlu:</strong> wajib ada agar argumen tetap berdiri.</li>
+                <li><strong>Asumsi tambahan:</strong> membantu, tetapi bukan inti penghubung.</li>
+            </ul>
+            <div class="tip"><strong>Patokan cepat:</strong> kalau sebuah opsi dibatalkan lalu kesimpulan langsung runtuh, besar kemungkinan itulah asumsi yang diperlukan.</div>
+        </section>
+
+        <section class="section" id="jenis">
+            <h2>2. Pola kelemahan argumen yang sering keluar</h2>
+            <p>Banyak argumen tampak meyakinkan, tetapi sebenarnya memiliki cacat logika. Beberapa pola yang sering muncul:</p>
+            <ul>
+                <li><strong>Generalisasi berlebihan:</strong> menyimpulkan hal besar dari bukti terlalu sedikit.</li>
+                <li><strong>Sebab-akibat palsu:</strong> dua hal terjadi bersama, lalu dianggap saling menyebabkan.</li>
+                <li><strong>Data tidak relevan:</strong> premis tidak benar-benar mendukung kesimpulan.</li>
+                <li><strong>Dikotomi palsu:</strong> seolah hanya ada dua pilihan, padahal ada alternatif lain.</li>
+                <li><strong>Sampel bias:</strong> data diambil dari kelompok yang tidak mewakili populasi.</li>
+                <li><strong>Analogi lemah:</strong> membandingkan dua situasi yang sebenarnya berbeda konteks.</li>
+            </ul>
+            <div class="warning"><strong>Waspadai jebakan:</strong> jangan langsung memilih opsi yang -terdengar bagus-. Pilih opsi yang <em>paling berpengaruh terhadap validitas argumen</em>, bukan yang sekadar informatif.</div>
+        </section>
+
+        <section class="section" id="uji">
+            <h2>3. Teknik uji asumsi: negation test</h2>
+            <p>Salah satu cara paling aman untuk mencari asumsi adalah <strong>negation test</strong>: balikkan opsi menjadi pernyataan negatif, lalu lihat apakah argumen menjadi runtuh.</p>
+            <ol>
+                <li>Tentukan dulu <strong>kesimpulan</strong> dan <strong>premis</strong>.</li>
+                <li>Cari celah logika di antara keduanya.</li>
+                <li>Uji opsi dengan membalik maknanya.</li>
+                <li>Jika setelah dibalik kesimpulan tidak lagi masuk akal, opsi itu kemungkinan asumsi inti.</li>
+            </ol>
+            <div class="example"><strong>Contoh singkat:</strong> -Perpustakaan digital perlu diperluas karena jumlah akses e-book meningkat.-<br>Jika kita negasikan asumsi <em>akses e-book membantu kebutuhan belajar siswa</em>, maka alasan memperluas perpustakaan digital jadi jauh lebih lemah.</div>
+        </section>
+
+        <section class="section" id="kuat-lemah">
+            <h2>4. Memperkuat dan melemahkan argumen</h2>
+            <h3>Informasi yang memperkuat</h3>
+            <ul>
+                <li>Data tambahan yang mendukung hubungan premis ? kesimpulan.</li>
+                <li>Bukti bahwa sampel cukup luas dan representatif.</li>
+                <li>Perbandingan sebelum-sesudah yang konsisten.</li>
+            </ul>
+            <h3>Informasi yang melemahkan</h3>
+            <ul>
+                <li>Ada penyebab lain yang lebih masuk akal.</li>
+                <li>Ada contoh pengecualian yang meruntuhkan generalisasi.</li>
+                <li>Data yang dipakai ternyata bias, terlalu sempit, atau tidak relevan.</li>
+            </ul>
+            <div class="tip"><strong>Pertanyaan kunci:</strong> -Kalau informasi baru ini benar, apakah kesimpulan jadi lebih kuat, tetap sama, atau justru goyah?-</div>
+        </section>
+
+        <section class="section" id="strategi">
+            <h2>5. Strategi cepat model SNBT 2026</h2>
+            <p>Untuk konteks SNBT 2026, fokus tetap pada <strong>reasoning</strong>, bukan hafalan istilah. Soal cenderung membungkus argumen dalam konteks pendidikan, teknologi, kesehatan, lingkungan, atau data sosial.</p>
+            <ol>
+                <li>Baca <strong>kesimpulan</strong> terlebih dahulu, baru cari premis pendukungnya.</li>
+                <li>Tentukan apakah masalahnya ada pada <em>sampel, sebab-akibat, perbandingan,</em> atau <em>rekomendasi kebijakan</em>.</li>
+                <li>Jangan tergoda opsi yang terlalu umum seperti -teknologi itu penting- atau -pendidikan harus ditingkatkan-.</li>
+                <li>Pilih opsi yang benar-benar menutup celah logika.</li>
+            </ol>
+            <div class="example"><strong>Rumus praktis:</strong> <em>Kesimpulan - Premis = Asumsi yang dicari</em>.</div>
+        </section>
+
+        <section class="section" id="latihan">
+            <h2>6. Latihan bertahap</h2>
+            <p><strong>Soal 1:</strong> -Penggunaan tablet di kelas harus diperluas karena siswa yang memakai tablet tampak lebih aktif berdiskusi.-</p>
+            <p><strong>Asumsi yang paling diperlukan adalah-</strong></p>
+            <ul>
+                <li>A. Semua siswa menyukai teknologi.</li>
+                <li>B. Keaktifan berdiskusi menunjukkan proses belajar yang lebih baik.</li>
+                <li>C. Tablet lebih murah daripada buku cetak.</li>
+                <li>D. Semua guru dapat mengoperasikan tablet.</li>
+            </ul>
+            <div class="example"><strong>Jawaban:</strong> <strong>B</strong>, karena argumen menyimpulkan perluasan penggunaan tablet berdasarkan indikator -lebih aktif berdiskusi-.</div>
+
+            <p><strong>Soal 2:</strong> -Kantin sekolah sebaiknya menambah menu sehat karena survei pada 25 siswa menunjukkan minat tinggi terhadap makanan rendah gula.- Informasi yang paling <em>melemahkan</em> argumen adalah-</p>
+            <ul>
+                <li>A. Harga bahan makanan sehat sedikit lebih mahal.</li>
+                <li>B. Survei hanya dilakukan pada anggota klub kesehatan sekolah.</li>
+                <li>C. Ada sekolah lain yang sukses menjual menu sehat.</li>
+                <li>D. Guru juga mulai mengurangi konsumsi gula.</li>
+            </ul>
+            <div class="example"><strong>Jawaban:</strong> <strong>B</strong>, karena menunjukkan <em>sampel bias</em> dan tidak mewakili seluruh siswa.</div>
+        </section>
+
+        <div class="nav-buttons">
+            <a class="nav-btn" href="library.html">? Kembali ke Library</a>
+            <a class="nav-btn primary" href="snbt.html?type=tps">Lanjut ke Evaluasi TPS ?</a>
+        </div>
+
+        <footer>- 2026 QuizNation - Materi Library SNBT 2026.</footer>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            if (typeof window.__quizNationApplyGlobalPreferences === 'function') { window.__quizNationApplyGlobalPreferences(); }
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        }
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+    </script>
+</body>
+
+</html>
+

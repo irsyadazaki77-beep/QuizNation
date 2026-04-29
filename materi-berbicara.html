@@ -1,0 +1,1085 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <title>Teknik Berbicara Bahasa Inggris - QuizNation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&display=swap"
+        rel="stylesheet">
+    <style>
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --bg: #f7f2f0;
+            --surface: #fff;
+            --surface2: #efe8e4;
+            --border: #e0d6d0;
+            --text: #1e1614;
+            --text2: #5e4840;
+            --text3: #a08878;
+            --ink: #1e1614;
+            --accent: #c2410c;
+            --accent-mid: #ea580c;
+            --accent-light: #fff7ed;
+            --accent-glow: rgba(194, 65, 12, .12);
+            --teal: #0f766e;
+            --teal-light: #ccfbf1;
+            --blue: #1d4ed8;
+            --blue-light: #dbeafe;
+            --rose: #9f1239;
+            --rose-light: #ffe4e6;
+            --sidebar-w: 260px;
+            --r: 20px;
+            --r-sm: 12px;
+            --shadow: 0 2px 20px rgba(0, 0, 0, .06);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, .09)
+        }
+
+        body.dark {
+            --bg: #100c0a;
+            --surface: #1a1410;
+            --surface2: #221c18;
+            --border: #2e2820;
+            --text: #f4ece8;
+            --text2: #b09880;
+            --text3: #706050;
+            --ink: #f4ece8;
+            --accent-light: rgba(194, 65, 12, .2);
+            --teal-light: rgba(15, 118, 110, .15);
+            --blue-light: rgba(29, 78, 216, .2);
+            --rose-light: rgba(159, 18, 57, .2);
+            --shadow: 0 2px 20px rgba(0, 0, 0, .35);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, .5)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .45);
+            backdrop-filter: blur(4px);
+            z-index: 90;
+            opacity: 0;
+            visibility: hidden;
+            transition: .3s
+        }
+
+        .backdrop.open {
+            opacity: 1;
+            visibility: visible
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-w);
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            z-index: 100;
+            padding: 28px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform .4s cubic-bezier(.4, 0, .2, 1)
+        }
+
+        @media(min-width:1024px) {
+            .sidebar {
+                transform: translateX(0)
+            }
+        }
+
+        .sidebar.open {
+            transform: translateX(0)
+        }
+
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 28px;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .logo-close {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text2);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 8px;
+            line-height: 1
+        }
+
+        @media(max-width:1023px) {
+            .logo-close {
+                display: block
+            }
+        }
+
+        .nav-label {
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--text3);
+            padding: 16px 12px 6px
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--r-sm);
+            text-decoration: none;
+            font-size: .88rem;
+            font-weight: 500;
+            color: var(--text2);
+            transition: .15s
+        }
+
+        .nav-link:hover {
+            background: var(--surface2);
+            color: var(--text)
+        }
+
+        .nav-link.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700
+        }
+
+        .hamburger {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--text);
+            box-shadow: var(--shadow)
+        }
+
+        @media(max-width:1023px) {
+            .hamburger {
+                display: flex
+            }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            transition: .3s
+        }
+
+        .main {
+            flex: 1;
+            margin-left: 0;
+            transition: margin .4s;
+            min-width: 0
+        }
+
+        @media(min-width:1024px) {
+            .main {
+                margin-left: var(--sidebar-w)
+            }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--teal));
+            z-index: 200;
+            transition: width .15s;
+            border-radius: 0 2px 2px 0
+        }
+
+        .hero {
+            padding: 80px 48px 56px;
+            max-width: 840px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: rise .7s .1s cubic-bezier(.16, 1, .3, 1) forwards
+        }
+
+        @media(max-width:768px) {
+            .hero {
+                padding: 72px 24px 40px
+            }
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .8rem;
+            color: var(--text3);
+            margin-bottom: 28px;
+            font-weight: 500
+        }
+
+        .breadcrumb span {
+            color: var(--text2)
+        }
+
+        .module-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 100px;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: .75rem;
+            font-weight: 700;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border: 1px solid rgba(194, 65, 12, .15)
+        }
+
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--text);
+            margin-bottom: 20px;
+            letter-spacing: -.02em
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--accent)
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text2);
+            max-width: 560px
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 36px;
+            flex-wrap: wrap
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .85rem;
+            color: var(--text2);
+            font-weight: 500
+        }
+
+        .stat-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent)
+        }
+
+        .content {
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 0 48px 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px
+        }
+
+        @media(max-width:768px) {
+            .content {
+                padding: 0 20px 80px
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 36px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(24px);
+            transition: box-shadow .3s, transform .3s
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity .6s cubic-bezier(.16, 1, .3, 1), transform .6s cubic-bezier(.16, 1, .3, 1), box-shadow .3s
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md)
+        }
+
+        @media(max-width:768px) {
+            .card {
+                padding: 24px
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: var(--accent-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0
+        }
+
+        .card-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -.01em
+        }
+
+        .card-subtitle {
+            font-size: .82rem;
+            color: var(--text3);
+            margin-top: 2px;
+            font-weight: 500
+        }
+
+        .body-text {
+            font-size: .97rem;
+            line-height: 1.8;
+            color: var(--text2);
+            margin-bottom: 24px
+        }
+
+        .body-text strong {
+            color: var(--text);
+            font-weight: 700
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px
+        }
+
+        .mini-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            transition: .25s;
+            cursor: default
+        }
+
+        .mini-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 20px var(--accent-glow);
+            transform: translateY(-2px)
+        }
+
+        .mini-icon {
+            font-size: 1.4rem;
+            margin-bottom: 12px
+        }
+
+        .mini-title {
+            font-weight: 700;
+            font-size: .9rem;
+            color: var(--text);
+            margin-bottom: 7px
+        }
+
+        .mini-text {
+            font-size: .82rem;
+            line-height: 1.6;
+            color: var(--text2)
+        }
+
+        .mini-text em {
+            font-style: normal;
+            font-weight: 600;
+            color: var(--accent)
+        }
+
+        .example-block {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 12px
+        }
+
+        .ex-label {
+            font-size: .7rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--text3);
+            margin-bottom: 10px
+        }
+
+        .ex-text {
+            font-size: .92rem;
+            line-height: 1.8;
+            color: var(--text2)
+        }
+
+        .ex-text strong {
+            color: var(--text)
+        }
+
+        .phonetic {
+            font-family: monospace;
+            background: var(--accent-light);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: .88rem;
+            color: var(--accent);
+            font-weight: 600
+        }
+
+        .highlight-box {
+            background: var(--accent-light);
+            border: 1px solid rgba(194, 65, 12, .18);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px
+        }
+
+        .hl-icon {
+            font-size: 1.05rem;
+            flex-shrink: 0;
+            margin-top: 1px
+        }
+
+        .hl-text {
+            font-size: .87rem;
+            line-height: 1.65;
+            color: var(--accent);
+            font-weight: 500
+        }
+
+        .hl-text strong {
+            font-weight: 700
+        }
+
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px
+        }
+
+        .tip-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 14px 16px;
+            background: var(--surface2);
+            border-radius: 12px;
+            border: 1px solid var(--border)
+        }
+
+        .tip-num {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--accent-light);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .78rem;
+            font-weight: 800;
+            flex-shrink: 0
+        }
+
+        .tip-text {
+            font-size: .88rem;
+            line-height: 1.65;
+            color: var(--text2)
+        }
+
+        .tip-text strong {
+            color: var(--text);
+            font-weight: 700
+        }
+
+        .quiz-card {
+            background: linear-gradient(135deg, #c2410c, #0f766e);
+            border-radius: 20px;
+            padding: 36px;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden
+        }
+
+        .quiz-card::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .05)
+        }
+
+        .quiz-card::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -5%;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .04)
+        }
+
+        .quiz-prompt {
+            font-size: .78rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            opacity: .65;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1
+        }
+
+        .quiz-q {
+            font-family: 'Fraunces', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            position: relative;
+            z-index: 1
+        }
+
+        .q-option {
+            background: rgba(255, 255, 255, .12);
+            border: 1.5px solid rgba(255, 255, 255, .22);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: .85rem;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            transition: .2s;
+            text-align: center;
+            font-family: 'Plus Jakarta Sans', sans-serif
+        }
+
+        .q-option:hover {
+            background: rgba(255, 255, 255, .22);
+            transform: translateY(-1px)
+        }
+
+        .q-option.correct {
+            background: rgba(255, 255, 255, .28);
+            border-color: #fff
+        }
+
+        .q-option.wrong {
+            background: rgba(0, 0, 0, .25);
+            border-color: rgba(255, 100, 100, .5)
+        }
+
+        .quiz-feedback {
+            margin-top: 14px;
+            font-size: .85rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: .3s;
+            position: relative;
+            z-index: 1;
+            line-height: 1.5
+        }
+
+        .quiz-feedback.show {
+            opacity: 1
+        }
+
+        .quiz-next {
+            margin-top: 16px;
+            background: #fff;
+            color: #c2410c;
+            border: none;
+            padding: 11px 26px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: .88rem;
+            cursor: pointer;
+            display: none;
+            transition: .2s;
+            position: relative;
+            z-index: 1;
+            font-family: 'Plus Jakarta Sans', sans-serif
+        }
+
+        .quiz-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .2)
+        }
+
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--text3);
+            font-size: .75rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border)
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 16px
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: .93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: .25s;
+            font-family: 'Plus Jakarta Sans', sans-serif
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-glow)
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: .93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: .25s;
+            font-family: 'Plus Jakarta Sans', sans-serif
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px)
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(20px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="backdrop" id="backdrop" onclick="closeSidebar()"></div>
+        <nav class="sidebar" id="sidebar">
+        <div class="logo">QuizNation <button class="logo-close" onclick="closeSidebar()">✕</button></div>
+        <div class="nav-label">Menu Utama</div>
+        <a href="index.html" class="nav-link">🏠 Beranda</a>
+        <a href="statistik.html" class="nav-link">📊 Statistik</a>
+        <a href="evaluasi.html" class="nav-link">🎓 Evaluasi SNBT</a>
+        <a href="pencapaian.html" class="nav-link">🏆 Pencapaian</a>
+        <a href="materi.html" class="nav-link active">📚 Materi</a>
+        <a href="library.html" class="nav-link">📖 Library</a>
+        <div class="nav-label" style="margin-top:10px">Bantuan</div>
+        <a href="pengaturan.html" class="nav-link">⚙️ Pengaturan</a>
+        <a href="panduan.html" class="nav-link">📋 Panduan</a>
+        <a href="feedback.html" class="nav-link">💬 Feedback</a>
+    </nav>
+    <button class="hamburger" onclick="openSidebar()">☰</button>
+    <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</div>
+    <main class="main">
+        <section class="hero">
+            <div class="breadcrumb"><span>📚 Materi</span> - <span>Listening &amp; Speaking</span> - Speaking</div>
+            <div class="module-tag">🗣️ Speaking</div>
+            <h1>Teknik Berbicara<br><em>Bahasa Inggris</em></h1>
+            <p>Tingkatkan percaya diri berbicara dengan latihan pronunciation, intonasi, dan conversational skills
+                sehari-hari.</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-dot"></div> Pronunciation
+                </div>
+                <div class="stat">
+                    <div class="stat-dot" style="background:var(--teal)"></div> Intonation
+                </div>
+                <div class="stat">
+                    <div class="stat-dot" style="background:var(--blue)"></div> -18 menit baca
+                </div>
+            </div>
+        </section>
+        <div class="content">
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">🔹?</div>
+                    <div>
+                        <div class="card-title">Pronunciation Dasar</div>
+                        <div class="card-subtitle">Bunyi-bunyi yang sering salah diucapkan</div>
+                    </div>
+                </div>
+                <p class="body-text">Bahasa Indonesia dan Inggris memiliki sistem bunyi yang berbeda. Beberapa bunyi
+                    Inggris <strong>tidak ada</strong> dalam bahasa Indonesia, sehingga sering tertukar.</p>
+                <div class="grid-2">
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">/?/ vs /t/ - "th"</div>
+                        <div class="mini-text"><em>think</em> bukan "tink". Letakkan lidah di antara gigi atas dan
+                            bawah.</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">/v/ vs /f/</div>
+                        <div class="mini-text"><em>very</em> bukan "fery". /v/ menggunakan getaran bibir bawah + gigi
+                            atas.</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">/?/ vs /s/ - "sh"</div>
+                        <div class="mini-text"><em>she</em> bukan "se". Bulatkan bibir sedikit untuk bunyi "sh".</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">/r/ vs /l/</div>
+                        <div class="mini-text"><em>right</em> vs <em>light</em>. /r/ Inggris tidak bergetar seperti /r/
+                            Indonesia.</div>
+                    </div>
+                </div>
+                <div class="example-block" style="margin-top:20px">
+                    <div class="ex-label">Minimal Pairs - Pasangan kata yang mirip tapi beda makna</div>
+                    <div class="ex-text"><span class="phonetic">ship</span> vs <span class="phonetic">sheep</span> -
+                        <span class="phonetic">bat</span> vs <span class="phonetic">bad</span> - <span
+                            class="phonetic">think</span> vs <span class="phonetic">sink</span> - <span
+                            class="phonetic">rice</span> vs <span class="phonetic">lice</span></div>
+                </div>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Intonasi &amp; Word Stress</div>
+                        <div class="card-subtitle">Naik-turunnya nada saat berbicara</div>
+                    </div>
+                </div>
+                <p class="body-text"><strong>Intonasi</strong> adalah pola naik-turun nada suara. <strong>Word
+                        stress</strong> adalah penekanan pada suku kata tertentu. Keduanya sangat penting - salah
+                    intonasi bisa mengubah makna.</p>
+                <div class="grid-2">
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Rising Intonation ?</div>
+                        <div class="mini-text">Untuk yes/no questions. <em>"Do you like coffee?"</em> - nada naik di
+                            akhir.</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Falling Intonation ?</div>
+                        <div class="mini-text">Untuk statements dan WH-questions. <em>"Where do you live?"</em> - nada
+                            turun di akhir.</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">?</div>
+                        <div class="mini-title">Content Words = Stressed</div>
+                        <div class="mini-text">Nouns, verbs, adjectives, adverbs diberi <em>tekanan lebih</em>. "I WANT
+                            to GO to the PARK."</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Function Words = Weak</div>
+                        <div class="mini-text">Articles, prepositions, pronouns diucapkan <em>lebih lemah</em>. "to the"
+                            ? "t'the".</div>
+                    </div>
+                </div>
+                <div class="highlight-box" style="margin-top:20px">
+                    <div class="hl-icon">🔹</div>
+                    <div class="hl-text"><strong>Trik Word Stress:</strong> Kata benda 2 suku kata biasanya stress di
+                        suku kata pertama (<em>REcord</em>), sedangkan kata kerja stress di suku kata kedua
+                        (<em>reCORD</em>). Ini bisa mengubah makna!</div>
+                </div>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Conversational Skills</div>
+                        <div class="card-subtitle">Frasa penting untuk percakapan sehari-hari</div>
+                    </div>
+                </div>
+                <p class="body-text">Percakapan natural bukan hanya soal grammar - kamu perlu menguasai
+                    <strong>frasa-frasa umum</strong> yang digunakan native speakers.</p>
+                <div class="grid-2">
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Greetings</div>
+                        <div class="mini-text"><em>What's up? - How's it going? - Long time no see! - Nice to meet
+                                you.</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Asking for Clarification</div>
+                        <div class="mini-text"><em>Could you repeat that? - What do you mean by...? - Sorry, I didn't
+                                catch that.</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Giving Opinions</div>
+                        <div class="mini-text"><em>I think... - In my opinion... - Personally, I believe... - As far as
+                                I'm concerned...</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Agreeing & Disagreeing</div>
+                        <div class="mini-text"><em>Exactly! - That's a good point. - I see what you mean, but... - I'm
+                                not so sure about that.</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Fillers (Natural Pause)</div>
+                        <div class="mini-text"><em>Well... - Let me think... - The thing is... - You know...</em> -
+                            jangan terlalu sering!</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Ending Conversations</div>
+                        <div class="mini-text"><em>It was nice talking to you. - I'd better get going. - Let's catch up
+                                soon!</em></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Tips Meningkatkan Speaking</div>
+                        <div class="card-subtitle">Latihan praktis yang bisa dilakukan sendiri</div>
+                    </div>
+                </div>
+                <div class="tips-list">
+                    <div class="tip-item">
+                        <div class="tip-num">1</div>
+                        <div class="tip-text"><strong>Bicara pada diri sendiri.</strong> Narasi aktivitasmu dalam bahasa
+                            Inggris: "Now I'm making breakfast. I'm pouring the milk..." - melatih fluency tanpa
+                            tekanan.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">2</div>
+                        <div class="tip-text"><strong>Rekam suaramu.</strong> Rekam saat berbicara, lalu dengarkan.
+                            Bandingkan dengan native speaker. Kamu akan menyadari kesalahan yang tidak terdengar saat
+                            bicara.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">3</div>
+                        <div class="tip-text"><strong>Shadowing.</strong> Tirukan persis apa yang dikatakan native
+                            speaker - intonasi, kecepatan, jeda semua. Ini teknik paling efektif untuk pronunciation.
+                        </div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">4</div>
+                        <div class="tip-text"><strong>Tongue twisters.</strong> "She sells seashells by the seashore." -
+                            Latihan menyenangkan untuk melatih bunyi-bunyi sulit.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">5</div>
+                        <div class="tip-text"><strong>Jangan takut salah!</strong> Native speakers juga melakukan
+                            kesalahan. Yang penting pesan tersampaikan. Confidence > perfection.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Mini Quiz</div>
+                        <div class="card-subtitle">8 soal - pronunciation &amp; speaking</div>
+                    </div>
+                </div>
+                <div class="quiz-card" id="quizCard">
+                    <div class="quiz-prompt">Pertanyaan <span id="qNum">1</span> dari <span id="qTotal">8</span></div>
+                    <div class="quiz-q" id="qText">Loading...</div>
+                    <div class="quiz-options" id="qOptions"></div>
+                    <div class="quiz-feedback" id="qFeedback"></div>
+                    <button class="quiz-next" id="qNext" onclick="nextQuestion()">Pertanyaan Berikutnya ?</button>
+                </div>
+            </div>
+
+            <div class="section-divider">Selesai Membaca</div>
+            <div class="card" data-card style="text-align:center;padding:40px">
+                <div style="font-size:2rem;margin-bottom:14px">🔹</div>
+                <div class="card-title" style="margin-bottom:10px">Modul Speaking selesai!</div>
+                <p class="body-text" style="margin-bottom:0;max-width:480px;margin-left:auto;margin-right:auto">Terus
+                    latih pronunciation dan percakapanmu setiap hari. Percaya diri adalah kunci!</p>
+                <div class="cta-row" style="justify-content:center;margin-top:24px">
+                    <a href="materi-listening-mendengarkan.html" class="btn-secondary">? Listening</a>
+                    <a href="materi-video.html" class="btn-primary">Video & Movie ?</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        const saved = localStorage.getItem('theme'); if (saved === 'dark') { document.body.classList.add('dark'); document.getElementById('themeBtn').textContent = '🔹' }
+        function toggleTheme() { const d = document.body.classList.toggle('dark'); localStorage.setItem('theme', d ? 'dark' : 'light'); document.getElementById('themeBtn').textContent = d ? '🔹' : '🔹' }
+        function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('backdrop').classList.add('open') }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('backdrop').classList.remove('open') }
+        window.addEventListener('scroll', () => { const el = document.documentElement; document.getElementById('progressBar').style.width = (el.scrollTop / (el.scrollHeight - el.clientHeight) * 100) + '%' });
+        const obs = new IntersectionObserver(entries => { entries.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 55); obs.unobserve(e.target) } }) }, { threshold: .07 }); document.querySelectorAll('[data-card]').forEach(c => obs.observe(c));
+        const questions = [
+            { q: "To produce the 'th' sound /?/, you should...", opts: ["Close your mouth", "Put your tongue between your teeth", "Press your lips together", "Touch your chin"], ans: 1, exp: "? The /?/ sound requires placing the tongue between the upper and lower teeth." },
+            { q: "In English, yes/no questions use...", opts: ["Falling intonation", "Rising intonation", "No intonation", "Random intonation"], ans: 1, exp: "? Yes/no questions have a rising intonation at the end - the pitch goes up." },
+            { q: "In 'I WANT to GO to the PARK', the stressed words are...", opts: ["I, to, the", "WANT, GO, PARK", "to, to, the", "I, to, PARK"], ans: 1, exp: "? Content words (nouns, verbs) are stressed; function words (to, the) are weak." },
+            { q: "'REcord' (noun) vs 'reCORD' (verb) is an example of...", opts: ["Intonation", "Connected speech", "Word stress", "Slang"], ans: 2, exp: "? Word stress changes - nouns often stressed on first syllable, verbs on second." },
+            { q: "Which is a good way to practice speaking alone?", opts: ["Never speak", "Only study grammar", "Narrate daily activities", "Wait for a partner"], ans: 2, exp: "? Self-narration builds fluency: describe what you're doing in English as you do it." },
+            { q: "Shadowing technique means...", opts: ["Reading silently", "Repeating after a speaker with same speed and intonation", "Translating sentences", "Writing essays"], ans: 1, exp: "? Shadowing = immediately repeating speech with matching speed, rhythm, and intonation." },
+            { q: "Which phrase asks for clarification?", opts: ["Goodbye!", "Could you repeat that?", "I totally agree.", "Nice weather!"], ans: 1, exp: "? 'Could you repeat that?' politely asks someone to say something again." },
+            { q: "The most important thing in speaking is...", opts: ["Perfect grammar", "British accent", "Confidence", "Speaking speed"], ans: 2, exp: "? Confidence is key. Native speakers also make mistakes. Communicate with confidence!" }
+        ];
+        let current = 0, score = 0, answered = false;
+        function renderQuestion() { const q = questions[current]; document.getElementById('qNum').textContent = current + 1; document.getElementById('qTotal').textContent = questions.length; document.getElementById('qText').textContent = q.q; document.getElementById('qFeedback').textContent = ''; document.getElementById('qFeedback').classList.remove('show'); document.getElementById('qNext').style.display = 'none'; answered = false; const o = document.getElementById('qOptions'); o.innerHTML = ''; q.opts.forEach((opt, i) => { const b = document.createElement('button'); b.className = 'q-option'; b.textContent = opt; b.onclick = () => selectAnswer(i); o.appendChild(b) }) }
+        function selectAnswer(i) { if (answered) return; answered = true; const q = questions[current]; const opts = document.querySelectorAll('.q-option'); opts[i].classList.add(i === q.ans ? 'correct' : 'wrong'); if (i !== q.ans) opts[q.ans].classList.add('correct'); else score++; const fb = document.getElementById('qFeedback'); fb.textContent = i === q.ans ? q.exp : '? ' + q.exp; fb.classList.add('show'); const n = document.getElementById('qNext'); n.style.display = 'inline-block'; if (current === questions.length - 1) n.textContent = 'Lihat Hasil 🔹' }
+        function nextQuestion() { current++; if (current < questions.length) { renderQuestion(); return } const s = score, t = questions.length, g = s >= 7 ? '🔹' : s >= 5 ? '🔹' : '🔹', m = s === t ? 'Sempurna!' : s >= 6 ? 'Bagus!' : s >= 4 ? 'Lumayan!' : 'Ayo ulangi.'; document.getElementById('quizCard').innerHTML = `<div class="quiz-prompt" style="position:relative;z-index:1">Hasil Akhir</div><div class="quiz-q" style="position:relative;z-index:1;font-size:2.8rem">${g}</div><div class="quiz-q" style="position:relative;z-index:1">Skor: ${s} / ${t}</div><p style="position:relative;z-index:1;opacity:.82;font-size:.88rem;margin-top:6px">${m}</p><button class="quiz-next" style="display:inline-block;margin-top:16px" onclick="restartQuiz()">Ulangi Quiz</button>` }
+        function restartQuiz() { current = 0; score = 0; document.getElementById('quizCard').innerHTML = `<div class="quiz-prompt">Pertanyaan <span id="qNum">1</span> dari <span id="qTotal">8</span></div><div class="quiz-q" id="qText"></div><div class="quiz-options" id="qOptions"></div><div class="quiz-feedback" id="qFeedback"></div><button class="quiz-next" id="qNext" onclick="nextQuestion()">Pertanyaan Berikutnya ?</button>`; renderQuestion() }
+        renderQuestion();
+    </script>
+</body>
+
+</html>
+
+
+

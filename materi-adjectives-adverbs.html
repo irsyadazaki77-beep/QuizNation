@@ -1,0 +1,1562 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Adjectives &amp; Adverbs - QuizNation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Mobile Optimization */
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #f7f5f0;
+            --surface: #ffffff;
+            --surface2: #f0ede6;
+            --border: #e3e0d6;
+            --text: #1a1816;
+            --text2: #5a5648;
+            --text3: #9a9580;
+            --ink: #1a1816;
+
+            --accent: #2563eb;
+            --accent-mid: #3b82f6;
+            --accent-light: #dbeafe;
+            --accent-glow: rgba(124, 58, 237, 0.12);
+
+            --adj: #0369a1;
+            --adj-light: #e0f2fe;
+            --adv: #b45309;
+            --adv-light: #fef3c7;
+            --comp: #0f766e;
+            --comp-light: #ccfbf1;
+            --super: #9f1239;
+            --super-light: #ffe4e6;
+            --red: #b91c1c;
+            --red-light: #fee2e2;
+            --green: #166534;
+            --green-light: #dcfce7;
+
+            --sidebar-w: 260px;
+            --r: 20px;
+            --r-sm: 12px;
+            --shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.09);
+        }
+
+        body.dark {
+            --bg: #0d0c0f;
+            --surface: #16141a;
+            --surface2: #1e1c24;
+            --border: #2a2830;
+            --text: #f0eef8;
+            --text2: #a09db8;
+            --text3: #475569;
+            --ink: #f0eef8;
+            --accent-light: rgba(124, 58, 237, 0.2);
+            --adj-light: rgba(3, 105, 161, 0.2);
+            --adv-light: rgba(180, 83, 9, 0.2);
+            --comp-light: rgba(15, 118, 110, 0.15);
+            --super-light: rgba(159, 18, 57, 0.2);
+            --red-light: rgba(185, 28, 28, 0.2);
+            --green-light: rgba(22, 101, 52, 0.2);
+            --shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            transition: background 0.4s, color 0.4s;
+            overflow-x: hidden;
+        }
+
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 90;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+        }
+
+        .backdrop.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-w);
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            z-index: 100;
+            padding: 28px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media(min-width:1024px) {
+            .sidebar {
+                transform: translateX(0);
+            }
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 28px;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-close {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text2);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 8px;
+            line-height: 1;
+        }
+
+        @media(max-width:1023px) {
+            .logo-close {
+                display: block;
+            }
+        }
+
+        .nav-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text3);
+            padding: 16px 12px 6px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--r-sm);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text2);
+            transition: 0.15s;
+        }
+
+        .nav-link:hover {
+            background: var(--surface2);
+            color: var(--text);
+        }
+
+        .nav-link.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .hamburger {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--text);
+            box-shadow: var(--shadow);
+        }
+
+        @media(max-width:1023px) {
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+        }
+
+        .main {
+            flex: 1;
+            margin-left: 0;
+            transition: margin 0.4s;
+            min-width: 0;
+        }
+
+        @media(min-width:1024px) {
+            .main {
+                margin-left: var(--sidebar-w);
+            }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--adj));
+            z-index: 200;
+            transition: width 0.15s;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .hero {
+            padding: 80px 48px 56px;
+            max-width: 840px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: rise 0.7s 0.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @media(max-width:768px) {
+            .hero {
+                padding: 72px 24px 40px;
+            }
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text3);
+            margin-bottom: 28px;
+            font-weight: 500;
+        }
+
+        .breadcrumb span {
+            color: var(--text2);
+        }
+
+        .module-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 100px;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border: 1px solid rgba(124, 58, 237, 0.15);
+        }
+
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--text);
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text2);
+            max-width: 560px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 36px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text2);
+            font-weight: 500;
+        }
+
+        .stat-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .content {
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 0 48px 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        @media(max-width:768px) {
+            .content {
+                padding: 0 20px 80px;
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 36px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(24px);
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        @media(max-width:768px) {
+            .card {
+                padding: 24px;
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: var(--accent-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .card-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+
+        .card-subtitle {
+            font-size: 0.82rem;
+            color: var(--text3);
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        .body-text {
+            font-size: 0.97rem;
+            line-height: 1.8;
+            color: var(--text2);
+            margin-bottom: 24px;
+        }
+
+        .body-text strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            margin-top: 8px;
+        }
+
+        .sh-badge {
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .sh-badge.adj {
+            background: var(--adj-light);
+            color: var(--adj);
+        }
+
+        .sh-badge.adv {
+            background: var(--adv-light);
+            color: var(--adv);
+        }
+
+        .sh-badge.comp {
+            background: var(--comp-light);
+            color: var(--comp);
+        }
+
+        .sh-badge.super {
+            background: var(--super-light);
+            color: var(--super);
+        }
+
+        .sh-badge.accent {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+
+        .sh-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+        }
+
+        .mini-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            transition: 0.25s;
+            cursor: default;
+        }
+
+        .mini-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 20px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        .mini-icon {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+        }
+
+        .mini-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text);
+            margin-bottom: 7px;
+        }
+
+        .mini-text {
+            font-size: 0.82rem;
+            line-height: 1.6;
+            color: var(--text2);
+        }
+
+        .mini-text em {
+            font-style: normal;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .example-block {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 12px;
+        }
+
+        .ex-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text3);
+            margin-bottom: 10px;
+        }
+
+        .sentence {
+            font-family: 'Fraunces', serif;
+            font-size: 1.2rem;
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--text);
+            margin-bottom: 10px;
+            letter-spacing: 0.01em;
+        }
+
+        .word {
+            display: inline-block;
+            padding: 2px 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.15s;
+            position: relative;
+        }
+
+        .word.s {
+            color: var(--adj);
+        }
+
+        .word.v {
+            color: var(--super);
+        }
+
+        .word.a {
+            color: var(--adv);
+        }
+
+        .word.o {
+            color: var(--comp);
+        }
+
+        .word:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .word::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%) scale(0.85);
+            background: var(--ink);
+            color: var(--bg);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            white-space: nowrap;
+            letter-spacing: 0.04em;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.18s;
+            z-index: 10;
+        }
+
+        .word:hover::after {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+
+        .ex-translation {
+            font-size: 0.83rem;
+            color: var(--text3);
+            font-style: italic;
+        }
+
+        .highlight-box {
+            background: var(--accent-light);
+            border: 1px solid rgba(124, 58, 237, 0.18);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .hl-icon {
+            font-size: 1.05rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .hl-text {
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .hl-text strong {
+            font-weight: 700;
+        }
+
+        .warn-box {
+            background: var(--super-light);
+            border: 1px solid rgba(159, 18, 57, 0.18);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .warn-text {
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: var(--super);
+            font-weight: 500;
+        }
+
+        .warn-text strong {
+            font-weight: 700;
+        }
+
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .compare-table th {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+            padding: 10px 16px;
+            text-align: left;
+            font-size: 0.78rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .compare-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text2);
+        }
+
+        .compare-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .compare-table tr:hover td {
+            background: var(--surface2);
+        }
+
+        .compare-table .adj-col {
+            color: var(--adj);
+            font-weight: 600;
+        }
+
+        .compare-table .adv-col {
+            color: var(--adv);
+            font-weight: 600;
+        }
+
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tip-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 14px 16px;
+            background: var(--surface2);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .tip-num {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--accent-light);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 0.88rem;
+            line-height: 1.65;
+            color: var(--text2);
+        }
+
+        .tip-text strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .quiz-card {
+            background: linear-gradient(135deg, #2563eb, #0369a1);
+            border-radius: 20px;
+            padding: 36px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-card::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .quiz-card::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -5%;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .quiz-prompt {
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.65;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-q {
+            font-family: 'Fraunces', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .q-option {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1.5px solid rgba(255, 255, 255, 0.22);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .q-option:hover {
+            background: rgba(255, 255, 255, 0.22);
+            transform: translateY(-1px);
+        }
+
+        .q-option.correct {
+            background: rgba(255, 255, 255, 0.28);
+            border-color: white;
+        }
+
+        .q-option.wrong {
+            background: rgba(0, 0, 0, 0.25);
+            border-color: rgba(255, 100, 100, 0.5);
+        }
+
+        .quiz-feedback {
+            margin-top: 14px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: 0.3s;
+            position: relative;
+            z-index: 1;
+            line-height: 1.5;
+        }
+
+        .quiz-feedback.show {
+            opacity: 1;
+        }
+
+        .quiz-next {
+            margin-top: 16px;
+            background: white;
+            color: #2563eb;
+            border: none;
+            padding: 11px 26px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: none;
+            transition: 0.2s;
+            position: relative;
+            z-index: 1;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .quiz-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--text3);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.25s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.25s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="backdrop" id="backdrop" onclick="closeSidebar()"></div>
+
+        <nav class="sidebar" id="sidebar">
+        <div class="logo">QuizNation <button class="logo-close" onclick="closeSidebar()">✕</button></div>
+        <div class="nav-label">Menu Utama</div>
+        <a href="index.html" class="nav-link">🏠 Beranda</a>
+        <a href="statistik.html" class="nav-link">📊 Statistik</a>
+        <a href="evaluasi.html" class="nav-link">🎓 Evaluasi SNBT</a>
+        <a href="pencapaian.html" class="nav-link">🏆 Pencapaian</a>
+        <a href="materi.html" class="nav-link active">📚 Materi</a>
+        <a href="library.html" class="nav-link">📖 Library</a>
+        <div class="nav-label" style="margin-top:10px">Bantuan</div>
+        <a href="pengaturan.html" class="nav-link">⚙️ Pengaturan</a>
+        <a href="panduan.html" class="nav-link">📋 Panduan</a>
+        <a href="feedback.html" class="nav-link">💬 Feedback</a>
+    </nav>
+
+    <button class="hamburger" onclick="openSidebar()">☰</button>
+    <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</div>
+
+    <main class="main">
+        <section class="hero">
+            <div class="breadcrumb"><span>📚 Materi</span> - <span>Grammar Dasar</span> - Modul 4</div>
+            <div class="module-tag">? Grammar Dasar - Modul 4</div>
+            <h1>Adjectives &amp;<br><em>Adverbs</em></h1>
+            <p>Tingkatkan gaya bahasamu dengan memahami perbedaan serta fungsi kata sifat dan kata keterangan - dari
+                dasar hingga comparative &amp; superlative.</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-dot"></div> 2 Topik Utama
+                </div>
+                <div class="stat">
+                    <div class="stat-dot" style="background:var(--adj)"></div> Latihan Mini Quiz
+                </div>
+                <div class="stat">
+                    <div class="stat-dot" style="background:var(--adv)"></div> -18 menit baca
+                </div>
+            </div>
+        </section>
+
+        <div class="content">
+
+            <!-- 1. Apa itu Adjective -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Apa itu Adjective?</div>
+                        <div class="card-subtitle">Kata sifat - mendeskripsikan kata benda</div>
+                    </div>
+                </div>
+                <p class="body-text"><strong>Adjective</strong> (kata sifat) adalah kata yang digunakan untuk
+                    <strong>mendeskripsikan atau memberikan informasi tambahan</strong> tentang noun (kata benda) atau
+                    pronoun (kata ganti). Adjective menjawab pertanyaan: <em>Which one? What kind? How many?</em></p>
+
+                <div class="section-head">
+                    <div class="sh-badge adj">Jenis-Jenis Adjective</div>
+                    <div class="sh-line"></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Descriptive</div>
+                        <div class="mini-text">Menggambarkan sifat/kualitas. Contoh: <em>beautiful</em>, <em>tall</em>,
+                            <em>smart</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Quantitative</div>
+                        <div class="mini-text">Menunjukkan jumlah. Contoh: <em>many</em>, <em>few</em>, <em>several</em>
+                        </div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Demonstrative</div>
+                        <div class="mini-text">Menunjuk sesuatu. Contoh: <em>this</em>, <em>that</em>, <em>these</em>
+                        </div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">?</div>
+                        <div class="mini-title">Interrogative</div>
+                        <div class="mini-text">Untuk bertanya. Contoh: <em>which</em>, <em>what</em>, <em>whose</em>
+                        </div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Possessive</div>
+                        <div class="mini-text">Menunjuk kepemilikan. Contoh: <em>my</em>, <em>your</em>, <em>their</em>
+                        </div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹?</div>
+                        <div class="mini-title">Proper</div>
+                        <div class="mini-text">Berasal dari proper noun. Contoh: <em>Indonesian</em>, <em>Japanese</em>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="margin-top:20px">
+                    <div class="hl-icon">🔹</div>
+                    <div class="hl-text"><strong>Posisi Adjective:</strong> Bisa sebelum noun (<em>a beautiful day</em>)
+                        atau setelah linking verb (<em>She is beautiful</em>). Posisi pertama disebut
+                        <strong>attributive</strong>, posisi kedua disebut <strong>predicative</strong>.</div>
+                </div>
+            </div>
+
+            <!-- 2. Apa itu Adverb -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">?</div>
+                    <div>
+                        <div class="card-title">Apa itu Adverb?</div>
+                        <div class="card-subtitle">Kata keterangan - memodifikasi verb, adjective, atau sesama adverb
+                        </div>
+                    </div>
+                </div>
+                <p class="body-text"><strong>Adverb</strong> (kata keterangan) adalah kata yang <strong>memodifikasi
+                        verb, adjective, atau adverb lain</strong>. Adverb menjawab pertanyaan: <em>How? When? Where?
+                        How often? To what degree?</em></p>
+
+                <div class="section-head">
+                    <div class="sh-badge adv">Jenis-Jenis Adverb</div>
+                    <div class="sh-line"></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Manner (Cara)</div>
+                        <div class="mini-text">Bagaimana sesuatu terjadi. Contoh: <em>quickly</em>, <em>carefully</em>,
+                            <em>loudly</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">?</div>
+                        <div class="mini-title">Time (Waktu)</div>
+                        <div class="mini-text">Kapan terjadi. Contoh: <em>yesterday</em>, <em>now</em>, <em>soon</em>
+                        </div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Place (Tempat)</div>
+                        <div class="mini-text">Di mana terjadi. Contoh: <em>here</em>, <em>outside</em>,
+                            <em>everywhere</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Frequency (Frekuensi)</div>
+                        <div class="mini-text">Seberapa sering. Contoh: <em>always</em>, <em>often</em>, <em>rarely</em>
+                        </div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Degree (Tingkat)</div>
+                        <div class="mini-text">Seberapa besar. Contoh: <em>very</em>, <em>extremely</em>, <em>quite</em>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box" style="margin-top:20px">
+                    <div class="hl-icon">🔹</div>
+                    <div class="hl-text"><strong>Pembentukan Adverb:</strong> Kebanyakan adverb dibentuk dengan
+                        menambahkan <strong>-ly</strong> pada adjective. <em>quick ? quickly</em>, <em>careful ?
+                            carefully</em>. Tapi ada pengecualian: <em>good ? well</em>, <em>fast ? fast</em>, <em>hard
+                            ? hard</em>.</div>
+                </div>
+            </div>
+
+            <!-- 3. Perbedaan Adjective vs Adverb -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Adjective vs Adverb</div>
+                        <div class="card-subtitle">Perbedaan utama dan cara membedakannya</div>
+                    </div>
+                </div>
+                <p class="body-text">Salah satu kesalahan paling umum dalam bahasa Inggris adalah <strong>mencampur
+                        adjective dan adverb</strong>. Kunci utamanya: adjective memodifikasi noun, adverb memodifikasi
+                    verb/adjective/adverb lain.</p>
+
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>Adjective</th>
+                            <th>Adverb</th>
+                            <th>Penjelasan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="adj-col">She is a slow driver.</td>
+                            <td class="adv-col">She drives slowly.</td>
+                            <td>Slow ? memodifikasi driver (noun). Slowly ? memodifikasi drives (verb).</td>
+                        </tr>
+                        <tr>
+                            <td class="adj-col">He gave a quick response.</td>
+                            <td class="adv-col">He responded quickly.</td>
+                            <td>Quick ? memodifikasi response (noun). Quickly ? memodifikasi responded (verb).</td>
+                        </tr>
+                        <tr>
+                            <td class="adj-col">The cake is good.</td>
+                            <td class="adv-col">She sings well.</td>
+                            <td>Good ? adjective (setelah linking verb). Well ? adverb (memodifikasi sings).</td>
+                        </tr>
+                        <tr>
+                            <td class="adj-col">It was a hard exam.</td>
+                            <td class="adv-col">He studied hard.</td>
+                            <td>Hard ? adjective DAN adverb (bentuk sama!).</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="warn-box">
+                    <div class="hl-icon">🔹</div>
+                    <div class="warn-text"><strong>Jebakan: "Good" vs "Well".</strong> <em>Good</em> adalah adjective,
+                        <em>well</em> adalah adverb. Jangan pernah bilang "She sings <s>good</s>" - yang benar adalah
+                        "She sings <strong>well</strong>". Ini sering muncul di soal SNBT!</div>
+                </div>
+
+                <div class="example-block">
+                    <div class="ex-label">Contoh Kalimat Interaktif</div>
+                    <div class="sentence">
+                        <span class="word s" data-label="Subject">The</span>
+                        <span> </span><span class="word s"
+                            data-label="Adjective (memodifikasi student)">brilliant</span>
+                        <span> </span><span class="word s" data-label="Noun">student</span>
+                        <span> </span><span class="word v" data-label="Verb">answered</span>
+                        <span> </span><span class="word o" data-label="Object">the question</span>
+                        <span> </span><span class="word a" data-label="Adverb (memodifikasi answered)">correctly.</span>
+                    </div>
+                    <div class="ex-translation">? Siswa yang cerdas menjawab pertanyaan itu dengan benar.</div>
+                </div>
+            </div>
+
+            <!-- 4. Comparative -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Comparative Form</div>
+                        <div class="card-subtitle">Membandingkan dua hal</div>
+                    </div>
+                </div>
+                <p class="body-text"><strong>Comparative</strong> digunakan untuk membandingkan <strong>dua hal, orang,
+                        atau situasi</strong>. Aturan pembentukan tergantung jumlah suku kata.</p>
+
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>Aturan</th>
+                            <th>Adjective</th>
+                            <th>Comparative</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1 suku kata ? tambah -er</td>
+                            <td>tall, fast</td>
+                            <td>taller, faster</td>
+                        </tr>
+                        <tr>
+                            <td>1 suku + konsonan akhir ? double + -er</td>
+                            <td>big, hot</td>
+                            <td>bigger, hotter</td>
+                        </tr>
+                        <tr>
+                            <td>2 suku + akhiran -y ? ubah -y ke -ier</td>
+                            <td>happy, easy</td>
+                            <td>happier, easier</td>
+                        </tr>
+                        <tr>
+                            <td>2+ suku kata ? more + adjective</td>
+                            <td>beautiful, expensive</td>
+                            <td>more beautiful, more expensive</td>
+                        </tr>
+                        <tr>
+                            <td>Irregular</td>
+                            <td>good, bad, far</td>
+                            <td>better, worse, farther/further</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-block">
+                    <div class="ex-label">Contoh Kalimat Comparative</div>
+                    <div class="sentence">
+                        <span class="word s" data-label="Subject">Jakarta</span>
+                        <span> </span><span class="word v" data-label="Linking Verb">is</span>
+                        <span> </span><span class="word o" data-label="Comparative Adjective">bigger</span>
+                        <span> </span><span class="word a" data-label="Pembanding (than)">than Bandung.</span>
+                    </div>
+                    <div class="ex-translation">? Jakarta lebih besar daripada Bandung.</div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="hl-icon">🔹</div>
+                    <div class="hl-text"><strong>Pola Comparative:</strong> Subject + be/verb + comparative adjective +
+                        <strong>than</strong> + objek pembanding. Kata <strong>"than"</strong> wajib ada saat
+                        membandingkan.</div>
+                </div>
+            </div>
+
+            <!-- 5. Superlative -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Superlative Form</div>
+                        <div class="card-subtitle">Menyatakan paling atau tertinggi dari kelompok</div>
+                    </div>
+                </div>
+                <p class="body-text"><strong>Superlative</strong> digunakan untuk menyatakan bahwa sesuatu adalah yang
+                    <strong>paling</strong> dalam kelompoknya (tiga atau lebih).</p>
+
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>Aturan</th>
+                            <th>Adjective</th>
+                            <th>Superlative</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1 suku kata ? the + adj + -est</td>
+                            <td>tall, fast</td>
+                            <td>the tallest, the fastest</td>
+                        </tr>
+                        <tr>
+                            <td>2 suku + -y ? the + adj + -iest</td>
+                            <td>happy, easy</td>
+                            <td>the happiest, the easiest</td>
+                        </tr>
+                        <tr>
+                            <td>2+ suku kata ? the most + adj</td>
+                            <td>beautiful, expensive</td>
+                            <td>the most beautiful, the most expensive</td>
+                        </tr>
+                        <tr>
+                            <td>Irregular</td>
+                            <td>good, bad, far</td>
+                            <td>the best, the worst, the farthest/furthest</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="example-block">
+                    <div class="ex-label">Contoh Kalimat Superlative</div>
+                    <div class="sentence">
+                        <span class="word s" data-label="Subject">She</span>
+                        <span> </span><span class="word v" data-label="Linking Verb">is</span>
+                        <span> </span><span class="word o" data-label="Superlative Adjective">the smartest</span>
+                        <span> </span><span class="word a" data-label="Dalam kelompok">student in the class.</span>
+                    </div>
+                    <div class="ex-translation">? Dia adalah siswa paling pintar di kelas.</div>
+                </div>
+
+                <div class="warn-box">
+                    <div class="hl-icon">🔹</div>
+                    <div class="warn-text"><strong>Jangan gabungkan dua bentuk!</strong> Jangan bilang "the <s>most
+                            tallest</s>" - cukup "the tallest". Ini adalah kesalahan <strong>double superlative</strong>
+                        yang sering menjadi jebakan soal.</div>
+                </div>
+            </div>
+
+            <!-- 6. Order of Adjectives -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Urutan Adjective</div>
+                        <div class="card-subtitle">Aturan urutan saat menggunakan lebih dari satu adjective</div>
+                    </div>
+                </div>
+                <p class="body-text">Ketika menggunakan lebih dari satu adjective sebelum noun, ada <strong>urutan yang
+                        harus diikuti</strong>. Urutan ini jarang diajarkan tapi sangat penting.</p>
+
+                <div class="highlight-box">
+                    <div class="hl-icon">🔹</div>
+                    <div class="hl-text"><strong>Urutan: OSASCOMP</strong> - Opinion ? Size ? Age ? Shape ? Color ?
+                        Origin ? Material ? Purpose. Contoh: <em>"A beautiful (Opinion) small (Size) old (Age) round
+                            (Shape) red (Color) Italian (Origin) leather (Material) handbag."</em></div>
+                </div>
+
+                <div class="example-block">
+                    <div class="ex-label">Contoh Benar</div>
+                    <div class="sentence">
+                        <span class="word s" data-label="Opinion">a lovely</span>
+                        <span> </span><span class="word o" data-label="Size">big</span>
+                        <span> </span><span class="word a" data-label="Age">old</span>
+                        <span> </span><span class="word v" data-label="Color">red</span>
+                        <span> </span><span class="word s" data-label="Noun">house</span>
+                    </div>
+                    <div class="ex-translation">? ? Benar: lovely ? big ? old ? red ? house</div>
+                </div>
+                <div class="example-block">
+                    <div class="ex-label">Contoh Salah</div>
+                    <div class="sentence" style="text-decoration: line-through; opacity:0.5">a red old big lovely house
+                    </div>
+                    <div class="ex-translation">? ? Salah: urutan terbalik</div>
+                </div>
+            </div>
+
+            <!-- 7. Tips -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Tips &amp; Jebakan Soal SNBT</div>
+                        <div class="card-subtitle">Strategi menjawab soal adjective &amp; adverb</div>
+                    </div>
+                </div>
+                <div class="tips-list">
+                    <div class="tip-item">
+                        <div class="tip-num">1</div>
+                        <div class="tip-text"><strong>Lihat kata yang dimodifikasi.</strong> Jika memodifikasi noun ?
+                            pakai adjective. Jika memodifikasi verb/adj/adverb ? pakai adverb. Ini cara paling cepat
+                            membedakan keduanya.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">2</div>
+                        <div class="tip-text"><strong>Good vs Well.</strong> "He is a <em>good</em> singer" (adj + noun)
+                            vs "He sings <em>well</em>" (adverb + verb). Tapi hati-hati: "I feel <em>good</em>" (adj
+                            setelah linking verb) juga benar!</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">3</div>
+                        <div class="tip-text"><strong>Jangan double comparative/superlative.</strong> "More better" ? ?
+                            "Better" ?. "Most easiest" ? ? "Easiest" ?. Ini jebakan klasik di soal grammar.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">4</div>
+                        <div class="tip-text"><strong>Adverb tanpa -ly.</strong> Beberapa adverb tidak berakhiran -ly:
+                            <em>fast, hard, late, early, high, low, near, far</em>. "She runs <em>fast</em>" bukan "She
+                            runs <s>fastly</s>".</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">5</div>
+                        <div class="tip-text"><strong>Linking verbs + adjective.</strong> Setelah linking verbs (be,
+                            look, feel, seem, taste, smell, sound), gunakan adjective bukan adverb. "The food smells
+                            <em>good</em>" ? bukan "The food smells <s>well</s>".</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. Mini Quiz -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Mini Quiz</div>
+                        <div class="card-subtitle">8 soal - adjectives &amp; adverbs</div>
+                    </div>
+                </div>
+                <p class="body-text" style="margin-bottom:20px">Perhatikan konteks kalimat sebelum memilih jawaban.
+                    Fokuslah pada kata yang dimodifikasi!</p>
+                <div class="quiz-card" id="quizCard">
+                    <div class="quiz-prompt">Pertanyaan <span id="qNum">1</span> dari <span id="qTotal">8</span></div>
+                    <div class="quiz-q" id="qText">Loading...</div>
+                    <div class="quiz-options" id="qOptions"></div>
+                    <div class="quiz-feedback" id="qFeedback"></div>
+                    <button class="quiz-next" id="qNext" onclick="nextQuestion()">Pertanyaan Berikutnya ?</button>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="section-divider">Selesai Membaca</div>
+            <div class="card" data-card style="text-align:center; padding:40px">
+                <div style="font-size:2rem; margin-bottom:14px">🔹</div>
+                <div class="card-title" style="margin-bottom:10px">Modul 4 selesai!</div>
+                <p class="body-text" style="margin-bottom:0; max-width:480px; margin-left:auto; margin-right:auto">Kamu
+                    sudah menguasai adjectives & adverbs. Lanjutkan ke modul berikutnya untuk memperdalam grammar-mu!
+                </p>
+                <div class="cta-row" style="justify-content:center; margin-top:24px">
+                    <a href="materi-nouns-pronouns.html" class="btn-secondary">? Nouns & Pronouns</a>
+                    <a href="materi.html" class="btn-primary">Modul Lainnya ?</a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') { document.body.classList.add('dark'); document.getElementById('themeBtn').textContent = '🔹'; }
+        function toggleTheme() {
+            const d = document.body.classList.toggle('dark');
+            localStorage.setItem('theme', d ? 'dark' : 'light');
+            document.getElementById('themeBtn').textContent = d ? '🔹' : '🔹';
+        }
+        function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('backdrop').classList.add('open'); }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('backdrop').classList.remove('open'); }
+        window.addEventListener('scroll', () => {
+            const el = document.documentElement;
+            document.getElementById('progressBar').style.width = (el.scrollTop / (el.scrollHeight - el.clientHeight) * 100) + '%';
+        });
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 55); obs.unobserve(e.target); } });
+        }, { threshold: 0.07 });
+        document.querySelectorAll('[data-card]').forEach(c => obs.observe(c));
+
+        const questions = [
+            { q: "She speaks English very _____.", opts: ["good", "well", "better", "best"], ans: 1, exp: "? 'well' - Adverb yang memodifikasi verb 'speaks'. 'Good' adalah adjective." },
+            { q: "This is the _____ movie I've ever seen.", opts: ["most good", "better", "best", "more good"], ans: 2, exp: "? 'best' - Superlative irregular dari 'good'. 'Most good' tidak pernah dipakai." },
+            { q: "He ran _____ to catch the bus.", opts: ["quick", "quickly", "quicker", "quickest"], ans: 1, exp: "? 'quickly' - Adverb memodifikasi verb 'ran'. 'Quick' adalah adjective." },
+            { q: "Jakarta is _____ than Surabaya.", opts: ["big", "bigger", "biggest", "more big"], ans: 1, exp: "? 'bigger' - Comparative 1 suku kata: big + -ger. 'More big' salah." },
+            { q: "The food smells _____.", opts: ["deliciously", "delicious", "more delicious", "deliciousness"], ans: 1, exp: "? 'delicious' - Setelah linking verb 'smells', gunakan adjective bukan adverb." },
+            { q: "She is the _____ student in our class.", opts: ["more smart", "most smartest", "smartest", "more smarter"], ans: 2, exp: "? 'smartest' - Superlative 1 suku kata. 'Most smartest' adalah double superlative (salah)." },
+            { q: "He works _____. No wonder he got promoted.", opts: ["hardly", "hard", "harder", "hardest"], ans: 1, exp: "? 'hard' - Adverb tanpa -ly. 'Hardly' berarti 'hampir tidak', makna sangat berbeda!" },
+            { q: "She bought a _____ Italian leather bag.", opts: ["beautiful new", "new beautiful", "leather beautiful", "Italian beautiful"], ans: 0, exp: "? 'beautiful new' - Urutan adjective: Opinion (beautiful) ? Age (new) ? Origin (Italian) ? Material (leather)." }
+        ];
+
+        let current = 0, score = 0, answered = false;
+        function renderQuestion() {
+            const q = questions[current];
+            document.getElementById('qNum').textContent = current + 1;
+            document.getElementById('qTotal').textContent = questions.length;
+            document.getElementById('qText').textContent = q.q;
+            document.getElementById('qFeedback').textContent = '';
+            document.getElementById('qFeedback').classList.remove('show');
+            document.getElementById('qNext').style.display = 'none';
+            answered = false;
+            const optDiv = document.getElementById('qOptions');
+            optDiv.innerHTML = '';
+            q.opts.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'q-option'; btn.textContent = opt;
+                btn.onclick = () => selectAnswer(i);
+                optDiv.appendChild(btn);
+            });
+        }
+        function selectAnswer(i) {
+            if (answered) return;
+            answered = true;
+            const q = questions[current];
+            const opts = document.querySelectorAll('.q-option');
+            opts[i].classList.add(i === q.ans ? 'correct' : 'wrong');
+            if (i !== q.ans) opts[q.ans].classList.add('correct'); else score++;
+            const fb = document.getElementById('qFeedback');
+            fb.textContent = i === q.ans ? q.exp : '? Kurang tepat. ' + q.exp;
+            fb.classList.add('show');
+            const nxt = document.getElementById('qNext');
+            nxt.style.display = 'inline-block';
+            if (current === questions.length - 1) nxt.textContent = 'Lihat Hasil 🔹';
+        }
+        function nextQuestion() {
+            current++;
+            if (current < questions.length) { renderQuestion(); return; }
+            const s = score; const total = questions.length;
+            const grade = s >= 7 ? '🔹' : s >= 5 ? '🔹' : '🔹';
+            const msg = s === total ? 'Sempurna! Kamu menguasai Adjectives & Adverbs.' : s >= 6 ? 'Bagus sekali! Hampir sempurna.' : s >= 4 ? 'Lumayan! Baca ulang bagian comparative & linking verbs.' : 'Ayo ulangi materi ini, terutama bagian good vs well.';
+            document.getElementById('quizCard').innerHTML = `
+    <div class="quiz-prompt" style="position:relative;z-index:1">Hasil Akhir</div>
+    <div class="quiz-q" style="position:relative;z-index:1;font-size:2.8rem">${grade}</div>
+    <div class="quiz-q" style="position:relative;z-index:1">Skor: ${s} / ${total}</div>
+    <p style="position:relative;z-index:1;opacity:0.82;font-size:0.88rem;margin-top:6px">${msg}</p>
+    <button class="quiz-next" style="display:inline-block;margin-top:16px" onclick="restartQuiz()">Ulangi Quiz</button>`;
+        }
+        function restartQuiz() {
+            current = 0; score = 0;
+            document.getElementById('quizCard').innerHTML = `
+    <div class="quiz-prompt">Pertanyaan <span id="qNum">1</span> dari <span id="qTotal">8</span></div>
+    <div class="quiz-q" id="qText"></div>
+    <div class="quiz-options" id="qOptions"></div>
+    <div class="quiz-feedback" id="qFeedback"></div>
+    <button class="quiz-next" id="qNext" onclick="nextQuestion()">Pertanyaan Berikutnya ?</button>`;
+            renderQuestion();
+        }
+        renderQuestion();
+    </script>
+</body>
+
+</html>
+
+
+

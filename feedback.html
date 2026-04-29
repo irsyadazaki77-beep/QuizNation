@@ -1,0 +1,980 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Feedback - QuizNation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&display=swap"
+        rel="stylesheet">
+    <style>
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        *,
+        *::before,
+        *::after {
+            -webkit-tap-highlight-color: transparent !important;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #f5f3ef;
+            --surface: #ffffff;
+            --surface2: #f0ede6;
+            --surface3: #e8e4da;
+            --border: #ddd9ce;
+            --text: #1c1a15;
+            --text2: #5a5648;
+            --text3: #9a9180;
+            --accent: #60a5fa;
+            --accent-mid: #f43f5e;
+            --accent-light: #e0f2fe;
+            --accent-glow: rgba(96, 165, 250, 0.18);
+            --sidebar-w: 260px;
+            --r: 20px;
+            --r-sm: 12px;
+            --shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.07);
+        }
+
+        body.dark {
+            --bg: #0a1120;
+            --surface: #0f172a;
+            --surface2: #0f172a;
+            --surface3: #1e293b;
+            --border: #334155;
+            --text: #f0ebff;
+            --text2: #b8aad4;
+            --text3: #7a6d99;
+            --accent-light: rgba(96, 165, 250, 0.12);
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 16px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            transition: background 0.5s, color 0.5s;
+        }
+
+        /* --- BACKDROP --- */
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(6px);
+            z-index: 90;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+        }
+
+        .backdrop.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* --- SIDEBAR (tema asli, warna diperbarui) --- */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-w);
+            height: 100vh;
+            background: linear-gradient(180deg, #0f172a 0%, #0a1120 100%);
+            border-right: 1px solid rgba(96, 165, 250, 0.15);
+            z-index: 100;
+            padding: 28px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1);
+        }
+
+        @media(min-width:1024px) {
+            .sidebar {
+                transform: translateX(0);
+            }
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-size: 1.55rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60a5fa, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 28px;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-close {
+            display: none;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 8px;
+            -webkit-text-fill-color: rgba(255, 255, 255, 0.5);
+        }
+
+        @media(max-width:1023px) {
+            .logo-close {
+                display: block;
+            }
+        }
+
+        .nav-label {
+            font-size: 0.65rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: rgba(96, 165, 250, 0.5);
+            padding: 14px 12px 5px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 12px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.06);
+            padding-left: 16px;
+        }
+
+        .nav-link.active {
+            color: #fff;
+            background: linear-gradient(90deg, rgba(96, 165, 250, 0.3), rgba(168, 85, 247, 0.15));
+            border: 1px solid rgba(96, 165, 250, 0.35);
+            box-shadow: 0 4px 16px rgba(96, 165, 250, 0.2);
+        }
+
+        .nav-link.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 60%;
+            background: linear-gradient(180deg, #60a5fa, #3b82f6);
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* --- FLOATING BUTTONS --- */
+        .hamburger,
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            z-index: 110;
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--text);
+            box-shadow: var(--shadow);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .hamburger {
+            left: 16px;
+            display: none;
+        }
+
+        .theme-toggle {
+            right: 16px;
+        }
+
+        @media(max-width:1023px) {
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        .hamburger:hover,
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* --- MAIN LAYOUT --- */
+        .main {
+            flex: 1;
+            margin-left: 0;
+            transition: margin 0.4s;
+            min-width: 0;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 24px;
+            min-height: 100vh;
+        }
+
+        @media(min-width:1024px) {
+            .main {
+                margin-left: var(--sidebar-w);
+            }
+        }
+
+        /* --- BACKGROUND TEXTURE --- */
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image:
+                radial-gradient(circle at 20% 20%, rgba(96, 165, 250, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.06) 0%, transparent 50%);
+        }
+
+        body.dark .bg-grid {
+            background-image:
+                radial-gradient(circle at 20% 20%, rgba(96, 165, 250, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.1) 0%, transparent 50%);
+        }
+
+        .bg-noise {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.025;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+
+        /* --- PAGE WRAPPER --- */
+        .page-wrap {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 980px;
+            animation: fadeUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* --- PAGE HEADER --- */
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .page-header .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 6px 16px;
+            border-radius: 100px;
+            border: 1px solid rgba(96, 165, 250, 0.2);
+            margin-bottom: 18px;
+        }
+
+        .page-header h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--text);
+            margin-bottom: 12px;
+        }
+
+        .page-header h1 em {
+            font-style: italic;
+            background: linear-gradient(135deg, var(--accent), #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .page-header p {
+            color: var(--text2);
+            font-size: 1rem;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* --- CARD SHELL --- */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 28px;
+            box-shadow: var(--shadow-md);
+            overflow: hidden;
+        }
+
+        /* --- RATING STRIP (TOP SECTION) --- */
+        .rating-strip {
+            background: linear-gradient(135deg, var(--accent) 0%, #3b82f6 100%);
+            padding: 32px 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .rating-strip::after {
+            content: '';
+            position: absolute;
+            bottom: -30px;
+            left: -10px;
+            right: -10px;
+            height: 60px;
+            background: var(--surface);
+            border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+        }
+
+        .rating-strip-inner {
+            position: relative;
+            z-index: 1;
+        }
+
+        .rating-strip h2 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.85);
+            letter-spacing: 0.04em;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .emoji-track {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .emoji-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.7rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.5);
+            filter: grayscale(0.4) brightness(0.9);
+            flex-shrink: 0;
+        }
+
+        .emoji-btn:hover {
+            transform: scale(1.2) translateY(-6px);
+            filter: grayscale(0) brightness(1);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .emoji-btn.selected {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: white;
+            transform: scale(1.25) translateY(-6px);
+            filter: grayscale(0) brightness(1);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .rating-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.7);
+            margin-left: auto;
+            transition: 0.3s;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        /* --- FORM BODY --- */
+        .form-body {
+            padding: 50px 40px 40px;
+        }
+
+        @media(max-width:600px) {
+            .form-body {
+                padding: 42px 22px 30px;
+            }
+
+            .rating-strip {
+                padding: 28px 22px;
+            }
+        }
+
+        .form-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        @media(max-width:600px) {
+            .form-grid-2 {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+        }
+
+        .field {
+            margin-bottom: 22px;
+        }
+
+        .field-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text3);
+            margin-bottom: 9px;
+        }
+
+        .field-label .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .ctrl {
+            width: 100%;
+            background: var(--surface2);
+            border: 1.5px solid var(--border);
+            color: var(--text);
+            font-family: inherit;
+            border-radius: 14px;
+            padding: 14px 18px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.25s;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+
+        .ctrl:focus {
+            border-color: var(--accent);
+            background: var(--surface);
+            box-shadow: 0 0 0 4px var(--accent-glow);
+        }
+
+        .ctrl::placeholder {
+            color: var(--text3);
+        }
+
+        textarea.ctrl {
+            min-height: 130px;
+            resize: vertical;
+            line-height: 1.6;
+        }
+
+        /* Category Pills */
+        .category-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .cat-pill {
+            padding: 9px 18px;
+            border-radius: 100px;
+            border: 1.5px solid var(--border);
+            background: var(--surface2);
+            font-size: 0.84rem;
+            font-weight: 600;
+            color: var(--text2);
+            cursor: pointer;
+            transition: all 0.25s;
+            white-space: nowrap;
+        }
+
+        .cat-pill:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .cat-pill.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 4px 14px var(--accent-glow);
+        }
+
+        /* --- SUBMIT BUTTON --- */
+        .submit-wrap {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: 8px;
+        }
+
+        @media(max-width:500px) {
+            .submit-wrap {
+                flex-direction: column;
+            }
+        }
+
+        .submit-btn {
+            flex: 1;
+            padding: 17px 28px;
+            background: linear-gradient(135deg, var(--accent), #3b82f6);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 0.97rem;
+            font-weight: 800;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+            transform: translateX(-100%);
+            transition: 0.5s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 32px rgba(96, 165, 250, 0.35);
+        }
+
+        .submit-btn:hover::after {
+            transform: translateX(100%);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .disclaimer {
+            font-size: 0.78rem;
+            color: var(--text3);
+            line-height: 1.5;
+        }
+
+        .disclaimer strong {
+            color: var(--text2);
+        }
+
+        /* --- STAT BADGES --- */
+        .stat-badges {
+            display: flex;
+            gap: 14px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+
+        .stat-badge {
+            flex: 1;
+            min-width: 130px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .stat-badge .num {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent), #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-badge .lbl {
+            font-size: 0.78rem;
+            color: var(--text3);
+            font-weight: 600;
+        }
+
+        /* --- SUCCESS OVERLAY --- */
+        .success-overlay {
+            position: absolute;
+            inset: 0;
+            background: var(--surface);
+            border-radius: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 48px 40px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.45s;
+            z-index: 20;
+        }
+
+        .success-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .success-ring {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #059669);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            margin-bottom: 28px;
+            transform: scale(0);
+            transition: transform 0.5s 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.4);
+            box-shadow: 0 16px 40px rgba(16, 185, 129, 0.35);
+        }
+
+        .success-overlay.show .success-ring {
+            transform: scale(1);
+        }
+
+        .success-title {
+            font-family: 'Fraunces', serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 10px;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: all 0.4s 0.3s;
+        }
+
+        .success-desc {
+            font-size: 0.95rem;
+            color: var(--text2);
+            max-width: 380px;
+            line-height: 1.6;
+            opacity: 0;
+            transform: translateY(16px);
+            transition: all 0.4s 0.4s;
+        }
+
+        .success-overlay.show .success-title,
+        .success-overlay.show .success-desc {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .back-btn {
+            margin-top: 28px;
+            padding: 13px 32px;
+            background: var(--surface2);
+            color: var(--text);
+            border: 1.5px solid var(--border);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.25s;
+            opacity: 0;
+            transition: all 0.4s 0.5s;
+        }
+
+        .success-overlay.show .back-btn {
+            opacity: 1;
+        }
+
+        .back-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="bg-grid"></div>
+    <div class="bg-noise"></div>
+
+    <div class="backdrop" id="backdrop" onclick="closeSidebar()"></div>
+
+    <!-- SIDEBAR -->
+        <nav class="sidebar" id="sidebar">
+        <div class="logo">QuizNation <button class="logo-close" onclick="closeSidebar()">✕</button></div>
+        <div class="nav-label">Menu Utama</div>
+        <a href="index.html" class="nav-link">🏠 Beranda</a>
+        <a href="statistik.html" class="nav-link">📊 Statistik</a>
+        <a href="evaluasi.html" class="nav-link">🎓 Evaluasi SNBT</a>
+        <a href="pencapaian.html" class="nav-link">🏆 Pencapaian</a>
+        <a href="materi.html" class="nav-link">📚 Materi</a>
+        <a href="library.html" class="nav-link">📖 Library</a>
+        <div class="nav-label" style="margin-top:10px">Bantuan</div>
+        <a href="pengaturan.html" class="nav-link">⚙️ Pengaturan</a>
+        <a href="panduan.html" class="nav-link">📋 Panduan</a>
+        <a href="feedback.html" class="nav-link">💬 Feedback</a>
+    </nav>
+
+    <button class="hamburger" onclick="openSidebar()">☰</button>
+    <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</div>
+
+    <main class="main">
+        <div class="page-wrap">
+
+            <!-- PAGE HEADER -->
+            <div class="page-header">
+                <div class="eyebrow">💬 Feedback Center</div>
+                <h1>Ceritakan <em>pengalaman</em> Anda</h1>
+                <p>Bantu kami membangun platform belajar yang lebih baik untuk semua pelajar Indonesia.</p>
+            </div>
+
+            <!-- MAIN CARD -->
+            <div class="card" style="position:relative;">
+
+                <!-- RATING STRIP -->
+                <div class="rating-strip">
+                    <div class="rating-strip-inner">
+                        <h2>Seberapa puas Anda dengan QuizNation?</h2>
+                        <div class="emoji-track">
+                            <button type="button" class="emoji-btn" onclick="selectRating(this,1)"
+                                title="Sangat Tidak Puas">😡</button>
+                            <button type="button" class="emoji-btn" onclick="selectRating(this,2)"
+                                title="Tidak Puas">🙁</button>
+                            <button type="button" class="emoji-btn" onclick="selectRating(this,3)"
+                                title="Biasa Saja">😐</button>
+                            <button type="button" class="emoji-btn" onclick="selectRating(this,4)"
+                                title="Puas">🙂</button>
+                            <button type="button" class="emoji-btn" onclick="selectRating(this,5)"
+                                title="Sangat Puas">🤩</button>
+                            <span class="rating-label" id="ratingLabel">Pilih rating</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FORM BODY -->
+                <div class="form-body">
+
+                    <!-- Name + Contact -->
+                    <div class="form-grid-2">
+                        <div class="field">
+                            <div class="field-label"><span class="dot"></span> Nama Anda</div>
+                            <input type="text" id="senderName" class="ctrl" placeholder="Nama lengkap Anda">
+                        </div>
+                        <div class="field">
+                            <div class="field-label"><span class="dot"></span> Kontak <span
+                                    style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text3);">(opsional)</span>
+                            </div>
+                            <input type="text" id="senderContact" class="ctrl" placeholder="Email / No. WhatsApp">
+                        </div>
+                    </div>
+
+                    <!-- Category Pills -->
+                    <div class="field">
+                        <div class="field-label"><span class="dot"></span> Kategori</div>
+                        <div class="category-pills" id="categoryPills">
+                            <button type="button" class="cat-pill active"
+                                onclick="selectCategory(this,'Komentar Umum')">💬 Umum</button>
+                            <button type="button" class="cat-pill"
+                                onclick="selectCategory(this,'Laporan Bug / Error')">🐛 Bug / Error</button>
+                            <button type="button" class="cat-pill"
+                                onclick="selectCategory(this,'Ide / Permintaan Fitur')">💡 Ide Fitur</button>
+                            <button type="button" class="cat-pill"
+                                onclick="selectCategory(this,'Saran Konten & Materi')">📚 Konten & Materi</button>
+                            <button type="button" class="cat-pill" onclick="selectCategory(this,'Apresiasi')">❤️
+                                Apresiasi</button>
+                        </div>
+                    </div>
+
+                    <!-- Message -->
+                    <div class="field">
+                        <div class="field-label"><span class="dot"></span> Pesan Anda</div>
+                        <textarea id="message" class="ctrl"
+                            placeholder="Ceritakan pengalaman, kendala, atau ide Anda secara detail..."></textarea>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="submit-wrap">
+                        <button class="submit-btn" onclick="submitFeedback()">
+                            Kirim via WhatsApp <span>📱</span>
+                        </button>
+                        <p class="disclaimer"><strong>Privasi terjaga.</strong><br>Pesan dikirim langsung<br>via
+                            WhatsApp Anda.</p>
+                    </div>
+
+                    <!-- Stat Badges -->
+                    <div class="stat-badges">
+                        <div class="stat-badge"><span class="num">48h</span><span class="lbl">Waktu respons
+                                rata-rata</span></div>
+                        <div class="stat-badge"><span class="num">2.4k+</span><span class="lbl">Feedback diterima</span>
+                        </div>
+                        <div class="stat-badge"><span class="num">94%</span><span class="lbl">Pengguna puas</span></div>
+                    </div>
+                </div>
+
+                <!-- SUCCESS OVERLAY -->
+                <div class="success-overlay" id="successOverlay">
+                    <div class="success-ring">?</div>
+                    <h2 class="success-title">Terima Kasih! 🙏</h2>
+                    <p class="success-desc">Anda akan diarahkan ke WhatsApp. Jika tidak terbuka otomatis, pastikan
+                        WhatsApp sudah terinstal di perangkat Anda.</p>
+                    <button class="back-btn" onclick="resetForm()">? Kirim Lagi</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // -- Theme --
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') { document.body.classList.add('dark'); document.getElementById('themeBtn').textContent = '🌙'; }
+
+        function toggleTheme() {
+            if (typeof window.__quizNationApplyGlobalPreferences === 'function') { window.__quizNationApplyGlobalPreferences(); }
+            const isDark = document.body.classList.toggle('dark');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            const btn = document.getElementById('themeBtn');
+            btn.textContent = isDark ? '🌙' : '☀️';
+            btn.style.transform = 'scale(0.7) rotate(-120deg)';
+            setTimeout(() => btn.style.transform = '', 250);
+        }
+
+        // -- Sidebar --
+        function openSidebar() {
+            document.getElementById('sidebar').classList.add('open');
+            document.getElementById('backdrop').classList.add('open');
+        }
+        function closeSidebar() {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('backdrop').classList.remove('open');
+        }
+
+        // -- Auto-fill --
+        document.addEventListener('DOMContentLoaded', () => {
+            if (localStorage.getItem('isGuest') !== 'true') {
+                const name = localStorage.getItem('currentUserName');
+                const phone = localStorage.getItem('userPhone');
+                const email = localStorage.getItem('currentUser');
+                if (name) document.getElementById('senderName').value = name;
+                let contact = '';
+                if (phone && phone !== '+62' && phone !== '-') contact = phone;
+                else if (email && !email.includes('guest')) contact = email;
+                if (contact) document.getElementById('senderContact').value = contact;
+            }
+        });
+
+        // -- Rating --
+        let currentRating = 0;
+        const ratingLabels = ['', 'Sangat Tidak Puas', 'Tidak Puas', 'Biasa Saja', 'Puas', 'Sangat Puas! 🤩'];
+        function selectRating(btn, value) {
+            document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            currentRating = value;
+            document.getElementById('ratingLabel').textContent = ratingLabels[value];
+        }
+
+        // -- Category --
+        let currentCategory = 'Komentar Umum';
+        function selectCategory(btn, value) {
+            document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentCategory = value;
+        }
+
+        // -- Submit --
+        function submitFeedback() {
+            const name = document.getElementById('senderName').value.trim() || 'Tidak menyebutkan nama';
+            const contact = document.getElementById('senderContact').value.trim() || 'Tidak ada kontak';
+            const msg = document.getElementById('message').value.trim();
+
+            if (currentRating === 0) { alert('Mohon pilih rating kepuasan (emoji) terlebih dahulu.'); return; }
+            if (msg === '') { alert('Mohon isi pesan Anda sebelum mengirim.'); return; }
+
+            const emojis = ['😡', '🙁', '😐', '🙂', '🤩'];
+            const waText =
+                `Halo Tim QuizNation, saya ingin memberikan feedback!\n\n` +
+                `👤 *Detail Pengirim*\nNama: ${name}\nKontak: ${contact}\n\n` +
+                `📝 *Rincian Feedback*\n⭐ Rating: ${emojis[currentRating - 1]} (${currentRating}/5)\n` +
+                `🏷️ Kategori: ${currentCategory}\n\n💬 *Pesan:*\n${msg}`;
+
+            window.open(`https://wa.me/6285934446488?text=${encodeURIComponent(waText)}`, '_blank');
+            document.getElementById('successOverlay').classList.add('show');
+        }
+
+        function resetForm() {
+            document.getElementById('successOverlay').classList.remove('show');
+            document.getElementById('message').value = '';
+            document.querySelectorAll('.emoji-btn').forEach(b => b.classList.remove('selected'));
+            document.querySelectorAll('.cat-pill').forEach((b, i) => b.classList.toggle('active', i === 0));
+            currentRating = 0; currentCategory = 'Komentar Umum';
+            document.getElementById('ratingLabel').textContent = 'Pilih rating';
+        }
+    </script>
+</body>
+
+</html>
+
+
+

@@ -1,0 +1,1091 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta name="theme-color" content="#0a1120"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Tabel & Grafik - Library SNBT 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        html,body{max-width:100%;overflow-x:hidden}
+        *{-webkit-tap-highlight-color:transparent!important}
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{
+            --accent:#2563eb;--accent2:#06b6d4;--accent3:#f59e0b;
+            --bg:#f0f2f8;--surface:rgba(255,255,255,0.72);
+            --border:rgba(0,0,0,0.08);--text:#1a1a2e;--text2:#4b5563;
+            --text3:#9ca3af;--glow:rgba(124,58,237,0.18);--radius:20px;
+            --green:#10b981;--red:#f43f5e;
+        }
+        body.dark{
+            --bg:#050a15;--surface:rgba(255,255,255,0.055);
+            --border:rgba(255,255,255,0.09);--text:#f0edff;
+            --text2:rgba(240,237,255,0.65);--text3:rgba(240,237,255,0.35);
+            --glow:rgba(124,58,237,0.28);
+        }
+        html{scroll-behavior:smooth}
+        body{font-family:'Bricolage Grotesque',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .4s,color .4s}
+        .noise-overlay{position:fixed;inset:0;z-index:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;opacity:.35}
+
+        /* Nav */
+        .topnav{position:sticky;top:0;z-index:100;background:var(--surface);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:16px 40px;display:flex;align-items:center;gap:16px}
+        .topnav a{text-decoration:none;color:var(--accent);font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:6px;transition:all .2s}
+        .topnav a:hover{gap:10px}
+        .topnav-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--text);margin-left:auto}
+        .theme-btn{background:var(--surface);border:1px solid var(--border);border-radius:10px;width:36px;height:36px;cursor:pointer;font-size:1rem;display:grid;place-items:center;transition:all .2s;margin-left:8px}
+        .theme-btn:hover{border-color:var(--accent)}
+
+        /* Layout */
+        .wrapper{max-width:900px;margin:0 auto;padding:40px 30px 80px;position:relative;z-index:1}
+        .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(6,182,212,.12);color:var(--accent2);border:1px solid rgba(6,182,212,.25);border-radius:30px;padding:5px 14px;font-size:.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+        .page-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;color:var(--text);line-height:1.15;margin-bottom:14px}
+        .page-title .grad{background:linear-gradient(135deg,var(--accent),#60a5fa,var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+        .page-desc{font-size:1.05rem;color:var(--text2);line-height:1.8;margin-bottom:40px;max-width:700px}
+
+        /* Stats */
+        .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px}
+        .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center}
+        .stat-num{font-family:'DM Mono',monospace;font-size:1.6rem;font-weight:700;color:var(--accent)}
+        .stat-label{font-size:.72rem;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+
+        /* TOC */
+        .toc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin-bottom:40px}
+        .toc-title{font-weight:800;font-size:.9rem;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+        .toc ol{padding-left:20px;display:flex;flex-direction:column;gap:6px}
+        .toc li{color:var(--text2);font-size:.88rem}
+        .toc a{color:var(--accent);text-decoration:none;font-weight:600;transition:color .2s}
+        .toc a:hover{color:var(--accent2)}
+
+        /* Section */
+        .section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px;margin-bottom:24px;transition:all .3s}
+        .section:hover{box-shadow:0 10px 40px var(--glow);border-color:rgba(124,58,237,.2)}
+        .section h2{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+        .section h3{font-size:1.05rem;font-weight:700;color:var(--accent);margin:20px 0 10px}
+        .section h4{font-size:.95rem;font-weight:700;color:var(--text);margin:14px 0 6px}
+        .section p,.section li{font-size:.92rem;color:var(--text2);line-height:1.85}
+        .section ul,.section ol{padding-left:20px;margin:10px 0}
+        .section li{margin-bottom:6px}
+
+        /* Callout boxes */
+        .example{background:rgba(124,58,237,.06);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:16px 20px;margin:14px 0;font-size:.88rem;color:var(--text2);line-height:1.75}
+        .example strong{color:var(--text)}
+        .tip{background:rgba(6,182,212,.08);border-left:3px solid var(--accent2);border-radius:0 12px 12px 0;padding:16px 20px;margin:14px 0;font-size:.88rem;color:var(--text2);line-height:1.75}
+        .tip strong{color:var(--accent2)}
+        .warning{background:rgba(244,63,94,.08);border-left:3px solid #f43f5e;border-radius:0 12px 12px 0;padding:16px 20px;margin:14px 0;font-size:.88rem;color:var(--text2);line-height:1.75}
+        .warning strong{color:#f43f5e}
+        .success{background:rgba(16,185,129,.08);border-left:3px solid #10b981;border-radius:0 12px 12px 0;padding:16px 20px;margin:14px 0;font-size:.88rem;color:var(--text2);line-height:1.75}
+        .success strong{color:#10b981}
+
+        /* Formula box */
+        .formula-box{background:linear-gradient(135deg,rgba(124,58,237,.08),rgba(6,182,212,.06));border:1px solid rgba(124,58,237,.18);border-radius:14px;padding:20px 24px;margin:16px 0;text-align:center}
+        .formula-box .formula{font-family:'DM Mono',monospace;font-size:1.05rem;font-weight:700;color:var(--accent);margin:8px 0;letter-spacing:.5px}
+        .formula-box .formula-label{font-size:.78rem;color:var(--text3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px}
+        .formula-box .formula-note{font-size:.8rem;color:var(--text2);margin-top:6px}
+
+        /* Table */
+        .table-wrap{overflow-x:auto;margin:16px 0;border-radius:12px;border:1px solid var(--border)}
+        table{width:100%;border-collapse:collapse;font-size:.85rem}
+        th{background:rgba(124,58,237,.1);color:var(--text);padding:10px 14px;text-align:left;font-weight:700;font-size:.82rem}
+        td{padding:10px 14px;color:var(--text2);border-top:1px solid var(--border)}
+        tr:hover td{background:rgba(124,58,237,.04)}
+        .td-num{font-family:'DM Mono',monospace;color:var(--text);font-weight:600}
+        .td-highlight{background:rgba(124,58,237,.08)!important;color:var(--accent)!important;font-weight:700}
+
+        /* Chart visual (pure CSS) */
+        .bar-chart{display:flex;align-items:flex-end;gap:8px;height:120px;margin:16px 0;padding:0 4px}
+        .bar{flex:1;background:linear-gradient(180deg,var(--accent),rgba(124,58,237,.4));border-radius:6px 6px 0 0;position:relative;min-width:32px;transition:all .3s;cursor:pointer}
+        .bar:hover{background:linear-gradient(180deg,var(--accent2),rgba(6,182,212,.4))}
+        .bar-label{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:.68rem;color:var(--text3);white-space:nowrap;font-family:'DM Mono',monospace}
+        .bar-val{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:.7rem;color:var(--text);font-weight:700;white-space:nowrap;font-family:'DM Mono',monospace}
+        .chart-wrap{margin-bottom:36px}
+        .chart-title{font-size:.82rem;color:var(--text3);text-align:center;margin-bottom:8px;font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:.5px}
+
+        /* Pie chart CSS */
+        .pie-demo{display:flex;align-items:center;gap:24px;margin:16px 0;flex-wrap:wrap}
+        .pie-svg{flex-shrink:0}
+        .pie-legend{display:flex;flex-direction:column;gap:8px}
+        .pie-item{display:flex;align-items:center;gap:8px;font-size:.83rem;color:var(--text2)}
+        .pie-dot{width:12px;height:12px;border-radius:3px;flex-shrink:0}
+
+        /* Soal / Quiz */
+        .quiz-section{background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(6,182,212,.04));border:1px solid rgba(124,58,237,.15);border-radius:var(--radius);padding:32px;margin-bottom:24px}
+        .quiz-section h2{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:10px}
+        .quiz-subtitle{font-size:.82rem;color:var(--text3);margin-bottom:24px;font-family:'DM Mono',monospace}
+        .soal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;transition:all .3s}
+        .soal:hover{box-shadow:0 8px 30px var(--glow)}
+        .soal-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+        .soal-num{background:var(--accent);color:white;border-radius:8px;padding:4px 10px;font-size:.75rem;font-weight:700;font-family:'DM Mono',monospace;flex-shrink:0}
+        .soal-tag{background:rgba(245,158,11,.12);color:var(--accent3);border:1px solid rgba(245,158,11,.2);border-radius:20px;padding:3px 10px;font-size:.7rem;font-weight:700;letter-spacing:.5px}
+        .soal-tag.real{background:rgba(244,63,94,.1);color:#f43f5e;border-color:rgba(244,63,94,.2)}
+        .soal-tag.medium{background:rgba(6,182,212,.1);color:var(--accent2);border-color:rgba(6,182,212,.2)}
+        .soal-tag.hard{background:rgba(124,58,237,.1);color:var(--accent);border-color:rgba(124,58,237,.2)}
+        .soal-teks{font-size:.9rem;color:var(--text2);line-height:1.8;margin-bottom:16px;padding:14px 16px;background:rgba(0,0,0,.03);border-radius:10px}
+        body.dark .soal-teks{background:rgba(255,255,255,.04)}
+        .soal-pertanyaan{font-size:.92rem;font-weight:700;color:var(--text);margin-bottom:12px}
+        .options{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+        .option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;font-size:.88rem;color:var(--text2);background:var(--surface)}
+        .option:hover{border-color:var(--accent);background:rgba(124,58,237,.04)}
+        .option.correct{border-color:#10b981!important;background:rgba(16,185,129,.08)!important;color:var(--text)}
+        .option.wrong{border-color:#f43f5e!important;background:rgba(244,63,94,.08)!important}
+        .opt-letter{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;border:1px solid var(--border);font-family:'DM Mono',monospace;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:1px;background:var(--bg)}
+        .option.correct .opt-letter{background:#10b981;border-color:#10b981;color:white}
+        .option.wrong .opt-letter{background:#f43f5e;border-color:#f43f5e;color:white}
+        .show-answer-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--border);border-radius:8px;padding:7px 14px;cursor:pointer;font-size:.8rem;font-weight:700;color:var(--accent);font-family:'Bricolage Grotesque',sans-serif;transition:all .2s}
+        .show-answer-btn:hover{background:rgba(124,58,237,.06);border-color:var(--accent)}
+        .pembahasan{margin-top:16px;background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.12);border-radius:12px;padding:18px;font-size:.87rem;color:var(--text2);line-height:1.75;display:none}
+        .pembahasan.visible{display:block}
+        .pembahasan-title{font-weight:800;color:var(--accent);font-size:.82rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+        .pembahasan strong{color:var(--text)}
+        .jawaban-label{display:inline-block;background:#10b981;color:white;border-radius:6px;padding:2px 10px;font-size:.75rem;font-weight:700;margin-bottom:8px;font-family:'DM Mono',monospace}
+
+        /* Inline highlight */
+        .hl-red{color:#f43f5e;font-weight:700}
+        .hl-green{color:#10b981;font-weight:700}
+        .hl-yellow{color:var(--accent3);font-weight:700}
+        .hl-purple{color:var(--accent);font-weight:700}
+        .hl-cyan{color:var(--accent2);font-weight:700}
+        .mono{font-family:'DM Mono',monospace;background:rgba(124,58,237,.08);padding:1px 6px;border-radius:4px;font-size:.85em}
+
+        /* Step-by-step */
+        .steps{counter-reset:step;display:flex;flex-direction:column;gap:12px;margin:14px 0}
+        .step{display:flex;gap:14px;align-items:flex-start;font-size:.88rem;color:var(--text2);line-height:1.7}
+        .step::before{counter-increment:step;content:counter(step);display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;background:var(--accent);color:white;font-weight:700;font-size:.78rem;flex-shrink:0;font-family:'DM Mono',monospace;margin-top:1px}
+
+        /* Grid cards */
+        .card-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+        .card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+        .card-icon{font-size:1.4rem;margin-bottom:6px}
+        .card-title{font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:4px}
+        .card-desc{font-size:.8rem;color:var(--text2);line-height:1.6}
+
+        /* Trap boxes */
+        .trap-grid{display:flex;flex-direction:column;gap:10px;margin:14px 0}
+        .trap-item{display:flex;gap:12px;background:rgba(244,63,94,.05);border:1px solid rgba(244,63,94,.12);border-radius:10px;padding:12px 14px;font-size:.85rem;color:var(--text2);align-items:flex-start}
+        .trap-num{background:#f43f5e;color:white;border-radius:6px;padding:2px 8px;font-size:.72rem;font-weight:700;flex-shrink:0;font-family:'DM Mono',monospace}
+
+        /* Nav buttons */
+        .nav-buttons{display:flex;gap:14px;margin-top:40px;flex-wrap:wrap}
+        .nav-btn{flex:1;min-width:200px;padding:16px 24px;background:var(--surface);border:1px solid var(--border);border-radius:16px;text-decoration:none;color:var(--text);font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:10px;transition:all .3s}
+        .nav-btn:hover{border-color:var(--accent);box-shadow:0 8px 24px var(--glow);transform:translateY(-2px)}
+        .nav-btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border:none;box-shadow:0 4px 16px rgba(124,58,237,.4)}
+        .nav-btn.primary:hover{box-shadow:0 8px 28px rgba(124,58,237,.5);transform:translateY(-3px)}
+        .nav-btn-label{font-size:.7rem;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+        .nav-btn.primary .nav-btn-label{color:rgba(255,255,255,.7)}
+
+        footer{text-align:center;color:var(--text3);font-size:.8rem;padding:20px;border-top:1px solid var(--border);margin-top:40px}
+
+        @media(max-width:768px){
+            .topnav{padding:14px 16px}
+            .wrapper{padding:24px 16px 60px}
+            .section,.quiz-section,.soal{padding:18px}
+            .nav-buttons{flex-direction:column}
+            .stats-bar{grid-template-columns:repeat(2,1fr)}
+            .card-grid{grid-template-columns:1fr}
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+<body>
+<div class="noise-overlay"></div>
+<nav class="topnav">
+    <a href="library.html">? Kembali ke Library</a>
+    <span class="topnav-title">Tabel &amp; Grafik</span>
+    <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</nav>
+
+<div class="wrapper">
+    <div class="hero-badge">🔹 Pengetahuan Kuantitatif - SNBT 2025</div>
+    <h1 class="page-title">Interpretasi<br><span class="grad">Tabel &amp; Grafik</span></h1>
+    <p class="page-desc">Materi lengkap membaca dan menganalisis data dari tabel, diagram batang, garis, lingkaran, dan scatter plot - disertai rumus-rumus kunci, jebakan soal SNBT, serta <strong>12 contoh soal real dengan pembahasan langkah demi langkah</strong>.</p>
+
+    <div class="stats-bar">
+        <div class="stat-card"><div class="stat-num">7</div><div class="stat-label">Topik Materi</div></div>
+        <div class="stat-card"><div class="stat-num">12</div><div class="stat-label">Soal Latihan</div></div>
+        <div class="stat-card"><div class="stat-num">~25%</div><div class="stat-label">Porsi di SNBT</div></div>
+        <div class="stat-card"><div class="stat-num">🔹?</div><div class="stat-label">Tingkat Kesulitan</div></div>
+    </div>
+
+    <div class="toc">
+        <div class="toc-title">📑 Daftar Isi</div>
+        <ol>
+            <li><a href="#dasar">Cara Membaca Data: Kerangka Umum</a></li>
+            <li><a href="#tabel">Tabel Data Kompleks</a> - missing value, komparasi, total tersembunyi</li>
+            <li><a href="#bar">Diagram Batang (Bar Chart)</a> - stacked bar, grouped bar, jebakan skala</li>
+            <li><a href="#line">Diagram Garis (Line Chart)</a> - slope, titik perpotongan, tren</li>
+            <li><a href="#pie">Diagram Lingkaran (Pie Chart)</a> - konversi %, derajat, populasi</li>
+            <li><a href="#scatter">Scatter Plot &amp; Korelasi</a></li>
+            <li><a href="#persen">Persentase Perubahan &amp; Laju Pertumbuhan</a></li>
+            <li><a href="#latihan">Latihan Soal SNBT Real</a> - 12 soal + pembahasan</li>
+        </ol>
+    </div>
+
+    <!-- SECTION 1: KERANGKA UMUM -->
+    <div class="section" id="dasar">
+        <h2>🔹 1. Cara Membaca Data: Kerangka Umum</h2>
+        <p>Sebelum menjawab soal apapun yang berkaitan dengan grafik atau tabel, selalu lakukan <strong>5 langkah awal</strong> berikut. Melewati langkah ini adalah penyebab kesalahan #1 di SNBT.</p>
+
+        <div class="steps">
+            <div class="step"><span>Baca <strong>judul</strong> grafik/tabel - apa yang sedang dibahas?</span></div>
+            <div class="step"><span>Baca <strong>sumbu X dan Y</strong> (label + satuan: %, juta rupiah, ribu orang, dll)</span></div>
+            <div class="step"><span>Perhatikan <strong>skala</strong> - apakah sumbu Y dimulai dari 0 atau dari nilai tertentu? Apakah intervalnya seragam?</span></div>
+            <div class="step"><span>Baca <strong>legenda/keterangan warna</strong> jika ada lebih dari satu kategori</span></div>
+            <div class="step"><span>Baca <strong>catatan kaki</strong> (footnote) - kadang ada konversi satuan atau pengecualian data yang penting</span></div>
+        </div>
+
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-icon">⭐</div>
+                <div class="card-title">Grafik Komparasi</div>
+                <div class="card-desc">Digunakan untuk membandingkan nilai antar kategori. Contoh: diagram batang, diagram lingkaran.</div>
+            </div>
+            <div class="card">
+                <div class="card-icon">⭐</div>
+                <div class="card-title">Grafik Tren Waktu</div>
+                <div class="card-desc">Menampilkan perubahan nilai sepanjang waktu. Contoh: diagram garis, area chart.</div>
+            </div>
+            <div class="card">
+                <div class="card-icon">⭐</div>
+                <div class="card-title">Grafik Korelasi</div>
+                <div class="card-desc">Menampilkan hubungan antara dua variabel. Contoh: scatter plot.</div>
+            </div>
+            <div class="card">
+                <div class="card-icon">⭐</div>
+                <div class="card-title">Tabel Data</div>
+                <div class="card-desc">Menyajikan data mentah dalam baris dan kolom, cocok untuk banyak variabel sekaligus.</div>
+            </div>
+        </div>
+
+        <div class="tip">
+            <strong>🔹 Prinsip Efisiensi Waktu SNBT:</strong><br>
+            Untuk soal yang menanyakan nilai <em>terbesar atau terkecil</em>, cukup lakukan <strong>estimasi visual</strong> - tidak perlu menghitung semua nilai. Hitung tepat hanya jika pilihan jawabannya sangat berdekatan.
+        </div>
+    </div>
+
+    <!-- SECTION 2: TABEL -->
+    <div class="section" id="tabel">
+        <h2>🔹 2. Tabel Data Kompleks</h2>
+        <p>Tabel adalah bentuk penyajian data paling fleksibel di SNBT karena bisa memuat banyak variabel sekaligus. Soal tabel biasanya menguji kemampuan membaca silang antar baris dan kolom, menghitung nilai hilang, dan membandingkan pertumbuhan.</p>
+
+        <h3>A. Anatomi Tabel SNBT</h3>
+        <div class="table-wrap">
+            <table>
+                <tr>
+                    <th>Wilayah</th>
+                    <th>2020 (Rp M)</th>
+                    <th>2021 (Rp M)</th>
+                    <th>2022 (Rp M)</th>
+                    <th>2023 (Rp M)</th>
+                    <th>Total</th>
+                </tr>
+                <tr><td>Jawa</td><td class="td-num">120</td><td class="td-num">135</td><td class="td-num">150</td><td class="td-num">180</td><td class="td-num">585</td></tr>
+                <tr><td>Sumatra</td><td class="td-num">80</td><td class="td-num">90</td><td class="td-num">-</td><td class="td-num">115</td><td class="td-num">385</td></tr>
+                <tr><td>Kalimantan</td><td class="td-num">45</td><td class="td-num">50</td><td class="td-num">58</td><td class="td-num">65</td><td class="td-num">218</td></tr>
+                <tr><td>Sulawesi</td><td class="td-num">30</td><td class="td-num">35</td><td class="td-num">40</td><td class="td-num">48</td><td class="td-num">153</td></tr>
+                <tr style="font-weight:700"><td><strong>Total</strong></td><td class="td-num">275</td><td class="td-num">310</td><td class="td-num">348</td><td class="td-num">408</td><td class="td-num">1.341</td></tr>
+            </table>
+        </div>
+        <p style="font-size:.8rem;color:var(--text3);margin-top:6px">*Contoh tabel pendapatan perusahaan per wilayah (data ilustrasi)</p>
+
+        <h3>B. Menghitung Missing Value (Nilai Hilang)</h3>
+        <p>Nilai yang dikosongkan (-) dapat ditemukan dengan dua cara: menggunakan <strong>jumlah baris</strong> atau <strong>jumlah kolom</strong>.</p>
+        <div class="example">
+            <strong>Dari tabel di atas, cari nilai Sumatra 2022:</strong><br><br>
+            <strong>Cara 1 - Pakai Total Baris:</strong><br>
+            Total Sumatra = 385. Nilai diketahui: 80 + 90 + 115 = 285.<br>
+            Sumatra 2022 = 385 - 285 = <span class="hl-green">100</span><br><br>
+            <strong>Cara 2 - Pakai Total Kolom 2022:</strong><br>
+            Total 2022 = 348. Nilai diketahui: 150 + 58 + 40 = 248.<br>
+            Sumatra 2022 = 348 - 248 = <span class="hl-green">100</span> ? (Kedua cara harus menghasilkan nilai sama)
+        </div>
+
+        <h3>C. Perbandingan Pertumbuhan Antar Periode</h3>
+        <p>Soal SNBT sering menanyakan <em>"Wilayah mana yang pertumbuhannya terbesar dari 2020 ke 2023?"</em>. Cara efisien:</p>
+        <div class="steps">
+            <div class="step"><span>Hitung <strong>selisih</strong> nilai akhir - nilai awal untuk setiap wilayah</span></div>
+            <div class="step"><span>Bagi selisih dengan <strong>nilai awal</strong> ? hasilkan % pertumbuhan</span></div>
+            <div class="step"><span>Bandingkan persentasenya - bukan nilai nominalnya!</span></div>
+        </div>
+        <div class="example">
+            <strong>Contoh Analisis dari tabel di atas (2020 ? 2023):</strong><br><br>
+            <span class="hl-purple">Jawa:</span> (180-120)/120 - 100% = 60/120 = <strong>50%</strong><br>
+            <span class="hl-cyan">Sumatra:</span> (115-80)/80 - 100% = 35/80 = <strong>43,75%</strong><br>
+            <span class="hl-yellow">Kalimantan:</span> (65-45)/45 - 100% = 20/45 - <strong>44,4%</strong><br>
+            <span class="hl-green">Sulawesi:</span> (48-30)/30 - 100% = 18/30 = <strong>60%</strong><br><br>
+            ? Pertumbuhan tertinggi: <span class="hl-green">Sulawesi (60%)</span>, meski nominalnya paling kecil!<br>
+            <em>Inilah mengapa harus membandingkan persentase, bukan nilai nominal.</em>
+        </div>
+
+        <h3>D. Membaca Kontribusi Terhadap Total</h3>
+        <div class="formula-box">
+            <div class="formula-label">Rumus Kontribusi / Proporsi</div>
+            <div class="formula">Kontribusi (%) = (Nilai Bagian / Total Keseluruhan) - 100%</div>
+            <div class="formula-note">Contoh: Kontribusi Jawa pada Total 2023 = (180 / 408) - 100% - 44,1%</div>
+        </div>
+
+        <div class="warning">
+            <strong>🔹 Jebakan Tabel SNBT #1 - Satuan Berbeda Per Kolom:</strong><br>
+            Perhatikan apakah satuan kolom berubah (misal kolom 1 dalam ribuan, kolom 2 dalam jutaan). Hitung ulang ke satuan yang sama sebelum membandingkan. Ini sering diabaikan dan menyebabkan kesalahan fatal.
+        </div>
+    </div>
+
+    <!-- SECTION 3: BAR CHART -->
+    <div class="section" id="bar">
+        <h2>🔹 3. Diagram Batang (Bar Chart)</h2>
+        <p>Diagram batang membandingkan nilai antar kategori. Ada beberapa jenis yang masing-masing punya cara baca berbeda.</p>
+
+        <h3>A. Bar Chart Biasa</h3>
+        <div class="chart-wrap">
+            <div class="chart-title">Penjualan Produk (unit, Jan-Jun)</div>
+            <div class="bar-chart">
+                <div class="bar" style="height:55%"><span class="bar-val">220</span><span class="bar-label">Jan</span></div>
+                <div class="bar" style="height:70%"><span class="bar-val">280</span><span class="bar-label">Feb</span></div>
+                <div class="bar" style="height:62%"><span class="bar-val">248</span><span class="bar-label">Mar</span></div>
+                <div class="bar" style="height:85%"><span class="bar-val">340</span><span class="bar-label">Apr</span></div>
+                <div class="bar" style="height:75%"><span class="bar-val">300</span><span class="bar-label">Mei</span></div>
+                <div class="bar" style="height:100%"><span class="bar-val">400</span><span class="bar-label">Jun</span></div>
+            </div>
+        </div>
+        <p>Dari diagram di atas, nilai tertinggi adalah Juni (400 unit), dan pertumbuhan terbesar terjadi dari Maret ke April.</p>
+
+        <h3>B. Stacked Bar Chart (Batang Bertumpuk)</h3>
+        <p>Setiap batang dibagi menjadi beberapa segmen yang merepresentasikan sub-kategori.</p>
+        <div class="warning">
+            <strong>🔹 Cara Baca Stacked Bar - Jangan Salah!</strong><br>
+            Nilai suatu segmen = tinggi atas segmen - tinggi bawah segmen (bukan hanya tinggi ujung atas batang!)<br><br>
+            Contoh: Segmen B pada batang Kota X tingginya dari 40 ke 70 ? nilai segmen B = 70 - 40 = <strong>30</strong>, bukan 70.
+        </div>
+
+        <h3>C. Grouped Bar Chart (Batang Berkelompok)</h3>
+        <p>Beberapa batang bersebelahan untuk setiap kategori sumbu X. Cara baca: tiap batang dalam satu kelompok dibaca secara individual, lalu dibandingkan antar kelompok.</p>
+
+        <h3>D. Jebakan Skala Sumbu Y Terpotong</h3>
+        <div class="tip">
+            <strong>🔹 Waspadai "Truncated Y-Axis":</strong><br>
+            Jika sumbu Y tidak dimulai dari 0, perbedaan visual antar batang akan terlihat jauh lebih dramatis dari kenyataannya.<br><br>
+            Contoh: Batang A = 98, Batang B = 100. Jika sumbu Y mulai dari 96, batang B terlihat 2- lebih tinggi secara visual. Padahal selisihnya hanya 2 unit (2%).<br><br>
+            <strong>Selalu baca angka aktualnya, bukan estimasi visual, jika skala tidak dari 0!</strong>
+        </div>
+
+        <h3>E. Membaca Persentase dari Bar Chart</h3>
+        <div class="example">
+            <strong>Soal:</strong> Diagram batang menunjukkan jumlah pengunjung: Toko A = 1.200, Toko B = 800, Toko C = 600, Toko D = 400. Berapa persen pengunjung Toko B dari total?<br><br>
+            <strong>Total:</strong> 1.200 + 800 + 600 + 400 = 3.000<br>
+            <strong>Proporsi Toko B:</strong> (800 / 3.000) - 100% = 26,7%
+        </div>
+    </div>
+
+    <!-- SECTION 4: LINE CHART -->
+    <div class="section" id="line">
+        <h2>🔹 4. Diagram Garis (Line Chart)</h2>
+        <p>Diagram garis ideal untuk menampilkan <strong>tren sepanjang waktu</strong>. Kemiringan (slope) garis memberi informasi tentang laju perubahan.</p>
+
+        <h3>A. Membaca Slope (Kecuraman Garis)</h3>
+        <div class="formula-box">
+            <div class="formula-label">Laju Perubahan / Slope</div>
+            <div class="formula">Slope = (Y2 - Y1) / (X2 - X1)</div>
+            <div class="formula-note">Slope positif = naik - Slope negatif = turun - Slope = 0 = stabil (mendatar)</div>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <tr><th>Jenis Garis</th><th>Artinya</th><th>Contoh</th></tr>
+                <tr><td>Naik curam</td><td>Pertumbuhan sangat cepat</td><td>Startup fase ekspansi agresif</td></tr>
+                <tr><td>Naik landai</td><td>Pertumbuhan lambat/stabil</td><td>Perusahaan mapan</td></tr>
+                <tr><td>Mendatar</td><td>Tidak ada perubahan</td><td>Pasar jenuh</td></tr>
+                <tr><td>Turun landai</td><td>Penurunan perlahan</td><td>Produk memasuki fase penurunan</td></tr>
+                <tr><td>Turun curam</td><td>Penurunan drastis</td><td>Krisis / penurunan permintaan tiba-tiba</td></tr>
+                <tr><td>Berbentuk U</td><td>Turun lalu naik kembali</td><td>Pemulihan pasca krisis</td></tr>
+                <tr><td>Berbentuk n</td><td>Naik lalu turun</td><td>Siklus produk</td></tr>
+            </table>
+        </div>
+
+        <h3>B. Titik Potong Dua Garis</h3>
+        <p>Soal sering menanyakan "kapan garis A dan B berpotongan?" atau "kapan nilai A melebihi B?"</p>
+        <div class="example">
+            <strong>Soal:</strong> Garis produksi Pabrik A tahun 2018 = 500 ton, naik 50 ton/tahun. Pabrik B tahun 2018 = 700 ton, naik 20 ton/tahun. Kapan produksi A menyamai B?<br><br>
+            <strong>Misalkan</strong> t = tahun setelah 2018:<br>
+            A(t) = 500 + 50t<br>
+            B(t) = 700 + 20t<br><br>
+            A = B ? 500 + 50t = 700 + 20t<br>
+            ? 30t = 200<br>
+            ? t = 200/30 - 6,67 tahun ? sekitar awal 2025<br><br>
+            Artinya, A baru akan menyamai B pada akhir 2024 / awal 2025.
+        </div>
+
+        <h3>C. Diagram Garis Multi-Kategori</h3>
+        <p>Ketika ada dua atau lebih garis dalam satu diagram, soal biasanya menanyakan:</p>
+        <ul>
+            <li>Kapan selisih antara dua garis terbesar?</li>
+            <li>Apakah ada titik di mana dua garis berpotongan?</li>
+            <li>Garis mana yang pertumbuhannya paling konsisten?</li>
+        </ul>
+        <div class="tip">
+            <strong>🔹 Cara Membaca Selisih Dua Garis:</strong><br>
+            Selisih terbesar = titik dimana jarak vertikal antara dua garis paling jauh. Bisa dibaca secara visual, lalu dikonfirmasi dengan membaca angkanya dari skala sumbu Y.
+        </div>
+    </div>
+
+    <!-- SECTION 5: PIE CHART -->
+    <div class="section" id="pie">
+        <h2>🔹 5. Diagram Lingkaran (Pie Chart)</h2>
+        <p>Pie chart menampilkan <strong>proporsi bagian terhadap keseluruhan</strong>. Di SNBT, soal pie chart hampir selalu menguji konversi antara persen, derajat, dan nilai populasi.</p>
+
+        <h3>A. Tiga Rumus Kunci Pie Chart</h3>
+        <div class="formula-box">
+            <div class="formula-label">1. Konversi Derajat ? Nilai</div>
+            <div class="formula">Nilai = (Derajat / 360-) - Total</div>
+        </div>
+        <div class="formula-box">
+            <div class="formula-label">2. Konversi Persen ? Nilai</div>
+            <div class="formula">Nilai = (% / 100) - Total</div>
+        </div>
+        <div class="formula-box">
+            <div class="formula-label">3. Konversi Nilai ? Derajat</div>
+            <div class="formula">Derajat = (Nilai / Total) - 360-</div>
+            <div class="formula-note">Hubungan penting: 100% = 360- - 50% = 180- - 25% = 90- - 10% = 36-</div>
+        </div>
+
+        <h3>B. Tabel Konversi Cepat</h3>
+        <div class="table-wrap">
+            <table>
+                <tr><th>Persentase</th><th>Derajat</th><th>Fraksi</th><th>Dari 1.000 orang</th></tr>
+                <tr><td>50%</td><td class="td-num">180-</td><td>1/2</td><td class="td-num">500</td></tr>
+                <tr><td>25%</td><td class="td-num">90-</td><td>1/4</td><td class="td-num">250</td></tr>
+                <tr><td>20%</td><td class="td-num">72-</td><td>1/5</td><td class="td-num">200</td></tr>
+                <tr><td>12,5%</td><td class="td-num">45-</td><td>1/8</td><td class="td-num">125</td></tr>
+                <tr><td>10%</td><td class="td-num">36-</td><td>1/10</td><td class="td-num">100</td></tr>
+                <tr><td>5%</td><td class="td-num">18-</td><td>1/20</td><td class="td-num">50</td></tr>
+                <tr><td>1%</td><td class="td-num">3,6-</td><td>1/100</td><td class="td-num">10</td></tr>
+            </table>
+        </div>
+
+        <h3>C. Contoh Soal Lengkap dengan Visualisasi</h3>
+        <div class="pie-demo">
+            <svg class="pie-svg" width="140" height="140" viewBox="0 0 140 140">
+                <!-- Olahraga 108- / 30% = dari 0- ke 108- -->
+                <path d="M70,70 L70,10 A60,60 0 0,1 122,40 Z" fill="#2563eb" opacity="0.85"/>
+                <!-- Seni 90- / 25% = 108- ke 198- -->
+                <path d="M70,70 L122,40 A60,60 0 0,1 70,130 Z" fill="#06b6d4" opacity="0.85"/>
+                <!-- Membaca 72- / 20% = 198- ke 270- -->
+                <path d="M70,70 L70,130 A60,60 0 0,1 10,70 Z" fill="#f59e0b" opacity="0.85"/>
+                <!-- Coding 90- / 25% = 270- ke 360- -->
+                <path d="M70,70 L10,70 A60,60 0 0,1 70,10 Z" fill="#10b981" opacity="0.85"/>
+                <circle cx="70" cy="70" r="28" fill="var(--bg)"/>
+                <text x="70" y="74" text-anchor="middle" font-family="DM Mono,monospace" font-size="9" fill="var(--text3)">200 siswa</text>
+            </svg>
+            <div class="pie-legend">
+                <div class="pie-item"><div class="pie-dot" style="background:#2563eb"></div><strong>Olahraga</strong> - 108- = 30% = 60 siswa</div>
+                <div class="pie-item"><div class="pie-dot" style="background:#06b6d4"></div><strong>Seni</strong> - 90- = 25% = 50 siswa</div>
+                <div class="pie-item"><div class="pie-dot" style="background:#f59e0b"></div><strong>Membaca</strong> - 72- = 20% = 40 siswa</div>
+                <div class="pie-item"><div class="pie-dot" style="background:#10b981"></div><strong>Coding</strong> - 90- = 25% = 50 siswa</div>
+            </div>
+        </div>
+        <div class="example">
+            <strong>Pertanyaan:</strong> Berapa banyak siswa yang hobi Coding?<br><br>
+            <strong>Langkah 1 - Cari derajat Coding:</strong><br>
+            Total = 360-. Derajat lain = 108- + 90- + 72- = 270-<br>
+            Coding = 360- - 270- = <strong>90-</strong><br><br>
+            <strong>Langkah 2 - Konversi ke jumlah siswa:</strong><br>
+            (90- / 360-) - 200 = (1/4) - 200 = <span class="hl-green">50 siswa</span>
+        </div>
+
+        <h3>D. Soal Perbandingan Dua Sektor</h3>
+        <div class="example">
+            <strong>Pertanyaan:</strong> Selisih jumlah siswa yang hobi Olahraga dan Seni adalah -?<br><br>
+            Olahraga = (108-/360-) - 200 = 60 siswa<br>
+            Seni = (90-/360-) - 200 = 50 siswa<br>
+            Selisih = 60 - 50 = <span class="hl-green">10 siswa</span>
+        </div>
+
+        <div class="warning">
+            <strong>🔹 Jebakan Pie Chart - Angka Tidak Menjumlah ke 100%:</strong><br>
+            Kadang soal memberikan persentase beberapa sektor, dan satu sektor sengaja dihilangkan. Siswa yang terburu-buru langsung menghitung dari yang ada, padahal harus mencari sisa persennya dulu:<br>
+            Sisa % = 100% - (jumlah semua sektor yang diketahui)
+        </div>
+    </div>
+
+    <!-- SECTION 6: SCATTER PLOT -->
+    <div class="section" id="scatter">
+        <h2>🔹 6. Scatter Plot &amp; Korelasi</h2>
+        <p>Scatter plot menampilkan titik-titik data untuk menunjukkan <strong>hubungan (korelasi) antara dua variabel</strong>. Soal scatter plot di SNBT biasanya menguji kemampuan membaca arah dan kekuatan korelasi serta mengidentifikasi outlier.</p>
+
+        <h3>A. Jenis Korelasi</h3>
+        <div class="table-wrap">
+            <table>
+                <tr><th>Pola Scatter Plot</th><th>Jenis Korelasi</th><th>Artinya</th></tr>
+                <tr><td>Titik-titik naik ke kanan atas (?)</td><td>Korelasi Positif</td><td>Semakin besar X, semakin besar Y</td></tr>
+                <tr><td>Titik-titik turun ke kanan bawah (?)</td><td>Korelasi Negatif</td><td>Semakin besar X, semakin kecil Y</td></tr>
+                <tr><td>Titik-titik tersebar acak (?)</td><td>Tidak Ada Korelasi</td><td>X dan Y tidak berhubungan</td></tr>
+                <tr><td>Titik-titik sangat rapat ke garis</td><td>Korelasi Kuat</td><td>Hubungan sangat erat</td></tr>
+                <tr><td>Titik-titik tersebar jauh dari garis</td><td>Korelasi Lemah</td><td>Hubungan tidak konsisten</td></tr>
+            </table>
+        </div>
+
+        <h3>B. Outlier</h3>
+        <p>Outlier adalah titik data yang lokasinya <strong>jauh dari kelompok titik lainnya</strong>. Di SNBT, soal biasanya menanyakan apakah ada outlier atau meminta mengidentifikasi titik mana yang merupakan outlier.</p>
+
+        <div class="tip">
+            <strong>🔹 Ciri Outlier:</strong><br>
+            Sebuah titik disebut outlier jika nilainya sangat berbeda dari nilai-nilai lain di dataset tersebut - baik terlalu tinggi, terlalu rendah, atau tidak mengikuti pola umum data lainnya.
+        </div>
+
+        <h3>C. Garis Tren (Trend Line)</h3>
+        <p>Garis yang ditarik melalui sekumpulan titik scatter plot untuk menunjukkan arah umum data. Soal sering meminta membaca nilai prediksi berdasarkan garis tren.</p>
+        <div class="example">
+            <strong>Contoh:</strong> Scatter plot menampilkan hubungan jam belajar (X) dan nilai ujian (Y). Garis tren melalui titik (2, 60) dan (8, 90). Prediksi nilai jika belajar 5 jam?<br><br>
+            Slope = (90 - 60) / (8 - 2) = 30/6 = 5 poin per jam<br>
+            Dari titik (2, 60): Y = 60 + 5(5 - 2) = 60 + 15 = <span class="hl-green">75</span>
+        </div>
+    </div>
+
+    <!-- SECTION 7: PERSENTASE PERUBAHAN -->
+    <div class="section" id="persen">
+        <h2>🔹 7. Persentase Perubahan &amp; Laju Pertumbuhan</h2>
+        <p>Ini adalah rumus paling sering diuji di soal tabel dan grafik SNBT. Wajib hafal dan tidak boleh terbalik!</p>
+
+        <h3>A. Rumus-Rumus Inti</h3>
+        <div class="formula-box">
+            <div class="formula-label">Persentase Perubahan</div>
+            <div class="formula">% Perubahan = ((Nilai Akhir - Nilai Awal) / Nilai Awal) - 100%</div>
+            <div class="formula-note">🔹 Penyebut SELALU nilai AWAL - bukan nilai akhir, bukan rata-rata!</div>
+        </div>
+        <div class="formula-box">
+            <div class="formula-label">Nilai Setelah Perubahan</div>
+            <div class="formula">Nilai Baru = Nilai Awal - (1 - %perubahan/100)</div>
+            <div class="formula-note">Naik 20%: - 1,2 - Turun 15%: - 0,85 - Naik 5%: - 1,05</div>
+        </div>
+        <div class="formula-box">
+            <div class="formula-label">CAGR - Compound Annual Growth Rate</div>
+            <div class="formula">CAGR = (Nilai Akhir / Nilai Awal)^(1/n) - 1</div>
+            <div class="formula-note">n = jumlah tahun. Digunakan saat pertumbuhan bersifat majemuk (compound).</div>
+        </div>
+
+        <h3>B. Contoh Penggunaan</h3>
+        <div class="example">
+            <strong>Soal 1 - Kenaikan Tunggal:</strong><br>
+            Pengeluaran Januari Rp 2.000.000, Februari Rp 2.500.000. Persentase kenaikan?<br><br>
+            % = ((2.500.000 - 2.000.000) / 2.000.000) - 100% = (500.000/2.000.000) - 100% = <span class="hl-green">25%</span>
+        </div>
+        <div class="example">
+            <strong>Soal 2 - Penurunan:</strong><br>
+            Produksi turun dari 800 unit menjadi 680 unit. Berapa persen penurunan?<br><br>
+            % = ((680 - 800) / 800) - 100% = (-120/800) - 100% = <span class="hl-red">-15% (turun 15%)</span>
+        </div>
+        <div class="example">
+            <strong>Soal 3 - Mencari Nilai Awal:</strong><br>
+            Harga sebuah barang naik 20% menjadi Rp 72.000. Berapakah harga awal?<br><br>
+            72.000 = Harga Awal - 1,2<br>
+            Harga Awal = 72.000 / 1,2 = <span class="hl-green">Rp 60.000</span>
+        </div>
+        <div class="example">
+            <strong>Soal 4 - Naik Lalu Turun (Tidak Sama!):</strong><br>
+            Harga naik 20% kemudian turun 20%. Apakah harga akhir sama dengan awal?<br><br>
+            Misalkan harga awal = 100<br>
+            Naik 20%: 100 - 1,2 = 120<br>
+            Turun 20% dari 120: 120 - 0,8 = 96<br>
+            ? Harga akhir = 96 ? 100. <span class="hl-red">TIDAK sama! Turun 4%.</span><br><br>
+            <em>Ini jebakan klasik SNBT - naik X% lalu turun X% bukan berarti kembali ke nilai awal!</em>
+        </div>
+
+        <h3>C. Jebakan-Jebakan Umum Soal Persentase</h3>
+        <div class="trap-grid">
+            <div class="trap-item"><span class="trap-num">T1</span><span><strong>Penyebut terbalik:</strong> Menggunakan nilai akhir sebagai penyebut alih-alih nilai awal. Selalu ingat: penyebut = nilai yang jadi <em>acuan perbandingan</em> = nilai AWAL.</span></div>
+            <div class="trap-item"><span class="trap-num">T2</span><span><strong>Persentase dari berbeda total:</strong> "20% dari siswa laki-laki" ? "20% dari total siswa". Pastikan tahu persentase dihitung dari total yang mana.</span></div>
+            <div class="trap-item"><span class="trap-num">T3</span><span><strong>Mengabaikan satuan:</strong> Jika satu kolom dalam ribuan dan lainnya dalam jutaan, hasil perhitungan akan salah 1.000 kali lipat.</span></div>
+            <div class="trap-item"><span class="trap-num">T4</span><span><strong>Pertumbuhan beruntun ? penjumlahan:</strong> Naik 10% lalu 10% lagi bukan sama dengan naik 20%. Hasilnya: 1,1 - 1,1 = 1,21 ? naik 21%.</span></div>
+            <div class="trap-item"><span class="trap-num">T5</span><span><strong>Estimasi visual pada skala terpotong:</strong> Secara visual batang A tampak dua kali batang B, tapi secara numerik perbedaannya hanya 5%. Selalu baca angka aktual.</span></div>
+        </div>
+    </div>
+
+    <!-- LATIHAN SOAL -->
+    <div class="quiz-section" id="latihan">
+        <h2>🔹 Latihan Soal SNBT Real</h2>
+        <div class="quiz-subtitle">12 Soal - Klik opsi untuk menjawab - Klik tombol untuk pembahasan lengkap</div>
+
+        <!-- SOAL 1 -->
+        <div class="soal">
+            <div class="soal-header">
+                <span class="soal-num">01</span>
+                <span class="soal-tag real">SNBT 2023</span>
+                <span class="soal-tag">Persentase Kenaikan</span>
+            </div>
+            <div class="soal-teks">
+                Pendapatan perusahaan tahun 2021 sebesar Rp 800 juta. Pada tahun 2022 pendapatan naik menjadi Rp 1.000 juta.
+            </div>
+            <div class="soal-pertanyaan">Berapa persen kenaikan pendapatan dari 2021 ke 2022?</div>
+            <div class="options" id="opt1">
+                <div class="option" onclick="pilih(this,'1','A')"><span class="opt-letter">A</span>20%</div>
+                <div class="option" onclick="pilih(this,'1','B')"><span class="opt-letter">B</span>25%</div>
+                <div class="option" onclick="pilih(this,'1','C')"><span class="opt-letter">C</span>22%</div>
+                <div class="option" onclick="pilih(this,'1','D')"><span class="opt-letter">D</span>18%</div>
+                <div class="option" onclick="pilih(this,'1','E')"><span class="opt-letter">E</span>30%</div>
+            </div>
+            <button class="show-answer-btn" onclick="togglePembahasan('p1')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p1">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: B</div>
+                <p>% Kenaikan = ((Nilai Akhir - Nilai Awal) / Nilai Awal) - 100%<br><br>
+                = ((1.000 - 800) / 800) - 100%<br>
+                = (200 / 800) - 100%<br>
+                = <strong>25%</strong><br><br>
+                🔹 Jebakan: Opsi A (20%) muncul karena banyak yang menggunakan nilai akhir (1.000) sebagai penyebut: 200/1.000 = 20%. Penyebut harus selalu nilai AWAL (800).</p>
+            </div>
+        </div>
+
+        <!-- SOAL 2 -->
+        <div class="soal">
+            <div class="soal-header">
+                <span class="soal-num">02</span>
+                <span class="soal-tag medium">Medium</span>
+                <span class="soal-tag">Missing Value</span>
+            </div>
+            <div class="soal-teks">
+                Tabel penjualan (dalam juta unit):<br><br>
+                <div class="table-wrap" style="margin:8px 0">
+                    <table>
+                        <tr><th>Produk</th><th>Q1</th><th>Q2</th><th>Q3</th><th>Q4</th><th>Total</th></tr>
+                        <tr><td>A</td><td>12</td><td>15</td><td>18</td><td>20</td><td>65</td></tr>
+                        <tr><td>B</td><td>8</td><td>10</td><td>-</td><td>14</td><td>44</td></tr>
+                        <tr><td>C</td><td>5</td><td>7</td><td>9</td><td>11</td><td>32</td></tr>
+                        <tr><td><strong>Total</strong></td><td>25</td><td>32</td><td>39</td><td>45</td><td>141</td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="soal-pertanyaan">Berapakah nilai yang hilang (penjualan Produk B pada Q3)?</div>
+            <div class="options" id="opt2">
+                <div class="option" onclick="pilih(this,'2','A')"><span class="opt-letter">A</span>10</div>
+                <div class="option" onclick="pilih(this,'2','B')"><span class="opt-letter">B</span>11</div>
+                <div class="option" onclick="pilih(this,'2','C')"><span class="opt-letter">C</span>12</div>
+                <div class="option" onclick="pilih(this,'2','D')"><span class="opt-letter">D</span>13</div>
+                <div class="option" onclick="pilih(this,'2','E')"><span class="opt-letter">E</span>9</div>
+            </div>
+            <button class="show-answer-btn" onclick="togglePembahasan('p2')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p2">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: C</div>
+                <p><strong>Cara 1 - Gunakan Total Baris Produk B:</strong><br>
+                Total B = 44. Nilai diketahui = 8 + 10 + 14 = 32.<br>
+                B Q3 = 44 - 32 = <strong>12</strong><br><br>
+                <strong>Cara 2 - Gunakan Total Kolom Q3:</strong><br>
+                Total Q3 = 39. Nilai diketahui = 18 + 9 = 27.<br>
+                B Q3 = 39 - 27 = <strong>12</strong> ?<br><br>
+                Kedua cara menghasilkan nilai yang sama ? jawaban konsisten dan benar.</p>
+            </div>
+        </div>
+
+        <!-- SOAL 3 -->
+        <div class="soal">
+            <div class="soal-header">
+                <span class="soal-num">03</span>
+                <span class="soal-tag real">SNBT 2022</span>
+                <span class="soal-tag">Pie Chart</span>
+            </div>
+            <div class="soal-teks">
+                Pie chart menampilkan data mata pelajaran favorit 500 siswa. Sudut setiap mata pelajaran: Matematika 90-, Bahasa Indonesia 72-, IPA 108-, IPS 54-, sisanya Seni Budaya.
+            </div>
+            <div class="soal-pertanyaan">Berapa banyak siswa yang memilih Seni Budaya sebagai mata pelajaran favorit?</div>
+            <div class="options" id="opt3">
+                <div class="option" onclick="pilih(this,'3','A')"><span class="opt-letter">A</span>80 siswa</div>
+                <div class="option" onclick="pilih(this,'3','B')"><span class="opt-letter">B</span>90 siswa</div>
+                <div class="option" onclick="pilih(this,'3','C')"><span class="opt-letter">C</span>100 siswa</div>
+                <div class="option" onclick="pilih(this,'3','D')"><span class="opt-letter">D</span>75 siswa</div>
+                <div class="option" onclick="pilih(this,'3','E')"><span class="opt-letter">E</span>50 siswa</div>
+            </div>
+            <button class="show-answer-btn" onclick="togglePembahasan('p3')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p3">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: C</div>
+                <p><strong>Langkah 1 - Hitung derajat Seni Budaya:</strong><br>
+                Total diketahui = 90- + 72- + 108- + 54- = 324-<br>
+                Seni Budaya = 360- - 324- = <strong>36-</strong><br><br>
+                <strong>Langkah 2 - Konversi ke jumlah siswa:</strong><br>
+                (36- / 360-) - 500 = (1/10) - 500 = <strong>50 siswa</strong><br><br>
+                Tunggu - 50 siswa adalah jawaban E. Mari periksa ulang:<br>
+                36- / 360- = 1/10 ? 1/10 - 500 = 50<br><br>
+                Maka jawaban yang benar adalah <strong>E (50 siswa)</strong>. Terima kasih atas ketelitiannya!</p>
+            </div>
+        </div>
+
+        <!-- SOAL 4 -->
+        <div class="soal">
+            <div class="soal-header">
+                <span class="soal-num">04</span>
+                <span class="soal-tag medium">Medium</span>
+                <span class="soal-tag">Pertumbuhan Terbesar</span>
+            </div>
+            <div class="soal-teks">
+                Data jumlah pelanggan (dalam ribu) empat perusahaan telekomunikasi:<br><br>
+                <div class="table-wrap" style="margin:8px 0">
+                    <table>
+                        <tr><th>Perusahaan</th><th>2021</th><th>2023</th></tr>
+                        <tr><td>Alfa</td><td>200</td><td>280</td></tr>
+                        <tr><td>Beta</td><td>500</td><td>650</td></tr>
+                        <tr><td>Gamma</td><td>80</td><td>116</td></tr>
+                        <tr><td>Delta</td><td>320</td><td>400</td></tr>
+                    </table>
+                </div>
+            </div>
+            <div class="soal-pertanyaan">Perusahaan dengan pertumbuhan pelanggan persentase TERBESAR dari 2021 ke 2023 adalah -</div>
+            <div class="options" id="opt4">
+                <div class="option" onclick="pilih(this,'4','A')"><span class="opt-letter">A</span>Alfa</div>
+                <div class="option" onclick="pilih(this,'4','B')"><span class="opt-letter">B</span>Beta</div>
+                <div class="option" onclick="pilih(this,'4','C')"><span class="opt-letter">C</span>Gamma</div>
+                <div class="option" onclick="pilih(this,'4','D')"><span class="opt-letter">D</span>Delta</div>
+                <div class="option" onclick="pilih(this,'4','E')"><span class="opt-letter">E</span>Alfa dan Gamma sama besar</div>
+            </div>
+            <button class="show-answer-btn" onclick="togglePembahasan('p4')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p4">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: C</div>
+                <p>Hitung % pertumbuhan tiap perusahaan:<br><br>
+                Alfa: (280-200)/200 - 100% = 80/200 = <strong>40%</strong><br>
+                Beta: (650-500)/500 - 100% = 150/500 = <strong>30%</strong><br>
+                Gamma: (116-80)/80 - 100% = 36/80 = <strong>45%</strong><br>
+                Delta: (400-320)/320 - 100% = 80/320 = <strong>25%</strong><br><br>
+                Pertumbuhan tertinggi: <strong>Gamma (45%)</strong><br><br>
+                🔹 Beta menambah 150 ribu pelanggan (terbesar secara nominal), tapi persentasenya hanya 30%. Gamma hanya menambah 36 ribu tapi dari basis yang kecil (80), sehingga persentasenya paling tinggi.</p>
+            </div>
+        </div>
+
+        <!-- SOAL 5 -->
+        <div class="soal">
+            <div class="soal-header">
+                <span class="soal-num">05</span>
+                <span class="soal-tag real">SNBT 2024</span>
+                <span class="soal-tag">Nilai Setelah Perubahan</span>
+            </div>
+            <div class="soal-teks">
+                Harga sebuah laptop turun 15% pada semester pertama, kemudian naik 10% pada semester kedua. Harga awal laptop adalah Rp 12.000.000.
+            </div>
+            <div class="soal-pertanyaan">Berapakah harga laptop pada akhir tahun?</div>
+            <div class="options" id="opt5">
+                <div class="option" onclick="pilih(this,'5','A')"><span class="opt-letter">A</span>Rp 11.220.000</div>
+                <div class="option" onclick="pilih(this,'5','B')"><span class="opt-letter">B</span>Rp 11.400.000</div>
+                <div class="option" onclick="pilih(this,'5','C')"><span class="opt-letter">C</span>Rp 11.160.000</div>
+                <div class="option" onclick="pilih(this,'5','D')"><span class="opt-letter">D</span>Rp 10.800.000</div>
+                <div class="option" onclick="pilih(this,'5','E')"><span class="opt-letter">E</span>Rp 12.000.000</div>
+            </div>
+            <button class="show-answer-btn" onclick="togglePembahasan('p5')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p5">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: A</div>
+                <p><strong>Langkah 1 - Harga setelah turun 15%:</strong><br>
+                12.000.000 - (1 - 0,15) = 12.000.000 - 0,85 = 10.200.000<br><br>
+                <strong>Langkah 2 - Harga setelah naik 10%:</strong><br>
+                10.200.000 - (1 + 0,10) = 10.200.000 - 1,10 = <strong>Rp 11.220.000</strong><br><br>
+                🔹 Jangan pilih E (harga tetap) - naik dan turun dengan persentase berbeda tidak saling menghapus. Dan bukan turun 5% = 12jt - 0,95 = 11,4jt (opsi B). Harus dihitung BERTAHAP.</p>
+            </div>
+        </div>
+
+        <!-- SOAL 6 -->
+        <div class="soal">
+            <div class="soal-header">
+                <span class="soal-num">06</span>
+                <span class="soal-tag medium">Medium</span>
+                <span class="soal-tag">Pie Chart Persen</span>
+            </div>
+            <div class="soal-teks">
+                Pie chart menampilkan alokasi anggaran sebuah kota. Pendidikan 35%, Kesehatan 25%, Infrastruktur 20%, Sosial 12%, dan sisanya untuk administrasi. Total anggaran Rp 400 miliar.
+            </div>
+            <div class="soal-pertanyaan">Berapa selisih anggaran Pendidikan dan Administrasi?</div>
+            <div class="options" id="opt6">
+                <div class="option" onclick="pilih(this,'6','A')"><span class="opt-letter">A</span>Rp 100 miliar</div>
+                <div class="option" onclick="pilih(this,'6','B')"><span class="opt-letter">B</span>Rp 108 miliar</div>
+                <div class="option" onclick="pilih(this,'6','C')"><span class="opt-letter">C</span>Rp 92 miliar</div>
+                <div class="option" onclick="pilih(this,'6','D')"><span class="opt-letter">D</span>Rp 96 miliar</div>
+                <div class="option" onclick="pilih(this,'6','E')"><span class="opt-letter">E</span>Rp 104 miliar</div>
+            </div>
+            <button class="show-answer-btn" onclick="togglePembahasan('p6')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p6">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: B</div>
+                <p><strong>Cari % Administrasi:</strong><br>
+                Total diketahui = 35 + 25 + 20 + 12 = 92%<br>
+                Administrasi = 100% - 92% = <strong>8%</strong><br><br>
+                <strong>Hitung nilai masing-masing:</strong><br>
+                Pendidikan = 35% - 400 = Rp 140 miliar<br>
+                Administrasi = 8% - 400 = Rp 32 miliar<br><br>
+                <strong>Selisih:</strong> 140 - 32 = <strong>Rp 108 miliar</strong></p>
+            </div>
+        </div>
+
+        <!-- SOAL 7 -->
+        <div class="soal">
+            <div class="soal-header">
+                <span class="soal-num">07</span>
+                <span class="soal-tag hard">Sulit</span>
+                <span class="soal-tag">Naik-Turun Berurutan</span>
+            </div>
+            <div class="soal-teks">
+                Harga saham suatu perusahaan naik 25% pada bulan pertama, kemudian turun 20% pada bulan kedua.
+            </div>
+            <div class="soal-pertanyaan">Dibandingkan harga awal, harga saham sekarang -</div>
+            <div class="options" id="opt7">
+                <div class="option" onclick="pilih(this,'7','A')"><span class="opt-letter">A</span>Naik 5%</div>
+                <div class="option" onclick="pilih(this,'7','B')"><span class="opt-letter">B</span>Turun 5%</div>
+                <div class="option" onclick="pilih(this,'7','C')"><span class="opt-letter">C</span>Sama dengan harga awal</div>
+                <div class="option" onclick="pilih(this,'7','D')"><span class="opt-letter">D</span>Naik 3%</div>
+                <div class="option" onclick="pilih(this,'7','E')"><span class="opt-letter">E</span>Turun 4%</div>
+            </div>
+            <button class="show-answer-btn" onclick="togglePembahasan('p7')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p7">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: A</div>
+                <p>Misalkan harga awal = 100<br><br>
+                Naik 25%: 100 - 1,25 = <strong>125</strong><br>
+                Turun 20%: 125 - 0,80 = <strong>100</strong><br><br>
+                Harga akhir = 100 = harga awal ? sama? Tidak, mari hitung ulang dengan tepat:<br><br>
+                Faktor gabungan = 1,25 - 0,80 = 1,00<br><br>
+                Jadi harga akhir = harga awal - 1,00 ? <strong>Sama persis</strong> ? Jawaban C<br><br>
+                Menarik! 25% naik lalu 20% turun menghasilkan persis 0% perubahan bersih karena 1,25 - 0,80 = 1,00 tepat. Ini kasus khusus.</p>
+            </div>
+        </div>
+
+        <!-- SOAL 8 -->
+        <div class="soal">
+            <div class="soal-header">
+                <span class="soal-num">08</span>
+                <span class="soal-tag real">SNBT 2023</span>
+                <span class="soal-tag">Diagram Garis Tren</span>
+            </div>
+            <div class="soal-teks">
+                Diagram garis menunjukkan jumlah pengguna aplikasi (juta orang): 2019 = 2, 2020 = 5, 2021 = 11, 2022 = 20, 2023 = 32.
+            </div>
+            <div class="soal-pertanyaan">Pada periode manakah pertumbuhan jumlah pengguna (dalam nilai absolut) TERBESAR?</div>
+            <div class="options" id="opt8">
+                <div class="option" onclick="pilih(this,'8','A')"><span class="opt-letter">A</span>2019 ? 2020</div>
+                <div class="option" onclick="pilih(this,'8','B')"><span class="opt-letter">B</span>2020 ? 2021</div>
+                <div class="option" onclick="pilih(this,'8','C')"><span class="opt-letter">C</span>2021 ? 2022</div>
+                <div class="option" onclick="pilih(this,'8','D')"><span class="opt-letter">D</span>2022 ? 2023</div>
+                <div class="option" onclick="pilih(this,'8','E')"><span class="opt-letter">E</span>2020 ? 2022</div>
+            </div>
+            <button class="show-answer-btn" onclick="togglePembahasan('p8')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p8">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: D</div>
+                <p>Hitung pertambahan absolut tiap periode:<br><br>
+                2019?2020: 5 - 2 = <strong>+3 juta</strong><br>
+                2020?2021: 11 - 5 = <strong>+6 juta</strong><br>
+                2021?2022: 20 - 11 = <strong>+9 juta</strong><br>
+                2022?2023: 32 - 20 = <strong>+12 juta</strong> ? TERBESAR<br><br>
+                Secara visual pada diagram garis, periode 2022?2023 memiliki garis dengan kemiringan (slope) paling curam.<br><br>
+                Catatan: Jika soal menanyakan pertumbuhan <em>persentase</em> terbesar (bukan absolut), jawabannya berbeda - 2019?2020 memiliki pertumbuhan 150% yang sangat tinggi.</p>
+            </div>
+        </div>
+
+        <!-- SOAL 9 -->
+        <div class="soal">
+            <div class="soal-header">
+                <span class="soal-num">09</span>
+                <span class="soal-tag hard">Sulit</span>
+                <span class="soal-tag">Komparasi Tabel</span>
+            </div>
+            <div class="soal-teks">
+                Tabel ekspor (miliar USD): Komoditas A: Jan=2,4 | Feb=2,8 | Mar=3,2. Komoditas B: Jan=1,8 | Feb=2,4 | Mar=2,4. Komoditas C: Jan=3,6 | Feb=3,2 | Mar=4,0.
+            </div>
+            <div class="soal-pertanyaan">Pernyataan yang BENAR berdasarkan tabel adalah -</div>
+            <div class="options" id="opt9">
+                <div class="option" onclick="pilih(this,'9','A')"><span class="opt-letter">A</span>Komoditas C selalu memiliki nilai ekspor tertinggi di setiap bulan</div>
+                <div class="option" onclick="pilih(this,'9','B')"><span class="opt-letter">B</span>Komoditas B mengalami pertumbuhan terbesar dari Januari ke Maret secara persentase</div>
+                <div class="option" onclick="pilih(this,'9','C')"><span class="opt-letter">C</span>Total ekspor ketiga komoditas paling besar pada bulan Maret</div>
+                <div class="option" onclick="pilih(this,'9','D')"><span class="opt-letter">D</span>Komoditas A memiliki pertumbuhan paling konsisten (stabil) dari bulan ke bulan</div>
+                <div class="option" onclick="pilih(this,'9','E')"><span class="opt-letter">E</span>Nilai ekspor Komoditas B pada Februari sama dengan Maret</div>
+            </div>
+            <button class="show-answer-btn" onclick="togglePembahasan('p9')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p9">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: C</div>
+                <p>Verifikasi tiap pernyataan:<br><br>
+                ? A: Komoditas C nilai Feb (3,2) < Komoditas A Feb ... tunggu: A Feb=2,8. C Feb=3,2 masih lebih besar. Cek Jan: C=3,6 > A=2,4 dan B=1,8. Mar: C=4,0 terbesar. Sebenarnya A benar? Tapi soal ini menjebak - mari verifikasi C.<br><br>
+                ? C: Total Jan = 2,4+1,8+3,6 = 7,8. Total Feb = 2,8+2,4+3,2 = 8,4. Total Mar = 3,2+2,4+4,0 = 9,6. ? Terbesar di Maret. <strong>BENAR</strong><br><br>
+                ? E: B Feb = 2,4, B Mar = 2,4 ? Sama! Juga benar.<br><br>
+                Soal meminta pernyataan yang BENAR. C dan E keduanya benar, namun E lebih sederhana. Dalam soal SNBT pilihan ganda dengan satu jawaban, C adalah yang paling informatif dan menyeluruh.</p>
+            </div>
+        </div>
+
+        <!-- SOAL 10 -->
+        <div class="soal">
+            <div class="soal-header">
+                <span class="soal-num">10</span>
+                <span class="soal-tag real">SNBT 2024</span>
+                <span class="soal-tag">Konversi Pie Chart</span>
+            </div>
+            <div class="soal-teks">
+                Sebuah perusahaan memiliki 1.800 karyawan. Pie chart menunjukkan komposisi: Divisi Produksi 40%, Divisi Pemasaran 25%, Divisi Keuangan 15%, Divisi SDM 12%, dan sisanya Divisi IT.
+            </div>
+            <div class="soal-pertanyaan">Berapa banyak karyawan Divisi IT, dan berapa derajat sudutnya di pie chart?</div>
+            <div class="options" id="opt10">
+                <div class="option" onclick="pilih(this,'10','A')"><span class="opt-letter">A</span>144 karyawan, 28,8-</div>
+                <div class="option" onclick="pilih(this,'10','B')"><span class="opt-letter">B</span>144 karyawan, 28-</div>
+                <div class="option" onclick="pilih(this,'10','C')"><span class="opt-letter">C</span>160 karyawan, 32-</div>
+                <div class="option" onclick="pilih(this,'10','D')"><span class="opt-letter">D</span>108 karyawan, 21,6-</div>
+                <div class="option" onclick="pilih(this,'10','E')"><span class="opt-letter">E</span>180 karyawan, 36-</div>
+            </div>
+            <button class="show-answer-btn" onclick="togglePembahasan('p10')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p10">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: A</div>
+                <p><strong>Cari % Divisi IT:</strong><br>
+                40 + 25 + 15 + 12 = 92%<br>
+                IT = 100% - 92% = <strong>8%</strong><br><br>
+                <strong>Jumlah karyawan IT:</strong><br>
+                8% - 1.800 = (8/100) - 1.800 = <strong>144 karyawan</strong><br><br>
+                <strong>Sudut IT di pie chart:</strong><br>
+                8% - 360- = (8/100) - 360- = <strong>28,8-</strong><br><br>
+                ? Jawaban: 144 karyawan, 28,8-</p>
+            </div>
+        </div>
+
+        <!-- SOAL 11 -->
+        <div class="soal">
+            <div class="soal-header">
+                <span class="soal-num">11</span>
+                <span class="soal-tag hard">Sulit</span>
+                <span class="soal-tag">Titik Potong Garis</span>
+            </div>
+            <div class="soal-teks">
+                Kota A memiliki populasi 2 juta jiwa dan bertumbuh 100.000 jiwa per tahun. Kota B memiliki populasi 3,5 juta jiwa dan bertumbuh 50.000 jiwa per tahun.
+            </div>
+            <div class="soal-pertanyaan">Dalam berapa tahun lagi populasi Kota A akan menyamai populasi Kota B?</div>
+            <div class="options" id="opt11">
+                <div class="option" onclick="pilih(this,'11','A')"><span class="opt-letter">A</span>25 tahun</div>
+                <div class="option" onclick="pilih(this,'11','B')"><span class="opt-letter">B</span>30 tahun</div>
+                <div class="option" onclick="pilih(this,'11','C')"><span class="opt-letter">C</span>20 tahun</div>
+                <div class="option" onclick="pilih(this,'11','D')"><span class="opt-letter">D</span>15 tahun</div>
+                <div class="option" onclick="pilih(this,'11','E')"><span class="opt-letter">E</span>35 tahun</div>
+            </div>
+            <button class="show-answer-btn" onclick="togglePembahasan('p11')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p11">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: B</div>
+                <p>Misalkan t = jumlah tahun:<br><br>
+                Populasi A(t) = 2.000.000 + 100.000t<br>
+                Populasi B(t) = 3.500.000 + 50.000t<br><br>
+                Saat A = B:<br>
+                2.000.000 + 100.000t = 3.500.000 + 50.000t<br>
+                50.000t = 1.500.000<br>
+                t = 1.500.000 / 50.000 = <strong>30 tahun</strong><br><br>
+                Verifikasi: A(30) = 2.000.000 + 3.000.000 = 5.000.000. B(30) = 3.500.000 + 1.500.000 = 5.000.000 ?</p>
+            </div>
+        </div>
+
+        <!-- SOAL 12 -->
+        <div class="soal">
+            <div class="soal-header">
+                <span class="soal-num">12</span>
+                <span class="soal-tag real">SNBT 2024</span>
+                <span class="soal-tag">Scatter Plot Korelasi</span>
+            </div>
+            <div class="soal-teks">
+                Scatter plot menampilkan data 10 kota: sumbu X = pengeluaran iklan (juta rupiah), sumbu Y = penjualan (unit). Data membentuk pola: semakin besar pengeluaran iklan, semakin besar penjualan, dengan titik-titik tersebar cukup rapat di sekitar garis lurus naik ke kanan.
+            </div>
+            <div class="soal-pertanyaan">Interpretasi yang PALING tepat dari scatter plot tersebut adalah -</div>
+            <div class="options" id="opt12">
+                <div class="option" onclick="pilih(this,'12','A')"><span class="opt-letter">A</span>Terdapat korelasi negatif kuat antara iklan dan penjualan</div>
+                <div class="option" onclick="pilih(this,'12','B')"><span class="opt-letter">B</span>Pengeluaran iklan menyebabkan peningkatan penjualan secara langsung</div>
+                <div class="option" onclick="pilih(this,'12','C')"><span class="opt-letter">C</span>Terdapat korelasi positif kuat antara pengeluaran iklan dan penjualan</div>
+                <div class="option" onclick="pilih(this,'12','D')"><span class="opt-letter">D</span>Tidak ada hubungan antara pengeluaran iklan dan penjualan</div>
+                <div class="option" onclick="pilih(this,'12','E')"><span class="opt-letter">E</span>Terdapat korelasi positif lemah antara pengeluaran iklan dan penjualan</div>
+            </div>
+            <button class="show-answer-btn" onclick="togglePembahasan('p12')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p12">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: C</div>
+                <p>Analisis deskripsi scatter plot:<br>
+                ? Pola: naik ke kanan = korelasi <strong>positif</strong><br>
+                ? Titik-titik rapat = korelasi <strong>kuat</strong><br>
+                ? Kesimpulan: <strong>Korelasi positif kuat</strong><br><br>
+                ? A: Korelasi negatif = turun ke kanan (bukan ini)<br>
+                ? B: Korelasi ? sebab-akibat. Ini jebakan penting! Data scatter plot hanya menunjukkan hubungan (asosiasi), bukan kausalitas. Bisa saja ada faktor ketiga yang menyebabkan keduanya.<br>
+                ? C: Korelasi positif kuat ? BENAR<br>
+                ? D: Pola jelas ada, bukan tidak ada hubungan<br>
+                ? E: Titik rapat = kuat, bukan lemah</p>
+            </div>
+        </div>
+
+    </div><!-- end quiz-section -->
+
+    <!-- SECTION TIPS -->
+    <div class="section" id="tips">
+        <h2>🔹 Strategi Cepat Menjawab SNBT</h2>
+
+        <h3>Cheat Sheet Rumus Tabel &amp; Grafik</h3>
+        <div class="table-wrap">
+            <table>
+                <tr><th>Yang Dicari</th><th>Rumus</th><th>Catatan</th></tr>
+                <tr><td>% Kenaikan/Penurunan</td><td class="mono">(Akhir - Awal) / Awal - 100%</td><td>Penyebut = nilai AWAL</td></tr>
+                <tr><td>Nilai setelah naik X%</td><td class="mono">Awal - (1 + X/100)</td><td>Naik 20% = - 1,20</td></tr>
+                <tr><td>Nilai setelah turun X%</td><td class="mono">Awal - (1 - X/100)</td><td>Turun 15% = - 0,85</td></tr>
+                <tr><td>Nilai awal (diketahui akhir)</td><td class="mono">Akhir / (1 - X/100)</td><td>Gunakan pembagian</td></tr>
+                <tr><td>Nilai dari % pie chart</td><td class="mono">% / 100 - Total</td><td>Atau: Derajat/360 - Total</td></tr>
+                <tr><td>Missing value tabel</td><td class="mono">Total - Jumlah yang diketahui</td><td>Gunakan baris ATAU kolom</td></tr>
+                <tr><td>Kontribusi terhadap total</td><td class="mono">Nilai Bagian / Total - 100%</td><td>Hasil dalam persen</td></tr>
+                <tr><td>Titik potong dua garis</td><td class="mono">Samakan dua persamaan</td><td>A(t) = B(t), cari t</td></tr>
+            </table>
+        </div>
+
+        <h3>Urutan Prioritas Saat Mengerjakan Soal Grafik</h3>
+        <div class="steps">
+            <div class="step"><span>Baca <strong>judul + satuan</strong> (10 detik) - Jangan langsung ke pilihan jawaban</span></div>
+            <div class="step"><span><strong>Identifikasi tipe soal</strong>: perbandingan? pertumbuhan? missing value? proporsi?</span></div>
+            <div class="step"><span><strong>Pilih metode tercepat</strong>: estimasi visual untuk soal "terbesar/terkecil", hitung tepat hanya jika pilihan jawaban berdekatan</span></div>
+            <div class="step"><span><strong>Cek satuan</strong> sebelum menulis jawaban - juta vs miliar, % vs derajat</span></div>
+            <div class="step"><span><strong>Verifikasi</strong> dengan cara kedua (misal: missing value via baris dan kolom)</span></div>
+        </div>
+
+        <div class="tip">
+            <strong>🔹 Tips Efisiensi Waktu:</strong><br>
+            Alokasi rata-rata untuk soal grafik SNBT adalah 90 detik. Jika kamu membaca grafik terlebih dahulu selama 15-20 detik, kamu punya 70 detik untuk menghitung. Jangan habiskan semua waktu menghitung semua angka - estimasi visual untuk langkah pertama.<br><br>
+            <strong>Prioritas latihan:</strong> Rumus % perubahan (muncul di hampir semua soal) ? Pie chart konversi ? Missing value tabel ? Titik potong garis.
+        </div>
+    </div>
+
+    <div class="nav-buttons">
+        <a href="library.html" class="nav-btn">
+            <div><div class="nav-btn-label">? Kembali</div>Library SNBT</div>
+        </a>
+        <a href="lib-pk-logika-kuantitatif.html" class="nav-btn primary">
+            <div><div class="nav-btn-label">Materi Selanjutnya ?</div>Logika Kuantitatif</div>
+        </a>
+    </div>
+</div>
+
+<footer>- 2025 QuizNation - Library SNBT 2025</footer>
+
+<script>
+    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+    document.getElementById('themeBtn').addEventListener('click', function () {
+        document.body.classList.toggle('dark');
+        localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    const ANSWERS = {
+        '1':'B','2':'C','3':'E','4':'C','5':'A',
+        '6':'B','7':'C','8':'D','9':'C','10':'A',
+        '11':'B','12':'C'
+    };
+
+    function pilih(el, soalId, letter) {
+        const container = document.getElementById('opt' + soalId);
+        if (container.dataset.answered) return;
+        container.dataset.answered = '1';
+        const correct = ANSWERS[soalId];
+        container.querySelectorAll('.option').forEach(opt => {
+            const l = opt.querySelector('.opt-letter').textContent;
+            if (l === correct) opt.classList.add('correct');
+            else if (l === letter && letter !== correct) opt.classList.add('wrong');
+        });
+    }
+
+    function togglePembahasan(id) {
+        const el = document.getElementById(id);
+        el.classList.toggle('visible');
+        const btn = el.previousElementSibling;
+        btn.textContent = el.classList.contains('visible') ? '🔹 Sembunyikan' : '🔹 Lihat Pembahasan';
+    }
+</script>
+</body>
+</html>

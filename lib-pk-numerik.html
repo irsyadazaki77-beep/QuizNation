@@ -1,0 +1,558 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Numerik & Komputasi - Library SNBT 2025</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Mobile Optimization */
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --accent: #2563eb;
+            --accent2: #06b6d4;
+            --bg: #f0f2f8;
+            --surface: rgba(255, 255, 255, 0.72);
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #1a1a2e;
+            --text2: #4b5563;
+            --text3: #9ca3af;
+            --glow: rgba(124, 58, 237, 0.18);
+            --radius: 20px
+        }
+
+        body.dark {
+            --bg: #050a15;
+            --surface: rgba(255, 255, 255, 0.055);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #f0edff;
+            --text2: rgba(240, 237, 255, 0.65);
+            --text3: rgba(240, 237, 255, 0.35);
+            --glow: rgba(124, 58, 237, 0.28)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: .35
+        }
+
+        /* Top Nav */
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            gap: 16px
+        }
+
+        .topnav a {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .2s
+        }
+
+        .topnav a:hover {
+            gap: 10px
+        }
+
+        .topnav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-left: auto
+        }
+
+        .theme-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: grid;
+            place-items: center;
+            transition: all .2s;
+            margin-left: 8px
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent)
+        }
+
+        /* Content */
+        .wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px 80px;
+            position: relative;
+            z-index: 1
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(251, 146, 60, .12);
+            color: #f59e0b;
+            border: 1px solid rgba(251, 146, 60, .25);
+            border-radius: 30px;
+            padding: 5px 14px;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.15;
+            margin-bottom: 14px
+        }
+
+        .page-title .grad {
+            background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .page-desc {
+            font-size: 1.05rem;
+            color: var(--text2);
+            line-height: 1.8;
+            margin-bottom: 40px;
+            max-width: 700px
+        }
+
+        /* TOC */
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 40px
+        }
+
+        .toc-title {
+            font-weight: 800;
+            font-size: .9rem;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .toc ol {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .toc li {
+            color: var(--text2);
+            font-size: .88rem
+        }
+
+        .toc a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color .2s
+        }
+
+        .toc a:hover {
+            color: var(--accent2)
+        }
+
+        /* Sections */
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: all .3s
+        }
+
+        .section:hover {
+            box-shadow: 0 10px 40px var(--glow);
+            border-color: rgba(124, 58, 237, .2)
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .section h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 20px 0 10px
+        }
+
+        .section p,
+        .section li {
+            font-size: .92rem;
+            color: var(--text2);
+            line-height: 1.85
+        }
+
+        .section ul,
+        .section ol {
+            padding-left: 20px;
+            margin: 10px 0
+        }
+
+        .section li {
+            margin-bottom: 6px
+        }
+
+        /* Example Box */
+        .example {
+            background: rgba(124, 58, 237, .06);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .example strong {
+            color: var(--text)
+        }
+
+        /* Tip Box */
+        .tip {
+            background: rgba(6, 182, 212, .08);
+            border-left: 3px solid var(--accent2);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .tip strong {
+            color: var(--accent2)
+        }
+
+        /* Warning */
+        .warning {
+            background: rgba(244, 63, 94, .08);
+            border-left: 3px solid #f43f5e;
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        /* Nav buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 14px;
+            margin-top: 40px;
+            flex-wrap: wrap
+        }
+
+        .nav-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all .3s
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px var(--glow);
+            transform: translateY(-2px)
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, .4)
+        }
+
+        .nav-btn.primary:hover {
+            box-shadow: 0 8px 28px rgba(124, 58, 237, .5);
+            transform: translateY(-3px)
+        }
+
+        .nav-btn-label {
+            font-size: .7rem;
+            color: var(--text3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .nav-btn.primary .nav-btn-label {
+            color: rgba(255, 255, 255, .7)
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text3);
+            font-size: .8rem;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px
+        }
+
+        @media(max-width:768px) {
+            .topnav {
+                padding: 14px 16px
+            }
+
+            .wrapper {
+                padding: 24px 16px 60px
+            }
+
+            .section {
+                padding: 20px
+            }
+
+            .nav-buttons {
+                flex-direction: column
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">? Kembali ke Library</a>
+        <span class="topnav-title">Numerik & Komputasi</span>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">Pengetahuan Kuantitatif</div>
+        <h1 class="page-title">Numerik & <span class="grad">Komputasi</span></h1>
+        <p class="page-desc">Latih kecepatan dan akurasi operasi hitung: persen, rasio, proporsi, dan perbandingan.
+        </p>
+
+        <div class="toc">
+            <div class="toc-title">📑 Daftar Isi</div>
+            <ol>
+                <li><a href="#hitung">Trik Hitung Cepat</a></li>
+                <li><a href="#persentase">Aritmatika Sosial & Persentase</a></li>
+                <li><a href="#perbandingan">Perbandingan Senilai & Berbalik</a></li>
+                <li><a href="#himpunan">Himpunan & Diagram Venn</a></li>
+                <li><a href="#tips">Strategi Menjawab SNBT</a></li>
+            </ol>
+        </div>
+
+        <div class="section" id="hitung">
+            <h2>🔹 1. Trik Hitung Cepat (Numerik)</h2>
+            <p>Soal komputasi SNBT didesain untuk dikerjakan tanpa kalkulator dengan waktu kurang dari 1 menit per soal.
+                Oleh sebab itu, selalu ada "celah" pola perhitungan. Hafalkan juga akar, pangkat, dan pecahan istimewa.
+            </p>
+            <ul>
+                <li><strong>Sifat Distributif & Pemfaktoran:</strong> Sangat sering keluar. Bentuk a- - b- = (a-b)(a+b).
+                    <br>Contoh: 99- - 1 = (99-1)(99+1) = 98 - 100 = 9800.</li>
+                <li><strong>Pecahan Istimewa:</strong> Hafalkan bentuk desimal ke pecahan:<br>
+                    12,5% = 1/8 | 37,5% = 3/8 | 62,5% = 5/8 | 87,5% = 7/8<br>
+                    16,67% = 1/6 | 33,33% = 1/3 | 66,67% = 2/3 | 83,33% = 5/6</li>
+                <li><strong>Aproksimasi (Taksiran):</strong> Jawab soal dengan pembulatan jika opsi jawaban selisihnya
+                    jauh. Contoh: v101.99 - 9.998 dapat dihitung sebagai 10 - 10 = 100.</li>
+            </ul>
+            <div class="example">
+                <strong>Contoh Soal & Solusi Rinci:</strong><br>
+                <em>Berapakah hasil dari (33,33% - 18) / (16,67% - 36)?</em><br>
+                <strong>Langkah 1:</strong> Ubah menjadi pecahan biasa. 33,33% = 1/3 dan 16,67% = 1/6.<br>
+                <strong>Langkah 2:</strong> Substitusi ke persamaan: (1/3 - 18) / (1/6 - 36)<br>
+                <strong>Langkah 3:</strong> Hitung bagian atas dan bawah. Atas = 18/3 = 6. Bawah = 36/6 = 6.<br>
+                <strong>Hasil Akhir:</strong> 6 / 6 = 1.<br><br>
+                <em><small>Sumber Pembahasan: Modul Penalaran Kuantitatif SNBT 2024, BPPP Kemdikbud & Bank Soal
+                        Asli.</small></em>
+            </div>
+        </div>
+
+        <div class="section" id="persentase">
+            <h2>🔹 2. Aritmatika Sosial & Persentase</h2>
+            <p>Melibatkan perhitungan untung-rugi, bunga bank, pajak, harga beli/jual, dan diskon. Pahami bahwa
+                persentase selalu dihitung dari Harga Awal (Harga Beli) kecuali disebutkan lain.</p>
+            <ul>
+                <li><strong>Keuntungan/Kerugian:</strong> % Untung = (Untung / Harga Beli) - 100%</li>
+                <li><strong>Harga Jual:</strong> HJ = [(100 + % Untung) / 100] - HB atau HJ = [(100 - % Rugi) / 100] -
+                    HB</li>
+            </ul>
+            <div class="example">
+                <strong>Contoh Soal Diskon Bertingkat & Solusi:</strong><br>
+                <em>Sebuah toko memberikan diskon 50% + 20% untuk sepatu seharga Rp 200.000. Candra menggunakan e-wallet
+                    dan mendapat cashback 10% dari total yang ia bayarkan. Berapa uang yang riil dikeluarkan Candra
+                    (setelah dikurangi cashback)?</em><br>
+                <strong>Solusi Bertahap:</strong><br>
+                1. <strong>Diskon Pertama (50%):</strong> 50% - 200.000 = 100.000. Harga menjadi 200.000 - 100.000 =
+                100.000.<br>
+                2. <strong>Diskon Kedua (20%):</strong> Diskon dihitung dari sisa harga! 20% - 100.000 = 20.000. Harga
+                bayar = 100.000 - 20.000 = 80.000.<br>
+                3. <strong>Cashback (10%):</strong> Cashback dihitung dari yang dibayarkan. 10% - 80.000 = 8.000.<br>
+                4. <strong>Uang Riil Dikeluarkan:</strong> 80.000 - 8.000 = 72.000.<br><br>
+                <em><small>Sumber Pendalaman: Adaptasi Soal Asli UTBK 2022 TPS Kuantitatif.</small></em>
+            </div>
+        </div>
+
+        <div class="section" id="perbandingan">
+            <h2>🔹 3. Perbandingan Senilai & Berbalik Nilai</h2>
+            <p>Perbandingan sering keluar dalam bentuk soal cerita pekerja, makanan ternak, jarak-waktu, dll.</p>
+            <div class="tip">
+                <strong>Senilai (A naik, B naik):</strong> A1/B1 = A2/B2 (Contoh: Bensin vs Jarak)<br>
+                <strong>Berbalik Nilai (A naik, B turun):</strong> A1 - B1 = A2 - B2 (Contoh: Pekerja vs Waktu,
+                Kecepatan vs Waktu)
+            </div>
+            <div class="example">
+                <strong>Contoh Soal & Solusi (Pekerja Tambahan):</strong><br>
+                <em>Suatu proyek direncanakan selesai dalam 30 hari oleh 15 orang. Setelah dikerjakan 10 hari, proyek
+                    terhenti selama 5 hari. Agar proyek selesai tepat waktu, berapa tambahan pekerja yang
+                    dibutuhkan?</em><br>
+                <strong>Solusi Metode Cepat (Beban Kerja Tersisa):</strong><br>
+                1. <strong>Target sisa waktu normal:</strong> 30 - 10 = 20 hari.<br>
+                2. <strong>Waktu yang tersedia riil:</strong> 20 - 5 (libur) = 15 hari.<br>
+                3. <strong>Gunakan rumus berbalik nilai pada sisa beban target:</strong><br>
+                Waktu Normal Sisa - Pekerja Awal = Waktu Tersedia - Pekerja Baru<br>
+                20 - 15 = 15 - Pekerja Baru<br>
+                300 = 15 - Pekerja Baru ? Pekerja Baru = 20 orang.<br>
+                4. <strong>Tambahan pekerja:</strong> 20 - 15 = 5 orang.<br><br>
+                <em><small>Sumber: Bank Soal SBMPTN 2018 & Latihan Mandiri.</small></em>
+            </div>
+        </div>
+
+        <div class="section" id="himpunan">
+            <h2>🔹 4. Himpunan & Diagram Venn</h2>
+            <p>Himpunan menguji logika kategorisasi data. Gunakan diagram Venn atau "Rumus Sapu Jagat" untuk mempermudah
+                perhitungan irisan dan gabungan.</p>
+            <p><strong>Rumus Total (Sapu Jagat 2 Himpunan):</strong> Total = n(A) + n(B) - Irisan(A,B) + Tidak Keduanya
+            </p>
+            <div class="example">
+                <strong>Contoh Soal & Solusi:</strong><br>
+                <em>Dari 40 siswa, 25 suka Matematika, 20 suka Fisika, dan 7 tidak suka keduanya. Berapa siswa yang suka
+                    keduanya?</em><br>
+                <strong>Solusi:</strong><br>
+                Substitusi langsung ke Rumus 2 Himpunan:<br>
+                40 = 25 + 20 - (Suka Keduanya) + 7<br>
+                40 = 52 - (Suka Keduanya)<br>
+                Suka Keduanya = 52 - 40 = 12 orang siswa.<br><br>
+                <em><small>Sumber: Materi Tes Potensi Akademik (TPA) Nasional.</small></em>
+            </div>
+        </div>
+
+        <div class="section" id="tips">
+            <h2>🔹 5. Strategi Menjawab SNBT Numerik</h2>
+            <ul>
+                <li><strong>Eliminasi Opsi (Digit Terakhir):</strong> Cek digit terakhir operasi perkalian untuk
+                    mengeleminasi jawaban salah tanpa menghitung ribuan penuh. Misal 123 - 457 ujungnya pasti angka 1.
+                </li>
+                <li><strong>Cek Keseimbangan Operasi:</strong> Perhatikan bilangan genap/ganjil. Ganjil + Ganjil =
+                    Genap. Jika soal menghasilkan (Ganjil - Ganjil), hasil akhir PASTI ganjil. Eliminasi semua opsi
+                    genap!</li>
+                <li><strong>Time Management:</strong> Jangan terpaku pada 1 soal lebih dari 1,5 menit. Lompat ke soal
+                    yang rumusnya Anda hafal diluar kepala.</li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="library.html" class="nav-btn">
+                <div>
+                    <div class="nav-btn-label">? Kembali</div>Library SNBT
+                </div>
+            </a>
+            <a href="lib-pk-tabel-grafik.html" class="nav-btn primary">
+                <div>
+                    <div class="nav-btn-label">Materi Selanjutnya &rarr;</div>Tabel & Grafik
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>- 2025 QuizNation - Library SNBT 2025</footer>
+    <script>if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark')</script>
+</body>
+
+</html>

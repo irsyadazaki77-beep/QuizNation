@@ -1,0 +1,549 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Penalaran Figural & Keruangan - Library SNBT 2025</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Mobile Optimization */
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --accent: #2563eb;
+            --accent2: #06b6d4;
+            --bg: #f0f2f8;
+            --surface: rgba(255, 255, 255, 0.72);
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #1a1a2e;
+            --text2: #4b5563;
+            --text3: #9ca3af;
+            --glow: rgba(124, 58, 237, 0.18);
+            --radius: 20px
+        }
+
+        body.dark {
+            --bg: #050a15;
+            --surface: rgba(255, 255, 255, 0.055);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #f0edff;
+            --text2: rgba(240, 237, 255, 0.65);
+            --text3: rgba(240, 237, 255, 0.35);
+            --glow: rgba(124, 58, 237, 0.28)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: .35
+        }
+
+        /* Top Nav */
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            gap: 16px
+        }
+
+        .topnav a {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .2s
+        }
+
+        .topnav a:hover {
+            gap: 10px
+        }
+
+        .topnav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-left: auto
+        }
+
+        .theme-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: grid;
+            place-items: center;
+            transition: all .2s;
+            margin-left: 8px
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent)
+        }
+
+        /* Content */
+        .wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px 80px;
+            position: relative;
+            z-index: 1
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(251, 146, 60, .12);
+            color: #f59e0b;
+            border: 1px solid rgba(251, 146, 60, .25);
+            border-radius: 30px;
+            padding: 5px 14px;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.15;
+            margin-bottom: 14px
+        }
+
+        .page-title .grad {
+            background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .page-desc {
+            font-size: 1.05rem;
+            color: var(--text2);
+            line-height: 1.8;
+            margin-bottom: 40px;
+            max-width: 700px
+        }
+
+        /* TOC */
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 40px
+        }
+
+        .toc-title {
+            font-weight: 800;
+            font-size: .9rem;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .toc ol {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .toc li {
+            color: var(--text2);
+            font-size: .88rem
+        }
+
+        .toc a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color .2s
+        }
+
+        .toc a:hover {
+            color: var(--accent2)
+        }
+
+        /* Sections */
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: all .3s
+        }
+
+        .section:hover {
+            box-shadow: 0 10px 40px var(--glow);
+            border-color: rgba(124, 58, 237, .2)
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .section h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 20px 0 10px
+        }
+
+        .section p,
+        .section li {
+            font-size: .92rem;
+            color: var(--text2);
+            line-height: 1.85
+        }
+
+        .section ul,
+        .section ol {
+            padding-left: 20px;
+            margin: 10px 0
+        }
+
+        .section li {
+            margin-bottom: 6px
+        }
+
+        /* Example Box */
+        .example {
+            background: rgba(124, 58, 237, .06);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .example strong {
+            color: var(--text)
+        }
+
+        /* Tip Box */
+        .tip {
+            background: rgba(6, 182, 212, .08);
+            border-left: 3px solid var(--accent2);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .tip strong {
+            color: var(--accent2)
+        }
+
+        /* Warning */
+        .warning {
+            background: rgba(244, 63, 94, .08);
+            border-left: 3px solid #f43f5e;
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        /* Nav buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 14px;
+            margin-top: 40px;
+            flex-wrap: wrap
+        }
+
+        .nav-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all .3s
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px var(--glow);
+            transform: translateY(-2px)
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, .4)
+        }
+
+        .nav-btn.primary:hover {
+            box-shadow: 0 8px 28px rgba(124, 58, 237, .5);
+            transform: translateY(-3px)
+        }
+
+        .nav-btn-label {
+            font-size: .7rem;
+            color: var(--text3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .nav-btn.primary .nav-btn-label {
+            color: rgba(255, 255, 255, .7)
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text3);
+            font-size: .8rem;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px
+        }
+
+        @media(max-width:768px) {
+            .topnav {
+                padding: 14px 16px
+            }
+
+            .wrapper {
+                padding: 24px 16px 60px
+            }
+
+            .section {
+                padding: 20px
+            }
+
+            .nav-buttons {
+                flex-direction: column
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">? Kembali ke Library</a>
+        <span class="topnav-title">Penalaran Keruangan</span>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">🧩 Kemampuan Spasial</div>
+        <h1 class="page-title">Penalaran <span class="grad">Figural &</span><br>Keruangan</h1>
+        <p class="page-desc">Latih kemampuan spasial untuk menguasai Penalaran Umum dan Potensi Kognitif. Materi ini
+            mencakup kemampuan menganalisis pola gambar, merotasi bentuk, pencerminan, hingga melipat bangun ruang 2D
+            menjadi 3D.
+        </p>
+
+        <div class="toc">
+            <div class="toc-title">📑 Daftar Isi</div>
+            <ol>
+                <li><a href="#pola-gambar">Pola Gambar (Deret Figural)</a></li>
+                <li><a href="#rotasi">Rotasi (Perputaran Gambar)</a></li>
+                <li><a href="#pencerminan">Pencerminan (Refleksi)</a></li>
+                <li><a href="#bangun-ruang">Melipat Bangun Ruang</a></li>
+                <li><a href="#tips">Tips & Strategi Menjawab Soal</a></li>
+            </ol>
+        </div>
+
+        <div class="section" id="pola-gambar">
+            <h2>🔹 1. Pola Gambar (Deret Figural)</h2>
+            <p>Pola gambar menguji kemampuan dalam mengidentifikasi perubahan dari satu gambar ke gambar berikutnya
+                dalam sebuah deret. Perubahan ini bisa terjadi karena berbagai hal, biasanya mengikuti suatu pola yang
+                teratur.</p>
+            <h3>Jenis-Jenis Perubahan pada Pola Gambar</h3>
+            <ul>
+                <li><strong>Penambahan/Pengurangan:</strong> Elemen pada gambar bertambah atau berkurang dengan jumlah
+                    tertentu di setiap langkahnya.</li>
+                <li><strong>Pergerakan Elemen:</strong> Sebuah titik, garis, atau bentuk bergerak mengelilingi bingkai
+                    (misal: maju 1 langkah searah jarum jam atau melompat-lompat).</li>
+                <li><strong>Perubahan Warna:</strong> Elemen berubah warna secara bergantian (contoh: hitam - putih -
+                    abu-abu - hitam).</li>
+                <li><strong>Kombinasi Geometri:</strong> Beberapa bentuk digabungkan atau saling memotong sehingga
+                    menciptakan bentuk baru.</li>
+            </ul>
+            <div class="example">
+                <strong>🔹 Tips Pola Gambar:</strong><br>
+                Fokuslah hanya pada <strong>satu elemen spesifik</strong> terlebih dahulu (misal titik hitam). Lacak
+                pergerakannya dari gambar 1, 2, dan 3. Setelah polanya ketemu, eliminasi pilihan jawaban yang tidak
+                sesuai, lalu lanjut analisis elemen lainnya.
+            </div>
+        </div>
+
+        <div class="section" id="rotasi">
+            <h2>🔹 2. Rotasi (Perputaran Gambar)</h2>
+            <p>Soal rotasi akan memberikan sebuah gambar asal, kemudian Anda diminta mencari hasil gambar ketika diputar
+                pada sudut dan arah tertentu.</p>
+            <h3>Sudut & Arah Rotasi Umum</h3>
+            <ul>
+                <li><strong>90- Searah Jarum Jam (SJJ):</strong> Atas pindah ke kanan.</li>
+                <li><strong>90- Berlawanan Arah Jarum Jam (BAJJ):</strong> Atas pindah ke kiri.</li>
+                <li><strong>180-:</strong> Posisi seluruh gambar terbalik secara sempurna.</li>
+            </ul>
+            <div class="tip">
+                <strong>🔹 Strategi Rotasi:</strong> Bayangkan sebuah jarum jam atau kompas di tengah gambar. Perhatikan
+                satu detail kecil di bagian atas (arah jam 12), bayangkan elemen tersebut bergeser ke arah jam 3 (90-
+                SJJ). Eliminasi opsi yang salah.
+            </div>
+        </div>
+
+        <div class="section" id="pencerminan">
+            <h2>? 3. Pencerminan (Refleksi)</h2>
+            <p>Pencerminan menguji apakah Anda bisa memvisualisasikan bagaimana penampakan suatu bentuk ketika
+                direfleksikan terhadap suatu sumbu horizontal, vertikal, maupun diagonal.</p>
+            <h3>Karakteristik Pencerminan</h3>
+            <ul>
+                <li><strong>Cermin Vertikal (|):</strong> Bagian kiri gambar akan menjadi bagian kanan bayangan (dan
+                    sebaliknya). Bagian atas dan bawah tetap pada posisinya.</li>
+                <li><strong>Cermin Horizontal (-):</strong> Bagian atas gambar akan menjadi bagian bawah bayangan (dan
+                    sebaliknya). Bagian kiri dan kanan tetap pada posisinya.</li>
+                <li>Elemen yang letaknya berdekatan dengan garis cermin akan muncul saling <strong>berhadapan</strong>
+                    (dekat garis juga) pada hasil pencerminannya.</li>
+            </ul>
+            <div class="example">
+                <strong>Contoh Visual:</strong><br>
+                Huruf <strong>d</strong> jika dicerminkan secara vertikal (|) akan menjadi huruf <strong>b</strong>.<br>
+                Huruf <strong>p</strong> jika dicerminkan secara vertikal (|) akan menjadi huruf <strong>q</strong>.
+            </div>
+        </div>
+
+        <div class="section" id="bangun-ruang">
+            <h2>🔹 4. Melipat Bangun Ruang</h2>
+            <p>Jaring-jaring atau melipat bangun ruang menguji tingkat tertinggi dari kemampuan spasial 3 dimensi. Anda
+                akan disajikan jaring-jaring 2D, kemudian diminta merakitnya menjadi bentuk utuh (biasanya kubus).</p>
+            <h3>Aturan Utama Jaring-jaring Kubus</h3>
+            <ul>
+                <li>Jika terdapat <strong>4 sisi sejajar</strong> (berderet lurus), maka 2 sisi di ujung barisan TIDAK
+                    AKAN PERNAH bersebelahan saat kubus dilipat.</li>
+                <li>Dua sisi yang letaknya diselingi (dilompati) oleh 1 sisi lain pada jaring-jaring pasti merupakan
+                    <strong>Sisi yang Berhadapan</strong> dan tidak bisa terlihat bersamaan dari posisi manapun.
+                </li>
+            </ul>
+            <div class="warning">
+                <strong>🔹 Awas Terkecoh:</strong> Dalam kubus, sering kali terdapat gambar dengan orientasi tertentu
+                (misalnya tanda panah). Pastikan mencatat kemana panah ini menunjuk usai dilipat (ke atas, ke samping,
+                dsb).
+            </div>
+        </div>
+
+        <div class="section" id="tips">
+            <h2>? 5. Tips & Strategi Menjawab Soal Spasial</h2>
+            <ol>
+                <li><strong>Gunakan Tangan / Kertas Buram:</strong> Jangan ragu memutar kertas coretan untuk
+                    memvisualisasikan soal gambar/rotasi. Ini sangat membantu kinerja otak!</li>
+                <li><strong>Metode Eliminasi (Wajib):</strong> Jarang sekali Anda harus meraba bentuk akhirnya 100%.
+                    Lebih cepat jika membuang pilihan jawaban yang ciri-cirinya tidak masuk akal.</li>
+                <li><strong>Pecah Fokus:</strong> Otak tidak dirancang untuk memeriksa 5 elemen bentuk yang bergerak
+                    serentak. Cukup ambil satu sisi / objek terkecil, analisis, eliminasi. Ulangi.</li>
+                <li><strong>Penomoran Jaring-jaring:</strong> Pada soal kubus, gunakan bolpoin untuk menandai sisi atas
+                    (1), sisi bawah (2), sisi kiri (3), dan seterusnya.</li>
+            </ol>
+            <div class="tip">
+                <strong>🔹 Manajemen Waktu:</strong> Soal figural kadang membuat kita penasaran sehingga menghabiskan
+                banyak waktu. Beri batas: jika dalam 1 menit 30 detik gambar sulit dicari polanya, segera tinggalkan.
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="library.html" class="nav-btn">
+                <div>
+                    <div class="nav-btn-label">? Kembali</div>Library SNBT
+                </div>
+            </a>
+            <a href="lib-penalaran-induktif.html" class="nav-btn primary">
+                <div>
+                    <div class="nav-btn-label">Materi Selanjutnya ?</div>Penalaran Induktif
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>- 2025 QuizNation - Library SNBT 2025</footer>
+    <script>if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark')</script>
+</body>
+
+</html>

@@ -1,0 +1,1233 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <title>Belajar dari Video &amp; Movie - QuizNation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&display=swap"
+        rel="stylesheet">
+    <style>
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --bg: #f0f2f7;
+            --surface: #fff;
+            --surface2: #e4e8f2;
+            --border: #d0d6e4;
+            --text: #14182a;
+            --text2: #3e4868;
+            --text3: #7880a0;
+            --ink: #14182a;
+            --accent: #2563eb;
+            --accent-mid: #60a5fa;
+            --accent-light: #e0e7ff;
+            --accent-glow: rgba(37, 99, 235, .12);
+            --teal: #0f766e;
+            --teal-light: #ccfbf1;
+            --rose: #e11d48;
+            --rose-light: #ffe4e6;
+            --amber: #b45309;
+            --amber-light: #fef3c7;
+            --sidebar-w: 260px;
+            --r: 20px;
+            --r-sm: 12px;
+            --shadow: 0 2px 20px rgba(0, 0, 0, .06);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, .09)
+        }
+
+        body.dark {
+            --bg: #0a11204;
+            --surface: #111420;
+            --surface2: #1a1e2c;
+            --border: #24283c;
+            --text: #e0e4f4;
+            --text2: #8090b8;
+            --text3: #4c5880;
+            --ink: #e0e4f4;
+            --accent-light: rgba(37, 99, 235, .2);
+            --teal-light: rgba(15, 118, 110, .15);
+            --rose-light: rgba(225, 29, 72, .15);
+            --amber-light: rgba(180, 83, 9, .2);
+            --shadow: 0 2px 20px rgba(0, 0, 0, .35);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, .5)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .45);
+            backdrop-filter: blur(4px);
+            z-index: 90;
+            opacity: 0;
+            visibility: hidden;
+            transition: .3s
+        }
+
+        .backdrop.open {
+            opacity: 1;
+            visibility: visible
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-w);
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            z-index: 100;
+            padding: 28px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform .4s cubic-bezier(.4, 0, .2, 1)
+        }
+
+        @media(min-width:1024px) {
+            .sidebar {
+                transform: translateX(0)
+            }
+        }
+
+        .sidebar.open {
+            transform: translateX(0)
+        }
+
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 28px;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .logo-close {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text2);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 8px;
+            line-height: 1
+        }
+
+        @media(max-width:1023px) {
+            .logo-close {
+                display: block
+            }
+        }
+
+        .nav-label {
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--text3);
+            padding: 16px 12px 6px
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--r-sm);
+            text-decoration: none;
+            font-size: .88rem;
+            font-weight: 500;
+            color: var(--text2);
+            transition: .15s
+        }
+
+        .nav-link:hover {
+            background: var(--surface2);
+            color: var(--text)
+        }
+
+        .nav-link.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700
+        }
+
+        .hamburger {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--text);
+            box-shadow: var(--shadow)
+        }
+
+        @media(max-width:1023px) {
+            .hamburger {
+                display: flex
+            }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            transition: .3s
+        }
+
+        .main {
+            flex: 1;
+            margin-left: 0;
+            transition: margin .4s;
+            min-width: 0
+        }
+
+        @media(min-width:1024px) {
+            .main {
+                margin-left: var(--sidebar-w)
+            }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--rose));
+            z-index: 200;
+            transition: width .15s;
+            border-radius: 0 2px 2px 0
+        }
+
+        .hero {
+            padding: 80px 48px 56px;
+            max-width: 840px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: rise .7s .1s cubic-bezier(.16, 1, .3, 1) forwards
+        }
+
+        @media(max-width:768px) {
+            .hero {
+                padding: 72px 24px 40px
+            }
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .8rem;
+            color: var(--text3);
+            margin-bottom: 28px;
+            font-weight: 500
+        }
+
+        .breadcrumb span {
+            color: var(--text2)
+        }
+
+        .module-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 100px;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: .75rem;
+            font-weight: 700;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border: 1px solid rgba(37, 99, 235, .15)
+        }
+
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--text);
+            margin-bottom: 20px;
+            letter-spacing: -.02em
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--accent)
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text2);
+            max-width: 560px
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 36px;
+            flex-wrap: wrap
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .85rem;
+            color: var(--text2);
+            font-weight: 500
+        }
+
+        .stat-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent)
+        }
+
+        .content {
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 0 48px 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px
+        }
+
+        @media(max-width:768px) {
+            .content {
+                padding: 0 20px 80px
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 36px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(24px);
+            transition: box-shadow .3s, transform .3s
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity .6s cubic-bezier(.16, 1, .3, 1), transform .6s cubic-bezier(.16, 1, .3, 1), box-shadow .3s
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md)
+        }
+
+        @media(max-width:768px) {
+            .card {
+                padding: 24px
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: var(--accent-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0
+        }
+
+        .card-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -.01em
+        }
+
+        .card-subtitle {
+            font-size: .82rem;
+            color: var(--text3);
+            margin-top: 2px;
+            font-weight: 500
+        }
+
+        .body-text {
+            font-size: .97rem;
+            line-height: 1.8;
+            color: var(--text2);
+            margin-bottom: 24px
+        }
+
+        .body-text strong {
+            color: var(--text);
+            font-weight: 700
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px
+        }
+
+        .mini-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            transition: .25s;
+            cursor: default
+        }
+
+        .mini-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 20px var(--accent-glow);
+            transform: translateY(-2px)
+        }
+
+        .mini-icon {
+            font-size: 1.4rem;
+            margin-bottom: 12px
+        }
+
+        .mini-title {
+            font-weight: 700;
+            font-size: .9rem;
+            color: var(--text);
+            margin-bottom: 7px
+        }
+
+        .mini-text {
+            font-size: .82rem;
+            line-height: 1.6;
+            color: var(--text2)
+        }
+
+        .mini-text em {
+            font-style: normal;
+            font-weight: 600;
+            color: var(--accent)
+        }
+
+        .highlight-box {
+            background: var(--accent-light);
+            border: 1px solid rgba(37, 99, 235, .18);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px
+        }
+
+        .hl-icon {
+            font-size: 1.05rem;
+            flex-shrink: 0;
+            margin-top: 1px
+        }
+
+        .hl-text {
+            font-size: .87rem;
+            line-height: 1.65;
+            color: var(--accent);
+            font-weight: 500
+        }
+
+        .hl-text strong {
+            font-weight: 700
+        }
+
+        .step-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 0
+        }
+
+        .step {
+            display: flex;
+            gap: 16px;
+            position: relative
+        }
+
+        .step-line {
+            width: 2px;
+            background: var(--accent-light);
+            position: absolute;
+            top: 40px;
+            bottom: -14px;
+            left: 19px
+        }
+
+        .step:last-child .step-line {
+            display: none
+        }
+
+        .step-num {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: .9rem;
+            flex-shrink: 0;
+            z-index: 1
+        }
+
+        .step-content {
+            flex: 1;
+            padding-bottom: 28px
+        }
+
+        .step-title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: var(--text);
+            margin-bottom: 6px
+        }
+
+        .step-desc {
+            font-size: .87rem;
+            line-height: 1.65;
+            color: var(--text2)
+        }
+
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px
+        }
+
+        .tip-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 14px 16px;
+            background: var(--surface2);
+            border-radius: 12px;
+            border: 1px solid var(--border)
+        }
+
+        .tip-num {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--accent-light);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .78rem;
+            font-weight: 800;
+            flex-shrink: 0
+        }
+
+        .tip-text {
+            font-size: .88rem;
+            line-height: 1.65;
+            color: var(--text2)
+        }
+
+        .tip-text strong {
+            color: var(--text);
+            font-weight: 700
+        }
+
+        .quiz-card {
+            background: linear-gradient(135deg, #2563eb, #e11d48);
+            border-radius: 20px;
+            padding: 36px;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden
+        }
+
+        .quiz-card::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .05)
+        }
+
+        .quiz-card::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -5%;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .04)
+        }
+
+        .quiz-prompt {
+            font-size: .78rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            opacity: .65;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1
+        }
+
+        .quiz-q {
+            font-family: 'Fraunces', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            position: relative;
+            z-index: 1
+        }
+
+        .q-option {
+            background: rgba(255, 255, 255, .12);
+            border: 1.5px solid rgba(255, 255, 255, .22);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: .85rem;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            transition: .2s;
+            text-align: center;
+            font-family: 'Plus Jakarta Sans', sans-serif
+        }
+
+        .q-option:hover {
+            background: rgba(255, 255, 255, .22);
+            transform: translateY(-1px)
+        }
+
+        .q-option.correct {
+            background: rgba(255, 255, 255, .28);
+            border-color: #fff
+        }
+
+        .q-option.wrong {
+            background: rgba(0, 0, 0, .25);
+            border-color: rgba(255, 100, 100, .5)
+        }
+
+        .quiz-feedback {
+            margin-top: 14px;
+            font-size: .85rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: .3s;
+            position: relative;
+            z-index: 1;
+            line-height: 1.5
+        }
+
+        .quiz-feedback.show {
+            opacity: 1
+        }
+
+        .quiz-next {
+            margin-top: 16px;
+            background: #fff;
+            color: #2563eb;
+            border: none;
+            padding: 11px 26px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: .88rem;
+            cursor: pointer;
+            display: none;
+            transition: .2s;
+            position: relative;
+            z-index: 1;
+            font-family: 'Plus Jakarta Sans', sans-serif
+        }
+
+        .quiz-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .2)
+        }
+
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--text3);
+            font-size: .75rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border)
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 16px
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: .93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: .25s;
+            font-family: 'Plus Jakarta Sans', sans-serif
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-glow)
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: .93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: .25s;
+            font-family: 'Plus Jakarta Sans', sans-serif
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px)
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(20px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="backdrop" id="backdrop" onclick="closeSidebar()"></div>
+        <nav class="sidebar" id="sidebar">
+        <div class="logo">QuizNation <button class="logo-close" onclick="closeSidebar()">✕</button></div>
+        <div class="nav-label">Menu Utama</div>
+        <a href="index.html" class="nav-link">🏠 Beranda</a>
+        <a href="statistik.html" class="nav-link">📊 Statistik</a>
+        <a href="evaluasi.html" class="nav-link">🎓 Evaluasi SNBT</a>
+        <a href="pencapaian.html" class="nav-link">🏆 Pencapaian</a>
+        <a href="materi.html" class="nav-link active">📚 Materi</a>
+        <a href="library.html" class="nav-link">📖 Library</a>
+        <div class="nav-label" style="margin-top:10px">Bantuan</div>
+        <a href="pengaturan.html" class="nav-link">⚙️ Pengaturan</a>
+        <a href="panduan.html" class="nav-link">📋 Panduan</a>
+        <a href="feedback.html" class="nav-link">💬 Feedback</a>
+    </nav>
+    <button class="hamburger" onclick="openSidebar()">☰</button>
+    <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</div>
+    <main class="main">
+        <section class="hero">
+            <div class="breadcrumb"><span>📚 Materi</span> - <span>Listening &amp; Speaking</span> - Video &amp; Media
+            </div>
+            <div class="module-tag">🔹 Video & Media</div>
+            <h1>Belajar dari<br><em>Video &amp; Movie</em></h1>
+            <p>Manfaatkan video, film, dan series untuk meningkatkan listening comprehension secara natural dan
+                menyenangkan.</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-dot"></div> Film & Series
+                </div>
+                <div class="stat">
+                    <div class="stat-dot" style="background:var(--rose)"></div> YouTube Channels
+                </div>
+                <div class="stat">
+                    <div class="stat-dot" style="background:var(--amber)"></div> -15 menit baca
+                </div>
+            </div>
+        </section>
+        
+        <div class="content">
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">1. Kenapa Belajar dari Video?</div>
+                        <div class="card-subtitle">Natural learning - seperti anak kecil belajar bahasa</div>
+                    </div>
+                </div>
+                <p class="body-text">Belajar dari video memberikan <strong>konteks visual dan audio secara
+                        bersamaan</strong> - cara paling natural untuk menyerap bahasa, karena kamu melihat ekspresi,
+                    bahasa tubuh, dan situasi percakapan sebenarnya.</p>
+                <div class="grid-2">
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Real Pronunciation</div>
+                        <div class="mini-text">Dengar bagaimana native speakers <em>benar-benar</em> mengucapkan kata -
+                            bukan versi "textbook".</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Slang & Idioms</div>
+                        <div class="mini-text">Pelajari ekspresi sehari-hari: <em>"no biggie", "hang out", "it's a piece
+                                of cake"</em>.</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Context & Emotion</div>
+                        <div class="mini-text">Pahami bagaimana <em>emosi dan konteks</em> mempengaruhi cara orang
+                            berbicara.</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Cultural Understanding</div>
+                        <div class="mini-text">Film dan series memberikan insight tentang <em>budaya</em>
+                            English-speaking countries.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">2. Active vs Passive Watching</div>
+                        <div class="card-subtitle">Perbedaan menonton untuk hiburan vs belajar</div>
+                    </div>
+                </div>
+                <p class="body-text">Banyak orang mengeluh, "Saya sering nonton Netflix tapi bahasa Inggris saya tidak membaik." Itu terjadi karena mereka melakukan <strong>Passive Watching</strong>.</p>
+                <div class="grid-2">
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹?</div>
+                        <div class="mini-title">Passive Watching</div>
+                        <div class="mini-text">Menonton hanya untuk mengikuti alur cerita. Sering mengandalkan subtitle bahasa Indonesia dan mengabaikan kosakata yang tidak dipahami asalkan inti ceritanya jelas.</div>
+                    </div>
+                    <div class="mini-card" style="border-color: var(--accent);">
+                        <div class="mini-icon">?</div>
+                        <div class="mini-title">Active Watching</div>
+                        <div class="mini-text">Menonton dengan niat <em>decoding</em> (membedah) bahasa. Kamu mem-pause video, mencatat frasa menarik, dan mengulang pengucapan aktor.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">3. Metode 3-Step Video Learning</div>
+                        <div class="card-subtitle">Cara efektif belajar dari video</div>
+                    </div>
+                </div>
+                <p class="body-text">Jangan hanya menonton - gunakan metode 3 langkah ini agar tontonanmu
+                    <strong>benar-benar meningkatkan kemampuan bahasa Inggris</strong>:</p>
+                <div class="step-flow">
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-line"></div>
+                        <div class="step-content">
+                            <div class="step-title">Tonton dengan English Subtitles</div>
+                            <div class="step-desc">Pertama kali menonton, nyalakan subtitle bahasa Inggris. Ini membantu
+                                menghubungkan apa yang kamu <strong>dengar</strong> dengan apa yang tertulis. Catat
+                                kata/frasa baru.</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-line"></div>
+                        <div class="step-content">
+                            <div class="step-title">Tonton Tanpa Subtitle</div>
+                            <div class="step-desc">Ulangi scene yang sama tanpa subtitle. Coba pahami berdasarkan
+                                <strong>konteks, intonasi, dan visual</strong>. Berapa persen yang kamu tangkap?</div>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <div class="step-title">Shadow & Repeat</div>
+                            <div class="step-desc">Pilih dialog favorit. Putar berulang dan tirukan persis -
+                                <strong>kecepatan, intonasi, ekspresi</strong>. Ini teknik shadowing yang sangat
+                                efektif.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">4. Membangun Vocabulary Bank</div>
+                        <div class="card-title" style="font-size: 0.9rem; font-weight: normal; color: var(--text3); margin-top: 4px;">Jangan sekadar menghafal kata</div>
+                    </div>
+                </div>
+                <p class="body-text">Saat menonton, kamu akan menemukan banyak kata baru. Kesalahan terbesar adalah hanya mencatat terjemahannya. Terapkan metode ini:</p>
+                <ul class="body-text" style="padding-left: 20px; display: flex; flex-direction: column; gap: 12px;">
+                    <li><strong>Catat dalam "Chunk" (Kesatuan):</strong> Jangan mencatat kata "ridiculous". Catatlah kalimat lengkapnya: <em>"That's absolutely ridiculous!"</em></li>
+                    <li><strong>Tulis Konteks Adegan:</strong> Catat di memori atau kertas tentang siapa yang bicara dan dalam situasi apa. (Contoh: "Diucapkan saat Rachel marah karena pizzanya jatuh"). Konteks emosional membantu otak mengingat lebih lama.</li>
+                    <li><strong>Review Mingguan:</strong> Kumpulkan frasa-frasa tersebut dalam aplikasi seperti Notion atau Anki, lalu review setiap akhir pekan.</li>
+                </ul>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">5. Memilih Genre Berdasarkan Tujuan</div>
+                        <div class="card-subtitle">Setiap genre mengajarkan kosakata yang berbeda</div>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Sitcoms (Komedi Situasi)</div>
+                        <div class="mini-text">Terbaik untuk belajar: <strong>Casual English, Slang, & Sarcasm</strong>. (Contoh: Friends, Brooklyn Nine-Nine).</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Documentaries</div>
+                        <div class="mini-text">Terbaik untuk belajar: <strong>Formal Vocabulary & Clear Articulation</strong>. (Contoh: Planet Earth, Our Great National Parks).</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Talk Shows</div>
+                        <div class="mini-text">Terbaik untuk belajar: <strong>Natural flow of conversation & Interruptions</strong>. (Contoh: The Graham Norton Show).</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Legal / Medical Drama</div>
+                        <div class="mini-text">Terbaik untuk belajar: <strong>Advanced / Professional Terminology</strong>. (Contoh: Suits, Grey's Anatomy).</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">6. Rekomendasi Film &amp; Series</div>
+                        <div class="card-subtitle">Berdasarkan level kemampuan</div>
+                    </div>
+                </div>
+                <div class="grid-3">
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Beginner</div>
+                        <div class="mini-text"><em>Friends</em> - dialog sederhana, repetitif, humor visual. <em>Peppa
+                                Pig</em> - vocabulary dasar, kalimat pendek.</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Intermediate</div>
+                        <div class="mini-text"><em>The Office</em> - percakapan kantor natural. <em>Stranger Things</em>
+                            - dialog variatif, accents jelas.</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Advanced</div>
+                        <div class="mini-text"><em>Sherlock</em> - vocabulary kaya, kecepatan tinggi. <em>The Crown</em>
+                            - British English formal dan elegan.</div>
+                    </div>
+                </div>
+                <div class="highlight-box" style="margin-top:20px">
+                    <div class="hl-icon">🔹</div>
+                    <div class="hl-text"><strong>Pro tip:</strong> Pilih genre yang kamu suka! Kamu akan lebih
+                        termotivasi dan konsisten jika menonton sesuatu yang memang kamu nikmati.</div>
+                </div>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">🔹?</div>
+                    <div>
+                        <div class="card-title">7. Mengatasi "Mumbling" (Bicara Bergumam)</div>
+                        <div class="card-subtitle">Kenapa Native Speaker sulit dipahami?</div>
+                    </div>
+                </div>
+                <p class="body-text">Seringkali saat menonton film, aktor berbicara terlalu cepat dan kata-katanya terdengar menyatu. Ini disebut <strong>Connected Speech</strong>.</p>
+                <div class="highlight-box">
+                    <div class="hl-icon">🔹</div>
+                    <div class="hl-text">
+                        <strong>Contoh Connected Speech:</strong><br>
+                        Tulisan: "What are you going to do?"<br>
+                        Diucapkan: <em>"Whatcha gonna do?"</em>
+                    </div>
+                </div>
+                <p class="body-text">Solusinya adalah dengan sering mendengar dan menyadari pola penyambungan kata tersebut, bukan memaksakan diri mendengar setiap kata secara terpisah.</p>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">8. YouTube Channels untuk Belajar</div>
+                        <div class="card-subtitle">Content creator yang membantu pronunciation & listening</div>
+                    </div>
+                </div>
+                <div class="grid-2">
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">English with Lucy</div>
+                        <div class="mini-text">British English, grammar, pronunciation. <em>Sangat jelas dan
+                                terstruktur.</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹🔹</div>
+                        <div class="mini-title">Rachel's English</div>
+                        <div class="mini-text">American pronunciation specialist. <em>Detail tentang mouth
+                                position.</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">BBC Learning English</div>
+                        <div class="mini-text">Video pendek, berita sederhana. <em>Cocok untuk semua level.</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">TED Talks</div>
+                        <div class="mini-text">Presentasi inspiring dengan subtitle. <em>Melatih academic
+                                listening.</em></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">9. Cara Mengevaluasi Progress-mu</div>
+                        <div class="card-subtitle">Apakah teknik ini berhasil?</div>
+                    </div>
+                </div>
+                <p class="body-text">Lakukan "Blind Test" setiap akhir bulan. Tonton satu episode sitcom berdurasi 20 menit (seperti Friends atau How I Met Your Mother) <strong>sepenuhnya tanpa subtitle</strong>. Hitung persentase pemahamanmu:</p>
+                <ul class="body-text" style="padding-left: 20px;">
+                    <li><strong>0 - 30%:</strong> Masih perlu banyak berlatih dengan English Subtitle.</li>
+                    <li><strong>31 - 70%:</strong> Telingamu mulai terbiasa, perbanyak perbendaharaan slang.</li>
+                    <li><strong>71 - 100%:</strong> Kamu sudah siap menonton sebagian besar film tanpa bantuan teks!</li>
+                </ul>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">10. Tips Maksimalkan Belajar dari Video</div>
+                        <div class="card-subtitle">Do's and Don'ts</div>
+                    </div>
+                </div>
+                <div class="tips-list">
+                    <div class="tip-item">
+                        <div class="tip-num">1</div>
+                        <div class="tip-text"><strong>JANGAN gunakan subtitle Indonesia.</strong> Otakmu akan "membaca"
+                            bukan "mendengar". Gunakan English subtitles atau tanpa subtitle.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">2</div>
+                        <div class="tip-text"><strong>Catat frasa, bukan kata tunggal.</strong> "How's it going?" lebih
+                            berguna daripada sekadar mencatat "going". Pelajari frasa sebagai satu kesatuan.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">3</div>
+                        <div class="tip-text"><strong>Mulai dari 10 menit/hari.</strong> Konsistensi lebih penting dari
+                            durasi. 10 menit setiap hari lebih baik dari 2 jam sekali seminggu.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">4</div>
+                        <div class="tip-text"><strong>Gunakan fitur speed control.</strong> Terlalu cepat? Turunkan
+                            speed ke 0.75x. Seiring waktu, naikkan ke normal speed.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">5</div>
+                        <div class="tip-text"><strong>Active watching, bukan passive.</strong> Tanyakan pada diri
+                            sendiri: "Apa yang dia bilang? Kenapa dia pakai kata itu? Bagaimana intonasinya?"</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Mini Quiz</div>
+                        <div class="card-subtitle">8 soal - Evaluasi Pemahaman Modul Video & Movie</div>
+                    </div>
+                </div>
+                <div class="quiz-card" id="quizCard">
+                    <div class="quiz-prompt">Pertanyaan <span id="qNum">1</span> dari <span id="qTotal">8</span></div>
+                    <div class="quiz-q" id="qText">Loading...</div>
+                    <div class="quiz-options" id="qOptions"></div>
+                    <div class="quiz-feedback" id="qFeedback"></div>
+                    <button class="quiz-next" id="qNext" onclick="nextQuestion()">Pertanyaan Berikutnya ?</button>
+                </div>
+            </div>
+
+            <div class="section-divider">Selesai Membaca</div>
+            <div class="card" data-card style="text-align:center;padding:40px">
+                <div style="font-size:2rem;margin-bottom:14px">🔹</div>
+                <div class="card-title" style="margin-bottom:10px">Modul Video & Movie selesai!</div>
+                <p class="body-text" style="margin-bottom:0;max-width:480px;margin-left:auto;margin-right:auto">Sekarang
+                    ubah kebiasaan menontonmu menjadi sesi belajar yang menyenangkan!</p>
+                <div class="cta-row" style="justify-content:center;margin-top:24px">
+                    <a href="materi-berbicara.html" class="btn-secondary">? Teknik Berbicara</a>
+                    <a href="materi.html" class="btn-primary">Semua Materi ?</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        const saved = localStorage.getItem('theme'); if (saved === 'dark') { document.body.classList.add('dark'); document.getElementById('themeBtn').textContent = '🔹' }
+        function toggleTheme() { const d = document.body.classList.toggle('dark'); localStorage.setItem('theme', d ? 'dark' : 'light'); document.getElementById('themeBtn').textContent = d ? '🔹' : '🔹' }
+        function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('backdrop').classList.add('open') }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('backdrop').classList.remove('open') }
+        window.addEventListener('scroll', () => { const el = document.documentElement; document.getElementById('progressBar').style.width = (el.scrollTop / (el.scrollHeight - el.clientHeight) * 100) + '%' });
+        const obs = new IntersectionObserver(entries => { entries.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 55); obs.unobserve(e.target) } }) }, { threshold: .07 }); document.querySelectorAll('[data-card]').forEach(c => obs.observe(c));
+        
+        // Kuis telah diupdate untuk merefleksikan materi baru
+        const questions = [
+            { q: "Apa perbedaan utama antara Active dan Passive Watching?", opts: ["Active watching melibatkan decoding bahasa, passive sekadar mengikuti cerita", "Passive watching lebih melelahkan otak", "Active watching wajib menggunakan subtitle Indonesia", "Tidak ada bedanya"], ans: 0, exp: "? Active watching berarti kamu sengaja memperhatikan kosakata dan intonasi, bukan sekadar larut dalam cerita." },
+            { q: "Mengapa disarankan mencatat kosakata dalam bentuk 'Chunk'?", opts: ["Agar lebih cepat", "Agar tahu konteks penggunaan dan cara merangkai kalimatnya", "Karena buku tulis lebih muat", "Agar terjemahannya lebih literal"], ans: 1, exp: "? Mencatat dalam kesatuan (chunk) membantu kamu memahami bagaimana kata tersebut digunakan dalam kalimat secara natural." },
+            { q: "Genre apa yang paling disarankan untuk mempelajari Casual English dan Slang?", opts: ["Legal Drama", "Documentaries", "Sitcoms (Komedi Situasi)", "Talk Shows"], ans: 2, exp: "? Sitcoms seperti Friends sangat kaya akan bahasa gaul (slang), sarkasme, dan percakapan sehari-hari." },
+            { q: "Apa yang dimaksud dengan 'Connected Speech' saat native speaker berbicara?", opts: ["Berbicara tanpa bernapas", "Berbicara sangat lambat", "Kata-kata yang diucapkan seolah menyatu, seperti 'Whatcha gonna do?'", "Menggunakan bahasa tubuh berlebihan"], ans: 2, exp: "? Connected Speech adalah fenomena di mana native speaker menyambungkan kata-kata saat berbicara dengan kecepatan normal." },
+            { q: "Langkah ke-3 dalam 'Metode 3-Step Video Learning' adalah:", opts: ["Tonton dengan subtitle Indonesia", "Shadow & Repeat", "Tulis ulang seluruh naskah", "Tidur siang"], ans: 1, exp: "? Step 3 adalah Shadow & Repeat, yaitu meniru pengucapan aktor persis seperti aslinya." },
+            { q: "Bagaimana cara melakukan 'Blind Test' untuk mengevaluasi progress-mu?", opts: ["Menonton dengan mata tertutup", "Mendengarkan musik keras-keras", "Menonton satu episode penuh tanpa subtitle apa pun", "Membaca naskah film tanpa menontonnya"], ans: 2, exp: "? Blind Test dilakukan dengan menonton video/film murni tanpa bantuan subtitle untuk mengukur seberapa banyak yang telingamu bisa tangkap." },
+            { q: "Jika sebuah video dirasa terlalu cepat, solusi terbaik adalah:", opts: ["Menyerah dan nonton yang lain", "Turunkan kecepatan video (speed control) menjadi 0.75x", "Mengganti subtitle ke bahasa Indonesia", "Hanya membaca subtitle tanpa mendengar"], ans: 1, exp: "? Fitur speed control 0.75x sangat membantu pemula untuk menangkap artikulasi yang cepat sebelum kembali ke kecepatan normal." },
+            { q: "Kunci keberhasilan belajar dari video menurut tips nomor 3 adalah...", opts: ["Menonton 3 jam di hari Minggu", "Konsistensi, meskipun hanya 10 menit setiap hari", "Membeli akun premium Netflix", "Menghafal kamus terlebih dahulu"], ans: 1, exp: "? Otak lebih mudah menyerap bahasa melalui paparan singkat yang dilakukan secara konsisten setiap hari." }
+        ];
+        
+        let current = 0, score = 0, answered = false;
+        function renderQuestion() { const q = questions[current]; document.getElementById('qNum').textContent = current + 1; document.getElementById('qTotal').textContent = questions.length; document.getElementById('qText').textContent = q.q; document.getElementById('qFeedback').textContent = ''; document.getElementById('qFeedback').classList.remove('show'); document.getElementById('qNext').style.display = 'none'; answered = false; const o = document.getElementById('qOptions'); o.innerHTML = ''; q.opts.forEach((opt, i) => { const b = document.createElement('button'); b.className = 'q-option'; b.textContent = opt; b.onclick = () => selectAnswer(i); o.appendChild(b) }) }
+        function selectAnswer(i) { if (answered) return; answered = true; const q = questions[current]; const opts = document.querySelectorAll('.q-option'); opts[i].classList.add(i === q.ans ? 'correct' : 'wrong'); if (i !== q.ans) opts[q.ans].classList.add('correct'); else score++; const fb = document.getElementById('qFeedback'); fb.textContent = i === q.ans ? q.exp : '? ' + q.exp; fb.classList.add('show'); const n = document.getElementById('qNext'); n.style.display = 'inline-block'; if (current === questions.length - 1) n.textContent = 'Lihat Hasil 🔹' }
+        function nextQuestion() { current++; if (current < questions.length) { renderQuestion(); return } const s = score, t = questions.length, g = s >= 7 ? '🔹' : s >= 5 ? '🔹' : '🔹', m = s === t ? 'Sempurna!' : s >= 6 ? 'Bagus!' : s >= 4 ? 'Lumayan!' : 'Ayo ulangi.'; document.getElementById('quizCard').innerHTML = `<div class="quiz-prompt" style="position:relative;z-index:1">Hasil Akhir</div><div class="quiz-q" style="position:relative;z-index:1;font-size:2.8rem">${g}</div><div class="quiz-q" style="position:relative;z-index:1">Skor: ${s} / ${t}</div><p style="position:relative;z-index:1;opacity:.82;font-size:.88rem;margin-top:6px">${m}</p><button class="quiz-next" style="display:inline-block;margin-top:16px" onclick="restartQuiz()">Ulangi Quiz</button>` }
+        function restartQuiz() { current = 0; score = 0; document.getElementById('quizCard').innerHTML = `<div class="quiz-prompt">Pertanyaan <span id="qNum">1</span> dari <span id="qTotal">8</span></div><div class="quiz-q" id="qText"></div><div class="quiz-options" id="qOptions"></div><div class="quiz-feedback" id="qFeedback"></div><button class="quiz-next" id="qNext" onclick="nextQuestion()">Pertanyaan Berikutnya ?</button>`; renderQuestion() }
+        renderQuestion();
+    </script>
+</body>
+
+</html>
+
+
+

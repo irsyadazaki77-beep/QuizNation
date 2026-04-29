@@ -1,0 +1,167 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Fungsi Kuadrat & Optimasi - Library SNBT 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        html, body { max-width: 100%; overflow-x: hidden; }
+        * { -webkit-tap-highlight-color: transparent !important; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --accent:#2563eb; --accent2:#06b6d4; --bg:#f0f2f8; --surface:rgba(255,255,255,.72); --border:rgba(0,0,0,.08); --text:#1a1a2e; --text2:#4b5563; --text3:#9ca3af; --glow:rgba(124,58,237,.18); --radius:20px; }
+        body.dark { --bg:#050a15; --surface:rgba(255,255,255,.055); --border:rgba(255,255,255,.09); --text:#f0edff; --text2:rgba(240,237,255,.68); --text3:rgba(240,237,255,.36); --glow:rgba(124,58,237,.28); }
+        body { font-family:'Bricolage Grotesque',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; transition:background .3s,color .3s; }
+        .noise-overlay { position:fixed; inset:0; z-index:0; opacity:.35; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); }
+        .topnav { position:sticky; top:0; z-index:10; display:flex; align-items:center; gap:14px; padding:16px 20px; background:var(--surface); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); }
+        .topnav a { text-decoration:none; color:var(--accent); font-weight:800; }
+        .topnav-title { margin-left:auto; font-family:'Playfair Display',serif; font-weight:700; }
+        .theme-btn { width:36px; height:36px; border-radius:10px; border:1px solid var(--border); background:var(--surface); cursor:pointer; }
+        .wrapper { max-width:920px; margin:0 auto; padding:34px 18px 70px; position:relative; z-index:1; }
+        .hero-badge { display:inline-flex; padding:6px 14px; border-radius:999px; background:rgba(168,85,247,.12); color:#3b82f6; border:1px solid rgba(168,85,247,.24); font-size:.74rem; font-weight:800; margin-bottom:14px; }
+        .page-title { font-family:'Playfair Display',serif; font-size:clamp(2rem,4vw,3rem); line-height:1.15; margin-bottom:12px; }
+        .page-title .grad { background:linear-gradient(135deg,var(--accent),#60a5fa,var(--accent2)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+        .page-desc { color:var(--text2); line-height:1.8; margin-bottom:26px; }
+        .toc, .section { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); }
+        .toc { padding:22px 24px; margin-bottom:24px; }
+        .toc-title { font-weight:800; margin-bottom:10px; }
+        .toc ol { padding-left:20px; display:grid; gap:6px; color:var(--text2); }
+        .section { padding:24px; margin-bottom:18px; }
+        .section h2 { font-family:'Playfair Display',serif; margin-bottom:12px; font-size:1.45rem; }
+        .section h3 { color:var(--accent); margin:16px 0 8px; font-size:1.02rem; }
+        .section p, .section li { color:var(--text2); line-height:1.8; font-size:.94rem; }
+        .section ul, .section ol { padding-left:20px; margin:10px 0; }
+        .example, .tip, .warning { padding:14px 16px; border-radius:12px; margin:14px 0; line-height:1.75; font-size:.9rem; }
+        .example { background:rgba(124,58,237,.07); border-left:3px solid var(--accent); }
+        .tip { background:rgba(6,182,212,.08); border-left:3px solid var(--accent2); }
+        .warning { background:rgba(244,63,94,.08); border-left:3px solid #f43f5e; }
+        .formula { font-family:'DM Mono',monospace; background:rgba(255,255,255,.08); padding:8px 10px; border-radius:10px; display:inline-block; margin:8px 0; }
+        .nav-buttons { display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; }
+        .nav-btn { flex:1 1 220px; padding:14px 16px; border-radius:14px; text-decoration:none; border:1px solid var(--border); background:var(--surface); color:var(--text); font-weight:800; }
+        .nav-btn.primary { color:#fff; border:none; background:linear-gradient(135deg,var(--accent),var(--accent2)); }
+        footer { text-align:center; color:var(--text3); padding:18px; margin-top:22px; border-top:1px solid var(--border); }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">? Kembali ke Library</a>
+        <span class="topnav-title">Fungsi Kuadrat & Optimasi</span>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">Penalaran Matematika</div>
+        <h1 class="page-title">Fungsi Kuadrat & <span class="grad">Optimasi</span></h1>
+        <p class="page-desc">Topik ini penting untuk memahami grafik parabola, titik puncak, nilai maksimum-minimum, dan soal optimasi yang sering muncul dalam penalaran matematika SNBT. Untuk latihan 2026, fokus utamanya bukan sekadar hafal rumus, tetapi mampu memodelkan masalah kontekstual ke bentuk fungsi kuadrat.</p>
+
+        <div class="toc">
+            <div class="toc-title">📑 Daftar Isi</div>
+            <ol>
+                <li>Bentuk umum dan bentuk puncak</li>
+                <li>Titik puncak, sumbu simetri, dan akar</li>
+                <li>Nilai maksimum-minimum</li>
+                <li>Optimasi kontekstual langkah demi langkah</li>
+                <li>Jebakan umum model SNBT 2026</li>
+                <li>Latihan bertahap</li>
+            </ol>
+        </div>
+
+        <section class="section">
+            <h2>1. Bentuk umum dan bentuk puncak</h2>
+            <p>Fungsi kuadrat ditulis sebagai <span class="formula">f(x) = ax- + bx + c</span> dengan <strong>a ? 0</strong>. Grafiknya berbentuk parabola.</p>
+            <ul>
+                <li>Jika <strong>a &gt; 0</strong>, parabola terbuka ke atas.</li>
+                <li>Jika <strong>a &lt; 0</strong>, parabola terbuka ke bawah.</li>
+                <li>Bentuk puncak sering ditulis sebagai <span class="formula">f(x)=a(x-h)-+k</span>, dengan titik puncak <span class="formula">(h,k)</span>.</li>
+            </ul>
+            <div class="example"><strong>Contoh:</strong> <span class="formula">f(x)=x--4x+3</span> adalah parabola terbuka ke atas karena <strong>a = 1</strong>. Jika dilengkapkan kuadrat, diperoleh <span class="formula">(x-2)--1</span>, sehingga titik puncaknya adalah <strong>(2, -1)</strong>.</div>
+        </section>
+
+        <section class="section">
+            <h2>2. Titik puncak, sumbu simetri, dan akar</h2>
+            <p>Titik puncak adalah bagian paling tinggi atau paling rendah dari parabola. Nilai absis titik puncak dapat dicari dengan rumus:</p>
+            <div class="formula">x = -b / 2a</div>
+            <p>Setelah memperoleh nilai <strong>x</strong>, substitusikan ke fungsi untuk mendapatkan nilai <strong>y</strong>. Selain itu, akar-akar persamaan kuadrat penting untuk mengetahui titik potong dengan sumbu-<em>x</em>.</p>
+            <div class="formula">D = b- - 4ac</div>
+            <ul>
+                <li><strong>D &gt; 0</strong>: dua akar real berbeda.</li>
+                <li><strong>D = 0</strong>: satu akar kembar.</li>
+                <li><strong>D &lt; 0</strong>: tidak memotong sumbu-<em>x</em>.</li>
+            </ul>
+            <div class="tip"><strong>Shortcut:</strong> kalau yang ditanya hanya sumbu simetri, cukup pakai <span class="formula">x = -b / 2a</span>. Kalau ditanya bentuk grafik, cek juga tanda <span class="formula">a</span> dan diskriminannya.</div>
+        </section>
+
+        <section class="section">
+            <h2>3. Nilai maksimum dan minimum</h2>
+            <p>Nilai optimum fungsi kuadrat berada di titik puncak.</p>
+            <ul>
+                <li><strong>Minimum</strong> terjadi jika parabola terbuka ke atas.</li>
+                <li><strong>Maksimum</strong> terjadi jika parabola terbuka ke bawah.</li>
+            </ul>
+            <div class="example"><strong>Latihan singkat:</strong> tentukan nilai minimum dari <span class="formula">f(x)=x--6x+13</span>.<br>
+            Jawab: <span class="formula">x = -(-6)/(2-1)=3</span>, maka <span class="formula">f(3)=4</span>. Jadi nilai minimumnya <strong>4</strong>.</div>
+            <h3>Kenapa ini penting?</h3>
+            <p>Pada soal SNBT 2026, maksimum-minimum sering muncul dalam konteks <em>luas terbesar, keuntungan terbesar, biaya paling kecil</em>, atau <em>jarak paling dekat</em>. Jadi kamu harus bisa menghubungkan nilai puncak dengan situasi cerita.</p>
+        </section>
+
+        <section class="section">
+            <h2>4. Optimasi kontekstual langkah demi langkah</h2>
+            <p>Soal optimasi biasanya muncul dalam bentuk cerita: luas maksimum, biaya minimum, keuntungan maksimum, dan sebagainya.</p>
+            <ol>
+                <li>Tentukan variabel utama, misalnya panjang = <span class="formula">x</span>.</li>
+                <li>Nyatakan besaran lain dalam variabel yang sama.</li>
+                <li>Bentuk fungsi kuadrat dari situasi tersebut.</li>
+                <li>Cari titik puncak untuk memperoleh nilai optimum.</li>
+                <li>Tafsirkan kembali hasilnya ke konteks soal.</li>
+            </ol>
+            <div class="example"><strong>Contoh konteks:</strong> Sebuah taman persegi panjang memiliki keliling 20 m. Jika panjangnya <span class="formula">x</span>, maka lebarnya <span class="formula">10 - x</span>. Luas taman:<br><span class="formula">L(x)=x(10-x)=-x-+10x</span>.<br>Titik puncak ada di <span class="formula">x=5</span>, sehingga luas maksimum adalah <span class="formula">25 m-</span>.</div>
+        </section>
+
+        <section class="section">
+            <h2>5. Jebakan umum model SNBT 2026</h2>
+            <ul>
+                <li>Berhenti di nilai <strong>x</strong> titik puncak, padahal yang ditanya adalah luas, biaya, atau keuntungan.</li>
+                <li>Lupa membedakan kapan diminta <strong>nilai optimum</strong> dan kapan diminta <strong>nilai x saat optimum terjadi</strong>.</li>
+                <li>Salah mengubah cerita menjadi model aljabar.</li>
+                <li>Terlalu fokus pada hitungan, padahal soal penalaran matematika juga menilai <strong>interpretasi grafik</strong>.</li>
+            </ul>
+            <div class="warning"><strong>Catatan relevansi:</strong> tidak ada materi yang -ketinggalan zaman- di sini untuk 2026; yang berubah biasanya hanya <em>konteks soal</em>. Jadi kuasai konsep, bukan hafalan template semata.</div>
+        </section>
+
+        <section class="section">
+            <h2>6. Latihan bertahap</h2>
+            <p><strong>Soal 1:</strong> Tentukan titik puncak dari <span class="formula">f(x)=2x--8x+5</span>.</p>
+            <div class="example"><strong>Pembahasan:</strong> <span class="formula">x = -(-8)/(2-2)=2</span>. Lalu <span class="formula">f(2)=2(4)-16+5=-3</span>. Titik puncak = <strong>(2, -3)</strong>.</div>
+
+            <p><strong>Soal 2:</strong> Sebuah usaha kecil memiliki keuntungan <span class="formula">K(x)=-x-+12x-20</span>. Berapa keuntungan maksimum?</p>
+            <div class="example"><strong>Pembahasan:</strong> karena <span class="formula">a &lt; 0</span>, fungsi memiliki nilai maksimum. <span class="formula">x = -12/(2--1)=6</span>, maka <span class="formula">K(6)=16</span>. Jadi keuntungan maksimumnya <strong>16</strong>.</div>
+        </section>
+
+        <div class="nav-buttons">
+            <a class="nav-btn" href="library.html">? Kembali ke Library</a>
+            <a class="nav-btn primary" href="snbt.html?type=math">Lanjut ke Penalaran Matematika ?</a>
+        </div>
+
+        <footer>- 2026 QuizNation - Materi Library SNBT 2026.</footer>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            if (typeof window.__quizNationApplyGlobalPreferences === 'function') { window.__quizNationApplyGlobalPreferences(); }
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        }
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+    </script>
+</body>
+
+</html>
+

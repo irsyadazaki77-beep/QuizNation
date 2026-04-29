@@ -1,0 +1,3474 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+   <meta name="theme-color" content="#0a1120" />
+   <meta name="mobile-web-app-capable" content="yes" />
+   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+   <meta charset="UTF-8" />
+   <meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+   <title>Materi - QuizNation</title>
+   <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap"
+      rel="stylesheet">
+
+   <style>
+      /* Mobile Optimization & Accessibility Fix */
+      html,
+      body {
+         max-width: 100%;
+         overflow-x: hidden;
+         scroll-behavior: smooth;
+      }
+
+      * {
+         -webkit-tap-highlight-color: transparent !important;
+      }
+
+      *,
+      *::before,
+      *::after {
+         box-sizing: border-box;
+         margin: 0;
+         padding: 0;
+      }
+
+      /* Accessibility Focus - Elegant Ring */
+      *:focus-visible {
+         outline: 2px solid var(--accent);
+         outline-offset: 3px;
+         border-radius: 4px;
+      }
+
+      :root {
+         --accent: #2563eb;
+         --accent2: #06b6d4;
+         --accent3: #f43f5e;
+         --gold: #f59e0b;
+         --sidebar-w: 290px;
+         --radius: 20px;
+
+         /* Light */
+         --bg: #f0f2f8;
+         --surface: rgba(255, 255, 255, 0.72);
+         --surface2: rgba(255, 255, 255, 0.45);
+         --border: rgba(0, 0, 0, 0.08);
+         --text: #1a1a2e;
+         --text2: #4b5563;
+         --text3: #9ca3af;
+         --sidebar-bg: rgba(255, 255, 255, 0.96);
+         --card-hover: rgba(255, 255, 255, 0.95);
+         --glow: rgba(124, 58, 237, 0.18);
+      }
+
+      body.dark {
+         --bg: #050a15;
+         --surface: rgba(255, 255, 255, 0.055);
+         --surface2: rgba(255, 255, 255, 0.03);
+         --border: rgba(255, 255, 255, 0.09);
+         --text: #f0edff;
+         --text2: rgba(240, 237, 255, 0.65);
+         --text3: rgba(240, 237, 255, 0.35);
+         --sidebar-bg: rgba(12, 9, 30, 0.97);
+         --card-hover: rgba(255, 255, 255, 0.09);
+         --glow: rgba(124, 58, 237, 0.28);
+      }
+
+      /* --------------- RESET / BASE --------------- */
+      body {
+         font-family: 'Bricolage Grotesque', sans-serif;
+         background: var(--bg);
+         color: var(--text);
+         min-height: 100vh;
+         display: flex;
+         overflow-x: hidden;
+         transition: background .4s, color .4s;
+         cursor: none;
+      }
+
+      /* Consistent Emoji Rendering */
+      .emoji {
+         font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", "Segoe UI Symbol", sans-serif;
+      }
+
+      /* --------------- CUSTOM CURSOR --------------- */
+      #cursor {
+         position: fixed;
+         width: 12px;
+         height: 12px;
+         background: var(--accent);
+         border-radius: 50%;
+         pointer-events: none;
+         z-index: 99999;
+         transform: translate(-50%, -50%);
+         transition: transform .08s, width .2s, height .2s, background .2s;
+         mix-blend-mode: normal;
+         will-change: transform, width, height;
+      }
+
+      #cursor-ring {
+         position: fixed;
+         width: 36px;
+         height: 36px;
+         border: 2px solid var(--accent);
+         border-radius: 50%;
+         pointer-events: none;
+         z-index: 99998;
+         transform: translate(-50%, -50%);
+         transition: transform .18s, width .2s, height .2s, border-color .2s, opacity .2s;
+         opacity: 0.55;
+         will-change: transform, width, height;
+      }
+
+      body:hover #cursor {
+         opacity: 1;
+      }
+
+      /* --------------- BG --------------- */
+      #bg-canvas {
+         position: fixed;
+         inset: 0;
+         z-index: 0;
+         pointer-events: none;
+         opacity: 0.6;
+      }
+
+      .noise-overlay {
+         position: fixed;
+         inset: 0;
+         z-index: 0;
+         background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+         pointer-events: none;
+         opacity: .35;
+      }
+
+      /* --------------- SIDEBAR --------------- */
+      #backdrop {
+         position: fixed;
+         inset: 0;
+         background: rgba(0, 0, 0, 0.5);
+         backdrop-filter: blur(10px);
+         z-index: 900;
+         opacity: 0;
+         visibility: hidden;
+         transition: all .4s;
+      }
+
+      #backdrop.on {
+         opacity: 1;
+         visibility: visible;
+      }
+
+      .sidebar {
+         position: fixed;
+         left: 0;
+         top: 0;
+         width: var(--sidebar-w);
+         height: 100vh;
+         background: var(--sidebar-bg);
+         backdrop-filter: blur(12px);
+         border-right: 1px solid var(--border);
+         z-index: 1000;
+         display: flex;
+         flex-direction: column;
+         padding: 24px 18px;
+         transform: translateX(calc(-1 * var(--sidebar-w)));
+         transition: transform .45s cubic-bezier(.77, 0, .175, 1);
+         overflow-y: auto;
+         will-change: transform;
+      }
+
+      .sidebar.on {
+         transform: translateX(0);
+      }
+
+      .sidebar::-webkit-scrollbar {
+         width: 4px;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb {
+         background: linear-gradient(var(--accent), var(--accent2));
+         border-radius: 4px;
+      }
+
+      .sb-logo {
+         display: flex;
+         align-items: center;
+         gap: 10px;
+         margin-bottom: 24px;
+         padding-bottom: 20px;
+         border-bottom: 1px solid var(--border);
+      }
+
+      .sb-logo-icon {
+         width: 40px;
+         height: 40px;
+         background: linear-gradient(135deg, var(--accent), var(--accent2));
+         border-radius: 12px;
+         display: grid;
+         place-items: center;
+         font-size: 1.3rem;
+         box-shadow: 0 4px 16px rgba(124, 58, 237, .4);
+      }
+
+      .sb-logo-text {
+         font-size: 1.4rem;
+         font-weight: 800;
+         background: linear-gradient(135deg, var(--accent), var(--accent2));
+         -webkit-background-clip: text;
+         background-clip: text;
+         -webkit-text-fill-color: transparent;
+      }
+
+      .sb-close {
+         margin-left: auto;
+         background: var(--surface);
+         border: 1px solid var(--border);
+         border-radius: 10px;
+         width: 32px;
+         height: 32px;
+         cursor: pointer;
+         color: var(--text2);
+         font-size: .9rem;
+         display: grid;
+         place-items: center;
+         transition: all .2s;
+      }
+
+      .sb-close:hover {
+         background: var(--accent3);
+         /* Changed to red for close action */
+         color: white;
+         border-color: var(--accent3);
+         transform: scale(1.05);
+      }
+
+      /* Clock */
+      .clock-box {
+         background: linear-gradient(135deg, var(--accent) 0%, #1e3a8a 50%, var(--accent2) 100%);
+         border-radius: 16px;
+         padding: 20px 18px;
+         margin-bottom: 16px;
+         text-align: center;
+         position: relative;
+         overflow: hidden;
+         box-shadow: 0 8px 32px rgba(124, 58, 237, .4);
+         min-height: 120px;
+      }
+
+      .clock-box::before {
+         content: '';
+         position: absolute;
+         inset: 0;
+         background: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(255, 255, 255, .03) 8px, rgba(255, 255, 255, .03) 9px);
+         pointer-events: none;
+      }
+
+      .clock-time {
+         font-family: 'DM Mono', monospace;
+         font-size: 2rem;
+         font-weight: 500;
+         color: white;
+         letter-spacing: 3px;
+         text-shadow: 0 0 30px rgba(255, 255, 255, .5);
+         line-height: 1.2;
+      }
+
+      .clock-date {
+         font-size: .85rem;
+         color: rgba(255, 255, 255, .85);
+         margin-top: 6px;
+      }
+
+      .clock-day {
+         font-size: .75rem;
+         color: rgba(255, 255, 255, .6);
+         margin-top: 2px;
+      }
+
+      /* Theme toggle */
+      .theme-row {
+         display: flex;
+         align-items: center;
+         justify-content: space-between;
+         background: var(--surface);
+         border: 1px solid var(--border);
+         border-radius: 14px;
+         padding: 12px 14px;
+         margin-bottom: 16px;
+      }
+
+      .theme-label {
+         font-size: .85rem;
+         font-weight: 700;
+         color: var(--text2);
+         display: flex;
+         align-items: center;
+         gap: 8px;
+      }
+
+      .toggle {
+         position: relative;
+         width: 46px;
+         height: 24px;
+         background: #d1d5db;
+         border-radius: 30px;
+         cursor: pointer;
+         transition: background .3s;
+      }
+
+      .toggle.on {
+         background: linear-gradient(135deg, var(--accent), var(--accent2));
+      }
+
+      .toggle::after {
+         content: '';
+         position: absolute;
+         top: 3px;
+         left: 3px;
+         width: 18px;
+         height: 18px;
+         background: white;
+         border-radius: 50%;
+         box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
+         transition: transform .3s cubic-bezier(.4, 0, .2, 1);
+         /* Smoother bounce */
+      }
+
+      .toggle.on::after {
+         transform: translateX(22px);
+      }
+
+      /* Sidebar stats */
+      .sb-stats {
+         background: var(--surface);
+         border: 1px solid var(--border);
+         border-radius: 14px;
+         padding: 14px;
+         margin-bottom: 16px;
+      }
+
+      .sb-stat {
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         padding: 8px 0;
+         border-bottom: 1px solid var(--border);
+      }
+
+      .sb-stat:last-child {
+         border-bottom: none;
+      }
+
+      .sb-stat-lbl {
+         font-size: .8rem;
+         color: var(--text3);
+         font-weight: 600;
+      }
+
+      .sb-stat-val {
+         font-size: 1rem;
+         font-weight: 800;
+         background: linear-gradient(135deg, var(--accent), var(--accent2));
+         -webkit-background-clip: text;
+         background-clip: text;
+         -webkit-text-fill-color: transparent;
+      }
+
+      /* Progress Ring in Sidebar */
+      .sb-progress-ring {
+         display: flex;
+         align-items: center;
+         gap: 14px;
+         background: var(--surface);
+         border: 1px solid var(--border);
+         border-radius: 14px;
+         padding: 14px;
+         margin-bottom: 16px;
+      }
+
+      .ring-svg {
+         flex-shrink: 0;
+      }
+
+      .ring-track {
+         fill: none;
+         stroke: var(--border);
+         stroke-width: 5;
+      }
+
+      .ring-fill {
+         fill: none;
+         stroke: url(#ringGrad);
+         stroke-width: 5;
+         stroke-linecap: round;
+         stroke-dasharray: 100.5;
+         stroke-dashoffset: 35;
+         transform: rotate(-90deg);
+         transform-origin: 50% 50%;
+         transition: stroke-dashoffset 1.5s cubic-bezier(.4, 0, .2, 1);
+      }
+
+      .ring-label {
+         font-size: .82rem;
+         color: var(--text2);
+      }
+
+      .ring-pct {
+         font-size: 1.2rem;
+         font-weight: 800;
+         background: linear-gradient(135deg, var(--accent), var(--accent2));
+         -webkit-background-clip: text;
+         background-clip: text;
+         -webkit-text-fill-color: transparent;
+      }
+
+      /* Sidebar menu */
+      .sb-section {
+         margin-bottom: 14px;
+      }
+
+      .sb-section-lbl {
+         font-size: .68rem;
+         font-weight: 800;
+         letter-spacing: 1.2px;
+         text-transform: uppercase;
+         color: var(--text3);
+         padding: 0 4px;
+         margin-bottom: 8px;
+      }
+
+      .sb-item {
+         display: flex;
+         align-items: center;
+         gap: 10px;
+         padding: 10px 13px;
+         margin-bottom: 3px;
+         border-radius: 12px;
+         text-decoration: none;
+         color: var(--text2);
+         font-size: .87rem;
+         font-weight: 600;
+         transition: all .25s;
+         position: relative;
+      }
+
+      .sb-item::before {
+         content: '';
+         position: absolute;
+         left: 0;
+         top: 50%;
+         width: 3px;
+         height: 0;
+         background: linear-gradient(var(--accent), var(--accent2));
+         border-radius: 3px;
+         transform: translateY(-50%);
+         transition: height .25s;
+      }
+
+      .sb-item:hover::before {
+         height: 60%;
+      }
+
+      .sb-item:hover {
+         background: var(--surface);
+         color: var(--accent);
+         padding-left: 17px;
+      }
+
+      .sb-item.active {
+         background: linear-gradient(135deg, var(--accent), var(--accent2));
+         color: white;
+         box-shadow: 0 4px 16px rgba(124, 58, 237, .35);
+      }
+
+      .sb-item.active::before {
+         display: none;
+      }
+
+      .sb-icon {
+         font-size: 1.1rem;
+      }
+
+      .sb-badge {
+         margin-left: auto;
+         background: var(--accent);
+         color: white;
+         font-size: .65rem;
+         font-weight: 800;
+         padding: 2px 7px;
+         border-radius: 20px;
+      }
+
+      /* --------------- HAMBURGER --------------- */
+      #ham {
+         position: fixed;
+         top: 18px;
+         left: 18px;
+         z-index: 1001;
+         width: 46px;
+         height: 46px;
+         border-radius: 14px;
+         background: var(--surface);
+         border: 1px solid var(--border);
+         backdrop-filter: blur(12px);
+         display: grid;
+         place-items: center;
+         cursor: pointer;
+         box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
+         transition: all .3s;
+      }
+
+      #ham:hover {
+         transform: scale(1.08);
+         box-shadow: 0 6px 28px var(--glow);
+         border-color: var(--accent);
+      }
+
+      .ham-lines {
+         display: flex;
+         flex-direction: column;
+         gap: 5px;
+      }
+
+      .ham-lines span {
+         display: block;
+         width: 20px;
+         height: 2px;
+         background: var(--text);
+         border-radius: 2px;
+         transition: all .3s;
+      }
+
+      #ham.open {
+         opacity: 0;
+         visibility: hidden;
+         pointer-events: none;
+         transform: scale(0.8);
+      }
+
+      /* --------------- SEARCH BAR --------------- */
+      #search-bar {
+         position: fixed;
+         top: 18px;
+         left: 80px;
+         right: 80px;
+         z-index: 800;
+         transform: translateY(-80px);
+         transition: transform .4s cubic-bezier(.77, 0, .175, 1);
+         will-change: transform;
+      }
+
+      #search-bar.visible {
+         transform: translateY(0);
+      }
+
+      #search-input {
+         width: 100%;
+         background: var(--surface);
+         border: 1px solid var(--border);
+         backdrop-filter: blur(8px);
+         border-radius: 14px;
+         padding: 14px 20px 14px 48px;
+         font-family: 'Bricolage Grotesque', sans-serif;
+         font-size: .95rem;
+         color: var(--text);
+         box-shadow: 0 8px 32px rgba(0, 0, 0, .15);
+         outline: none;
+         transition: border-color .2s, box-shadow .2s;
+      }
+
+      #search-input:focus {
+         border-color: var(--accent);
+         box-shadow: 0 8px 32px var(--glow);
+      }
+
+      .search-icon {
+         position: absolute;
+         left: 16px;
+         top: 50%;
+         transform: translateY(-50%);
+         font-size: 1.1rem;
+         pointer-events: none;
+      }
+
+      #search-clear {
+         position: absolute;
+         right: 14px;
+         top: 50%;
+         transform: translateY(-50%);
+         cursor: pointer;
+         color: var(--text3);
+         font-size: 1.2rem;
+         /* Adjusted size */
+         display: none;
+      }
+
+      #search-clear:hover {
+         color: var(--accent3);
+      }
+
+      #search-bar.has-text #search-clear {
+         display: block;
+      }
+
+      /* Top bar actions */
+      .topbar-actions {
+         position: fixed;
+         top: 18px;
+         right: 18px;
+         z-index: 800;
+         display: flex;
+         gap: 10px;
+      }
+
+      .topbar-btn {
+         width: 46px;
+         height: 46px;
+         border-radius: 14px;
+         background: var(--surface);
+         border: 1px solid var(--border);
+         backdrop-filter: blur(12px);
+         display: grid;
+         place-items: center;
+         cursor: pointer;
+         font-size: 1.1rem;
+         box-shadow: 0 4px 20px rgba(0, 0, 0, .1);
+         transition: all .25s;
+         text-decoration: none;
+         color: var(--text);
+         position: relative;
+      }
+
+      .topbar-btn:hover {
+         border-color: var(--accent);
+         box-shadow: 0 4px 20px var(--glow);
+         transform: translateY(-2px);
+      }
+
+      .topbar-notif {
+         position: absolute;
+         top: 8px;
+         right: 8px;
+         width: 8px;
+         height: 8px;
+         background: var(--accent3);
+         border-radius: 50%;
+         border: 2px solid var(--bg);
+      }
+
+      /* --------------- MAIN --------------- */
+      .main {
+         flex: 1;
+         min-height: 100vh;
+         position: relative;
+         z-index: 1;
+         padding-top: 80px;
+      }
+
+      /* --------------- HERO --------------- */
+      .hero {
+         padding: 40px 60px 50px;
+         position: relative;
+         overflow: hidden;
+      }
+
+      .hero::after {
+         content: '';
+         position: absolute;
+         right: -100px;
+         top: -100px;
+         width: 500px;
+         height: 500px;
+         background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+         pointer-events: none;
+         animation: heroGlow 6s ease-in-out infinite;
+      }
+
+      @keyframes heroGlow {
+
+         0%,
+         100% {
+            transform: scale(1);
+            opacity: .7;
+         }
+
+         50% {
+            transform: scale(1.2);
+            opacity: 1;
+         }
+      }
+
+      .eyebrow {
+         display: inline-flex;
+         align-items: center;
+         gap: 8px;
+         background: var(--surface);
+         border: 1px solid var(--border);
+         border-radius: 30px;
+         padding: 5px 15px;
+         font-size: .72rem;
+         font-weight: 700;
+         color: var(--text2);
+         letter-spacing: 1px;
+         text-transform: uppercase;
+         margin-bottom: 18px;
+         animation: fadeInUp .7s both;
+      }
+
+      .eyebrow-dot {
+         width: 7px;
+         height: 7px;
+         background: linear-gradient(var(--accent), var(--accent2));
+         border-radius: 50%;
+         animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+
+         0%,
+         100% {
+            transform: scale(1);
+         }
+
+         50% {
+            transform: scale(1.4);
+         }
+      }
+
+      .hero-title {
+         font-family: 'Playfair Display', serif;
+         font-size: clamp(2.2rem, 5vw, 4rem);
+         /* Fluid Typography */
+         font-weight: 800;
+         color: var(--text);
+         line-height: 1.1;
+         margin-bottom: 16px;
+         animation: fadeInUp .8s .1s both;
+      }
+
+      .hero-title span.grad {
+         background: linear-gradient(135deg, var(--accent) 0%, #60a5fa 50%, var(--accent2) 100%);
+         -webkit-background-clip: text;
+         background-clip: text;
+         -webkit-text-fill-color: transparent;
+      }
+
+      .hero-sub {
+         font-size: clamp(0.95rem, 2vw, 1.05rem);
+         color: var(--text2);
+         max-width: 560px;
+         line-height: 1.75;
+         margin-bottom: 30px;
+         animation: fadeInUp .8s .2s both;
+      }
+
+      /* Stat Cards */
+      .hero-stats {
+         display: flex;
+         gap: 14px;
+         flex-wrap: wrap;
+         animation: fadeInUp .8s .3s both;
+         margin-bottom: 32px;
+      }
+
+      .hstat {
+         background: var(--surface);
+         border: 1px solid var(--border);
+         backdrop-filter: blur(10px);
+         border-radius: 16px;
+         padding: 16px 22px;
+         display: flex;
+         align-items: center;
+         gap: 14px;
+         cursor: default;
+         transition: all .3s;
+         position: relative;
+         overflow: hidden;
+      }
+
+      .hstat::before {
+         content: '';
+         position: absolute;
+         inset: 0;
+         background: linear-gradient(135deg, var(--accent), var(--accent2));
+         opacity: 0;
+         transition: opacity .3s;
+      }
+
+      .hstat:hover::before {
+         opacity: 0.07;
+      }
+
+      .hstat:hover {
+         transform: translateY(-3px);
+         box-shadow: 0 10px 30px -5px var(--glow), 0 4px 10px -2px rgba(0, 0, 0, 0.1);
+         /* Dynamic Multi-layered Shadow */
+      }
+
+      .hstat-icon {
+         font-size: 1.5rem;
+      }
+
+      .hstat-num {
+         font-family: 'DM Mono', monospace;
+         font-size: 1.35rem;
+         font-weight: 500;
+         background: linear-gradient(135deg, var(--accent), var(--accent2));
+         -webkit-background-clip: text;
+         background-clip: text;
+         -webkit-text-fill-color: transparent;
+      }
+
+      .hstat-lbl {
+         font-size: .72rem;
+         color: var(--text3);
+         font-weight: 600;
+      }
+
+      /* Filter Tabs */
+      .filter-row {
+         display: flex;
+         gap: 8px;
+         flex-wrap: wrap;
+         animation: fadeInUp .8s .4s both;
+      }
+
+      .filter-tab {
+         padding: 10px 20px;
+         /* Optimized Touch Target */
+         border-radius: 30px;
+         border: 1px solid var(--border);
+         background: var(--surface2);
+         color: var(--text2);
+         font-size: .82rem;
+         font-weight: 700;
+         cursor: pointer;
+         transition: all .25s;
+         user-select: none;
+      }
+
+      .filter-tab:hover {
+         border-color: var(--accent);
+         color: var(--accent);
+      }
+
+      .filter-tab.active {
+         background: linear-gradient(135deg, var(--accent), var(--accent2));
+         border-color: transparent;
+         color: white;
+         box-shadow: 0 4px 16px rgba(124, 58, 237, .35);
+      }
+
+      /* Quick Tools */
+      .quick-tools {
+         margin-top: 22px;
+         display: flex;
+         gap: 10px;
+         flex-wrap: wrap;
+         align-items: center;
+         background: var(--surface);
+         border: 1px solid var(--border);
+         border-radius: 16px;
+         padding: 12px;
+         backdrop-filter: blur(8px);
+      }
+
+      .quick-input {
+         flex: 1;
+         min-width: 220px;
+         border: 1px solid var(--border);
+         background: var(--surface2);
+         color: var(--text);
+         border-radius: 12px;
+         padding: 12px 16px;
+         /* Better touch area */
+         font-size: .86rem;
+         font-weight: 600;
+         outline: none;
+         transition: border-color 0.2s, box-shadow 0.2s;
+      }
+
+      .quick-input:focus {
+         border-color: var(--accent);
+         box-shadow: 0 0 0 3px rgba(124, 58, 237, .18);
+      }
+
+      .quick-btn {
+         display: inline-flex;
+         align-items: center;
+         gap: 6px;
+         padding: 12px 18px;
+         /* Touch target upgrade */
+         border-radius: 12px;
+         border: 1px solid var(--border);
+         background: var(--surface2);
+         color: var(--text);
+         font-size: .78rem;
+         font-weight: 800;
+         cursor: pointer;
+         transition: all .2s;
+      }
+
+      .quick-btn:hover {
+         border-color: var(--accent);
+         color: var(--accent);
+         transform: translateY(-1px);
+      }
+
+      .quick-btn.primary {
+         background: linear-gradient(135deg, var(--accent), var(--accent2));
+         color: white;
+         border-color: transparent;
+      }
+
+      .quick-btn.primary:hover {
+         color: white;
+         box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+      }
+
+      .quick-select {
+         border: 1px solid var(--border);
+         background: var(--surface2);
+         color: var(--text);
+         border-radius: 12px;
+         padding: 10px 14px;
+         font-size: .78rem;
+         font-weight: 800;
+         outline: none;
+      }
+
+      .quick-select:focus-visible {
+         border-color: var(--accent);
+      }
+
+      .quick-meta {
+         margin-left: auto;
+         font-size: .75rem;
+         font-weight: 700;
+         color: var(--text3);
+      }
+
+      .insight-strip {
+         display: grid;
+         grid-template-columns: repeat(4, minmax(160px, 1fr));
+         gap: 12px;
+         margin-top: 18px;
+      }
+
+      .insight-card {
+         background: var(--surface);
+         border: 1px solid var(--border);
+         border-radius: 16px;
+         padding: 12px 14px;
+         backdrop-filter: blur(6px);
+      }
+
+      .insight-label {
+         font-size: .7rem;
+         font-weight: 800;
+         text-transform: uppercase;
+         letter-spacing: .6px;
+         color: var(--text3);
+         margin-bottom: 4px;
+      }
+
+      .insight-value {
+         font-family: 'DM Mono', monospace;
+         font-size: 1.1rem;
+         font-weight: 600;
+         color: var(--text);
+      }
+
+      .view-toggle {
+         display: inline-flex;
+         gap: 6px;
+      }
+
+      .view-btn {
+         border: 1px solid var(--border);
+         background: var(--surface2);
+         color: var(--text);
+         border-radius: 10px;
+         padding: 10px 12px;
+         font-size: .78rem;
+         font-weight: 800;
+         cursor: pointer;
+         transition: 0.2s;
+      }
+
+      .view-btn:hover {
+         border-color: var(--accent);
+      }
+
+      .view-btn.active {
+         background: linear-gradient(135deg, var(--accent), var(--accent2));
+         color: white;
+         border-color: transparent;
+      }
+
+      body.list-view .grid {
+         grid-template-columns: 1fr;
+      }
+
+      body.list-view .card:not(.card-featured) {
+         flex-direction: row;
+         align-items: center;
+         gap: 18px;
+      }
+
+      body.list-view .card-icon {
+         font-size: 2rem;
+      }
+
+      .bookmark-btn {
+         position: absolute;
+         top: 12px;
+         right: 12px;
+         width: 36px;
+         height: 36px;
+         border-radius: 10px;
+         border: 1px solid var(--border);
+         background: var(--surface2);
+         display: grid;
+         place-items: center;
+         cursor: pointer;
+         font-size: 1.1rem;
+         color: var(--text2);
+         transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+         /* Bouncy micro-interaction */
+      }
+
+      .bookmark-btn:hover {
+         transform: scale(1.1);
+         border-color: var(--gold);
+      }
+
+      .bookmark-btn.active {
+         background: linear-gradient(135deg, var(--gold), #f97316);
+         color: white;
+         border-color: transparent;
+         transform: scale(1.05);
+      }
+
+      .section-actions {
+         display: flex;
+         gap: 8px;
+         align-items: center;
+         margin-top: 8px;
+         flex-wrap: wrap;
+      }
+
+      .mini-pill {
+         border: 1px solid var(--border);
+         background: var(--surface2);
+         border-radius: 20px;
+         padding: 4px 10px;
+         font-size: .7rem;
+         font-weight: 800;
+         color: var(--text2);
+      }
+
+      .toast-mini {
+         position: fixed;
+         right: 24px;
+         bottom: 28px;
+         z-index: 900;
+         background: rgba(17, 24, 39, .92);
+         color: white;
+         padding: 12px 16px;
+         border-radius: 12px;
+         font-size: .85rem;
+         font-weight: 700;
+         opacity: 0;
+         transform: translateY(20px);
+         transition: all .35s cubic-bezier(0.4, 0, 0.2, 1);
+         pointer-events: none;
+         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+      }
+
+      .toast-mini.show {
+         opacity: 1;
+         transform: translateY(0);
+      }
+
+      /* --------------- CONTENT --------------- */
+      .content {
+         padding: 0 60px 80px;
+      }
+
+      /* Section Header */
+      .sec-head {
+         display: flex;
+         align-items: center;
+         gap: 14px;
+         margin-bottom: 24px;
+         margin-top: 50px;
+      }
+
+      .sec-head:first-child {
+         margin-top: 0;
+      }
+
+      .sec-icon-wrap {
+         width: 44px;
+         height: 44px;
+         border-radius: 14px;
+         display: grid;
+         place-items: center;
+         font-size: 1.3rem;
+         flex-shrink: 0;
+      }
+
+      .sec-title {
+         font-family: 'Playfair Display', serif;
+         font-size: 1.4rem;
+         font-weight: 700;
+         color: var(--text);
+      }
+
+      .sec-sub {
+         font-size: .8rem;
+         color: var(--text3);
+         margin-top: 2px;
+      }
+
+      .sec-line {
+         flex: 1;
+         height: 1px;
+         background: var(--border);
+         margin-left: 8px;
+      }
+
+      .sec-count {
+         font-family: 'DM Mono', monospace;
+         font-size: .78rem;
+         color: var(--text3);
+         background: var(--surface);
+         border: 1px solid var(--border);
+         border-radius: 20px;
+         padding: 3px 10px;
+      }
+
+      /* --------------- CARD GRID --------------- */
+      .grid {
+         display: grid;
+         grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+         gap: 18px;
+      }
+
+      .card {
+         background: var(--surface);
+         border: 1px solid var(--border);
+         backdrop-filter: blur(8px);
+         border-radius: var(--radius);
+         padding: 26px;
+         text-decoration: none;
+         display: flex;
+         flex-direction: column;
+         gap: 10px;
+         position: relative;
+         overflow: hidden;
+         transition: transform .35s cubic-bezier(.4, 0, .2, 1), box-shadow .35s, border-color .35s, background .35s;
+         cursor: pointer;
+         opacity: 0;
+         transform: translateY(30px);
+         will-change: transform, opacity;
+      }
+
+      .card.visible {
+         animation: cardIn .6s cubic-bezier(.4, 0, .2, 1) both;
+      }
+
+      @keyframes cardIn {
+         to {
+            opacity: 1;
+            transform: translateY(0);
+         }
+      }
+
+      /* Holographic sheen */
+      .card::before {
+         content: '';
+         position: absolute;
+         inset: 0;
+         background: conic-gradient(from var(--angle, 0deg) at 50% 50%, transparent 0deg, rgba(255, 255, 255, .06) 60deg, transparent 120deg);
+         pointer-events: none;
+         opacity: 0;
+         transition: opacity .3s;
+      }
+
+      .card:hover::before {
+         opacity: 1;
+      }
+
+      /* Gradient top border */
+      .card::after {
+         content: '';
+         position: absolute;
+         top: 0;
+         left: 0;
+         right: 0;
+         height: 2px;
+         background: var(--card-accent, linear-gradient(90deg, var(--accent), var(--accent2)));
+         opacity: 0;
+         transition: opacity .3s;
+      }
+
+      .card:hover::after {
+         opacity: 1;
+      }
+
+      .card:hover {
+         transform: translateY(-6px) scale(1.01);
+         box-shadow: 0 20px 40px -10px rgba(0, 0, 0, .2), 0 0 0 1px rgba(124, 58, 237, .15), 0 0 50px var(--glow);
+         /* Depth adjustment */
+         border-color: rgba(124, 58, 237, .3);
+         background: var(--card-hover);
+      }
+
+      /* Card locked state */
+      .card.locked {
+         filter: saturate(.4);
+         opacity: .6;
+      }
+
+      .card.locked:hover {
+         transform: none;
+         box-shadow: none;
+         cursor: not-allowed;
+      }
+
+      .lock-icon {
+         position: absolute;
+         top: 14px;
+         right: 14px;
+         font-size: 1.1rem;
+         color: var(--text3);
+      }
+
+      /* Card popular badge */
+      .popular-badge {
+         position: absolute;
+         top: 14px;
+         right: 14px;
+         background: linear-gradient(135deg, var(--gold), #f97316);
+         color: white;
+         font-size: .65rem;
+         font-weight: 800;
+         padding: 4px 10px;
+         border-radius: 20px;
+         letter-spacing: .5px;
+         animation: badgePop .5s cubic-bezier(.4, 0, .2, 1) both;
+         box-shadow: 0 4px 10px rgba(245, 158, 11, 0.3);
+      }
+
+      @keyframes badgePop {
+         0% {
+            transform: scale(0);
+         }
+
+         80% {
+            transform: scale(1.1);
+         }
+
+         100% {
+            transform: scale(1);
+         }
+      }
+
+      /* Card Category Badge */
+      .cat-badge {
+         display: inline-flex;
+         align-items: center;
+         gap: 5px;
+         font-size: .68rem;
+         font-weight: 700;
+         padding: 4px 12px;
+         border-radius: 20px;
+         width: fit-content;
+      }
+
+      .badge-g {
+         background: rgba(37, 99, 235, .15);
+         color: #93c5fd;
+         border: 1px solid rgba(37, 99, 235, .25);
+      }
+
+      .badge-v {
+         background: rgba(96, 165, 250, .15);
+         color: #93c5fd;
+         border: 1px solid rgba(96, 165, 250, .25);
+      }
+
+      .badge-r {
+         background: rgba(6, 182, 212, .15);
+         color: #67e8f9;
+         border: 1px solid rgba(6, 182, 212, .25);
+      }
+
+      .badge-w {
+         background: rgba(244, 114, 182, .15);
+         color: #bae6fd;
+         border: 1px solid rgba(244, 114, 182, .25);
+      }
+
+      .badge-l {
+         background: rgba(251, 146, 60, .15);
+         color: #fcd34d;
+         border: 1px solid rgba(251, 146, 60, .25);
+      }
+
+      .badge-s {
+         background: rgba(74, 222, 128, .15);
+         color: #86efac;
+         border: 1px solid rgba(74, 222, 128, .25);
+      }
+
+      /* Card icon */
+      .card-icon {
+         font-size: 2.4rem;
+         display: inline-block;
+         transition: transform .35s cubic-bezier(.4, 0, .2, 1), opacity 0.3s;
+      }
+
+      .card:hover .card-icon {
+         transform: translateY(-5px) scale(1.08) rotate(-5deg);
+      }
+
+      .card-level {
+         font-size: .7rem;
+         color: var(--text3);
+         font-weight: 700;
+         text-transform: uppercase;
+         letter-spacing: .5px;
+      }
+
+      .card-title {
+         font-family: 'Playfair Display', serif;
+         font-size: 1.15rem;
+         /* slightly larger for readability */
+         font-weight: 700;
+         color: var(--text);
+         line-height: 1.35;
+      }
+
+      .card-desc {
+         font-size: .86rem;
+         /* improved text legibility */
+         color: var(--text2);
+         line-height: 1.65;
+         flex: 1;
+         display: -webkit-box;
+         -webkit-line-clamp: 3;
+         /* Smart truncation */
+         -webkit-box-orient: vertical;
+         overflow: hidden;
+      }
+
+      /* Progress bar */
+      .card-progress {
+         margin-top: 4px;
+      }
+
+      .prog-top {
+         display: flex;
+         justify-content: space-between;
+         font-size: .72rem;
+         color: var(--text3);
+         margin-bottom: 5px;
+      }
+
+      .prog-bar {
+         height: 5px;
+         /* Thicker for visibility */
+         background: var(--surface2);
+         border-radius: 4px;
+         overflow: hidden;
+      }
+
+      .prog-fill {
+         height: 100%;
+         background: var(--card-accent, linear-gradient(90deg, var(--accent), var(--accent2)));
+         border-radius: 4px;
+         width: 0%;
+         transition: width 1.2s cubic-bezier(.4, 0, .2, 1);
+      }
+
+      .card-stats {
+         display: flex;
+         gap: 14px;
+         padding-top: 14px;
+         border-top: 1px solid var(--border);
+      }
+
+      .cstat {
+         display: flex;
+         align-items: center;
+         gap: 5px;
+         font-size: .78rem;
+         color: var(--text3);
+      }
+
+      /* CTA Button */
+      .card-cta {
+         display: inline-flex;
+         align-items: center;
+         gap: 7px;
+         background: var(--surface2);
+         border: 1px solid var(--border);
+         border-radius: 11px;
+         padding: 10px 18px;
+         font-size: .82rem;
+         font-weight: 700;
+         color: var(--text);
+         transition: all .25s;
+         width: fit-content;
+      }
+
+      .card:hover .card-cta {
+         background: linear-gradient(135deg, var(--accent), var(--accent2));
+         border-color: transparent;
+         color: white;
+         box-shadow: 0 4px 16px rgba(124, 58, 237, .35);
+      }
+
+      .card-cta .arr {
+         transition: transform .25s;
+      }
+
+      .card:hover .card-cta .arr {
+         transform: translateX(4px);
+      }
+
+      /* --------------- FEATURED CARD (wide) --------------- */
+      .card-featured {
+         grid-column: span 2;
+         flex-direction: row;
+         align-items: flex-start;
+         gap: 28px;
+         background: linear-gradient(135deg, rgba(124, 58, 237, .12) 0%, rgba(6, 182, 212, .08) 100%);
+         border-color: rgba(124, 58, 237, .2);
+      }
+
+      @media (max-width: 860px) {
+         .card-featured {
+            grid-column: span 1;
+            flex-direction: column;
+         }
+      }
+
+      .card-featured .card-icon {
+         font-size: 4rem;
+         flex-shrink: 0;
+         margin-top: 4px;
+      }
+
+      .card-featured-body {
+         flex: 1;
+      }
+
+      /* Ripple */
+      .ripple {
+         position: absolute;
+         border-radius: 50%;
+         background: rgba(124, 58, 237, .25);
+         transform: scale(0);
+         animation: rippleOut .7s ease-out forwards;
+         pointer-events: none;
+      }
+
+      @keyframes rippleOut {
+         to {
+            transform: scale(6);
+            opacity: 0;
+         }
+      }
+
+      /* --------------- FLOATING TOASTS (STREAK & REMINDER) --------------- */
+      #streak-toast,
+      #reminder-toast {
+         position: fixed;
+         right: 28px;
+         z-index: 700;
+         background: var(--surface);
+         border: 1px solid var(--border);
+         backdrop-filter: blur(12px);
+         border-radius: 18px;
+         padding: 16px 20px;
+         display: flex;
+         align-items: center;
+         gap: 14px;
+         box-shadow: 0 12px 40px rgba(0, 0, 0, .2);
+         transform: translateY(150px);
+         opacity: 0;
+         transition: all .5s cubic-bezier(.4, 0, .2, 1);
+         max-width: 320px;
+      }
+
+      #streak-toast {
+         bottom: 28px;
+      }
+
+      #reminder-toast {
+         bottom: 116px;
+         border: 1px solid rgba(6, 182, 212, 0.4);
+         background: linear-gradient(135deg, rgba(6, 182, 212, 0.05), var(--surface));
+      }
+
+      #streak-toast.show,
+      #reminder-toast.show {
+         transform: translateY(0);
+         opacity: 1;
+      }
+
+      .toast-icon,
+      .streak-fire {
+         font-size: 2rem;
+         animation: fireWiggle 1s ease-in-out infinite;
+      }
+
+      @keyframes fireWiggle {
+
+         0%,
+         100% {
+            transform: rotate(-8deg);
+         }
+
+         50% {
+            transform: rotate(8deg);
+         }
+      }
+
+      .toast-text h4,
+      .streak-text h4 {
+         font-size: .9rem;
+         font-weight: 800;
+         color: var(--text);
+      }
+
+      .toast-text p,
+      .streak-text p {
+         font-size: .78rem;
+         color: var(--text3);
+         margin-top: 2px;
+         line-height: 1.4;
+      }
+
+      .toast-close {
+         background: transparent;
+         border: none;
+         color: var(--text3);
+         cursor: pointer;
+         padding: 5px;
+         margin-left: auto;
+         font-size: 1rem;
+         transition: color 0.2s;
+      }
+
+      .toast-close:hover {
+         color: var(--accent3);
+      }
+
+      /* --------------- SCROLL TO TOP --------------- */
+      #scroll-top {
+         position: fixed;
+         bottom: 100px;
+         right: 28px;
+         z-index: 700;
+         width: 46px;
+         height: 46px;
+         border-radius: 14px;
+         background: linear-gradient(135deg, var(--accent), var(--accent2));
+         color: white;
+         display: grid;
+         place-items: center;
+         cursor: pointer;
+         box-shadow: 0 6px 24px rgba(124, 58, 237, .4);
+         font-size: 1.4rem;
+         opacity: 0;
+         transform: translateY(20px);
+         transition: all .35s;
+      }
+
+      #scroll-top.show {
+         opacity: 1;
+         transform: translateY(0);
+      }
+
+      #scroll-top:hover {
+         transform: translateY(-4px) scale(1.05);
+      }
+
+      /* --------------- SECTION ACCENTS --------------- */
+      .sec-grammar {
+         --card-accent: linear-gradient(90deg, #60a5fa, #2563eb);
+      }
+
+      .sec-grammar .sec-icon-wrap {
+         background: rgba(37, 99, 235, .15);
+      }
+
+      .sec-vocab {
+         --card-accent: linear-gradient(90deg, #38bdf8, #3b82f6);
+      }
+
+      .sec-vocab .sec-icon-wrap {
+         background: rgba(168, 85, 247, .15);
+      }
+
+      .sec-reading {
+         --card-accent: linear-gradient(90deg, #22d3ee, #06b6d4);
+      }
+
+      .sec-reading .sec-icon-wrap {
+         background: rgba(6, 182, 212, .15);
+      }
+
+      .sec-writing {
+         --card-accent: linear-gradient(90deg, #fb7185, #f43f5e);
+      }
+
+      .sec-writing .sec-icon-wrap {
+         background: rgba(244, 63, 94, .15);
+      }
+
+      .sec-media {
+         --card-accent: linear-gradient(90deg, #fb923c, #f59e0b);
+      }
+
+      .sec-media .sec-icon-wrap {
+         background: rgba(245, 158, 11, .15);
+      }
+
+      /* --------------- NO RESULTS --------------- */
+      #no-results {
+         display: none;
+         grid-column: 1 / -1;
+         padding: 60px;
+         text-align: center;
+         color: var(--text3);
+         font-size: 1.1rem;
+         animation: fadeInUp 0.5s ease;
+      }
+
+      #no-results .empty-icon {
+         font-size: 3.5rem;
+         margin-bottom: 12px;
+         animation: floatIcon 3s ease-in-out infinite;
+         /* Interactive empty state */
+         display: inline-block;
+      }
+
+      @keyframes floatIcon {
+
+         0%,
+         100% {
+            transform: translateY(0);
+         }
+
+         50% {
+            transform: translateY(-10px);
+         }
+      }
+
+      /* --------------- FOOTER --------------- */
+      footer {
+         padding: 28px 60px;
+         border-top: 1px solid var(--border);
+         text-align: center;
+         color: var(--text3);
+         font-size: .84rem;
+      }
+
+      /* --------------- KEYFRAMES --------------- */
+      @keyframes fadeInUp {
+         from {
+            opacity: 0;
+            transform: translateY(24px);
+         }
+
+         to {
+            opacity: 1;
+            transform: translateY(0);
+         }
+      }
+
+      /* --------------- RESPONSIVE --------------- */
+      @media (max-width: 1024px) {
+
+         .hero,
+         .content {
+            padding-left: 40px;
+            padding-right: 40px;
+         }
+
+         #search-bar {
+            left: 80px;
+            right: 130px;
+         }
+      }
+
+      @media (max-width: 768px) {
+
+         .hero,
+         .content {
+            padding-left: 24px;
+            padding-right: 24px;
+         }
+
+         .grid {
+            grid-template-columns: 1fr;
+         }
+
+         #search-bar {
+            left: 74px;
+            right: 74px;
+         }
+
+         .insight-strip {
+            grid-template-columns: repeat(2, minmax(140px, 1fr));
+         }
+
+         footer {
+            padding: 24px;
+         }
+      }
+
+      @media (max-width: 500px) {
+         .hero {
+            padding: 24px 16px 30px;
+         }
+
+         .content {
+            padding: 0 16px 50px;
+         }
+
+         #search-bar {
+            left: 70px;
+            right: 70px;
+         }
+
+         .quick-meta {
+            width: 100%;
+            margin-left: 0;
+         }
+      }
+
+      /* --------------- DESKTOP ENHANCED ANIMATION --------------- */
+      @media (min-width: 1025px) and (hover: hover) and (pointer: fine) {
+         body.desktop-anim .section-block {
+            --sec-delay: 0ms;
+         }
+
+         body.desktop-anim .section-block .sec-head {
+            opacity: .35;
+            transform: translateY(16px);
+            transition: opacity .6s ease, transform .6s cubic-bezier(.22, 1, .36, 1);
+            transition-delay: var(--sec-delay);
+         }
+
+         body.desktop-anim .section-block.in-view .sec-head {
+            opacity: 1;
+            transform: translateY(0);
+         }
+
+         body.desktop-anim .section-block .sec-line {
+            transform-origin: left center;
+            transform: scaleX(.4);
+            opacity: .5;
+            transition: transform .65s cubic-bezier(.22, 1, .36, 1), opacity .45s ease;
+         }
+
+         body.desktop-anim .section-block.in-view .sec-line {
+            transform: scaleX(1);
+            opacity: 1;
+         }
+
+         body.desktop-anim .hero {
+            transform-style: preserve-3d;
+            perspective: 1100px;
+         }
+
+         body.desktop-anim .hero-title,
+         body.desktop-anim .hero-sub,
+         body.desktop-anim .hero-stats,
+         body.desktop-anim .quick-tools,
+         body.desktop-anim .insight-strip {
+            transition: transform .25s ease-out;
+            will-change: transform;
+         }
+
+         body.desktop-anim .hstat {
+            animation: desktopFloat 5.5s ease-in-out infinite;
+         }
+
+         body.desktop-anim .hstat:nth-child(2) {
+            animation-delay: .6s;
+         }
+
+         body.desktop-anim .hstat:nth-child(3) {
+            animation-delay: 1.2s;
+         }
+
+         body.desktop-anim .hstat:nth-child(4) {
+            animation-delay: 1.8s;
+         }
+
+         body.desktop-anim .topbar-btn,
+         body.desktop-anim .quick-btn,
+         body.desktop-anim .filter-tab,
+         body.desktop-anim .view-btn {
+            transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease, color .22s ease;
+         }
+
+         body.desktop-anim .topbar-btn:hover,
+         body.desktop-anim .quick-btn:hover,
+         body.desktop-anim .filter-tab:hover,
+         body.desktop-anim .view-btn:hover {
+            transform: translateY(-2px) scale(1.02);
+         }
+
+         body.desktop-anim .card {
+            backface-visibility: hidden;
+            transform-style: preserve-3d;
+         }
+
+         @keyframes desktopFloat {
+
+            0%,
+            100% {
+               transform: translateY(0);
+            }
+
+            50% {
+               transform: translateY(-5px);
+            }
+         }
+      }
+   </style>
+   <link rel="stylesheet" href="android-optimized.css">
+   <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+
+   <!-- SVG Gradient def for progress ring -->
+   <svg width="0" height="0" style="position:absolute">
+      <defs>
+         <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#2563eb" />
+            <stop offset="100%" stop-color="#06b6d4" />
+         </linearGradient>
+      </defs>
+   </svg>
+
+   <!-- Custom Cursor -->
+   <div id="cursor"></div>
+   <div id="cursor-ring"></div>
+
+   <!-- BG Canvas -->
+   <canvas id="bg-canvas"></canvas>
+   <div class="noise-overlay"></div>
+
+   <!-- Sidebar Backdrop -->
+   <div id="backdrop" onclick="closeSidebar()"></div>
+
+   <!-- Sidebar -->
+   <nav class="sidebar" id="sidebar">
+      <div class="sb-logo">
+         <div class="sb-logo-icon emoji">✨</div>
+         <span class="sb-logo-text">QuizNation</span>
+         <button class="sb-close emoji" onclick="closeSidebar()">❌</button>
+      </div>
+
+      <div class="clock-box">
+         <div class="clock-time" id="clockTime">00:00:00</div>
+         <div class="clock-date" id="clockDate">-</div>
+         <div class="clock-day" id="clockDay">-</div>
+      </div>
+
+      <div class="theme-row">
+         <div class="theme-label"><span id="themeIcon" class="emoji">☀️</span><span id="themeText">Mode Terang</span>
+         </div>
+         <div class="toggle" id="toggleBtn" onclick="toggleTheme()"></div>
+      </div>
+
+      <!-- Progress Ring -->
+      <div class="sb-progress-ring">
+         <svg class="ring-svg" width="60" height="60" viewBox="0 0 36 36">
+            <circle class="ring-track" cx="18" cy="18" r="16" />
+            <circle class="ring-fill" id="ringFill" cx="18" cy="18" r="16" />
+         </svg>
+         <div>
+            <div class="ring-pct" id="ringPct">65%</div>
+            <div class="ring-label">Progress<br>Keseluruhan</div>
+         </div>
+      </div>
+
+      <div class="sb-stats">
+         <div class="sb-stat"><span class="sb-stat-lbl">Total Skor</span><span class="sb-stat-val" id="sbScore">0</span>
+         </div>
+         <div class="sb-stat"><span class="sb-stat-lbl">Level Terbuka</span><span class="sb-stat-val">100/100</span>
+         </div>
+         <div class="sb-stat"><span class="sb-stat-lbl">Streak Hari <span class="emoji">🔥</span></span><span
+               class="sb-stat-val" id="sbStreak">0</span></div>
+         <div class="sb-stat"><span class="sb-stat-lbl">Materi Selesai</span><span class="sb-stat-val">7/15</span></div>
+      </div>
+
+      <div class="sb-section">
+         <div class="sb-section-lbl">Menu Utama</div>
+         <a href="index.html" class="sb-item"><span class="sb-icon emoji">🏠</span>Beranda</a>
+         <a href="statistik.html" class="sb-item"><span class="sb-icon emoji">📊</span>Statistik<span
+               class="sb-badge">NEW</span></a>
+         <a href="evaluasi.html" class="sb-item"><span class="sb-icon emoji">🎓</span>Evaluasi SNBT</a>
+         <a href="pencapaian.html" class="sb-item"><span class="sb-icon emoji">🏆</span>Pencapaian</a>
+         <a href="materi.html" class="sb-item active"><span class="sb-icon emoji">📚</span>Materi</a>
+         <a href="library.html" class="sb-item"><span class="sb-icon emoji">📖</span>Library</a>
+      </div>
+
+      <div class="sb-section">
+         <div class="sb-section-lbl">Bantuan</div>
+         <a href="pengaturan.html" class="sb-item"><span class="sb-icon emoji">⚙️</span>Pengaturan</a>
+         <a href="panduan.html" class="sb-item"><span class="sb-icon emoji">📋</span>Panduan</a>
+         <a href="feedback.html" class="sb-item"><span class="sb-icon emoji">💬</span>Feedback</a>
+         <a href="login.html" class="sb-item login-btn-sidebar"
+            style="color:#d94646; margin-top:15px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; border-radius: 0;">
+            <span class="sb-icon emoji">🔑</span><span class="login-text">Masuk Akun</span>
+         </a>
+      </div>
+   </nav>
+
+   <!-- Hamburger -->
+   <button id="ham" onclick="toggleSidebar()" aria-label="Menu">
+      <div class="ham-lines">
+         <span></span><span></span><span></span>
+      </div>
+   </button>
+
+   <!-- Search Bar -->
+   <div id="search-bar">
+      <span class="search-icon emoji">🔍</span>
+      <input id="search-input" type="text" placeholder="Cari materi, topik, atau kategori..."
+         oninput="handleSearch(this)">
+      <span id="search-clear" onclick="clearSearch()" class="emoji">✖</span>
+   </div>
+
+   <!-- Topbar Actions -->
+   <div class="topbar-actions">
+      <button class="topbar-btn emoji" onclick="toggleSearch()" title="Cari">🔍</button>
+      <button class="topbar-btn emoji" title="Notifikasi">🔔<span class="topbar-notif"></span></button>
+      <a href="pengaturan.html" class="topbar-btn emoji" title="Profil">👤</a>
+   </div>
+
+   <!-- Scroll Top -->
+   <button id="scroll-top" class="emoji" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆</button>
+
+   <!-- Streak Toast -->
+   <div id="streak-toast">
+      <div class="streak-fire emoji">🔥</div>
+      <div class="streak-text">
+         <h4>Streak 7 Hari!</h4>
+         <p>Terus belajar setiap hari</p>
+      </div>
+   </div>
+
+   <!-- Reminder Toast -->
+   <div id="reminder-toast">
+      <div class="toast-icon emoji" id="reminder-icon">🔔</div>
+      <div class="toast-text" style="flex: 1;">
+         <h4 id="reminder-title">Waktunya Belajar!</h4>
+         <p id="reminder-desc">Lanjutkan materi yang belum selesai.</p>
+      </div>
+      <button class="toast-close emoji" onclick="closeReminder()">✖</button>
+   </div>
+
+   <!-- MAIN -->
+   <main class="main" id="main">
+
+      <!-- HERO -->
+      <section class="hero">
+         <div class="eyebrow">
+            <div class="eyebrow-dot"></div> Pusat Pembelajaran
+         </div>
+         <h1 class="hero-title">Kuasai <span class="grad">Bahasa Inggris</span><br>Mulai dari Sini</h1>
+         <p class="hero-sub">Akses ratusan modul pembelajaran terstruktur - dari grammar dasar hingga advanced reading
+            comprehension, semuanya ada di sini.</p>
+
+         <div class="hero-stats">
+            <div class="hstat"><span class="hstat-icon emoji">🗂️</span>
+               <div>
+                  <div class="hstat-num" data-count="15">0</div>
+                  <div class="hstat-lbl">Kategori</div>
+               </div>
+            </div>
+            <div class="hstat"><span class="hstat-icon emoji">📝</span>
+               <div>
+                  <div class="hstat-num" data-count="200">0</div>
+                  <div class="hstat-lbl">Topik</div>
+               </div>
+            </div>
+            <div class="hstat"><span class="hstat-icon emoji">👥</span>
+               <div>
+                  <div class="hstat-num" data-count="12400">0</div>
+                  <div class="hstat-lbl">Pelajar Aktif</div>
+               </div>
+            </div>
+            <div class="hstat"><span class="hstat-icon emoji">⭐</span>
+               <div>
+                  <div class="hstat-num" data-count="4.9">0</div>
+                  <div class="hstat-lbl">Rating</div>
+               </div>
+            </div>
+         </div>
+
+         <div class="filter-row" id="filter-row">
+            <button class="filter-tab active" data-filter="all">Semua</button>
+            <button class="filter-tab" data-filter="grammar">Grammar</button>
+            <button class="filter-tab" data-filter="vocabulary">Vocabulary</button>
+            <button class="filter-tab" data-filter="reading">Reading</button>
+            <button class="filter-tab" data-filter="writing">Writing</button>
+            <button class="filter-tab" data-filter="listening">Listening</button>
+            <button class="filter-tab" data-filter="speaking">Speaking</button>
+            <button class="filter-tab" data-filter="dasar">Dasar</button>
+            <button class="filter-tab" data-filter="menengah">Menengah</button>
+            <button class="filter-tab" data-filter="lanjutan">Lanjutan</button>
+            <button class="filter-tab" data-filter="terkunci">Terkunci</button>
+            <button class="filter-tab" data-filter="terbuka">Terbuka</button>
+         </div>
+
+         <div class="quick-tools">
+            <input id="quick-filter" class="quick-input" type="text"
+               placeholder="Filter cepat (contoh: tenses, speaking)...">
+            <button class="quick-btn" onclick="toggleSearch()"><span class="emoji">🔍</span> Buka Search</button>
+            <button class="quick-btn" onclick="clearQuickFilter()"><span class="emoji">🔄</span> Reset Filter</button>
+            <button class="quick-btn" onclick="jumpToRandom()"><span class="emoji">🎲</span> Random Modul</button>
+            <button class="quick-btn primary" onclick="exportBookmarks()"><span class="emoji">💾</span> Export
+               Bookmark</button>
+            <select id="sortSelect" class="quick-select" onchange="sortModules(this.value)">
+               <option value="default">Urut Default</option>
+               <option value="title">Urut Judul</option>
+               <option value="progress">Urut Progress</option>
+               <option value="duration">Urut Durasi</option>
+            </select>
+            <div class="view-toggle">
+               <button class="view-btn active emoji" id="viewGrid" onclick="setViewMode('grid')">🔲 Grid</button>
+               <button class="view-btn emoji" id="viewList" onclick="setViewMode('list')">📄 List</button>
+            </div>
+            <span class="quick-meta" id="quickMeta">Status: siap</span>
+         </div>
+
+         <div class="insight-strip" id="insightStrip"></div>
+      </section>
+
+      <!-- CONTENT -->
+      <div class="content" id="content">
+
+         <div class="section-block" data-cat="meta">
+            <div class="sec-head">
+               <div class="sec-icon-wrap emoji">🚀</div>
+               <div class="sec-head-info">
+                  <div class="sec-title">Lanjutkan Belajar</div>
+                  <div class="sec-sub">Rekomendasi cepat berdasarkan aktivitas terbaru</div>
+               </div>
+               <div class="sec-line"></div>
+               <div class="sec-count" id="continueCount">0 Modul</div>
+            </div>
+            <div class="grid" id="continueGrid"></div>
+         </div>
+
+         <!-- GRAMMAR -->
+         <div class="section-block sec-grammar" data-cat="grammar">
+            <div class="sec-head">
+               <div class="sec-icon-wrap emoji">📏</div>
+               <div class="sec-head-info">
+                  <div class="sec-title">Tata Bahasa & Grammar</div>
+                  <div class="sec-sub">Fondasi komunikasi yang kuat</div>
+               </div>
+               <div class="sec-line"></div>
+               <div class="sec-count">8 Modul</div>
+            </div>
+            <div class="grid">
+               <!-- Featured Card -->
+               <a href="materi-pengenalan-kalimat.html" class="card card-featured" data-cat="grammar dasar"
+                  onclick="addRipple(event,this)">
+                  <span class="card-icon emoji">📝</span>
+                  <div class="card-featured-body">
+                     <span class="cat-badge badge-g"><span class="emoji">📏</span> Grammar</span>
+                     <div class="card-level">Dasar - Wajib Dimulai</div>
+                     <div class="card-title">Pengenalan Kalimat Bahasa Inggris</div>
+                     <div class="card-desc">Pelajari struktur dasar kalimat bahasa Inggris, termasuk subjek, predikat,
+                        dan
+                        objek. Kuasai pola S-V-O yang menjadi pondasi seluruh tata bahasa.</div>
+                     <div class="card-progress">
+                        <div class="prog-top"><span>Progress kamu</span><span>45%</span></div>
+                        <div class="prog-bar">
+                           <div class="prog-fill" data-w="45"></div>
+                        </div>
+                     </div>
+                     <div class="card-stats">
+                        <div class="cstat"><span class="emoji">📄</span> 15 Topik</div>
+                        <div class="cstat"><span class="emoji">⏱️</span> 2 Jam</div>
+                        <div class="cstat"><span class="emoji">⭐</span> 4.9</div>
+                     </div>
+                     <span class="card-cta">Lanjut Belajar <span class="arr emoji">✨</span></span>
+                  </div>
+                  <div class="popular-badge emoji">⭐ Populer</div>
+               </a>
+
+               <a href="tenses.html" class="card" data-cat="grammar menengah" onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-g"><span class="emoji">📏</span> Grammar</span>
+                  <span class="card-icon emoji">⏳</span>
+                  <div class="card-level">Menengah</div>
+                  <div class="card-title">Tenses: Present & Past</div>
+                  <div class="card-desc">Kuasai present simple, continuous, past simple, dan past continuous dengan
+                     latihan
+                     interaktif.</div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>0%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="0"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 20 Topik</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 3 Jam</div>
+                  </div>
+                  <span class="card-cta">Mulai Belajar <span class="arr emoji">✨</span></span>
+               </a>
+
+               <a href="materi-modal-verbs.html" class="card locked" data-cat="grammar lanjutan"
+                  onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-g"><span class="emoji">📏</span> Grammar</span>
+                  <span class="card-icon emoji">⚖️</span>
+                  <div class="card-level">Lanjutan</div>
+                  <div class="card-title">Modal Verbs & Conditionals</div>
+                  <div class="card-desc">Pahami penggunaan modal verbs dan conditional sentences dalam berbagai konteks
+                     nyata.
+                  </div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>0%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="0"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 18 Topik</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 2.5 Jam</div>
+                  </div>
+                  <span class="card-cta">Mulai Belajar <span class="arr emoji">✨</span></span>
+                  <span class="lock-icon emoji">🔒</span>
+               </a>
+
+               <a href="materi-nouns-pronouns.html" class="card locked" data-cat="grammar dasar"
+                  onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-g"><span class="emoji">📏</span> Grammar</span>
+                  <span class="card-icon emoji">🏷️</span>
+                  <div class="card-level">Dasar</div>
+                  <div class="card-title">Nouns & Pronouns</div>
+                  <div class="card-desc">Pelajari berbagai jenis kata benda dan kata ganti untuk menyusun kalimat dengan
+                     benar.
+                  </div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>0%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="0"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 10 Topik</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 1.5 Jam</div>
+                  </div>
+                  <span class="card-cta">Mulai Belajar <span class="arr emoji">✨</span></span>
+                  <span class="lock-icon emoji">🔒</span>
+               </a>
+
+               <a href="materi-adjectives-adverbs.html" class="card locked" data-cat="grammar dasar"
+                  onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-g"><span class="emoji">📏</span> Grammar</span>
+                  <span class="card-icon emoji">🎨</span>
+                  <div class="card-level">Dasar</div>
+                  <div class="card-title">Adjectives & Adverbs</div>
+                  <div class="card-desc">Tingkatkan gaya bahasamu dengan memahami perbedaan serta fungsi kata sifat dan
+                     kata
+                     keterangan.
+                  </div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>0%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="0"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 12 Topik</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 2 Jam</div>
+                  </div>
+                  <span class="card-cta">Mulai Belajar <span class="arr emoji">✨</span></span>
+                  <span class="lock-icon emoji">🔒</span>
+               </a>
+
+               <a href="materi-prepositions-conjunctions.html" class="card locked" data-cat="grammar menengah"
+                  onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-g"><span class="emoji">📏</span> Grammar</span>
+                  <span class="card-icon emoji">🔗</span>
+                  <div class="card-level">Menengah</div>
+                  <div class="card-title">Prepositions & Conjunctions</div>
+                  <div class="card-desc">Kuasai penggunaan kata depan dan kata hubung agar kalimatmu lebih koheren dan
+                     logis.
+                  </div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>0%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="0"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 14 Topik</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 2 Jam</div>
+                  </div>
+                  <span class="card-cta">Mulai Belajar <span class="arr emoji">✨</span></span>
+                  <span class="lock-icon emoji">🔒</span>
+               </a>
+
+               <a href="materi-passive-voice.html" class="card locked" data-cat="grammar lanjutan"
+                  onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-g"><span class="emoji">📏</span> Grammar</span>
+                  <span class="card-icon emoji">🎭</span>
+                  <div class="card-level">Lanjutan</div>
+                  <div class="card-title">Passive Voice</div>
+                  <div class="card-desc">Pahami cara mengubah kalimat aktif menjadi pasif dan kapan waktu yang tepat
+                     menggunakannya.
+                  </div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>0%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="0"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 15 Topik</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 2.5 Jam</div>
+                  </div>
+                  <span class="card-cta">Mulai Belajar <span class="arr emoji">✨</span></span>
+                  <span class="lock-icon emoji">🔒</span>
+               </a>
+
+               <a href="materi-direct-indirect-speech.html" class="card locked" data-cat="grammar lanjutan"
+                  onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-g"><span class="emoji">📏</span> Grammar</span>
+                  <span class="card-icon emoji">💬</span>
+                  <div class="card-level">Lanjutan</div>
+                  <div class="card-title">Direct & Indirect Speech</div>
+                  <div class="card-desc">Pelajari aturan menyampaikan ulang ucapan orang lain secara langsung dan tidak
+                     langsung.
+                  </div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>0%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="0"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 16 Topik</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 3 Jam</div>
+                  </div>
+                  <span class="card-cta">Mulai Belajar <span class="arr emoji">✨</span></span>
+                  <span class="lock-icon emoji">🔒</span>
+               </a>
+            </div>
+         </div>
+
+         <!-- VOCABULARY -->
+         <div class="section-block sec-vocab" data-cat="vocabulary">
+            <div class="sec-head">
+               <div class="sec-icon-wrap emoji">🔤</div>
+               <div class="sec-head-info">
+                  <div class="sec-title">Kosakata & Vocabulary</div>
+                  <div class="sec-sub">Perluas kosakata, perluas dunia</div>
+               </div>
+               <div class="sec-line"></div>
+               <div class="sec-count">3 Modul</div>
+            </div>
+            <div class="grid">
+               <a href="materi-kosakata.html" class="card" data-cat="vocabulary dasar" onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-v"><span class="emoji">🧠</span> Vocabulary</span>
+                  <span class="card-icon emoji">☕</span>
+                  <div class="card-level">Daily Life</div>
+                  <div class="card-title">Kosakata Kehidupan Sehari-hari</div>
+                  <div class="card-desc">Belajar kosakata tentang rumah, pekerjaan, makanan, dan aktivitas sehari-hari
+                     yang
+                     paling sering digunakan.</div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>80%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="80"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 12 Topik</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 1.5 Jam</div>
+                     <div class="cstat"><span class="emoji">⭐</span> 4.8</div>
+                  </div>
+                  <span class="card-cta">Lanjut Belajar <span class="arr emoji">✨</span></span>
+                  <div class="popular-badge emoji">⭐ Top Rated</div>
+               </a>
+
+               <a href="materi-vocab-bisnis.html" class="card" data-cat="vocabulary profesional"
+                  onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-v"><span class="emoji">🧠</span> Vocabulary</span>
+                  <span class="card-icon emoji">💼</span>
+                  <div class="card-level">Professional</div>
+                  <div class="card-title">Vocabulary Bisnis & Profesional</div>
+                  <div class="card-desc">Tingkatkan kosakata bisnis untuk komunikasi profesional, presentasi, dan
+                     surat-menyurat formal.</div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>30%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="30"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 16 Topik</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 2 Jam</div>
+                  </div>
+                  <span class="card-cta">Lanjut Belajar <span class="arr emoji">✨</span></span>
+               </a>
+
+               <a href="materi-temakhusus.html" class="card" data-cat="vocabulary lanjutan"
+                  onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-v"><span class="emoji">🧠</span> Vocabulary</span>
+                  <span class="card-icon emoji">🔬</span>
+                  <div class="card-level">Tema Khusus</div>
+                  <div class="card-title">Kosakata Tema Khusus</div>
+                  <div class="card-desc">Eksplorasi kosakata teknologi, sains, seni, dan berbagai topik menarik lainnya
+                     untuk
+                     komunikasi yang lebih kaya.</div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>0%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="0"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 25 Topik</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 3.5 Jam</div>
+                  </div>
+                  <span class="card-cta">Mulai Belajar <span class="arr emoji">✨</span></span>
+               </a>
+            </div>
+         </div>
+
+         <!-- READING -->
+         <div class="section-block sec-reading" data-cat="reading">
+            <div class="sec-head">
+               <div class="sec-icon-wrap emoji">👁️</div>
+               <div class="sec-head-info">
+                  <div class="sec-title">Reading Comprehension</div>
+                  <div class="sec-sub">Pahami lebih dalam, lebih cepat</div>
+               </div>
+               <div class="sec-line"></div>
+               <div class="sec-count">3 Modul</div>
+            </div>
+            <div class="grid">
+               <a href="materi-membacateks.html" class="card" data-cat="reading dasar" onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-r"><span class="emoji">📖</span> Reading</span>
+                  <span class="card-icon emoji">📰</span>
+                  <div class="card-level">Pemula</div>
+                  <div class="card-title">Membaca Teks Pendek</div>
+                  <div class="card-desc">Latih kemampuan memahami teks pendek dan sederhana lengkap dengan pertanyaan
+                     pemahaman interaktif.</div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>60%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="60"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 20 Teks</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 2 Jam</div>
+                  </div>
+                  <span class="card-cta">Lanjut Belajar <span class="arr emoji">✨</span></span>
+               </a>
+
+               <a href="materi-readcom.html" class="card" data-cat="reading menengah" onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-r"><span class="emoji">📖</span> Reading</span>
+                  <span class="card-icon emoji">🗞️</span>
+                  <div class="card-level">Menengah</div>
+                  <div class="card-title">Reading Comprehension Menengah</div>
+                  <div class="card-desc">Baca artikel dan berita, pelajari cara mengidentifikasi ide utama, detail
+                     penting,
+                     dan tone penulis.</div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>15%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="15"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 30 Artikel</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 3 Jam</div>
+                  </div>
+                  <span class="card-cta">Lanjut Belajar <span class="arr emoji">✨</span></span>
+               </a>
+
+               <a href="materi-advanceread.html" class="card locked" data-cat="reading lanjutan"
+                  onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-r"><span class="emoji">📖</span> Reading</span>
+                  <span class="card-icon emoji">📚</span>
+                  <div class="card-level">Lanjutan</div>
+                  <div class="card-title">Advanced Reading & Analysis</div>
+                  <div class="card-desc">Analisis teks kompleks, inferensi mendalam, dan pemahaman kritis tentang isi
+                     dan
+                     tujuan bacaan.</div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>0%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="0"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 25 Teks</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 3.5 Jam</div>
+                  </div>
+                  <span class="card-cta">Mulai Belajar <span class="arr emoji">✨</span></span>
+                  <span class="lock-icon emoji">🔒</span>
+               </a>
+            </div>
+         </div>
+
+         <!-- WRITING -->
+         <div class="section-block sec-writing" data-cat="writing">
+            <div class="sec-head">
+               <div class="sec-icon-wrap emoji">🖋️</div>
+               <div class="sec-head-info">
+                  <div class="sec-title">Menulis & Writing</div>
+                  <div class="sec-sub">Ekspresikan ide dengan sempurna</div>
+               </div>
+               <div class="sec-line"></div>
+               <div class="sec-count">3 Modul</div>
+            </div>
+            <div class="grid">
+               <a href="materi-menulis-kalimat.html" class="card" data-cat="writing dasar"
+                  onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-w"><span class="emoji">✍️</span> Writing</span>
+                  <span class="card-icon emoji">📓</span>
+                  <div class="card-level">Dasar</div>
+                  <div class="card-title">Menulis Kalimat & Paragraf</div>
+                  <div class="card-desc">Belajar membuat kalimat yang benar dan mengorganisir ide menjadi paragraf yang
+                     kohesif dan mengalir.</div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>50%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="50"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 15 Modul</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 2 Jam</div>
+                  </div>
+                  <span class="card-cta">Lanjut Belajar <span class="arr emoji">✨</span></span>
+               </a>
+
+               <a href="materi-email-formal.html" class="card" data-cat="writing email menengah"
+                  onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-w"><span class="emoji">✍️</span> Writing</span>
+                  <span class="card-icon emoji">📧</span>
+                  <div class="card-level">Email & Surat</div>
+                  <div class="card-title">Menulis Email & Surat Formal</div>
+                  <div class="card-desc">Kuasai format dan etika menulis email profesional serta surat bisnis yang
+                     efektif dan
+                     berkesan.</div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>20%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="20"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 12 Template</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 1.5 Jam</div>
+                  </div>
+                  <span class="card-cta">Lanjut Belajar <span class="arr emoji">✨</span></span>
+               </a>
+
+               <a href="materi-essay-artikel.html" class="card" data-cat="writing essay lanjutan"
+                  onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-w"><span class="emoji">✍️</span> Writing</span>
+                  <span class="card-icon emoji">📄</span>
+                  <div class="card-level">Essay</div>
+                  <div class="card-title">Menulis Essay & Artikel</div>
+                  <div class="card-desc">Pelajari cara menulis essay persuasif, naratif, dan artikel yang menarik
+                     perhatian
+                     pembaca sejak kalimat pertama.</div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>0%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="0"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 18 Materi</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 3 Jam</div>
+                  </div>
+                  <span class="card-cta">Mulai Belajar <span class="arr emoji">✨</span></span>
+               </a>
+            </div>
+         </div>
+
+         <!-- LISTENING & SPEAKING -->
+         <div class="section-block sec-media" data-cat="listening speaking">
+            <div class="sec-head">
+               <div class="sec-icon-wrap emoji">🎙️</div>
+               <div class="sec-head-info">
+                  <div class="sec-title">Mendengar & Berbicara</div>
+                  <div class="sec-sub">Dengarkan, serap, ungkapkan</div>
+               </div>
+               <div class="sec-line"></div>
+               <div class="sec-count">3 Modul</div>
+            </div>
+            <div class="grid">
+               <a href="materi-listening-mendengarkan.html" class="card" data-cat="listening dasar"
+                  onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-l"><span class="emoji">🎧</span> Listening</span>
+                  <span class="card-icon emoji">👂</span>
+                  <div class="card-level">Listening</div>
+                  <div class="card-title">Latihan Mendengarkan</div>
+                  <div class="card-desc">Dengarkan native speakers dan latih kemampuan menangkap esensi pembicaraan
+                     dalam
+                     berbagai aksen.</div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>35%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="35"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 30 Audio</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 2.5 Jam</div>
+                  </div>
+                  <span class="card-cta">Lanjut Belajar <span class="arr emoji">✨</span></span>
+               </a>
+
+               <a href="materi-berbicara.html" class="card" data-cat="speaking menengah"
+                  onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-s"><span class="emoji">💬</span> Speaking</span>
+                  <span class="card-icon emoji">🗣️</span>
+                  <div class="card-level">Speaking</div>
+                  <div class="card-title">Teknik Berbicara Bahasa Inggris</div>
+                  <div class="card-desc">Tingkatkan percaya diri berbicara dengan latihan pronunciation, intonasi, dan
+                     conversational skills sehari-hari.</div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>10%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="10"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 25 Topik</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 3 Jam</div>
+                  </div>
+                  <span class="card-cta">Lanjut Belajar <span class="arr emoji">✨</span></span>
+               </a>
+
+               <a href="materi-video.html" class="card" data-cat="listening lanjutan" onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-l"><span class="emoji">🎧</span> Listening</span>
+                  <span class="card-icon emoji">🎬</span>
+                  <div class="card-level">Video & Media</div>
+                  <div class="card-title">Belajar dari Video & Movie</div>
+                  <div class="card-desc">Manfaatkan video, film, dan series untuk meningkatkan listening comprehension
+                     secara
+                     natural dan menyenangkan.</div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>5%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="5"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 40 Video</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 4 Jam</div>
+                  </div>
+                  <span class="card-cta">Lanjut Belajar <span class="arr emoji">✨</span></span>
+               </a>
+
+               <a href="materi-dialog-sehari-hari.html" class="card" data-cat="speaking menengah"
+                  onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-s"><span class="emoji">💬</span> Speaking</span>
+                  <span class="card-icon emoji">🤝</span>
+                  <div class="card-level">Speaking</div>
+                  <div class="card-title">Dialog & Percakapan Sehari-hari</div>
+                  <div class="card-desc">Latih dialog langsung dengan berbagai skenario (restoran, bandara, hotel) untuk
+                     kelancaran bertutur.</div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>0%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="0"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 15 Skenario</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 2 Jam</div>
+                  </div>
+                  <span class="card-cta">Mulai Belajar <span class="arr emoji">✨</span></span>
+               </a>
+
+               <a href="materi-idiom-slang.html" class="card" data-cat="speaking lanjutan"
+                  onclick="addRipple(event,this)">
+                  <span class="cat-badge badge-s"><span class="emoji">💬</span> Speaking</span>
+                  <span class="card-icon emoji">🤙</span>
+                  <div class="card-level">Lanjutan</div>
+                  <div class="card-title">Idiom & Slang dalam Bahasa Inggris</div>
+                  <div class="card-desc">Pahami ribuan ekspresi natural dan slang agar tidak kaku saat mendengarkan
+                     native.</div>
+                  <div class="card-progress">
+                     <div class="prog-top"><span>Progress</span><span>0%</span></div>
+                     <div class="prog-bar">
+                        <div class="prog-fill" data-w="0"></div>
+                     </div>
+                  </div>
+                  <div class="card-stats">
+                     <div class="cstat"><span class="emoji">📄</span> 20 Topik</div>
+                     <div class="cstat"><span class="emoji">⏱️</span> 2 Jam</div>
+                  </div>
+                  <span class="card-cta">Mulai Belajar <span class="arr emoji">✨</span></span>
+               </a>
+            </div>
+         </div>
+
+         <div id="no-results">
+            <div class="empty-icon emoji">👻</div>
+            <div>Tidak ada materi yang ditemukan untuk "<span id="nr-query"></span>"</div>
+         </div>
+
+         <div class="section-block" data-cat="meta">
+            <div class="sec-head">
+               <div class="sec-icon-wrap emoji">🔖</div>
+               <div class="sec-head-info">
+                  <div class="sec-title">Bookmark Kamu</div>
+                  <div class="sec-sub">Simpan modul favorit untuk akses cepat</div>
+               </div>
+               <div class="sec-line"></div>
+               <div class="sec-count" id="bookmarkCount">0 Modul</div>
+            </div>
+            <div class="grid" id="bookmarkGrid"></div>
+            <div class="section-actions">
+               <span class="mini-pill">Tips: klik ikon ⭐ di kartu</span>
+               <button class="quick-btn" onclick="clearBookmarks()"><span class="emoji">🗑️</span> Hapus
+                  Bookmark</button>
+            </div>
+         </div>
+
+         <div class="section-block" data-cat="meta">
+            <div class="sec-head">
+               <div class="sec-icon-wrap emoji">⏳</div>
+               <div class="sec-head-info">
+                  <div class="sec-title">Terakhir Dilihat</div>
+                  <div class="sec-sub">Riwayat materi yang baru kamu buka</div>
+               </div>
+               <div class="sec-line"></div>
+               <div class="sec-count" id="recentCount">0 Modul</div>
+            </div>
+            <div class="grid" id="recentGrid"></div>
+            <div class="section-actions">
+               <span class="mini-pill">Shortcut: tekan / untuk search</span>
+               <button class="quick-btn" onclick="clearRecent()"><span class="emoji">🗑️</span> Hapus Riwayat</button>
+            </div>
+         </div>
+
+      </div><!-- /content -->
+
+      <footer>
+         (c) 2024-2026 QuizNation - Platform Pembelajaran Bahasa Inggris Terpadu - Belajar tanpa batas, kapan saja di
+         mana saja <span class="emoji">🚀</span>
+      </footer>
+   </main>
+
+   <div id="toast-mini" class="toast-mini"></div>
+
+   <script>
+      /* --------------------------------------
+       CUSTOM CURSOR
+      -------------------------------------- */
+      const cursor = document.getElementById('cursor');
+      const cursorRing = document.getElementById('cursor-ring');
+      const perfState = window.__QUIZNATION_PERF__ || {};
+      let cx = 0, cy = 0, rx = 0, ry = 0;
+      if (perfState.isAndroid || perfState.isTouchDevice || ('ontouchstart' in window)) {
+         if (cursor) cursor.style.display = 'none';
+         if (cursorRing) cursorRing.style.display = 'none';
+      } else {
+         document.addEventListener('mousemove', e => {
+            cx = e.clientX; cy = e.clientY;
+            cursor.style.left = cx + 'px';
+            cursor.style.top = cy + 'px';
+         });
+
+         function animRing() {
+            rx += (cx - rx) * 0.12;
+            ry += (cy - ry) * 0.12;
+            cursorRing.style.left = rx + 'px';
+            cursorRing.style.top = ry + 'px';
+            requestAnimationFrame(animRing);
+         }
+         animRing();
+
+         document.querySelectorAll('a, button, .card, .filter-tab, .topbar-btn, #ham, .toggle, .sb-item').forEach(el => {
+            el.addEventListener('mouseenter', () => {
+               cursor.style.width = '18px'; cursor.style.height = '18px';
+               cursor.style.background = 'var(--accent2)';
+               cursorRing.style.width = '52px'; cursorRing.style.height = '52px';
+               cursorRing.style.borderColor = 'var(--accent2)';
+               cursorRing.style.opacity = '.8';
+            });
+            el.addEventListener('mouseleave', () => {
+               cursor.style.width = '12px'; cursor.style.height = '12px';
+               cursor.style.background = 'var(--accent)';
+               cursorRing.style.width = '36px'; cursorRing.style.height = '36px';
+               cursorRing.style.borderColor = 'var(--accent)';
+               cursorRing.style.opacity = '.55';
+            });
+         });
+      }
+
+      /* --------------------------------------
+       BG CANVAS
+      -------------------------------------- */
+      (function () {
+         const c = document.getElementById('bg-canvas');
+         const perfState = window.__QUIZNATION_PERF__ || {};
+         if (!c) return;
+         if (perfState.disableDecorations && (perfState.isAndroid || perfState.isTouchDevice || perfState.isSmallScreen)) {
+            c.style.display = 'none';
+            return;
+         }
+         const ctx = c.getContext('2d');
+         let W, H, orbs = [];
+
+         function resize() { W = c.width = window.innerWidth; H = c.height = window.innerHeight; }
+
+         class Orb {
+            constructor() { this.reset(true); }
+            reset(init) {
+               this.x = Math.random() * (W || 800);
+               this.y = init ? Math.random() * (H || 600) : H + 80;
+               this.r = 120 + Math.random() * 200;
+               this.vx = (Math.random() - .5) * .3;
+               this.vy = -(Math.random() * .2 + .05);
+               this.hue = [260, 190, 320, 210][Math.floor(Math.random() * 4)];
+               this.a = Math.random() * .12 + .04;
+               this.pulseSpeed = Math.random() * .02 + .005;
+               this.phase = Math.random() * Math.PI * 2;
+            }
+            update(t) {
+               this.x += this.vx; this.y += this.vy;
+               if (this.y + this.r < 0) this.reset();
+               const pulse = 1 + Math.sin(t * this.pulseSpeed + this.phase) * 0.15;
+               const gr = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r * pulse);
+               gr.addColorStop(0, `hsla(${this.hue},80%,60%,${this.a})`);
+               gr.addColorStop(1, `hsla(${this.hue},80%,60%,0)`);
+               ctx.beginPath();
+               ctx.arc(this.x, this.y, this.r * pulse, 0, Math.PI * 2);
+               ctx.fillStyle = gr;
+               ctx.fill();
+            }
+         }
+
+         function init() { resize(); orbs = Array.from({ length: 12 }, () => new Orb()); }
+
+         let t = 0;
+         function loop() {
+            t++;
+            ctx.clearRect(0, 0, W, H);
+            orbs.forEach(o => o.update(t));
+            requestAnimationFrame(loop);
+         }
+
+         window.addEventListener('resize', () => { resize(); });
+         init(); loop();
+
+         // Particle layer
+         const pc = document.createElement('canvas');
+         pc.style.cssText = 'position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.25;';
+         document.body.appendChild(pc);
+         const pctx = pc.getContext('2d');
+         let PW, PH, particles = [];
+
+         function presize() { PW = pc.width = window.innerWidth; PH = pc.height = window.innerHeight; }
+
+         class Particle {
+            constructor(init) {
+               this.x = Math.random() * (PW || 800);
+               this.y = init ? Math.random() * (PH || 600) : (PH || 600) + 5;
+               this.r = Math.random() * 1.2 + .3;
+               this.vx = (Math.random() - .5) * .2;
+               this.vy = -(Math.random() * .3 + .08);
+               this.a = Math.random() * .4 + .1;
+               this.hue = Math.random() > .5 ? 260 : 190;
+            }
+            update() {
+               this.x += this.vx; this.y += this.vy;
+               if (this.y < -4) { this.y = PH + 4; this.x = Math.random() * PW; }
+               if (this.x < 0) this.x = PW; if (this.x > PW) this.x = 0;
+               pctx.beginPath();
+               pctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+               pctx.fillStyle = `hsla(${this.hue},80%,70%,${this.a})`;
+               pctx.fill();
+            }
+         }
+
+         presize();
+         particles = Array.from({ length: 60 }, () => new Particle(true));
+         window.addEventListener('resize', presize);
+
+         function ploopFn() {
+            pctx.clearRect(0, 0, PW, PH);
+            particles.forEach(p => p.update());
+            requestAnimationFrame(ploopFn);
+         }
+         ploopFn();
+      })();
+
+      /* --------------------------------------
+       CLOCK
+      -------------------------------------- */
+      const MONTHS = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+      const DAYS = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+      function updateClock() {
+         const n = new Date();
+         document.getElementById('clockTime').textContent = [n.getHours(), n.getMinutes(), n.getSeconds()].map(v => String(v).padStart(2, '0')).join(':');
+         document.getElementById('clockDate').textContent = `${n.getDate()} ${MONTHS[n.getMonth()]} ${n.getFullYear()}`;
+         document.getElementById('clockDay').textContent = DAYS[n.getDay()];
+      }
+      updateClock(); setInterval(updateClock, 1000);
+
+      /* --------------------------------------
+       THEME
+      -------------------------------------- */
+      function applyTheme(dark) {
+         localStorage.setItem('theme', dark ? 'dark' : 'light');
+         localStorage.setItem('themeMode', dark ? 'dark' : 'light');
+         if (typeof window.__quizNationApplyGlobalPreferences === 'function') {
+            window.__quizNationApplyGlobalPreferences();
+         } else {
+            document.body.classList.toggle('dark', dark);
+         }
+         document.getElementById('toggleBtn').classList.toggle('on', dark);
+         document.getElementById('themeIcon').textContent = dark ? '🌙' : '☀️';
+         document.getElementById('themeText').textContent = dark ? 'Mode Gelap' : 'Mode Terang';
+      }
+      function toggleTheme() { applyTheme(!document.body.classList.contains('dark')); }
+      applyTheme(localStorage.getItem('theme') === 'dark');
+
+      /* --------------------------------------
+       SIDEBAR
+      -------------------------------------- */
+      let sbOpen = false;
+      function toggleSidebar() { sbOpen ? closeSidebar() : openSidebar(); }
+      function openSidebar() {
+         document.getElementById('sidebar').classList.add('on');
+         document.getElementById('backdrop').classList.add('on');
+         document.getElementById('ham').classList.add('open');
+         sbOpen = true;
+      }
+      function closeSidebar() {
+         document.getElementById('sidebar').classList.remove('on');
+         document.getElementById('backdrop').classList.remove('on');
+         document.getElementById('ham').classList.remove('open');
+         sbOpen = false;
+      }
+      document.addEventListener('keydown', e => { if (e.key === 'Escape') closeSidebar(); });
+
+      /* --------------------------------------
+       SIDEBAR STATS
+      -------------------------------------- */
+      document.getElementById('sbScore').textContent = parseInt(localStorage.getItem('totalScore') || '0').toLocaleString('id-ID');
+      document.getElementById('sbStreak').textContent = parseInt(localStorage.getItem('streakDays') || '0');
+
+      /* --------------------------------------
+       PROGRESS RING ANIMATION
+      -------------------------------------- */
+      setTimeout(() => {
+         const ring = document.getElementById('ringFill');
+         const pct = 65;
+         const circumference = 100.5;
+         ring.style.strokeDashoffset = circumference - (pct / 100) * circumference;
+         document.getElementById('ringPct').textContent = pct + '%';
+      }, 500);
+
+      /* --------------------------------------
+       COUNTER ANIMATION
+      -------------------------------------- */
+      function animateCount(el, target, isDecimal) {
+         const dur = 1800, step = 16;
+         let start = 0, elapsed = 0;
+         const timer = setInterval(() => {
+            elapsed += step;
+            const progress = Math.min(elapsed / dur, 1);
+            const ease = 1 - Math.pow(1 - progress, 3);
+            const val = start + (target - start) * ease;
+            el.textContent = isDecimal ? val.toFixed(1) : Math.floor(val).toLocaleString('id-ID');
+            if (progress >= 1) clearInterval(timer);
+         }, step);
+      }
+
+      const counterEls = document.querySelectorAll('[data-count]');
+      const counterObs = new IntersectionObserver(entries => {
+         entries.forEach(e => {
+            if (e.isIntersecting) {
+               const t = parseFloat(e.target.dataset.count);
+               animateCount(e.target, t, t % 1 !== 0);
+               counterObs.unobserve(e.target);
+            }
+         });
+      }, { threshold: .5 });
+      counterEls.forEach(el => counterObs.observe(el));
+
+      /* --------------------------------------
+       PROGRESS BARS
+      -------------------------------------- */
+      const progObs = new IntersectionObserver(entries => {
+         entries.forEach(e => {
+            if (e.isIntersecting) {
+               const bars = e.target.querySelectorAll('.prog-fill[data-w]');
+               bars.forEach(b => { setTimeout(() => { b.style.width = b.dataset.w + '%'; }, 200); });
+               progObs.unobserve(e.target);
+            }
+         });
+      }, { threshold: .3 });
+      document.querySelectorAll('.card').forEach(c => progObs.observe(c));
+
+      /* --------------------------------------
+       CARD ENTRANCE ANIMATION
+      -------------------------------------- */
+      const cardObs = new IntersectionObserver(entries => {
+         entries.forEach((e, i) => {
+            if (e.isIntersecting) {
+               setTimeout(() => { e.target.classList.add('visible'); }, (i % 4) * 80);
+               cardObs.unobserve(e.target);
+            }
+         });
+      }, { threshold: .1, rootMargin: '0px 0px -40px 0px' });
+      document.querySelectorAll('.card').forEach(c => cardObs.observe(c));
+
+      /* --------------------------------------
+       RIPPLE
+      -------------------------------------- */
+      function addRipple(e, el) {
+         const r = document.createElement('span');
+         const rect = el.getBoundingClientRect();
+         const sz = Math.min(rect.width, rect.height) * 0.9;
+         r.className = 'ripple';
+         r.style.cssText = `width:${sz}px;height:${sz}px;left:${e.clientX - rect.left - sz / 2}px;top:${e.clientY - rect.top - sz / 2}px;`;
+         el.appendChild(r);
+         setTimeout(() => r.remove(), 700);
+      }
+
+      /* --------------------------------------
+       FILTER TABS
+      -------------------------------------- */
+      document.querySelectorAll('.filter-tab').forEach(tab => {
+         tab.addEventListener('click', () => {
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            const f = tab.dataset.filter;
+            filterCards(f);
+         });
+      });
+
+      function getPrimarySections() {
+         return Array.from(document.querySelectorAll('.section-block:not([data-cat="meta"])'));
+      }
+
+      function getPrimaryCards() {
+         return Array.from(document.querySelectorAll('.section-block:not([data-cat="meta"]) .card'));
+      }
+
+      function filterCards(f) {
+         getPrimarySections().forEach(sec => {
+            const secCat = sec.dataset.cat || '';
+            let anyVisible = false;
+            sec.querySelectorAll('.card').forEach(card => {
+               const cat = (card.dataset.cat || '').toLowerCase();
+               const isLocked = card.classList.contains('locked') || card.querySelector('.lock-icon');
+               const show = f === 'all'
+                  || (f === 'terkunci' && isLocked)
+                  || (f === 'terbuka' && !isLocked)
+                  || cat.includes(f)
+                  || secCat.includes(f);
+               card.style.display = show ? '' : 'none';
+               if (show) anyVisible = true;
+            });
+            sec.style.display = anyVisible ? '' : 'none';
+         });
+         document.querySelectorAll('.section-block[data-cat="meta"]').forEach(sec => { sec.style.display = ''; });
+         updateQuickMeta();
+      }
+
+      function applyQuickFilter(q) {
+         const term = (q || '').trim().toLowerCase();
+         document.getElementById('nr-query').textContent = term;
+         if (!term) {
+            filterCards('all');
+            document.getElementById('no-results').style.display = 'none';
+            return;
+         }
+         let any = false;
+         getPrimarySections().forEach(sec => {
+            let secAny = false;
+            sec.querySelectorAll('.card').forEach(card => {
+               const txt = card.textContent.toLowerCase();
+               const show = txt.includes(term);
+               card.style.display = show ? '' : 'none';
+               if (show) { secAny = true; any = true; }
+            });
+            sec.style.display = secAny ? '' : 'none';
+         });
+         document.querySelectorAll('.section-block[data-cat="meta"]').forEach(sec => { sec.style.display = ''; });
+         document.getElementById('no-results').style.display = any ? 'none' : 'block';
+         updateQuickMeta();
+      }
+
+      function clearQuickFilter() {
+         const input = document.getElementById('quick-filter');
+         if (input) input.value = '';
+         applyQuickFilter('');
+         showToast('Filter direset');
+      }
+
+      /* --------------------------------------
+       SEARCH
+      -------------------------------------- */
+      let searchOpen = false;
+      function toggleSearch() {
+         searchOpen = !searchOpen;
+         document.getElementById('search-bar').classList.toggle('visible', searchOpen);
+         if (searchOpen) setTimeout(() => document.getElementById('search-input').focus(), 400);
+         else clearSearch();
+      }
+      function handleSearch(input) {
+         const q = input.value.trim().toLowerCase();
+         document.getElementById('search-bar').classList.toggle('has-text', q.length > 0);
+         document.getElementById('nr-query').textContent = q;
+         if (!q) { filterCards('all'); document.getElementById('no-results').style.display = 'none'; return; }
+
+         let any = false;
+         getPrimarySections().forEach(sec => {
+            let secAny = false;
+            sec.querySelectorAll('.card').forEach(card => {
+               const txt = card.textContent.toLowerCase();
+               const show = txt.includes(q);
+               card.style.display = show ? '' : 'none';
+               if (show) { secAny = true; any = true; }
+            });
+            sec.style.display = secAny ? '' : 'none';
+         });
+         document.querySelectorAll('.section-block[data-cat="meta"]').forEach(sec => { sec.style.display = ''; });
+         document.getElementById('no-results').style.display = any ? 'none' : 'block';
+         updateQuickMeta();
+      }
+      function clearSearch() {
+         document.getElementById('search-input').value = '';
+         document.getElementById('search-bar').classList.remove('has-text');
+         filterCards('all');
+         document.getElementById('no-results').style.display = 'none';
+      }
+      document.addEventListener('keydown', e => { if (e.key === '/' && !searchOpen) { e.preventDefault(); toggleSearch(); } });
+
+      /* --------------------------------------
+       QUICK TOOLS
+      -------------------------------------- */
+      document.getElementById('quick-filter').addEventListener('input', (e) => applyQuickFilter(e.target.value));
+
+      function setViewMode(mode) {
+         document.body.classList.toggle('list-view', mode === 'list');
+         document.getElementById('viewGrid').classList.toggle('active', mode === 'grid');
+         document.getElementById('viewList').classList.toggle('active', mode === 'list');
+         localStorage.setItem('materi_view_mode', mode);
+      }
+
+      function restoreViewMode() {
+         const mode = localStorage.getItem('materi_view_mode') || 'grid';
+         setViewMode(mode);
+      }
+
+      function initCardOrder() {
+         getPrimaryCards().forEach((card, idx) => {
+            if (!card.dataset.order) card.dataset.order = String(idx);
+         });
+      }
+
+      function sortModules(mode) {
+         document.querySelectorAll('.section-block:not([data-cat="meta"]) .grid').forEach(grid => {
+            const cards = Array.from(grid.querySelectorAll('.card'));
+            const sorted = cards.sort((a, b) => {
+               if (mode === 'default') return (parseInt(a.dataset.order || '0', 10) - parseInt(b.dataset.order || '0', 10));
+               if (mode === 'title') return a.querySelector('.card-title').textContent.localeCompare(b.querySelector('.card-title').textContent);
+               if (mode === 'progress') return (getCardProgress(b) - getCardProgress(a));
+               if (mode === 'duration') return (getCardDuration(a) - getCardDuration(b));
+               return 0;
+            });
+            sorted.forEach(c => grid.appendChild(c));
+         });
+         showToast('Urutan diperbarui');
+         updateQuickMeta();
+      }
+
+      function getCardProgress(card) {
+         const bar = card.querySelector('.prog-fill[data-w]');
+         return bar ? parseInt(bar.dataset.w || '0', 10) : 0;
+      }
+
+      function getCardDuration(card) {
+         const stat = Array.from(card.querySelectorAll('.cstat')).find(s => /Jam|Menit|mnt/i.test(s.textContent));
+         if (!stat) return 0;
+         const txt = stat.textContent.toLowerCase();
+         const num = parseFloat(txt.replace(/[^0-9.]/g, '')) || 0;
+         if (txt.includes('jam')) return Math.round(num * 60);
+         return Math.round(num);
+      }
+
+      function jumpToRandom() {
+         const visibleCards = getPrimaryCards().filter(c => c.style.display !== 'none');
+         if (!visibleCards.length) return;
+         const card = visibleCards[Math.floor(Math.random() * visibleCards.length)];
+         card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+         card.classList.add('visible');
+         showToast('Modul dipilih secara acak');
+      }
+
+      function showToast(msg) {
+         const t = document.getElementById('toast-mini');
+         if (!t) return;
+         t.textContent = msg;
+         t.classList.add('show');
+         clearTimeout(window.__toastTimer);
+         window.__toastTimer = setTimeout(() => t.classList.remove('show'), 1600);
+      }
+
+      function updateQuickMeta() {
+         const total = getPrimaryCards().length;
+         const visible = getPrimaryCards().filter(c => c.style.display !== 'none').length;
+         const meta = document.getElementById('quickMeta');
+         if (meta) meta.textContent = `Modul tampil: ${visible}/${total}`;
+      }
+
+      /* --------------------------------------
+       SCROLL TOP
+      -------------------------------------- */
+      window.addEventListener('scroll', () => {
+         document.getElementById('scroll-top').classList.toggle('show', window.scrollY > 400);
+      });
+
+      /* --------------------------------------
+       STREAK TOAST
+      -------------------------------------- */
+      setTimeout(() => {
+         const t = document.getElementById('streak-toast');
+         t.classList.add('show');
+         setTimeout(() => t.classList.remove('show'), 4000);
+      }, 2000);
+
+      /* --------------------------------------
+       NOTIFICATIONS & REMINDERS
+      -------------------------------------- */
+      function showReminder(title, desc, icon = '🔔') {
+         const t = document.getElementById('reminder-toast');
+         document.getElementById('reminder-title').textContent = title;
+         document.getElementById('reminder-desc').textContent = desc;
+         document.getElementById('reminder-icon').textContent = icon;
+
+         t.classList.add('show');
+         // Auto close after 10 seconds
+         setTimeout(() => {
+            t.classList.remove('show');
+         }, 10000);
+      }
+
+      function closeReminder() {
+         document.getElementById('reminder-toast').classList.remove('show');
+      }
+
+      setTimeout(() => {
+         showReminder(
+            'Lanjutkan Belajar!',
+            'Jangan lupa, masih ada materi & soal evaluasi yang belum kamu selesaikan hari ini.',
+            '⏰'
+         );
+      }, 6000);
+
+      setInterval(() => {
+         showReminder(
+            'Waktunya Mengerjakan Soal!',
+            'Sudah 30 menit berlalu. Yuk istirahat sejenak 5 menit lalu mulai mengerjakan soal lagi!',
+            '☕'
+         );
+      }, 30 * 60 * 1000);
+
+      const notifBtn = document.querySelector('button[title="Notifikasi"]');
+      if (notifBtn) {
+         notifBtn.addEventListener('click', () => {
+            showReminder('Notifikasi Manual', 'Simulasi alarm setiap 30 menit. Tetap semangat membedah soal!', '⏰');
+         });
+      }
+
+      /* --------------------------------------
+       BOOKMARKS & RECENTS
+      -------------------------------------- */
+      const BOOKMARK_KEY = 'materi_bookmarks';
+      const RECENT_KEY = 'materi_recent';
+
+      function getBookmarks() {
+         try { return JSON.parse(localStorage.getItem(BOOKMARK_KEY)) || []; } catch (e) { return []; }
+      }
+
+      function setBookmarks(list) {
+         localStorage.setItem(BOOKMARK_KEY, JSON.stringify(list));
+      }
+
+      function getRecents() {
+         try { return JSON.parse(localStorage.getItem(RECENT_KEY)) || []; } catch (e) { return []; }
+      }
+
+      function setRecents(list) {
+         localStorage.setItem(RECENT_KEY, JSON.stringify(list));
+      }
+
+      function addRecent(card) {
+         const id = card.getAttribute('href');
+         const title = card.querySelector('.card-title')?.textContent || 'Materi';
+         const cat = card.querySelector('.cat-badge')?.textContent || '';
+         const item = { id, title, cat, ts: Date.now() };
+         const list = getRecents().filter(r => r.id !== id);
+         list.unshift(item);
+         setRecents(list.slice(0, 8));
+         renderRecent();
+      }
+
+      function toggleBookmark(card, btn) {
+         const id = card.getAttribute('href');
+         const title = card.querySelector('.card-title')?.textContent || 'Materi';
+         const cat = card.querySelector('.cat-badge')?.textContent || '';
+         let list = getBookmarks();
+         const exists = list.find(b => b.id === id);
+         if (exists) list = list.filter(b => b.id !== id);
+         else list.unshift({ id, title, cat, ts: Date.now() });
+         setBookmarks(list);
+         btn.classList.toggle('active', !exists);
+         showToast(exists ? 'Bookmark dihapus' : 'Bookmark ditambahkan');
+         renderBookmarks();
+      }
+
+      function renderBookmarks() {
+         const grid = document.getElementById('bookmarkGrid');
+         const count = document.getElementById('bookmarkCount');
+         if (!grid || !count) return;
+         const list = getBookmarks();
+         count.textContent = list.length + ' Modul';
+         if (!list.length) {
+            grid.innerHTML = '<div class="card visible"><div class="card-title">Belum ada bookmark</div><div class="card-desc">Klik ikon bintang pada kartu untuk menyimpan modul favorit.</div></div>';
+            return;
+         }
+         grid.innerHTML = list.map(b => `<a href="${b.id}" class="card visible"><span class="cat-badge badge-v">${b.cat || 'Materi'}</span><div class="card-title">${b.title}</div><div class="card-desc">Disimpan sebagai favorit</div><span class="card-cta">Buka <span class="arr emoji">✨</span></span></a>`).join('');
+      }
+
+      function renderRecent() {
+         const grid = document.getElementById('recentGrid');
+         const count = document.getElementById('recentCount');
+         if (!grid || !count) return;
+         const list = getRecents();
+         count.textContent = list.length + ' Modul';
+         if (!list.length) {
+            grid.innerHTML = '<div class="card visible"><div class="card-title">Belum ada riwayat</div><div class="card-desc">Buka modul apapun untuk membangun daftar terakhir dilihat.</div></div>';
+            return;
+         }
+         grid.innerHTML = list.map(r => `<a href="${r.id}" class="card visible"><span class="cat-badge badge-r">${r.cat || 'Materi'}</span><div class="card-title">${r.title}</div><div class="card-desc">Terakhir dibuka</div><span class="card-cta">Lanjut <span class="arr emoji">✨</span></span></a>`).join('');
+      }
+
+      function renderContinue() {
+         const grid = document.getElementById('continueGrid');
+         const count = document.getElementById('continueCount');
+         if (!grid || !count) return;
+         const list = getRecents().slice(0, 2);
+         count.textContent = list.length + ' Modul';
+         if (!list.length) {
+            grid.innerHTML = '<div class="card visible"><div class="card-title">Belum ada rekomendasi</div><div class="card-desc">Mulai belajar untuk mendapatkan rekomendasi lanjutkan.</div></div>';
+            return;
+         }
+         grid.innerHTML = list.map(r => `<a href="${r.id}" class="card visible"><span class="cat-badge badge-g">${r.cat || 'Materi'}</span><div class="card-title">${r.title}</div><div class="card-desc">Lanjutkan sesi terakhir</div><span class="card-cta">Buka <span class="arr emoji">✨</span></span></a>`).join('');
+      }
+
+      function clearBookmarks() {
+         setBookmarks([]);
+         renderBookmarks();
+         showToast('Bookmark dibersihkan');
+      }
+
+      function clearRecent() {
+         setRecents([]);
+         renderRecent();
+         renderContinue();
+         showToast('Riwayat dibersihkan');
+      }
+
+      function exportBookmarks() {
+         const data = { exportedAt: new Date().toISOString(), bookmarks: getBookmarks() };
+         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+         const url = URL.createObjectURL(blob);
+         const a = document.createElement('a');
+         a.href = url;
+         a.download = `materi-bookmark-${new Date().toISOString().slice(0, 10)}.json`;
+         document.body.appendChild(a);
+         a.click();
+         a.remove();
+         URL.revokeObjectURL(url);
+         showToast('Bookmark diexport');
+      }
+
+      function initCardActions() {
+         getPrimaryCards().forEach(card => {
+            if (card.querySelector('.bookmark-btn')) return;
+            const btn = document.createElement('button');
+            btn.className = 'bookmark-btn emoji';
+            btn.type = 'button';
+            btn.textContent = '⭐';
+            btn.addEventListener('click', (e) => {
+               e.preventDefault();
+               e.stopPropagation();
+               toggleBookmark(card, btn);
+            });
+            card.appendChild(btn);
+            const has = getBookmarks().some(b => b.id === card.getAttribute('href'));
+            btn.classList.toggle('active', has);
+
+            card.addEventListener('click', () => addRecent(card));
+         });
+      }
+
+      function renderInsights() {
+         const cards = getPrimaryCards();
+         const total = cards.length;
+         const unlocked = cards.filter(c => !(c.classList.contains('locked') || c.querySelector('.lock-icon'))).length;
+         const avgProgress = Math.round(cards.reduce((a, c) => a + getCardProgress(c), 0) / Math.max(1, total));
+         const totalMinutes = cards.reduce((a, c) => a + getCardDuration(c), 0);
+         const insight = document.getElementById('insightStrip');
+         if (!insight) return;
+         insight.innerHTML = [
+            { k: 'Total Modul', v: total },
+            { k: 'Terbuka', v: unlocked },
+            { k: 'Rata-rata Progress', v: avgProgress + '%' },
+            { k: 'Estimasi Durasi', v: Math.round(totalMinutes / 60) + ' jam' }
+         ].map(i => `<div class="insight-card"><div class="insight-label">${i.k}</div><div class="insight-value">${i.v}</div></div>`).join('');
+      }
+
+      /* --------------------------------------
+       TILT EFFECT ON CARDS
+      -------------------------------------- */
+      document.querySelectorAll('.card').forEach(card => {
+         card.addEventListener('mousemove', e => {
+            const rect = card.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width - 0.5;
+            const y = (e.clientY - rect.top) / rect.height - 0.5;
+            card.style.transform = `translateY(-6px) scale(1.01) rotateX(${-y * 6}deg) rotateY(${x * 6}deg)`;
+         });
+         card.addEventListener('mouseleave', () => {
+            card.style.transform = '';
+         });
+      });
+
+      /* --------------------------------------
+       DESKTOP PREMIUM ANIMATION
+      -------------------------------------- */
+      function initDesktopAnimations() {
+         const desktopMatch = window.matchMedia('(min-width: 1025px) and (hover: hover) and (pointer: fine)').matches;
+         if (!desktopMatch) return;
+
+         document.body.classList.add('desktop-anim');
+
+         // Stagger section header reveal on scroll.
+         const sections = Array.from(document.querySelectorAll('.section-block'));
+         sections.forEach((sec, idx) => sec.style.setProperty('--sec-delay', `${idx * 60}ms`));
+         const secObserver = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+               if (entry.isIntersecting) {
+                  entry.target.classList.add('in-view');
+                  secObserver.unobserve(entry.target);
+               }
+            });
+         }, { threshold: 0.16, rootMargin: '0px 0px -80px 0px' });
+         sections.forEach(sec => secObserver.observe(sec));
+
+         // Subtle hero parallax for title/sub/tools.
+         const hero = document.querySelector('.hero');
+         if (hero) {
+            const title = hero.querySelector('.hero-title');
+            const sub = hero.querySelector('.hero-sub');
+            const stats = hero.querySelector('.hero-stats');
+            const tools = hero.querySelector('.quick-tools');
+            const insight = hero.querySelector('.insight-strip');
+
+            hero.addEventListener('mousemove', (e) => {
+               const rect = hero.getBoundingClientRect();
+               const dx = (e.clientX - rect.left) / rect.width - 0.5;
+               const dy = (e.clientY - rect.top) / rect.height - 0.5;
+               if (title) title.style.transform = `translate3d(${dx * 8}px, ${dy * 4}px, 0)`;
+               if (sub) sub.style.transform = `translate3d(${dx * 5}px, ${dy * 3}px, 0)`;
+               if (stats) stats.style.transform = `translate3d(${dx * 10}px, ${dy * 5}px, 0)`;
+               if (tools) tools.style.transform = `translate3d(${dx * 6}px, ${dy * 3}px, 0)`;
+               if (insight) insight.style.transform = `translate3d(${dx * 4}px, ${dy * 2}px, 0)`;
+            });
+
+            hero.addEventListener('mouseleave', () => {
+               if (title) title.style.transform = '';
+               if (sub) sub.style.transform = '';
+               if (stats) stats.style.transform = '';
+               if (tools) tools.style.transform = '';
+               if (insight) insight.style.transform = '';
+            });
+         }
+      }
+
+      /* --------------------------------------
+       HOLOGRAPHIC ANGLE ANIMATION
+      -------------------------------------- */
+      let angle = 0;
+      function animHolo() {
+         angle = (angle + 0.5) % 360;
+         document.querySelectorAll('.card:hover').forEach(c => {
+            c.style.setProperty('--angle', angle + 'deg');
+         });
+         requestAnimationFrame(animHolo);
+      }
+      animHolo();
+
+      /* --------------------------------------
+       INIT NEW FEATURES
+      -------------------------------------- */
+      initCardOrder();
+      restoreViewMode();
+      initCardActions();
+      renderBookmarks();
+      renderRecent();
+      renderContinue();
+      renderInsights();
+      updateQuickMeta();
+      initDesktopAnimations();
+
+      // Sidebar Logout Check
+      document.addEventListener('DOMContentLoaded', () => {
+         const isGuest = localStorage.getItem('isGuest');
+         const currentUser = localStorage.getItem('currentUser');
+         const logoutLink = document.querySelector('.sb-item.login-btn-sidebar .login-text');
+         if (logoutLink) {
+            if (isGuest === 'false' && currentUser) {
+               logoutLink.textContent = 'Keluar (' + currentUser.split('@')[0] + ')';
+            } else {
+               logoutLink.textContent = 'Masuk / Daftar';
+            }
+         }
+      });
+
+   </script>
+</body>
+
+</html>

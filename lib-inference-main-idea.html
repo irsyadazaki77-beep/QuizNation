@@ -1,0 +1,1095 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Inference & Main Idea - Mega Library SNBT 2026</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Mobile Optimization */
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --accent: #2563eb;
+            --accent2: #06b6d4;
+            --bg: #f0f2f8;
+            --surface: rgba(255, 255, 255, 0.72);
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #1a1a2e;
+            --text2: #4b5563;
+            --text3: #9ca3af;
+            --glow: rgba(124, 58, 237, 0.18);
+            --radius: 20px
+        }
+
+        body.dark {
+            --bg: #050a15;
+            --surface: rgba(255, 255, 255, 0.055);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #f0edff;
+            --text2: rgba(240, 237, 255, 0.65);
+            --text3: rgba(240, 237, 255, 0.35);
+            --glow: rgba(124, 58, 237, 0.28)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: .35
+        }
+
+        /* Top Nav */
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            gap: 16px
+        }
+
+        .topnav a {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .2s
+        }
+
+        .topnav a:hover {
+            gap: 10px
+        }
+
+        .topnav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-left: auto
+        }
+
+        .theme-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: grid;
+            place-items: center;
+            transition: all .2s;
+            margin-left: 8px
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent)
+        }
+
+        /* Content */
+        .wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px 80px;
+            position: relative;
+            z-index: 1
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(251, 146, 60, .12);
+            color: #f59e0b;
+            border: 1px solid rgba(251, 146, 60, .25);
+            border-radius: 30px;
+            padding: 5px 14px;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.15;
+            margin-bottom: 14px
+        }
+
+        .page-title .grad {
+            background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .page-desc {
+            font-size: 1.05rem;
+            color: var(--text2);
+            line-height: 1.8;
+            margin-bottom: 40px;
+            max-width: 700px
+        }
+
+        /* TOC */
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 40px
+        }
+
+        .toc-title {
+            font-weight: 800;
+            font-size: .9rem;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .toc ol {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .toc li {
+            color: var(--text2);
+            font-size: .88rem
+        }
+
+        .toc a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color .2s
+        }
+
+        .toc a:hover {
+            color: var(--accent2)
+        }
+
+        /* Sections */
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: all .3s
+        }
+
+        .section:hover {
+            box-shadow: 0 10px 40px var(--glow);
+            border-color: rgba(124, 58, 237, .2)
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid rgba(124, 58, 237, 0.1);
+            padding-bottom: 12px;
+        }
+
+        .section h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 24px 0 12px
+        }
+
+        .section p,
+        .section li {
+            font-size: .92rem;
+            color: var(--text2);
+            line-height: 1.85
+        }
+
+        .section ul,
+        .section ol {
+            padding-left: 20px;
+            margin: 10px 0
+        }
+
+        .section li {
+            margin-bottom: 6px
+        }
+
+        /* Passage Box for Reading Material */
+        .passage-box {
+            background: var(--bg);
+            border-left: 4px solid var(--text3);
+            padding: 20px 24px;
+            margin: 20px 0;
+            border-radius: 0 12px 12px 0;
+            font-family: 'Playfair Display', serif;
+            font-size: 1rem;
+            line-height: 1.8;
+            color: var(--text);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        .passage-box p {
+            margin-bottom: 14px;
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .passage-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Example Box */
+        .example {
+            background: rgba(124, 58, 237, .06);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .example strong {
+            color: var(--text)
+        }
+
+        /* Tip Box */
+        .tip {
+            background: rgba(6, 182, 212, .08);
+            border-left: 3px solid var(--accent2);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .tip strong {
+            color: var(--accent2)
+        }
+
+        /* Warning */
+        .warning {
+            background: rgba(244, 63, 94, .08);
+            border-left: 3px solid #f43f5e;
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        /* Vocab Table */
+        .vocab-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.9rem;
+        }
+
+        .vocab-table th,
+        .vocab-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .vocab-table th {
+            background: rgba(124, 58, 237, 0.05);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .vocab-table tr:hover td {
+            background: rgba(124, 58, 237, 0.02);
+        }
+
+        /* Quiz Card / Soal Ornaments */
+        .quiz-card {
+            background: linear-gradient(145deg, var(--surface), rgba(124, 58, 237, 0.03));
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 24px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent), var(--accent2));
+        }
+
+        .quiz-card h4 {
+            color: var(--text);
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .quiz-question {
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .quiz-options {
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 16px 0 !important;
+        }
+
+        .quiz-options li {
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: var(--surface);
+            transition: all 0.2s;
+            cursor: pointer;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            font-size: 0.9rem;
+        }
+
+        .quiz-options li:hover {
+            border-color: var(--accent);
+            background: rgba(124, 58, 237, 0.04);
+            transform: translateX(4px);
+        }
+
+        .quiz-options .opt-letter {
+            font-weight: 700;
+            color: var(--accent);
+            background: rgba(124, 58, 237, 0.1);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            min-width: 28px;
+            text-align: center;
+        }
+
+        .solution-box {
+            background: rgba(16, 185, 129, 0.08);
+            border-left: 3px solid #10b981;
+            border-radius: 0 12px 12px 0;
+            padding: 20px;
+            margin-top: 20px;
+            font-size: .9rem;
+        }
+
+        .solution-box h5 {
+            color: #059669;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        body.dark .solution-box h5 {
+            color: #34d399;
+        }
+
+        body.dark .solution-box {
+            border-left-color: #34d399;
+        }
+
+        /* Nav buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 14px;
+            margin-top: 40px;
+            flex-wrap: wrap
+        }
+
+        .nav-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all .3s
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px var(--glow);
+            transform: translateY(-2px)
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, .4)
+        }
+
+        .nav-btn.primary:hover {
+            box-shadow: 0 8px 28px rgba(124, 58, 237, .5);
+            transform: translateY(-3px)
+        }
+
+        .nav-btn-label {
+            font-size: .7rem;
+            color: var(--text3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .nav-btn.primary .nav-btn-label {
+            color: rgba(255, 255, 255, .7)
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text3);
+            font-size: .8rem;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px
+        }
+
+        @media(max-width:768px) {
+            .topnav {
+                padding: 14px 16px
+            }
+
+            .wrapper {
+                padding: 24px 16px 60px
+            }
+
+            .section {
+                padding: 20px
+            }
+
+            .nav-buttons {
+                flex-direction: column
+            }
+
+            .quiz-options li {
+                flex-direction: column;
+                gap: 6px;
+            }
+
+            .passage-box {
+                padding: 16px;
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">? Kembali ke Library</a>
+        <span class="topnav-title">Literasi Bahasa Inggris</span>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">Mega Modul SNBT 2026</div>
+        <h1 class="page-title">Inference & <span class="grad">Main Idea</span></h1>
+        <p class="page-desc">Panduan terlengkap membedah teks Bahasa Inggris SNBT. Kuasai teknik menyimpulkan informasi
+            tersirat, menentukan gagasan utama, mengenali nada penulis, hingga menebak arah paragraf.</p>
+
+        <div class="toc">
+            <div class="toc-title">📑 Daftar Isi Eksklusif</div>
+            <ol>
+                <li><a href="#unearth">1. Unearthing the Main Idea & Title</a></li>
+                <li><a href="#inference">2. Mastering the Art of Inference</a></li>
+                <li><a href="#tone">3. Determining Author's Tone & Attitude</a></li>
+                <li><a href="#purpose">4. Identifying the Author's Purpose</a></li>
+                <li><a href="#flow">5. Organizing Paragraph Flow & Transitions</a></li>
+                <li><a href="#distractor">6. Anatomy of Distractors (Jebakan Opsi)</a></li>
+                <li><a href="#simulasi">7. Simulasi Taktis (Reading Practice)</a></li>
+                <li><a href="#tips">8. Grand Strategy UTBK SNBT</a></li>
+            </ol>
+        </div>
+
+        <div class="section" id="unearth">
+            <h2>? 1. Unearthing the Main Idea & Title</h2>
+            <p>Pertanyaan tentang <em>Main Idea</em> (Gagasan Utama) dan <em>Title</em> (Judul) adalah menu wajib di
+                setiap teks UTBK. Tujuan utama dari tipe soal ini adalah menguji apakah kamu memahami <strong>"Gambaran
+                    Besar" (Big Picture)</strong> dari teks, bukan sekadar detail kecil.</p>
+
+            <h3>Konsep Dasar: The 'Goldilocks' Rule</h3>
+            <p>Sama seperti dongeng Goldilocks yang mencari bubur yang tidak terlalu panas dan tidak terlalu dingin,
+                jawaban untuk Main Idea dan Title haruslah <strong>PAS</strong>.</p>
+            <ul>
+                <li><strong>Too Broad (Terlalu Luas):</strong> Opsi jawaban mencakup hal-hal yang tidak dibahas di dalam
+                    teks. (Contoh: Teks membahas dampak polusi plastik di Bali, tapi opsi jawaban berbunyi <em>"Global
+                        warming and its global effects"</em>).</li>
+                <li><strong>Too Narrow (Terlalu Sempit):</strong> Opsi jawaban hanya membahas fakta spesifik yang ada di
+                    paragraf tertentu saja. Ini adalah <strong>jebakan paling mematikan</strong>.</li>
+                <li><strong>Just Right (Tepat):</strong> Opsi jawaban merangkum Subjek (Topik) + Opini Penulis/Fokus
+                    Bahasan secara keseluruhan.</li>
+            </ul>
+
+            <div class="tip">
+                <strong>🔹 Trik Membaca Cepat (Skimming):</strong><br>
+                Untuk menemukan Main Idea, bacalah dengan cermat: <br>
+                1. Kalimat pertama dan kedua dari Paragraf 1 (Topik).<br>
+                2. Kalimat pertama dari setiap paragraf berikutnya (Topic Sentences).<br>
+                3. Kalimat terakhir dari Paragraf terakhir (Conclusion).<br>
+                Gabungkan ketiganya di dalam kepalamu sebelum melihat opsi jawaban!
+            </div>
+
+            <div class="quiz-card">
+                <h4>🔹 Practice 1.1: Main Idea</h4>
+                <div class="passage-box">
+                    <p>Unlike early computers that filled entire rooms and consumed massive amounts of electricity,
+                        modern quantum computers are taking a radically different approach to processing data. While
+                        traditional computers rely on bits (0s and 1s) to perform linear calculations, quantum computers
+                        use quantum bits, or qubits. These qubits can exist in multiple states simultaneously due to a
+                        phenomenon called superposition. This allows quantum systems to process vast numbers of
+                        possibilities at once.</p>
+                    <p>Consequently, industries ranging from pharmacology to cybersecurity are investing heavily in
+                        quantum research. In medicine, quantum algorithms could simulate complex molecular interactions
+                        in seconds, a task that would take classical supercomputers millennia. Meanwhile, cryptographers
+                        are racing to develop "quantum-proof" encryption before quantum machines become powerful enough
+                        to break current global security protocols.</p>
+                </div>
+                <p class="quiz-question">What is the main idea of the passage?</p>
+                <ul class="quiz-options">
+                    <li><span class="opt-letter">A</span> Quantum computers are smaller and consume less electricity
+                        than early room-sized computers.</li>
+                    <li><span class="opt-letter">B</span> The phenomenon of superposition allows qubits to exist as both
+                        0 and 1 simultaneously.</li>
+                    <li><span class="opt-letter">C</span> Cryptographers are deeply concerned about the future of global
+                        security protocols.</li>
+                    <li><span class="opt-letter">D</span> The unique processing capabilities of quantum computers offer
+                        revolutionary potential across various industries.</li>
+                    <li><span class="opt-letter">E</span> Traditional computing methods are becoming completely obsolete
+                        in the face of quantum advancements.</li>
+                </ul>
+                <div class="solution-box">
+                    <h5>🔹 Analisis & Resolusi:</h5>
+                    <p><strong>Jawaban: D</strong><br>
+                        <strong>Bedah Opsi:</strong><br>
+                        - A: <strong>Too Narrow/Detail.</strong> Ini hanya fakta di kalimat pertama.<br>
+                        - B: <strong>Too Narrow.</strong> Ini hanya penjelasan teknis di paragraf 1.<br>
+                        - C: <strong>Too Narrow.</strong> Ini hanya contoh di akhir paragraf 2.<br>
+                        - D: <strong>Just Right!</strong> Mencakup konsep "processing capabilities" (Paragraf 1) dan
+                        "revolutionary potential across industries" (Paragraf 2).<br>
+                        - E: <strong>Extreme/Out of Scope.</strong> Teks tidak pernah bilang komputer tradisional akan
+                        "completely obsolete" (benar-benar usang).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="inference">
+            <h2>🔹 2. Mastering the Art of Inference</h2>
+            <p>Pertanyaan tipe <em>Inference</em> (Kesimpulan Tersirat) ditandai dengan frasa seperti: <em>"It can be
+                    inferred from the passage that..."</em>, <em>"The author implies that..."</em>, atau <em>"Which of
+                    the following is most likely true based on the text?"</em></p>
+
+            <p>Aturan emasnya: <strong>Jawaban yang benar TIDAK AKAN PERNAH tertulis persis kata per kata (verbatim) di
+                    dalam teks.</strong> Kamu harus menjadi detektif logika.</p>
+
+            <h3>Formula Logika Inference:</h3>
+            <ul>
+                <li><strong>Arah Waktu (Chronological Inference):</strong> Jika teks berkata, "Prior to the 1990
+                    discovery of the X-gene, doctors believed the disease was purely environmental." ?
+                    <em>Inference:</em> After 1990, doctors realized genetics played a role in the disease.</li>
+                <li><strong>Perbandingan Tersirat (Comparative Inference):</strong> Jika teks berkata, "Unlike Option A
+                    which is cheap and fragile, Option B is expensive." ? <em>Inference:</em> Option B is likely more
+                    durable/stronger than Option A.</li>
+                <li><strong>Sebab-Akibat (Causal Inference):</strong> Gabungkan dua fakta. (Fakta 1: Tanaman X butuh
+                    tanah asam. Fakta 2: Tanah di area Y sangat basa). ? <em>Inference:</em> Tanaman X tidak akan tumbuh
+                    subur di area Y.</li>
+            </ul>
+
+            <div class="warning">
+                <strong>🔹 Danger Zone: Over-Inference (Asumsi Liar)</strong><br>
+                Hati-hati membawa pengetahuan pribadimu dari luar teks. Semua kesimpulan <strong>harus berakar pada
+                    bukti tertulis</strong> di dalam bacaan, bukan dari akal sehat umum.
+            </div>
+
+            <div class="quiz-card">
+                <h4>🔹 Practice 2.1: Inference</h4>
+                <div class="passage-box">
+                    <p>During the medieval period, the creation of illuminated manuscripts was an excruciatingly slow
+                        process reserved almost entirely for monasteries. Monks would spend years copying texts by hand,
+                        decorating pages with gold leaf and intricate borders. Because of the immense labor and rare
+                        materials required, these books were typically chained to library shelves and accessed only by
+                        high-ranking clergy or royalty. It wasn't until Johannes Gutenberg's introduction of the movable
+                        type printing press in the 15th century that the dissemination of knowledge began to shift.</p>
+                </div>
+                <p class="quiz-question">It can be inferred from the passage that prior to the 15th century...</p>
+                <ul class="quiz-options">
+                    <li><span class="opt-letter">A</span> Common people had widespread access to religious texts.</li>
+                    <li><span class="opt-letter">B</span> Monks were heavily overpaid for their intricate artwork.</li>
+                    <li><span class="opt-letter">C</span> The literacy rate among the general population was likely very
+                        low.</li>
+                    <li><span class="opt-letter">D</span> Gold leaf was the cheapest material available to monasteries.
+                    </li>
+                    <li><span class="opt-letter">E</span> Monasteries possessed the technology to print multiple books a
+                        day.</li>
+                </ul>
+                <div class="solution-box">
+                    <h5>🔹 Analisis & Resolusi:</h5>
+                    <p><strong>Jawaban: C</strong><br>
+                        <strong>Logika Deduktif:</strong><br>
+                        Teks menyatakan buku dibuat sangat lambat, mahal ("immense labor and rare materials"), dan hanya
+                        diakses oleh "high-ranking clergy or royalty" (pendeta tinggi atau bangsawan). Jika buku sangat
+                        langka dan hanya diakses kalangan elit, kita bisa menyimpulkan (infer) bahwa masyarakat umum
+                        jarang membaca, sehingga tingkat literasi mereka (literacy rate) pasti sangat rendah.<br>
+                        - A: Kontradiksi dengan teks.<br>
+                        - B: Out of scope (tidak ada info soal gaji biarawan).<br>
+                        - D: Kontradiksi ("rare materials" berarti tidak murah).<br>
+                        - E: Kontradiksi (mereka menyalin manual dengan tangan).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="tone">
+            <h2>🔹 3. Determining Author's Tone & Attitude</h2>
+            <p>Soal tipe ini meminta kamu menebak "perasaan" atau "sikap" penulis terhadap topik yang sedang dibahas.
+                Kunci menjawabnya ada pada <strong>Adjectives (Kata Sifat)</strong> dan <strong>Adverbs (Kata
+                    Keterangan)</strong> yang dipilih oleh penulis.</p>
+
+            <h3>Kamus Mini Tone SNBT (Wajib Hafal!)</h3>
+            <table class="vocab-table">
+                <tr>
+                    <th>Tone Category</th>
+                    <th>Common Vocabulary (Opsi Jawaban)</th>
+                    <th>Ciri-ciri dalam Teks</th>
+                </tr>
+                <tr>
+                    <td><strong>Positive / Favorable</strong></td>
+                    <td>Optimistic, Appreciative, Enthusiastic, Supportive, Approving</td>
+                    <td>Banyak memuji, menunjukkan harapan, menggunakan kata: <em>breakthrough, excellent, promising,
+                            beneficial.</em></td>
+                </tr>
+                <tr>
+                    <td><strong>Negative / Critical</strong></td>
+                    <td>Pessimistic, Skeptical, Critical, Cynical, Disapproving</td>
+                    <td>Menyoroti kelemahan, meragukan data, menggunakan kata: <em>flawed, questionable, disastrous,
+                            unlikely, unfortunately.</em></td>
+                </tr>
+                <tr>
+                    <td><strong>Neutral / Objective</strong></td>
+                    <td>Informative, Objective, Factual, Impartial, Descriptive</td>
+                    <td>Hanya menyajikan data dan fakta, tidak ada kata sifat emosional. Gaya bahasa seperti jurnal
+                        sains atau berita ensiklopedia.</td>
+                </tr>
+                <tr>
+                    <td><strong>Emotional / Assertive</strong></td>
+                    <td>Passionate, Alarmed, Outraged, Urgent, Humorous</td>
+                    <td>Menggunakan tanda seru (!), seruan bertindak (call to action), bahasa metafora yang kuat atau
+                        menyindir (satire).</td>
+                </tr>
+            </table>
+
+            <div class="example">
+                <strong>🔹 Cara Analisis Cepat:</strong><br>
+                Jika penulis menulis: <em>"The government's plan to reduce emissions is a step in the right direction,
+                    but their timeline is disappointingly slow and lacks concrete methodology."</em><br>
+                Tone penulis adalah <strong>Critical</strong> atau <strong>Skeptical</strong>. Walau ada pujian sedikit
+                di awal, fokus utamanya adalah mengkritik kelemahan program tersebut.
+            </div>
+
+            <div class="quiz-card">
+                <h4>🔹 Practice 3.1: Tone</h4>
+                <div class="passage-box">
+                    <p>Despite the endless hype surrounding autonomous driving technology, a sobering reality remains:
+                        current AI systems are glaringly inadequate when it comes to navigating unpredictable human
+                        behavior on complex urban roads. Tech conglomerates continue to release flashy promotional
+                        videos promising "full self-driving" capabilities by next year, yet independent safety reports
+                        reveal alarming failure rates in edge-case scenarios, such as sudden construction detours or
+                        erratic pedestrians. It is highly irresponsible for regulators to allow the beta-testing of such
+                        unpolished software on public streets.</p>
+                </div>
+                <p class="quiz-question">What is the author's attitude towards the current state of autonomous driving
+                    technology?</p>
+                <ul class="quiz-options">
+                    <li><span class="opt-letter">A</span> Enthusiastic and supportive</li>
+                    <li><span class="opt-letter">B</span> Neutral and purely descriptive</li>
+                    <li><span class="opt-letter">C</span> Highly critical and concerned</li>
+                    <li><span class="opt-letter">D</span> Optimistic but slightly confused</li>
+                    <li><span class="opt-letter">E</span> Indifferent and apathetic</li>
+                </ul>
+                <div class="solution-box">
+                    <h5>🔹 Analisis & Resolusi:</h5>
+                    <p><strong>Jawaban: C</strong><br>
+                        <strong>Eksekusi Kata Kunci:</strong><br>
+                        Penulis menggunakan banyak kata sifat negatif yang sangat kuat: <em>"glaringly inadequate"</em>
+                        (sangat tidak memadai), <em>"alarming failure rates"</em> (tingkat kegagalan yang
+                        mengkhawatirkan), <em>"unpolished software"</em>, dan <em>"highly irresponsible"</em>. Ini bukan
+                        sekadar deskripsi netral (B), melainkan sebuah kritik tajam dan wujud kepedulian/kekhawatiran
+                        atas keselamatan (C).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="purpose">
+            <h2>🔹 4. Identifying the Author's Purpose</h2>
+            <p>Pertanyaan <em>Author's Purpose</em> sangat mirip dengan Main Idea, tetapi diawali dengan kata kerja tak
+                terbatas (infinitive verbs) seperti <em>"To explain..."</em>, <em>"To argue..."</em>, dll.</p>
+
+            <ul>
+                <li><strong>To Inform / Describe / Explain:</strong> Jika teks berisi sejarah, proses sains, biografi,
+                    atau cara kerja sesuatu. (Tone biasanya netral).</li>
+                <li><strong>To Persuade / Convince / Argue:</strong> Jika teks berisi opini kuat, ajakan, atau mencoba
+                    membuktikan bahwa suatu teori lebih baik dari yang lain.</li>
+                <li><strong>To Criticize / Evaluate:</strong> Jika teks membedah kekurangan suatu kebijakan, film, buku,
+                    atau sistem.</li>
+                <li><strong>To Compare and Contrast:</strong> Jika teks secara konsisten membahas perbedaan dua hal
+                    (misal: pendidikan online vs offline).</li>
+            </ul>
+        </div>
+
+        <div class="section" id="flow">
+            <h2>🔹 5. Organizing Paragraph Flow & Transitions</h2>
+            <p>Tipe soal ini menguji pemahamanmu tentang kohesi wacana. Pertanyaan yang sering muncul: <br>
+                <em>"Which of the following topics would most likely precede the passage?"</em> (Menebak paragraf
+                SEBELUM teks).<br>
+                <em>"What will the author likely discuss in the following paragraph?"</em> (Menebak paragraf SESUDAH
+                teks).
+            </p>
+
+            <h3>Taktik Kunci (The Bridge Method):</h3>
+            <ul>
+                <li><strong>Menebak Paragraf SEBELUM (Preceding):</strong> Baca <strong>SATU KALIMAT PERTAMA</strong>
+                    dari teks. Biasanya ada kata rujukan (transition word) atau pengulangan topik lama. <br>
+                    <em>Contoh Kalimat 1:</em> "However, these early agricultural methods eventually led to soil
+                    depletion." ? <em>Jawaban:</em> Paragraf sebelumnya pasti membahas "early agricultural methods"
+                    secara detail.
+                </li>
+                <li><strong>Menebak Paragraf SESUDAH (Following):</strong> Baca <strong>SATU KALIMAT TERAKHIR</strong>
+                    dari keseluruhan teks. Kalimat ini berfungsi sebagai jembatan (bridge) ke paragraf selanjutnya. <br>
+                    <em>Contoh Kalimat Terakhir:</em> "To combat this economic decline, the government is proposing
+                    three new radical fiscal policies." ? <em>Jawaban:</em> Paragraf selanjutnya pasti merinci "the
+                    three new fiscal policies".
+                </li>
+            </ul>
+
+            <div class="quiz-card">
+                <h4>🔹 Practice 5.1: Following Paragraph</h4>
+                <div class="passage-box">
+                    <p>... Furthermore, the psychological impact of constant social media exposure on adolescents cannot
+                        be overstated. Studies indicate a direct correlation between screen time and rising anxiety
+                        levels among teenagers. The constant pursuit of virtual validation through likes and shares
+                        alters the brain's dopamine reward system, making it harder for youth to find satisfaction in
+                        real-world achievements. Given these severe implications, child psychologists are now urging
+                        educational institutions to implement mandatory digital literacy and detox programs within their
+                        curriculum.</p>
+                </div>
+                <p class="quiz-question">Which of the following is most likely to be the topic of the next paragraph?
+                </p>
+                <ul class="quiz-options">
+                    <li><span class="opt-letter">A</span> The history of social media platforms like Facebook and
+                        Instagram.</li>
+                    <li><span class="opt-letter">B</span> A detailed explanation of how dopamine functions biologically
+                        in adults.</li>
+                    <li><span class="opt-letter">C</span> Examples of the proposed digital literacy and detox programs
+                        in schools.</li>
+                    <li><span class="opt-letter">D</span> The financial benefits tech companies gain from adolescent
+                        users.</li>
+                    <li><span class="opt-letter">E</span> How teenagers can become famous influencers through viral
+                        content.</li>
+                </ul>
+                <div class="solution-box">
+                    <h5>🔹 Analisis & Resolusi:</h5>
+                    <p><strong>Jawaban: C</strong><br>
+                        <strong>Eksekusi The Bridge Method:</strong><br>
+                        Abaikan semua kalimat di atas, fokus HANYA pada kalimat paling akhir: <em>"...psychologists are
+                            now urging educational institutions to implement mandatory digital literacy and detox
+                            programs within their curriculum."</em><br>
+                        Logika penulisan esai yang baik akan melanjutkan dengan membahas, memberi contoh, atau
+                        menjelaskan "digital literacy and detox programs" yang baru saja disebut. Maka opsi C adalah
+                        jembatan yang paling masuk akal.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="distractor">
+            <h2>🔹 6. Anatomy of Distractors (Jebakan Opsi)</h2>
+            <p>Pembuat soal SNBT merancang opsi yang salah agar terlihat *sangat* benar. Kenali 4 anatomi jebakan ini
+                agar insting eliminasimu tajam:</p>
+
+            <ul>
+                <li><strong>The Half-Truth (Setengah Benar):</strong> Bagian awal kalimat opsi sesuai dengan teks, namun
+                    bagian akhirnya diubah atau ditambahkan fakta palsu. Bacalah opsi sampai titik terakhir!</li>
+                <li><strong>The Extreme Word (Kata Ekstrem):</strong> Opsi yang mengandung kata <em>always, never, all,
+                        completely, totally, impossible, undoubtedly</em> biasanya SALAH, kecuali teksnya memang
+                    menyatakan fakta mutlak. Teks akademik lebih suka kata <em>often, may, generally, primarily</em>.
+                </li>
+                <li><strong>The Jumble (Kata Acak):</strong> Opsi ini menggunakan banyak kosa kata canggih yang *memang
+                    ada* di dalam teks, tetapi dirangkai menjadi kalimat dengan makna yang sama sekali berbeda/ngawur.
+                </li>
+                <li><strong>The Out-of-Scope (Di Luar Konteks):</strong> Pernyataan yang secara fakta dunia nyata BENAR,
+                    tetapi tidak pernah dibahas di dalam teks tersebut. (Ingat, ini tes pemahaman bacaan, bukan tes
+                    pengetahuan umum!).</li>
+            </ul>
+        </div>
+
+        <div class="section" id="simulasi">
+            <h2>🔹 7. Simulasi Taktis (Mega Reading Practice)</h2>
+            <p>Uji semua teori di atas dengan teks kompleks berstandar SNBT ini. Gunakan metode Skimming, cari Main Idea
+                dulu, lalu bedah soal Inference dan Tone.</p>
+
+            <div class="passage-box">
+                <p>The concept of "rewilding" ecosystems has gained significant traction among conservation biologists
+                    over the past decade. Unlike traditional conservation efforts, which often focus on protecting a
+                    specific endangered species within a fenced reserve, rewilding aims to restore natural processes and
+                    wilderness areas by reintroducing apex predators and keystone species that have been eradicated by
+                    human activity. A famous, albeit controversial, example is the reintroduction of gray wolves to
+                    Yellowstone National Park in the 1990s.</p>
+                <p>Proponents of rewilding argue that nature is capable of managing itself if the correct ecological
+                    players are present. In Yellowstone, the return of wolves naturally curbed the overpopulated elk
+                    herds, which had been overgrazing the valleys. Consequently, willows and aspens began to regrow,
+                    stabilizing riverbanks and attracting beavers and songbirds back to the ecosystem-a phenomenon known
+                    as a "trophic cascade." Enthusiasts claim this proves that passive management, driven by apex
+                    predators, is vastly superior and more cost-effective than continuous human intervention.</p>
+                <p>However, the strategy is not without its fierce detractors. Local ranchers and farming communities
+                    view the reintroduction of large carnivores as an existential threat to their livelihoods. Predation
+                    on livestock has caused immense economic friction, leading to heated political battles. Furthermore,
+                    some ecologists warn against "Pleistocene rewilding"-a radical offshoot proposing the introduction
+                    of African elephants to North America to replace extinct mammoths-arguing that inserting foreign
+                    species into modern, altered landscapes could trigger unforeseen ecological disasters rather than
+                    restore balance. Thus, while the theoretical framework of rewilding is alluring, its practical
+                    execution demands rigorous, site-specific risk assessments before any animal is released.</p>
+            </div>
+
+            <div class="quiz-card">
+                <h4>🔹 Soal 1: Main Idea</h4>
+                <p class="quiz-question">Which of the following best expresses the main idea of the passage?</p>
+                <ul class="quiz-options">
+                    <li><span class="opt-letter">A</span> The reintroduction of wolves to Yellowstone proves that human
+                        intervention in nature is no longer necessary.</li>
+                    <li><span class="opt-letter">B</span> Rewilding is an emerging conservation strategy that relies on
+                        apex predators but faces significant practical and ecological opposition.</li>
+                    <li><span class="opt-letter">C</span> African elephants should not be introduced to North America
+                        because they will destroy local agricultural communities.</li>
+                    <li><span class="opt-letter">D</span> Traditional conservation efforts are failing because they only
+                        focus on protecting single species within fenced reserves.</li>
+                    <li><span class="opt-letter">E</span> The primary goal of rewilding is to resolve the political
+                        conflicts between conservationists and local ranchers.</li>
+                </ul>
+                <div class="solution-box">
+                    <input type="checkbox" id="show-sol-1" style="display:none;" class="show-sol">
+                    <label for="show-sol-1" style="cursor:pointer; color:var(--accent); font-weight:bold;">[+] Tampilkan
+                        Pembahasan</label>
+                    <div style="margin-top:10px; display:block;">
+                        <p><strong>Jawaban: B</strong><br>
+                            <strong>Analisis:</strong> Paragraf 1 memperkenalkan konsep rewilding. Paragraf 2 membahas
+                            keberhasilannya menurut pendukung (proponents). Paragraf 3 membahas kritik dan masalah
+                            praktisnya (detractors). Opsi B merangkum seluruh kerangka pro-kontra ini dengan sempurna.
+                            Opsi A (Too Narrow), Opsi C (Detail paragraf 3), Opsi D (Terlalu fokus pada metode
+                            tradisional), Opsi E (Salah kaprah/Jumble).
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <h4>🔹 Soal 2: Inference</h4>
+                <p class="quiz-question">Based on the passage, it can be inferred that before the wolves were
+                    reintroduced to Yellowstone in the 1990s...</p>
+                <ul class="quiz-options">
+                    <li><span class="opt-letter">A</span> Beavers and songbirds were the dominant species in the
+                        valleys.</li>
+                    <li><span class="opt-letter">B</span> The elk population was artificially managed by human hunters.
+                    </li>
+                    <li><span class="opt-letter">C</span> Riverbanks in the area were likely suffering from erosion and
+                        instability.</li>
+                    <li><span class="opt-letter">D</span> The willow and aspen trees were growing uncontrollably.</li>
+                    <li><span class="opt-letter">E</span> Local ranchers supported the removal of apex predators.</li>
+                </ul>
+                <div class="solution-box">
+                    <input type="checkbox" id="show-sol-2" style="display:none;" class="show-sol">
+                    <label for="show-sol-2" style="cursor:pointer; color:var(--accent); font-weight:bold;">[+] Tampilkan
+                        Pembahasan</label>
+                    <div style="margin-top:10px; display:block;">
+                        <p><strong>Jawaban: C</strong><br>
+                            <strong>Analisis Logika:</strong> Di paragraf 2 disebutkan bahwa SETELAH serigala datang,
+                            pohon willow tumbuh kembali, yang kemudian "stabilizing riverbanks" (menstabilkan tepi
+                            sungai). Maka, <strong>Inference</strong> (kesimpulan logis) sebelum serigala datang: karena
+                            pohon willow dimakan habis oleh elk yang berlebihan, tepi sungai pasti tidak stabil dan
+                            rentan erosi (C).
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <h4>🔹 Soal 3: Tone & Attitude</h4>
+                <p class="quiz-question">What is the author's tone in the final sentence of the passage ("Thus, while
+                    the theoretical framework of rewilding is alluring...")?</p>
+                <ul class="quiz-options">
+                    <li><span class="opt-letter">A</span> Entirely pessimistic and dismissive</li>
+                    <li><span class="opt-letter">B</span> Enthusiastic and highly encouraging</li>
+                    <li><span class="opt-letter">C</span> Sarcastic and humorous</li>
+                    <li><span class="opt-letter">D</span> Cautious and pragmatic</li>
+                    <li><span class="opt-letter">E</span> Angry and confrontational</li>
+                </ul>
+                <div class="solution-box">
+                    <input type="checkbox" id="show-sol-3" style="display:none;" class="show-sol">
+                    <label for="show-sol-3" style="cursor:pointer; color:var(--accent); font-weight:bold;">[+] Tampilkan
+                        Pembahasan</label>
+                    <div style="margin-top:10px; display:block;">
+                        <p><strong>Jawaban: D</strong><br>
+                            <strong>Analisis:</strong> Penulis mengatakan teori itu menarik ("alluring"), TETAPI butuh
+                            "rigorous, site-specific risk assessments" (penilaian risiko yang ketat). Ini menunjukkan
+                            sikap yang berhati-hati (Cautious) dan praktis/realistis (Pragmatic), bukan pesimis total
+                            atau antusias buta.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <h4>🔹 Soal 4: Vocabulary in Context</h4>
+                <p class="quiz-question">The word "eradicated" in the first paragraph is closest in meaning to...</p>
+                <ul class="quiz-options">
+                    <li><span class="opt-letter">A</span> Relocated</li>
+                    <li><span class="opt-letter">B</span> Wiped out</li>
+                    <li><span class="opt-letter">C</span> Domesticated</li>
+                    <li><span class="opt-letter">D</span> Evaluated</li>
+                    <li><span class="opt-letter">E</span> Protected</li>
+                </ul>
+                <div class="solution-box">
+                    <input type="checkbox" id="show-sol-4" style="display:none;" class="show-sol">
+                    <label for="show-sol-4" style="cursor:pointer; color:var(--accent); font-weight:bold;">[+] Tampilkan
+                        Pembahasan</label>
+                    <div style="margin-top:10px; display:block;">
+                        <p><strong>Jawaban: B</strong><br>
+                            <strong>Analisis Konteks:</strong> "...reintroducing apex predators... that have been
+                            eradicated by human activity." Kata 'reintroducing' (memasukkan kembali) mengisyaratkan
+                            hewan itu sebelumnya hilang atau punah akibat aktivitas manusia. Sinonim paling pas untuk
+                            'eradicated' (dimusnahkan) adalah 'wiped out'.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="section" id="tips">
+            <h2>🔹 8. Grand Strategy UTBK SNBT Literasi Inggris</h2>
+            <ul>
+                <li><strong>Skim, Don't Read Every Word:</strong> Baca kalimat awal tiap paragraf. Pahami strukturnya.
+                    Jangan berhenti dan panik di satu kosa kata yang kamu tidak tahu. Teruslah bergerak!</li>
+                <li><strong>Beware of Pronouns:</strong> Seringkali jawaban dari soal detail bersembunyi di balik kata
+                    <em>It, They, These, Those</em>. Lacak kembali ke belakang apa yang dimaksud kata tersebut.</li>
+                <li><strong>Anticipate the Answer:</strong> Untuk soal Main Idea dan Purpose, rumuskan jawaban dengan
+                    bahasamu sendiri *sebelum* membaca Opsi A-E. Jika kamu langsung membaca opsi, otakmu akan mudah
+                    tertipu oleh distractor yang dirancang cermat.</li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="library.html" class="nav-btn">
+                <div>
+                    <div class="nav-btn-label">? Kembali</div>Menu Utama
+                </div>
+            </a>
+            <a href="math-reasoning.html" class="nav-btn primary">
+                <div>
+                    <div class="nav-btn-label">Lanjut Gas! &rarr;</div>Penalaran Matematika
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>- 2026 Zaki Irsyada Putra - Telkom University | Curated for SNBT Excellence</footer>
+
+    <script>
+        // Toggle Dark Mode
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+        // Interactive Solution Reveal (Optional JS to make the [+] buttons toggle content natively if checkbox trick fails, but the CSS handles it gracefully).
+    </script>
+</body>
+
+</html>

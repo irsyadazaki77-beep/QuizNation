@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Reading Comprehension - Library SNBT 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        html, body { max-width: 100%; overflow-x: hidden; }
+        * { -webkit-tap-highlight-color: transparent !important; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+        :root { --accent: #2563eb; --accent2: #06b6d4; --bg: #f0f2f8; --surface: rgba(255,255,255,0.72); --border: rgba(0,0,0,0.08); --text: #1a1a2e; --text2: #4b5563; --text3: #9ca3af; --glow: rgba(124,58,237,0.18); --radius: 20px }
+        body.dark { --bg: #050a15; --surface: rgba(255,255,255,0.055); --border: rgba(255,255,255,0.09); --text: #f0edff; --text2: rgba(240,237,255,0.65); --text3: rgba(240,237,255,0.35); --glow: rgba(124,58,237,0.28) }
+        html { scroll-behavior: smooth }
+        body { font-family: 'Bricolage Grotesque', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background .4s, color .4s; overflow-x: hidden }
+        .noise-overlay { position: fixed; inset: 0; z-index: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; opacity: .35 }
+        .topnav { position: sticky; top: 0; z-index: 100; background: var(--surface); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 16px 40px; display: flex; align-items: center; gap: 16px }
+        .topnav a { text-decoration: none; color: var(--accent); font-weight: 700; font-size: .9rem; display: flex; align-items: center; gap: 6px; transition: all .2s }
+        .topnav a:hover { gap: 10px }
+        .topnav-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--text); margin-left: auto }
+        .theme-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; width: 36px; height: 36px; cursor: pointer; font-size: 1rem; display: grid; place-items: center; transition: all .2s; margin-left: 8px }
+        .theme-btn:hover { border-color: var(--accent) }
+        .wrapper { max-width: 900px; margin: 0 auto; padding: 40px 30px 80px; position: relative; z-index: 1 }
+        .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(251,146,60,.12); color: #f59e0b; border: 1px solid rgba(251,146,60,.25); border-radius: 30px; padding: 5px 14px; font-size: .72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px }
+        .page-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: var(--text); line-height: 1.15; margin-bottom: 14px }
+        .page-title .grad { background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent }
+        .page-desc { font-size: 1.05rem; color: var(--text2); line-height: 1.8; margin-bottom: 40px; max-width: 700px }
+        .toc { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 40px }
+        .toc-title { font-weight: 800; font-size: .9rem; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px }
+        .toc ol { padding-left: 20px; display: flex; flex-direction: column; gap: 6px }
+        .toc li { color: var(--text2); font-size: .88rem }
+        .toc a { color: var(--accent); text-decoration: none; font-weight: 600; transition: color .2s }
+        .toc a:hover { color: var(--accent2) }
+        .section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 24px; transition: all .3s }
+        .section:hover { box-shadow: 0 10px 40px var(--glow); border-color: rgba(124,58,237,.2) }
+        .section h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 10px }
+        .section h3 { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin: 20px 0 10px }
+        .section p, .section li { font-size: .92rem; color: var(--text2); line-height: 1.85 }
+        .section ul, .section ol { padding-left: 20px; margin: 10px 0 }
+        .section li { margin-bottom: 6px }
+        .example { background: rgba(124,58,237,.06); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 16px 0; font-size: .88rem; color: var(--text2); line-height: 1.75 }
+        .example strong { color: var(--text) }
+        .tip { background: rgba(6,182,212,.08); border-left: 3px solid var(--accent2); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 16px 0; font-size: .88rem; color: var(--text2); line-height: 1.75 }
+        .tip strong { color: var(--accent2) }
+        .warning { background: rgba(244,63,94,.08); border-left: 3px solid #f43f5e; border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 16px 0; font-size: .88rem; color: var(--text2); line-height: 1.75 }
+        .warning strong { color: #f43f5e }
+        .nav-buttons { display: flex; gap: 14px; margin-top: 40px; flex-wrap: wrap }
+        .nav-btn { flex: 1; min-width: 200px; padding: 16px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; text-decoration: none; color: var(--text); font-weight: 700; font-size: .9rem; display: flex; align-items: center; gap: 10px; transition: all .3s }
+        .nav-btn:hover { border-color: var(--accent); box-shadow: 0 8px 24px var(--glow); transform: translateY(-2px) }
+        .nav-btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; border: none; box-shadow: 0 4px 16px rgba(124,58,237,.4) }
+        .nav-btn.primary:hover { box-shadow: 0 8px 28px rgba(124,58,237,.5); transform: translateY(-3px) }
+        .nav-btn-label { font-size: .7rem; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: .5px }
+        .nav-btn.primary .nav-btn-label { color: rgba(255,255,255,.7) }
+        footer { text-align: center; color: var(--text3); font-size: .8rem; padding: 20px; border-top: 1px solid var(--border); margin-top: 40px }
+        @media(max-width:768px) { .topnav { padding: 14px 16px } .wrapper { padding: 24px 16px 60px } .section { padding: 20px } .nav-buttons { flex-direction: column } }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">&#8592; Kembali ke Library</a>
+        <span class="topnav-title">Reading Comprehension</span>
+        <button class="theme-btn" onclick="document.body.classList.toggle('dark')">&#127769;</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">Literasi Bahasa Inggris</div>
+        <h1 class="page-title">Reading <span class="grad">Comprehension</span></h1>
+        <p class="page-desc">Strategi membaca cepat, scanning, skimming, dan menjawab soal pemahaman bacaan secara efektif untuk tes SNBT 2025.</p>
+
+        <div class="toc">
+            <div class="toc-title">&#128203; Daftar Isi</div>
+            <ol>
+                <li><a href="#skimming">Skimming &amp; Scanning Mastery</a></li>
+                <li><a href="#factual">Factual &amp; Negative Factual Questions</a></li>
+                <li><a href="#reference">Pronoun Reference</a></li>
+                <li><a href="#purpose">Author's Purpose &amp; Rhetorical Function</a></li>
+                <li><a href="#inference">Making Inferences</a></li>
+                <li><a href="#structure">Text Structure &amp; Organization</a></li>
+                <li><a href="#tips">Strategi Menjawab SNBT</a></li>
+            </ol>
+        </div>
+
+        <div class="section" id="skimming">
+            <h2>&#128300; 1. Skimming &amp; Scanning Mastery</h2>
+            <p>The SNBT English test heavily evaluates your capacity to absorb long, complex passages efficiently. You do NOT have time to read every word carefully. Master these two techniques:</p>
+            
+            <h3>A. Skimming (Reading for the Gist)</h3>
+            <p>Rapid reading aimed at identifying the <em>main idea</em> or general topic. This is your first pass through any passage.</p>
+            <ul>
+                <li>Read <strong>only the first and last sentence</strong> of each paragraph</li>
+                <li>Pay attention to <strong>titles, subtitles, and bold/italic text</strong></li>
+                <li>Look for <strong>topic sentences</strong> (usually the first sentence of a paragraph)</li>
+                <li>Skip details, numbers, and specific examples on the first read</li>
+            </ul>
+            <div class="tip">
+                <strong>&#128161; Speed Tip:</strong> A good skimmer can understand the main idea of a 5-paragraph passage in under 60 seconds. Practice this daily with news articles!
+            </div>
+
+            <h3>B. Scanning (Reading for Specific Details)</h3>
+            <p>Running your eyes over the text to locate a specific piece of information (a name, date, number, or keyword).</p>
+            <ul>
+                <li>First, identify what the question is asking for</li>
+                <li>Look for <strong>keywords</strong> from the question in the passage</li>
+                <li>Don't read every word &mdash; let your eyes jump to the relevant area</li>
+                <li>Once you find the keyword, read the 2-3 sentences around it carefully</li>
+            </ul>
+            <div class="example">
+                <strong>Question:</strong> "According to the passage, when was the first vaccine developed?"<br>
+                <strong>Strategy:</strong> Scan for numbers/years and the word "vaccine" or "first." Once found, read the full sentence for the answer.
+            </div>
+
+            <h3>C. When to Use Which?</h3>
+            <ul>
+                <li><strong>Use Skimming for:</strong> "What is the passage mainly about?", "What is the best title?", "What is the author's main argument?"</li>
+                <li><strong>Use Scanning for:</strong> "According to the passage...", "In paragraph 3, the author states...", "The word 'X' in line 5 refers to..."</li>
+            </ul>
+        </div>
+
+        <div class="section" id="factual">
+            <h2>&#128301; 2. Factual &amp; Negative Factual Questions</h2>
+            
+            <h3>A. Factual Questions (Direct)</h3>
+            <p>These ask you to find information that is <strong>explicitly stated</strong> in the passage. The answer is always a paraphrase (reworded version) of the original text.</p>
+            <div class="example">
+                <strong>Common stems:</strong><br>
+                &#8226; "According to the passage..."<br>
+                &#8226; "The author states that..."<br>
+                &#8226; "Which of the following is mentioned in the passage?"<br><br>
+                <strong>Strategy:</strong> Find the specific paragraph referenced, then match each answer option against the text. The correct answer will be a <em>synonym-based restatement</em>, not a word-for-word copy.
+            </div>
+
+            <h3>B. Negative Factual Questions (EXCEPT)</h3>
+            <p>These ask you to find the one option that is <strong>NOT</strong> mentioned or contradicted by the passage.</p>
+            <div class="example">
+                <strong>Common stems:</strong><br>
+                &#8226; "All of the following are mentioned EXCEPT..."<br>
+                &#8226; "Which of the following is NOT true?"<br>
+                &#8226; "The author would disagree with which statement?"<br><br>
+                <strong>Strategy:</strong> Check ALL answer options against the passage. Eliminate the ones that ARE mentioned. The remaining one is your answer.
+            </div>
+
+            <div class="warning">
+                <strong>&#128721; Common Trap:</strong> Test makers often include an option that uses exact words from the passage but changes the meaning slightly. For example, the passage says "most students prefer..." but the option says "all students prefer..." &mdash; that one word changes everything!
+            </div>
+        </div>
+
+        <div class="section" id="reference">
+            <h2>&#128302; 3. Pronoun Reference</h2>
+            <p>Questions like "The word 'they' in line X refers to..." require you to trace back to find what the pronoun is replacing.</p>
+            
+            <h3>Step-by-Step Method</h3>
+            <ol>
+                <li>Find the pronoun in the passage</li>
+                <li>Read the sentence <strong>before</strong> it (pronouns almost always refer backwards)</li>
+                <li>Identify the noun that matches in <strong>number</strong> (singular/plural) and <strong>gender</strong></li>
+                <li>Substitute the noun back into the pronoun's sentence to verify it makes sense</li>
+            </ol>
+
+            <div class="example">
+                <strong>Passage:</strong> "Honeybees perform specific dances to communicate the distance of food sources. <u>They</u> use complex circular movements to indicate nearby flowers."<br>
+                <strong>Question:</strong> "They" refers to?<br>
+                <strong>Analysis:</strong> "They" is plural &#8594; look for a plural noun in the previous sentence &#8594; "Honeybees" (plural) &#8594; <strong>Answer: Honeybees</strong>
+            </div>
+
+            <h3>Common Reference Words to Watch</h3>
+            <ul>
+                <li><strong>it, its</strong> &#8594; refers to a singular noun (thing/concept)</li>
+                <li><strong>they, them, their</strong> &#8594; refers to a plural noun</li>
+                <li><strong>this, that</strong> &#8594; can refer to an entire idea or concept, not just a single noun</li>
+                <li><strong>which</strong> &#8594; in relative clauses, refers to the noun immediately before it</li>
+                <li><strong>such</strong> &#8594; refers to type/kind mentioned earlier</li>
+                <li><strong>the former / the latter</strong> &#8594; first mentioned / second mentioned</li>
+            </ul>
+
+            <div class="tip">
+                <strong>&#128161; Pro Tip:</strong> When "this" or "that" refers to a whole idea (not a single noun), the answer will typically be a phrase or clause, not a single word. Look for answer options that summarize the previous concept.
+            </div>
+        </div>
+
+        <div class="section" id="purpose">
+            <h2>&#129516; 4. Author's Purpose &amp; Rhetorical Function</h2>
+            <p>Asks <strong>WHY</strong> the author included certain features &mdash; a specific word, a quotation, a statistic, or a particular paragraph.</p>
+
+            <h3>Common Purpose Categories</h3>
+            <ul>
+                <li><strong>To inform/explain:</strong> Presents facts without bias (news articles, textbooks)</li>
+                <li><strong>To persuade/argue:</strong> Tries to convince the reader of a position (editorials, opinion pieces)</li>
+                <li><strong>To illustrate/exemplify:</strong> Uses specific examples to support a general point</li>
+                <li><strong>To compare/contrast:</strong> Shows similarities or differences between two things</li>
+                <li><strong>To criticize/challenge:</strong> Points out weaknesses in an idea or practice</li>
+                <li><strong>To warn/caution:</strong> Alerts the reader to potential dangers or problems</li>
+            </ul>
+
+            <div class="example">
+                <strong>Question:</strong> "Why does the author mention the experiment in paragraph 3?"<br>
+                <strong>Strategy:</strong> Look at what comes BEFORE paragraph 3. If paragraph 2 makes a general claim, paragraph 3's experiment likely serves <strong>to provide evidence</strong> for that claim.<br><br>
+                <strong>Key transition words to watch:</strong> "For instance" (illustrate), "However" (contrast), "Therefore" (conclude), "Nevertheless" (concede), "In fact" (emphasize)
+            </div>
+
+            <h3>Identifying the Author's Tone</h3>
+            <ul>
+                <li><strong>Objective/Neutral:</strong> Uses factual language, no emotional words</li>
+                <li><strong>Optimistic/Supportive:</strong> "innovative," "promising," "breakthrough"</li>
+                <li><strong>Critical/Skeptical:</strong> "questionable," "flawed," "dubious"</li>
+                <li><strong>Concerned/Alarmed:</strong> "troubling," "urgent," "devastating"</li>
+                <li><strong>Humorous/Sarcastic:</strong> Uses irony, exaggeration for effect</li>
+            </ul>
+        </div>
+
+        <div class="section" id="inference">
+            <h2>&#129504; 5. Making Inferences</h2>
+            <p>Inference questions ask you to determine what the passage <strong>implies</strong> or <strong>suggests</strong> without directly stating it. The answer is never explicitly written &mdash; you must connect the dots.</p>
+
+            <h3>The Inference Formula</h3>
+            <p><strong>What the text says + your logical reasoning = inference</strong></p>
+            <div class="example">
+                <strong>Passage:</strong> "Sales of electric vehicles in Country X tripled in 2023, while government subsidies for EV purchases were doubled that same year."<br>
+                <strong>Question:</strong> "What can be inferred from the passage?"<br>
+                <strong>Inference:</strong> Government subsidies likely contributed to the increase in EV sales. (The text doesn't say this directly, but the correlation strongly suggests it.)
+            </div>
+
+            <h3>Common Inference Question Stems</h3>
+            <ul>
+                <li>"It can be inferred from the passage that..."</li>
+                <li>"The passage implies that..."</li>
+                <li>"The author most likely believes that..."</li>
+                <li>"What can be concluded from paragraph 2?"</li>
+                <li>"Based on the passage, which statement is most likely true?"</li>
+            </ul>
+
+            <div class="warning">
+                <strong>&#128721; Critical Rule:</strong> An inference must be STRONGLY supported by the text. If the answer requires you to make a huge logical leap or bring in outside knowledge, it's probably wrong. The correct inference is always the <em>most conservative, safest conclusion</em> supported by the evidence.
+            </div>
+        </div>
+
+        <div class="section" id="structure">
+            <h2>&#128218; 6. Text Structure &amp; Organization</h2>
+            <p>Some questions ask about HOW the passage is organized rather than what it says.</p>
+
+            <h3>Common Text Organization Patterns</h3>
+            <ul>
+                <li><strong>Chronological:</strong> Events presented in time order (first, then, finally)</li>
+                <li><strong>Cause &amp; Effect:</strong> Explains why something happened and its results</li>
+                <li><strong>Problem &amp; Solution:</strong> Describes a problem and proposes solutions</li>
+                <li><strong>Compare &amp; Contrast:</strong> Shows similarities and differences</li>
+                <li><strong>Classification:</strong> Groups items into categories</li>
+                <li><strong>General to Specific:</strong> Starts with a broad claim, then provides supporting details</li>
+                <li><strong>Specific to General:</strong> Starts with examples, then draws a broader conclusion</li>
+            </ul>
+
+            <div class="example">
+                <strong>Question:</strong> "How is the passage organized?"<br>
+                <strong>Strategy:</strong> Look at the first and last paragraph. If the first introduces a problem and the last offers solutions, the answer is "problem-solution." If each paragraph discusses a different time period, it's "chronological."
+            </div>
+
+            <h3>Paragraph Function Questions</h3>
+            <p>You may be asked what role a specific paragraph plays:</p>
+            <ul>
+                <li><strong>Introduction:</strong> Sets up the topic, provides background</li>
+                <li><strong>Supporting:</strong> Provides evidence, examples, or data</li>
+                <li><strong>Transitional:</strong> Shifts from one subtopic to another</li>
+                <li><strong>Counter-argument:</strong> Presents the opposing view before refuting it</li>
+                <li><strong>Conclusion:</strong> Summarizes or restates the main argument</li>
+            </ul>
+        </div>
+        
+        <div class="section" id="tips">
+            <h2>&#127919; 7. Strategi Menjawab SNBT</h2>
+            <ol>
+                <li><strong>NEVER read the passage first.</strong> Always read the question stem first, then go to the passage to find the answer. Let the question guide your reading!</li>
+                <li><strong>Read the question carefully.</strong> Pay attention to words like "EXCEPT," "NOT," "most likely," and "primarily." These completely change what you're looking for.</li>
+                <li><strong>Avoid absolute extremes.</strong> Answer choices with "always," "never," "only," "must," or "all" are usually wrong unless the passage explicitly uses those words.</li>
+                <li><strong>Use Process of Elimination.</strong> For difficult questions, eliminate obviously wrong answers first. Even eliminating 2 options increases your chance from 20% to 50%.</li>
+                <li><strong>Don't bring outside knowledge.</strong> Even if you know additional facts about the topic, answer ONLY based on what the passage states or implies.</li>
+                <li><strong>Watch for paraphrasing.</strong> The correct answer almost never uses the exact same words as the passage. It will be rephrased using synonyms.</li>
+            </ol>
+            <div class="tip">
+                <strong>&#128161; Time Strategy:</strong> Allocate about 7-8 minutes per passage. Spend 1-2 minutes skimming, then 1 minute per question. If a question is too hard, mark it and come back later.
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="library.html" class="nav-btn">
+                <div>
+                    <div class="nav-btn-label">&#8592; Kembali</div>Library SNBT
+                </div>
+            </a>
+            <a href="lib-vocabulary-context.html" class="nav-btn primary">
+                <div>
+                    <div class="nav-btn-label">Materi Selanjutnya &rarr;</div>Vocabulary in Context
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>&copy; 2025 QuizNation &mdash; Library SNBT 2025</footer>
+    <script>if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark')</script>
+</body>
+
+</html>

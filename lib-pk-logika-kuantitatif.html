@@ -1,0 +1,547 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Logika Kuantitatif - Library SNBT 2025</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Mobile Optimization */
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --accent: #2563eb;
+            --accent2: #06b6d4;
+            --bg: #f0f2f8;
+            --surface: rgba(255, 255, 255, 0.72);
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #1a1a2e;
+            --text2: #4b5563;
+            --text3: #9ca3af;
+            --glow: rgba(124, 58, 237, 0.18);
+            --radius: 20px
+        }
+
+        body.dark {
+            --bg: #050a15;
+            --surface: rgba(255, 255, 255, 0.055);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #f0edff;
+            --text2: rgba(240, 237, 255, 0.65);
+            --text3: rgba(240, 237, 255, 0.35);
+            --glow: rgba(124, 58, 237, 0.28)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: .35
+        }
+
+        /* Top Nav */
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            gap: 16px
+        }
+
+        .topnav a {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .2s
+        }
+
+        .topnav a:hover {
+            gap: 10px
+        }
+
+        .topnav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-left: auto
+        }
+
+        .theme-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: grid;
+            place-items: center;
+            transition: all .2s;
+            margin-left: 8px
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent)
+        }
+
+        /* Content */
+        .wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px 80px;
+            position: relative;
+            z-index: 1
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(251, 146, 60, .12);
+            color: #f59e0b;
+            border: 1px solid rgba(251, 146, 60, .25);
+            border-radius: 30px;
+            padding: 5px 14px;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.15;
+            margin-bottom: 14px
+        }
+
+        .page-title .grad {
+            background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .page-desc {
+            font-size: 1.05rem;
+            color: var(--text2);
+            line-height: 1.8;
+            margin-bottom: 40px;
+            max-width: 700px
+        }
+
+        /* TOC */
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 40px
+        }
+
+        .toc-title {
+            font-weight: 800;
+            font-size: .9rem;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .toc ol {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .toc li {
+            color: var(--text2);
+            font-size: .88rem
+        }
+
+        .toc a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color .2s
+        }
+
+        .toc a:hover {
+            color: var(--accent2)
+        }
+
+        /* Sections */
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: all .3s
+        }
+
+        .section:hover {
+            box-shadow: 0 10px 40px var(--glow);
+            border-color: rgba(124, 58, 237, .2)
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .section h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 20px 0 10px
+        }
+
+        .section p,
+        .section li {
+            font-size: .92rem;
+            color: var(--text2);
+            line-height: 1.85
+        }
+
+        .section ul,
+        .section ol {
+            padding-left: 20px;
+            margin: 10px 0
+        }
+
+        .section li {
+            margin-bottom: 6px
+        }
+
+        /* Example Box */
+        .example {
+            background: rgba(124, 58, 237, .06);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .example strong {
+            color: var(--text)
+        }
+
+        /* Tip Box */
+        .tip {
+            background: rgba(6, 182, 212, .08);
+            border-left: 3px solid var(--accent2);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .tip strong {
+            color: var(--accent2)
+        }
+
+        /* Warning */
+        .warning {
+            background: rgba(244, 63, 94, .08);
+            border-left: 3px solid #f43f5e;
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        /* Nav buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 14px;
+            margin-top: 40px;
+            flex-wrap: wrap
+        }
+
+        .nav-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all .3s
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px var(--glow);
+            transform: translateY(-2px)
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, .4)
+        }
+
+        .nav-btn.primary:hover {
+            box-shadow: 0 8px 28px rgba(124, 58, 237, .5);
+            transform: translateY(-3px)
+        }
+
+        .nav-btn-label {
+            font-size: .7rem;
+            color: var(--text3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .nav-btn.primary .nav-btn-label {
+            color: rgba(255, 255, 255, .7)
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text3);
+            font-size: .8rem;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px
+        }
+
+        @media(max-width:768px) {
+            .topnav {
+                padding: 14px 16px
+            }
+
+            .wrapper {
+                padding: 24px 16px 60px
+            }
+
+            .section {
+                padding: 20px
+            }
+
+            .nav-buttons {
+                flex-direction: column
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">? Kembali ke Library</a>
+        <span class="topnav-title">Logika Kuantitatif</span>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+    <div class="wrapper">
+        <div class="hero-badge">Pengetahuan Kuantitatif</div>
+        <h1 class="page-title">Logika <span class="grad">Kuantitatif</span></h1>
+        <p class="page-desc">Selesaikan soal perbandingan kuantitatif, pola bilangan, dan logika matematika terapan.
+        </p>
+        <div class="toc">
+            <div class="toc-title">📑 Daftar Isi</div>
+            <ol>
+                <li><a href="#pola">Pola Deret Angka & Huruf</a></li>
+                <li><a href="#pq">Perbandingan P dan Q</a></li>
+                <li><a href="#kecukupan">Kecukupan Data (Pernyataan 1 & 2)</a></li>
+                <li><a href="#kode">Kriptografi Dasar (Kode Berpola)</a></li>
+                <li><a href="#tips">Strategi Menjawab SNBT</a></li>
+            </ol>
+        </div>
+
+        <div class="section" id="pola">
+            <h2>🔹 1. Pola Deret Angka & Huruf</h2>
+            <p>Bentuk penalaran mendeteksi irama jeda yang bersembunyi di balik barisan karakter. Deret dapat memiliki
+                lebih dari satu pola (pola berselang).</p>
+            <ul>
+                <li><strong>Deret Langsung (+, -, x, /):</strong> Perubahan angka konstan atau mengikuti deret
+                    aritmatika/geometri. Misal: 2, 4, 8, 16... (x2)</li>
+                <li><strong>Deret Fibonacci:</strong> Angka selanjutnya adalah jumlah dari 2 atau 3 angka sebelumnya
+                    (U_n = U_n-1 + U_n-2). Contoh: 1, 1, 2, 3, 5, 8.</li>
+                <li><strong>Deret Loncat:</strong> Ada 2 atau 3 pola yang saling tumpang tindih melewati 1 atau 2 angka.
+                </li>
+            </ul>
+            <div class="example">
+                <strong>Contoh Soal & Solusi:</strong><br>
+                <em>Lengkapilah: 2, 5, 4, 10, 6, 15, ..., ...</em><br>
+                <strong>Solusi:</strong><br>
+                Pola ini adalah <strong>Deret Loncat 1</strong>.<br>
+                - Deret 1 (posisi ganjil): 2, 4, 6... (pola +2), maka angka berikutnya adalah <strong>8</strong>.<br>
+                - Deret 2 (posisi genap): 5, 10, 15... (pola +5), maka angka berikutnya adalah <strong>20</strong>.<br>
+                <strong>Jawaban:</strong> 8, 20.<br><br>
+                <em><small>Sumber: Prediksi UTBK SNBT TPS Penalaran Umum 2024.</small></em>
+            </div>
+        </div>
+
+        <div class="section" id="pq">
+            <h2>🔹 2. Perbandingan P dan Q</h2>
+            <p>Tipe soal kuantitatif khusus SNBT: Disajikan informasi dasar, lalu ditanya hubungan nilai P atau Q.</p>
+            <div class="warning">
+                <strong>🔹 Tipe Jawaban Baku:</strong><br>
+                A. P > Q<br>
+                B. Q > P<br>
+                C. P = Q<br>
+                D. Informasi tidak cukup untuk memutuskan.
+            </div>
+            <div class="example">
+                <strong>Contoh Analisis Cepat:</strong><br>
+                <em>Diketahui x > 0 dan y < 0. P=x - y, Q=x + y.</em><br>
+                        <strong>Cara Cepat:</strong> <br>
+                        Karena y adalah bilangan negatif, maka -y menjadi POSITIF. Jadi P = x + (bilangan positif).
+                        Sementara Q = x - (bilangan positif). Tentu bilangan awal jika ditambah akan lebih besar
+                        daripada jika dikurang. <strong>Maka P > Q</strong>.<br><br>
+                        <em><small>Sumber: Panduan Penalaran Kuantitatif SNBT.</small></em>
+            </div>
+        </div>
+
+        <div class="section" id="kecukupan">
+            <h2>🔹 3. Kecukupan Data (Pernyataan 1 & 2)</h2>
+            <p>Bentuk soal dengan tingkat kegagalan tertinggi di SNBT.</p>
+            <ul>
+                <li>Uji <strong>Pernyataan 1 SAJA</strong>. Cukupkah mendapatkan 1 jawaban pasti?</li>
+                <li>Uji <strong>Pernyataan 2 SAJA</strong>. Cukupkah mendapatkan 1 jawaban pasti?</li>
+                <li>Jika keduanya SAJA gagal, baru coba digabungkan pemakaiannya!</li>
+            </ul>
+            <div class="example">
+                <strong>Contoh Kegagalan Logika:</strong><br>
+                <em>Berapakah nilai x?</em><br>
+                <em>(1) x- = 25</em><br>
+                <em>(2) x > 0</em><br>
+                <strong>Analisis:</strong><br>
+                - Pernyataan (1) SAJA: x- = 25 artinya x bisa 5 atau -5. Jawabannya <strong>TIDAK TUNGGAL</strong>
+                (Tidak Cukup).<br>
+                - Pernyataan (2) SAJA: x > 0, bisa 1, 2, 3... (Tidak Cukup).<br>
+                - (1) dan (2) digabungkan: x- = 25 dan x bilangan positif. Maka <strong>Pasti x = 5</strong>. (Dua
+                pernyataan bersama-sama cukup).<br><br>
+                <em><small>Sumber: Bank Soal Tryout BPPP - DS (Data Sufficiency).</small></em>
+            </div>
+        </div>
+
+        <div class="section" id="kode">
+            <h2>🔹 4. Kriptografi Dasar (Kode Berpola)</h2>
+            <p>Penyandian kata atau penggeseran letak huruf abjad. Sering dilabeli soal "Panda".</p>
+            <div class="tip">
+                <strong>🔹 Quick Tip:</strong> Tuliskan terlebih dahulu huruf A sampai Z secara berurutan dan beri angka
+                1 sampai 26 (A=1, Z=26) pada kertas buram saat ujian baru dimulai. Ini akan menyelamatkan waktu Anda.
+            </div>
+            <div class="example">
+                <strong>Contoh Pola Geser:</strong><br>
+                Jika "BACA" dikodekan menjadi "DCGE", maka "TULIS" menjadi?<br>
+                <strong>Solusi:</strong><br>
+                - B(+2) -> D<br>
+                - A(+2) -> C<br>
+                - C(+4) -> G<br>
+                - A(+4) -> E. <br>
+                Pola konstan adalah geseran +2, +2, +4, +4. Logikanya bisa diselesaikan dengan menerapkan perpindahan
+                abjad urutan alphabet secara hati-hati.<br><br>
+                <em><small>Sumber: Pelatihan TPS Bahasa Panda. 2023.</small></em>
+            </div>
+        </div>
+
+        <div class="section" id="tips">
+            <h2>🔹 5. Strategi Menjawab SNBT Logika</h2>
+            <ul>
+                <li><strong>Skip yang Susah:</strong> Soal deret atau panda yang polanya tak kunjung terlihat setelah 1
+                    menit harus segera ditinggalkan. Otak bawah sadar Anda akan terus memproyeknya saat Anda mengerjakan
+                    soal lain.</li>
+                <li><strong>Cari Pola Terbanyak Dulu:</strong> Di soal Kecukupan Data, mayoritas siswa terlalu cepat
+                    berasumsi. Uji angka negatif dan pecahan sebelum yakin.</li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="library.html" class="nav-btn">
+                <div>
+                    <div class="nav-btn-label">? Kembali</div>Library SNBT
+                </div>
+            </a>
+            <a href="lib-memahami-teks.html" class="nav-btn primary">
+                <div>
+                    <div class="nav-btn-label">Pindah Kategori &rarr;</div>Literasi Bhs. Indonesia
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>- 2025 QuizNation - Library SNBT 2025</footer>
+    <script>if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark')</script>
+</body>
+
+</html>

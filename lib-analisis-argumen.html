@@ -1,0 +1,696 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Penalaran Logis - Library SNBT 2025</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Mobile Optimization */
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --accent: #2563eb;
+            --accent2: #06b6d4;
+            --bg: #f0f2f8;
+            --surface: rgba(255, 255, 255, 0.72);
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #1a1a2e;
+            --text2: #4b5563;
+            --text3: #9ca3af;
+            --glow: rgba(124, 58, 237, 0.18);
+            --radius: 20px
+        }
+
+        body.dark {
+            --bg: #050a15;
+            --surface: rgba(255, 255, 255, 0.055);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #f0edff;
+            --text2: rgba(240, 237, 255, 0.65);
+            --text3: rgba(240, 237, 255, 0.35);
+            --glow: rgba(124, 58, 237, 0.28)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: .35
+        }
+
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            gap: 16px
+        }
+
+        .topnav a {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .2s
+        }
+
+        .topnav a:hover {
+            gap: 10px
+        }
+
+        .topnav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-left: auto
+        }
+
+        .theme-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: grid;
+            place-items: center;
+            transition: all .2s;
+            margin-left: 8px
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent)
+        }
+
+        .wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px 80px;
+            position: relative;
+            z-index: 1
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(251, 146, 60, .12);
+            color: #f59e0b;
+            border: 1px solid rgba(251, 146, 60, .25);
+            border-radius: 30px;
+            padding: 5px 14px;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.15;
+            margin-bottom: 14px
+        }
+
+        .page-title .grad {
+            background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .page-desc {
+            font-size: 1.05rem;
+            color: var(--text2);
+            line-height: 1.8;
+            margin-bottom: 40px;
+            max-width: 700px
+        }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 40px
+        }
+
+        .toc-title {
+            font-weight: 800;
+            font-size: .9rem;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .toc ol {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .toc li {
+            color: var(--text2);
+            font-size: .88rem
+        }
+
+        .toc a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color .2s
+        }
+
+        .toc a:hover {
+            color: var(--accent2)
+        }
+
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: all .3s
+        }
+
+        .section:hover {
+            box-shadow: 0 10px 40px var(--glow);
+            border-color: rgba(124, 58, 237, .2)
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .section h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 24px 0 12px
+        }
+
+        .section p,
+        .section li {
+            font-size: .92rem;
+            color: var(--text2);
+            line-height: 1.85
+        }
+
+        .section ul,
+        .section ol {
+            padding-left: 20px;
+            margin: 10px 0
+        }
+
+        .section li {
+            margin-bottom: 8px
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.88rem;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--border);
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(124, 58, 237, 0.05);
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        td {
+            color: var(--text2);
+        }
+
+        .example {
+            background: rgba(124, 58, 237, .06);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .example strong {
+            color: var(--text)
+        }
+
+        .tip {
+            background: rgba(6, 182, 212, .08);
+            border-left: 3px solid var(--accent2);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .tip strong {
+            color: var(--accent2)
+        }
+
+        .warning {
+            background: rgba(244, 63, 94, .08);
+            border-left: 3px solid #f43f5e;
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .warning strong {
+            color: #f43f5e
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 14px;
+            margin-top: 40px;
+            flex-wrap: wrap
+        }
+
+        .nav-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all .3s
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px var(--glow);
+            transform: translateY(-2px)
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, .4)
+        }
+
+        .nav-btn.primary:hover {
+            box-shadow: 0 8px 28px rgba(124, 58, 237, .5);
+            transform: translateY(-3px)
+        }
+
+        .nav-btn-label {
+            font-size: .7rem;
+            color: var(--text3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .nav-btn.primary .nav-btn-label {
+            color: rgba(255, 255, 255, .7)
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text3);
+            font-size: .8rem;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px
+        }
+
+        @media(max-width:768px) {
+            .topnav {
+                padding: 14px 16px
+            }
+
+            .wrapper {
+                padding: 24px 16px 60px
+            }
+
+            .section {
+                padding: 20px
+            }
+
+            .nav-buttons {
+                flex-direction: column
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">? Kembali ke Library</a>
+        <span class="topnav-title">Penalaran Logis</span>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">🔹 Penalaran Umum</div>
+        <h1 class="page-title">Penalaran <span class="grad">Logis</span><br>(Logika Formal)</h1>
+        <p class="page-desc">Kuasai dasar-dasar logika formal yang menjadi fondasi soal Penalaran Umum di SNBT 2025.
+            Materi ini diulas secara mendalam mencakup proposisi, silogisme, penalaran argumen, dan berbagai jebakan
+            sesat pikir (logical fallacy) yang sering muncul.
+        </p>
+
+        <div class="toc">
+            <div class="toc-title">📑 Daftar Isi Panduan Lengkap</div>
+            <ol>
+                <li><a href="#proposisi">Memahami Proposisi & Kuantor</a></li>
+                <li><a href="#silogisme">Hukum Penarikan Kesimpulan (Silogisme)</a></li>
+                <li><a href="#opini">Membedakan Fakta dan Opini Secara Akurat</a></li>
+                <li><a href="#asumsi">Membongkar Asumsi Terselubung</a></li>
+                <li><a href="#kelemahan">Memperkuat & Memperlemah Argumen</a></li>
+                <li><a href="#fallacy">Jebakan Sesat Pikir (Logical Fallacies)</a></li>
+                <li><a href="#tujuan">Menganalisis Tujuan & Sikap Penulis</a></li>
+                <li><a href="#tips">Strategi Jitu Menjawab Soal SNBT</a></li>
+            </ol>
+        </div>
+
+        <div class="section" id="proposisi">
+            <h2>🔹 1. Memahami Proposisi & Kuantor</h2>
+            <p>Logika formal dimulai dari <strong>Proposisi</strong>, yaitu sebuah pernyataan yang memiliki nilai
+                kebenaran (bisa dinilai 'Benar' saja atau 'Salah' saja, tapi tidak keduanya). Dalam SNBT, proposisi
+                sering digabungkan dengan kata penunjuk jumlah yang disebut <strong>Kuantor</strong>.</p>
+
+            <h3>A. Kuantor Universal (Semua / Setiap)</h3>
+            <p>Menyatakan keseluruhan tanpa pengecualian. Jika ada satu saja yang tidak memenuhi syarat, maka pernyataan
+                tersebut menjadi salah.</p>
+            <div class="example">
+                <strong>Contoh:</strong> "Semua mahasiswa harus memakai almamater saat ujian."<br>
+                <strong>Makna Logis:</strong> Jika kamu mahasiswa ujian, mutlak wajib memakai almamater. Tidak ada
+                toleransi.
+            </div>
+
+            <h3>B. Kuantor Eksistensial (Sebagian / Ada / Beberapa / Mayoritas)</h3>
+            <p>Menyatakan bahwa <strong>setidaknya ada satu</strong> anggota yang memenuhi syarat tersebut. Hati-hati,
+                kata "sebagian" dalam logika formal tidak selalu berarti 50%. "Sebagian" berarti "minimal ada satu,
+                tidak semuanya".</p>
+            <div class="example">
+                <strong>Contoh:</strong> "Beberapa siswa menyukai matematika."<br>
+                <strong>Makna Logis:</strong> Artinya, ada minimal satu siswa yang suka matematika. Ini juga berarti ada
+                "beberapa siswa yang TIDAK menyukai matematika".
+            </div>
+
+            <div class="warning">
+                <strong>🔹 Jebakan SNBT: Negasi (Ingkaran) Proposisi</strong><br>
+                Seringkali kamu diminta mencari ingkaran atau pernyataan yang berlawanan.<br>
+                - Negasi dari <strong>Semua</strong> adalah <strong>Beberapa... tidak</strong>.<br>
+                - Negasi dari <strong>Beberapa</strong> adalah <strong>Semua... tidak</strong>.<br><br>
+                <em>Pernyataan:</em> "Semua angsa berwarna putih."<br>
+                <em>Negasi (Ingkaran):</em> "Ada beberapa angsa yang TIDAK berwarna putih." (Bukan "Semua angsa berwarna
+                hitam"!)
+            </div>
+        </div>
+
+        <div class="section" id="silogisme">
+            <h2>🔹 2. Hukum Penarikan Kesimpulan (Silogisme)</h2>
+            <p>Ini adalah senjata utamamu di bagian Penalaran Umum. Silogisme adalah cara menarik kesimpulan baru dari
+                dua atau lebih premis yang saling berkaitan.</p>
+
+
+            [Image of venn diagram for syllogism]
+
+
+            <h3>A. Modus Ponens</h3>
+            <p>Penarikan kesimpulan yang sifatnya membenarkan/menegaskan penyebab (premis 1).</p>
+            <ul>
+                <li>Premis 1: Jika P terjadi, maka Q terjadi (P ? Q)</li>
+                <li>Premis 2: P benar-benar terjadi (P)</li>
+                <li><strong>Kesimpulan:</strong> Q pasti terjadi (Q)</li>
+            </ul>
+            <div class="example">
+                <strong>P1:</strong> Jika hari hujan, maka jalanan basah.<br>
+                <strong>P2:</strong> Hari ini hujan.<br>
+                <strong>Kesimpulan:</strong> Jalanan basah.
+            </div>
+
+            <h3>B. Modus Tollens</h3>
+            <p>Penarikan kesimpulan melalui pengingkaran/penolakan akibat.</p>
+            <ul>
+                <li>Premis 1: Jika P, maka Q (P ? Q)</li>
+                <li>Premis 2: Q tidak terjadi (~Q)</li>
+                <li><strong>Kesimpulan:</strong> P pasti tidak terjadi (~P)</li>
+            </ul>
+            <div class="example">
+                <strong>P1:</strong> Jika saya lulus ujian, ayah akan membelikan laptop.<br>
+                <strong>P2:</strong> Ayah TIDAK membelikan laptop.<br>
+                <strong>Kesimpulan:</strong> Saya TIDAK lulus ujian.
+            </div>
+
+            <h3>C. Silogisme Hipotetik (Berantai)</h3>
+            <p>Menyambungkan premis-premis yang berurutan secara kausal (sebab-akibat).</p>
+            <ul>
+                <li>Premis 1: Jika P, maka Q (P ? Q)</li>
+                <li>Premis 2: Jika Q, maka R (Q ? R)</li>
+                <li><strong>Kesimpulan:</strong> Jika P, maka R (P ? R)</li>
+            </ul>
+
+            <div class="tip">
+                <strong>🔹 Rahasia Kesalahan Kesimpulan:</strong><br>
+                Dalam soal SNBT, sering diberikan premis "Jika P, maka Q", lalu diberi kondisi "Q terjadi". Apakah
+                kesimpulannya "P"? <strong>SALAH!</strong> Ini disebut <em>Affirming the Consequent</em>. Hujan membuat
+                jalan basah, tapi jalan basah belum tentu karena hujan (bisa saja disiram air).
+            </div>
+        </div>
+
+        <div class="section" id="opini">
+            <h2>🔹 3. Membedakan Fakta dan Opini Secara Akurat</h2>
+            <p>Membaca kritis berawal dari kemahiran mendeteksi pernyataan mana yang merupakan fakta objektif, dan mana
+                yang merupakan gagasan subjektif sang penulis.</p>
+
+            <table>
+                <tr>
+                    <th>Indikator</th>
+                    <th>Fakta (Objektif)</th>
+                    <th>Opini / Gagasan (Subjektif)</th>
+                </tr>
+                <tr>
+                    <td><strong>Sifat Dasar</strong></td>
+                    <td>Kejadian nyata, telah terjadi, terukur, tidak terbantahkan.</td>
+                    <td>Tanggapan, ide, harapan, prediksi, atau evaluasi seseorang.</td>
+                </tr>
+                <tr>
+                    <td><strong>Penggunaan Kata</strong></td>
+                    <td>"Tercatat", "Survei menunjukkan", "Tahun 2023", "Sebanyak 40%".</td>
+                    <td>"Seharusnya", "Sangat", "Mungkin", "Diperkirakan", "Lebih baik", "Akan".</td>
+                </tr>
+                <tr>
+                    <td><strong>Verifikasi</strong></td>
+                    <td>Siapapun yang mengecek datanya akan mendapati hasil yang sama.</td>
+                    <td>Sangat bergantung pada sudut pandang, keyakinan, atau selera.</td>
+                </tr>
+            </table>
+
+            <div class="example">
+                <strong>Kalimat Campuran:</strong> "Menurut data BPS tahun 2022, angka kemiskinan turun 1%
+                (<em>Fakta</em>), hal ini seharusnya menjadi momentum bagi pemerintah untuk semakin giat bekerja
+                (<em>Opini</em>)."
+            </div>
+        </div>
+
+        <div class="section" id="asumsi">
+            <h2>🔹 4. Membongkar Asumsi Terselubung</h2>
+            <p>Dalam argumen, penulis sering melompati sebuah fakta logis karena menganggap hal tersebut sudah
+                dimengerti oleh pembaca. Lompatan inilah yang disebut <strong>Asumsi (Premis Tersembunyi)</strong>.
+                Asumsi adalah jembatan tak kasat mata yang menghubungkan Bukti ke Kesimpulan.</p>
+
+            <div class="example">
+                <strong>Argumen Penulis:</strong> "Pabrik semen di Desa Makmur harus ditutup (Kesimpulan), karena telah
+                mencemari sungai dengan limbah merkuri (Bukti)."<br><br>
+                <strong>Pertanyaan:</strong> Apa asumsi yang mendasari argumen tersebut?<br><br>
+                <strong>Asumsi (Yang Tidak Tertulis di Teks):</strong> "Pencemaran merkuri di sungai adalah hal yang
+                sangat membahayakan dan merupakan alasan yang cukup sah untuk menutup sebuah pabrik."<br>
+                <em>Analisis:</em> Argumen penulis akan hancur jika orang tidak peduli pada pencemaran air. Penulis
+                berasumsi bahwa pembaca sepakat pencemaran sungai = harus ditutup.
+            </div>
+        </div>
+
+        <div class="section" id="kelemahan">
+            <h2>🔹 5. Memperkuat & Memperlemah Argumen</h2>
+            <p>Tipe soal terbaru UTBK menuntut siswa mengevaluasi tingkat kekuatan sebuah opini. Kamu akan diminta
+                mencari informasi/fakta tambahan yang membuat argumen penulis menjadi masuk akal, atau justru hancur
+                berantakan.</p>
+
+            <h3>Cara Memperlemah (Melemahkan) Argumen</h3>
+            <p>Carilah opsi jawaban yang menawarkan <strong>data kontra (counter-example)</strong>, penyebab lain, atau
+                bukti bahwa kesimpulan penulis ditarik dari data yang cacat.</p>
+            <div class="example">
+                <strong>Argumen:</strong> "Program makan siang gratis akan meningkatkan kecerdasan siswa SD karena
+                asupan gizinya terpenuhi."<br><br>
+                <strong>Manakah pernyataan yang paling MEMPERLEMAH argumen di atas?</strong><br>
+                <em>Jawaban:</em> "Penelitian terbaru menunjukkan bahwa faktor utama penentu kecerdasan siswa SD adalah
+                kualitas guru pengajar, bukan sekadar asupan makanan pada jam siang." (Ini membantah klaim sebab-akibat
+                penulis).
+            </div>
+
+            <h3>Cara Memperkuat (Mendukung) Argumen</h3>
+            <p>Carilah opsi jawaban yang memberikan <strong>bukti empiris baru</strong> atau contoh nyata yang sejalan
+                dengan klaim penulis.</p>
+        </div>
+
+        <div class="section" id="fallacy">
+            <h2>🔹 6. Jebakan Sesat Pikir (Logical Fallacies)</h2>
+            <p>Penulis teks (atau opsi jawaban yang salah) di SNBT sering kali dengan sengaja dibuat mengandung cacat
+                logika. Mengenali jenis sesat pikir ini akan membuatmu langsung bisa mencoret opsi jawaban yang salah.
+            </p>
+
+            <ul>
+                <li><strong>Hasty Generalization (Generalisasi Gegabah):</strong> Menarik kesimpulan besar dari sampel
+                    yang sangat kecil. <em>"Tetangga saya merokok dan hidup sampai 90 tahun. Jadi merokok tidak
+                        berbahaya bagi kesehatan."</em></li>
+                <li><strong>False Cause / Post Hoc:</strong> Menganggap B disebabkan oleh A, hanya karena B terjadi
+                    setelah A. <em>"Sejak saya pakai kemeja merah ini, nilai ujian saya selalu A. Kemeja ini bawa
+                        hoki."</em> (Padahal tidak ada hubungan rasional).</li>
+                <li><strong>Ad Hominem:</strong> Menyerang pribadi orangnya, bukan menyerang argumennya. <em>"Pendapat
+                        ilmuwan itu tentang pelestarian lingkungan salah, karena dia sendiri pernah terjerat kasus
+                        korupsi."</em></li>
+                <li><strong>False Dilemma (Hitam Putih):</strong> Memaksa pembaca memilih antara dua ekstrem, padahal
+                    ada banyak jalan tengah. <em>"Jika kamu tidak mendukung kebijakan lockdown, berarti kamu ingin semua
+                        orang mati terkena virus."</em></li>
+            </ul>
+        </div>
+
+        <div class="section" id="tujuan">
+            <h2>🔹 7. Menganalisis Tujuan & Sikap Penulis</h2>
+            <p>Setiap wacana ditulis dengan tujuan (Purpose) dan sikap (Tone) tertentu terhadap topik yang dibicarakan.
+                Hal ini bisa ditebak dari <strong>pemilihan kata (diksi)</strong>.</p>
+
+            <ul>
+                <li><strong>Positif / Mendukung (Supportive / Optimistic):</strong> Menggunakan diksi yang konstruktif
+                    dan memuji. Contoh: "Langkah ini sangat <em>inovatif</em>", "Keberhasilan <em>gemilang</em>",
+                    "Solusi yang <em>brilian</em>".</li>
+                <li><strong>Negatif / Kritis (Critical / Pessimistic):</strong> Menggunakan diksi yang menguliti
+                    kelemahan dan memberi kecaman. Contoh: "Kebijakan ini <em>terburu-buru</em>", "Sangat
+                    <em>merugikan</em> rakyat", "Cacat <em>fundamental</em>".</li>
+                <li><strong>Netral / Obyektif (Neutral / Objective):</strong> Tidak memberikan sentimen emosional, hanya
+                    menyampaikan fakta mentah berdasar data (banyak dijumpai di teks laporan berita atau paper
+                    akademis).</li>
+            </ul>
+        </div>
+
+        <div class="section" id="tips">
+            <h2>🔹 8. Strategi Jitu Menjawab Soal Penalaran SNBT</h2>
+            <p>Waktu adalah musuh terbesarmu di tes SNBT. Jangan buang waktu secara percuma, ikuti langkah sistematis
+                ini:</p>
+            <ol>
+                <li><strong>Baca Pertanyaan Terlebih Dahulu:</strong> Jangan pernah memulai dengan membaca seluruh teks
+                    dari awal sampai akhir. Pahami dulu apa yang diminta: Apakah mencari kesimpulan? Kelemahan argumen?
+                    Atau asumsi?</li>
+                <li><strong>Petakan Posisi (Mapping):</strong> Saat membaca, sadari di mana penulis meletakkan fakta,
+                    dan di kalimat mana dia mulai memasukkan opini/klaim pribadinya. Argumen biasanya ada di paragraf
+                    terakhir.</li>
+                <li><strong>Abaikan Pendapat Pribadimu:</strong> Ini aturan emas logika formal! Sekalipun argumen di
+                    teks berlawanan dengan hati nurani atau keyakinanmu, kamu harus menjawab murni berdasarkan
+                    <strong>premis yang disediakan dalam teks</strong>, bukan dari kehidupan nyata.</li>
+                <li><strong>Hati-hati Kata Kuantitatif:</strong> Perhatikan tajam-tajam kata penunjuk jumlah di pilihan
+                    ganda seperti "sebagian", "hanya", "semua", "tidak pernah". Satu kata berbeda bisa membuat seluruh
+                    kalimat menjadi salah secara logika.</li>
+            </ol>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="library.html" class="nav-btn">
+                <div>
+                    <div class="nav-btn-label">? Kembali</div>Library SNBT
+                </div>
+            </a>
+            <a href="lib-kalimat-efektif.html" class="nav-btn primary">
+                <div>
+                    <div class="nav-btn-label">Materi Selanjutnya &rarr;</div>Kalimat Efektif & Kepaduan
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>- 2025 QuizNation - Library SNBT 2025</footer>
+    <script>if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark')</script>
+</body>
+
+</html>

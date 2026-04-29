@@ -1,0 +1,1772 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" id="themeColorMeta" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Masuk - QuizNation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-text-size-adjust: 100%;
+        }
+
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        :root {
+            --a1: #d94646;
+            --a2: #b83333;
+            --a3: #8a2525;
+            --bg-main: #0d0808;
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.5);
+            --panel-bg: rgba(255, 255, 255, 0.06);
+            --sat: env(safe-area-inset-top, 0px);
+            --sab: env(safe-area-inset-bottom, 0px);
+        }
+
+        body.theme-light {
+            --bg-main: #f8efef;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --card-border: rgba(94, 21, 21, 0.12);
+            --text-main: #2b1111;
+            --text-muted: rgba(43, 17, 17, 0.68);
+            --panel-bg: rgba(255, 255, 255, 0.72);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+            min-height: 100vh;
+            background:
+                radial-gradient(1000px 600px at -15% -10%, rgba(217, 70, 70, 0.24), transparent 70%),
+                radial-gradient(900px 520px at 110% 10%, rgba(138, 37, 37, 0.2), transparent 72%),
+                var(--bg-main);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: calc(var(--sat) + 20px) 20px calc(var(--sab) + 20px);
+            position: relative;
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ==========================================
+         -  ANIMATED BACKGROUND
+        ========================================== */
+        .bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 10% 10%, rgba(217, 70, 70, 0.22) 0%, transparent 60%),
+                radial-gradient(ellipse 70% 50% at 90% 90%, rgba(138, 37, 37, 0.18) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 50% 50%, rgba(184, 51, 51, 0.08) 0%, transparent 70%),
+                var(--bg-main);
+        }
+
+        /* Noise texture */
+        .bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* Floating orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(70px);
+            z-index: 0;
+            animation: orbFloat linear infinite;
+            will-change: transform;
+        }
+
+        .orb1 {
+            width: 500px;
+            height: 500px;
+            top: -150px;
+            left: -150px;
+            background: radial-gradient(circle, rgba(217, 70, 70, 0.2) 0%, transparent 70%);
+            animation-duration: 25s;
+        }
+
+        .orb2 {
+            width: 400px;
+            height: 400px;
+            bottom: -100px;
+            right: -100px;
+            background: radial-gradient(circle, rgba(138, 37, 37, 0.18) 0%, transparent 70%);
+            animation-duration: 30s;
+            animation-direction: reverse;
+        }
+
+        .orb3 {
+            width: 300px;
+            height: 300px;
+            top: 40%;
+            left: 60%;
+            background: radial-gradient(circle, rgba(217, 70, 70, 0.1) 0%, transparent 70%);
+            animation-duration: 20s;
+            animation-delay: -8s;
+        }
+
+        @keyframes orbFloat {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            25% {
+                transform: translate(30px, -40px) scale(1.08);
+            }
+
+            50% {
+                transform: translate(-20px, 30px) scale(0.94);
+            }
+
+            75% {
+                transform: translate(20px, 15px) scale(1.04);
+            }
+
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+        }
+
+        /* ==========================================
+         -  CARD
+        ========================================== */
+        .card {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 980px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 28px;
+            padding: 14px;
+            /* No backdrop-filter on mobile for perf */
+            box-shadow:
+                0 0 0 1px rgba(217, 70, 70, 0.12),
+                0 24px 60px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            animation: slideUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+            display: grid;
+            grid-template-columns: 1.05fr 1fr;
+            gap: 14px;
+        }
+
+        .brand-side {
+            border-radius: 20px;
+            background:
+                radial-gradient(300px 220px at 10% 10%, rgba(255, 255, 255, 0.14), transparent 70%),
+                linear-gradient(155deg, rgba(217, 70, 70, 0.94), rgba(138, 37, 37, 0.95));
+            color: #fff;
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 620px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-side::after {
+            content: '';
+            position: absolute;
+            inset: auto -60px -80px auto;
+            width: 220px;
+            height: 220px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.14);
+            filter: blur(2px);
+        }
+
+        .brand-kicker {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 800;
+            opacity: 0.85;
+            margin-bottom: 12px;
+        }
+
+        .brand-title {
+            font-size: clamp(1.8rem, 2.8vw, 2.35rem);
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 14px;
+            max-width: 13ch;
+        }
+
+        .brand-sub {
+            font-size: 0.92rem;
+            opacity: 0.9;
+            line-height: 1.55;
+            max-width: 34ch;
+        }
+
+        .brand-points {
+            margin-top: 24px;
+            display: grid;
+            gap: 10px;
+        }
+
+        .brand-point {
+            background: rgba(255, 255, 255, 0.14);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 12px;
+            padding: 10px 12px;
+            font-size: 0.84rem;
+            font-weight: 700;
+        }
+
+        .brand-stats {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .brand-stat {
+            border-radius: 12px;
+            background: rgba(0, 0, 0, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            padding: 10px;
+        }
+
+        .brand-stat-label {
+            font-size: 0.72rem;
+            opacity: 0.75;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .brand-stat-value {
+            font-size: 0.9rem;
+            font-weight: 800;
+        }
+
+        .auth-side {
+            background: var(--panel-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 20px;
+            padding: 26px 24px;
+            min-height: 620px;
+        }
+
+        .top-tools {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        .tool-chip {
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: rgba(0, 0, 0, 0.2);
+            color: var(--text-main);
+            border-radius: 999px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tool-chip:hover {
+            border-color: rgba(255, 255, 255, 0.24);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .helper-note {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-bottom: 14px;
+            line-height: 1.35;
+        }
+
+        .quick-user {
+            display: none;
+            margin-bottom: 14px;
+        }
+
+        .quick-user.show {
+            display: block;
+        }
+
+        .quick-user-btn {
+            width: 100%;
+            border-radius: 12px;
+            border: 1px dashed rgba(255, 255, 255, 0.22);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-main);
+            font-size: 0.84rem;
+            font-weight: 700;
+            padding: 10px 12px;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        @media (min-width: 768px) {
+            .card {
+                backdrop-filter: blur(24px);
+                -webkit-backdrop-filter: blur(24px);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(32px) scale(0.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ==========================================
+         -  VIEW SECTIONS
+        ========================================== */
+        .view {
+            display: none;
+            flex-direction: column;
+        }
+
+        .view.active {
+            display: flex;
+            animation: viewIn 0.35s ease both;
+        }
+
+        @keyframes viewIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ==========================================
+         -  LOGO & HEADER
+        ========================================== */
+        .logo-wrap {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .logo-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, var(--a1), var(--a2));
+            box-shadow: 0 8px 28px rgba(217, 70, 70, 0.45);
+            font-size: 1.8rem;
+            margin-bottom: 16px;
+            animation: logoPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes logoPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 8px 28px rgba(217, 70, 70, 0.45);
+            }
+
+            50% {
+                box-shadow: 0 12px 36px rgba(217, 70, 70, 0.65);
+            }
+        }
+
+        .logo-title {
+            font-size: 1.75rem;
+            font-weight: 900;
+            color: var(--text-main);
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        .logo-sub {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* ==========================================
+         -  FORM ELEMENTS
+        ========================================== */
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            color: color-mix(in srgb, var(--text-main) 62%, transparent);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 8px;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+            color: color-mix(in srgb, var(--text-main) 36%, transparent);
+            transition: color 0.2s;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .input-eye {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: color-mix(in srgb, var(--text-main) 36%, transparent);
+            font-size: 1rem;
+            transition: color 0.2s;
+            z-index: 2;
+            padding: 4px;
+            touch-action: manipulation;
+        }
+
+        .input-eye:hover,
+        .input-eye:active {
+            color: color-mix(in srgb, var(--text-main) 72%, transparent);
+        }
+
+        .input {
+            width: 100%;
+            background: color-mix(in srgb, var(--bg-main) 35%, transparent);
+            border: 1.5px solid color-mix(in srgb, var(--text-main) 12%, transparent);
+            color: var(--text-main);
+            border-radius: 13px;
+            padding: 13px 14px 13px 42px;
+            font-size: max(1rem, 16px);
+            /* Prevent iOS zoom */
+            font-family: 'Plus Jakarta Sans', system-ui;
+            font-weight: 500;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+            -webkit-appearance: none;
+        }
+
+        .input::placeholder {
+            color: color-mix(in srgb, var(--text-main) 24%, transparent);
+        }
+
+        .input:focus {
+            border-color: var(--a1);
+            background: rgba(0, 0, 0, 0.45);
+            box-shadow: 0 0 0 4px rgba(217, 70, 70, 0.15);
+        }
+
+        .input:focus+.input-icon,
+        .input-wrap:focus-within .input-icon {
+            color: var(--a1);
+        }
+
+        .input.has-eye {
+            padding-right: 42px;
+        }
+
+        .input.has-action {
+            padding-right: 98px;
+        }
+
+        .input-action {
+            position: absolute;
+            right: 42px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 0;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            font-size: 0.68rem;
+            font-weight: 800;
+            border-radius: 8px;
+            padding: 6px 8px;
+            cursor: pointer;
+        }
+
+        .input.error {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+        }
+
+        .input.success {
+            border-color: #10b981;
+        }
+
+        /* Error text */
+        .err-text {
+            font-size: 0.78rem;
+            color: #ef4444;
+            font-weight: 600;
+            margin-top: 5px;
+            display: none;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .err-text.show {
+            display: flex;
+        }
+
+        /* Password strength */
+        .pwd-strength {
+            margin-top: 8px;
+        }
+
+        .strength-bar {
+            height: 4px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.08);
+            overflow: hidden;
+            margin-bottom: 5px;
+        }
+
+        .strength-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.4s, background 0.4s;
+            width: 0%;
+        }
+
+        .strength-label {
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .pwd-hints {
+            margin-top: 8px;
+            display: grid;
+            gap: 5px;
+        }
+
+        .pwd-hint {
+            font-size: 0.72rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .pwd-hint.ok {
+            color: #10b981;
+        }
+
+        .caps-warning {
+            display: none;
+            margin-top: 7px;
+            font-size: 0.72rem;
+            color: #f59e0b;
+            font-weight: 700;
+        }
+
+        .caps-warning.show {
+            display: block;
+        }
+
+        .register-progress {
+            margin: -2px 0 16px;
+        }
+
+        .register-progress .meter {
+            height: 6px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .register-progress .meter-fill {
+            height: 100%;
+            width: 0%;
+            transition: width 0.25s ease;
+            background: linear-gradient(90deg, #f97316, #10b981);
+        }
+
+        .register-progress .meter-text {
+            margin-top: 6px;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            font-weight: 700;
+        }
+
+        /* ==========================================
+         -  OPTIONS ROW
+        ========================================== */
+        .options-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 22px;
+            font-size: 0.83rem;
+        }
+
+        .remember-check {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: color-mix(in srgb, var(--text-main) 62%, transparent);
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .remember-check input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--a1);
+            cursor: pointer;
+        }
+
+        .forgot-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #e86d6d;
+            font-size: 0.83rem;
+            font-weight: 700;
+            padding: 0;
+            font-family: 'Plus Jakarta Sans', system-ui;
+            transition: color 0.2s;
+            touch-action: manipulation;
+        }
+
+        .forgot-btn:hover {
+            color: #fff;
+        }
+
+        /* ==========================================
+         -  BUTTONS
+        ========================================== */
+        .btn {
+            width: 100%;
+            height: 50px;
+            border-radius: 13px;
+            font-size: 0.95rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            border: none;
+            font-family: 'Plus Jakarta Sans', system-ui;
+            transition: transform 0.15s, box-shadow 0.15s, background 0.2s;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            letter-spacing: 0.1px;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--a1) 0%, var(--a2) 100%);
+            color: #fff;
+            box-shadow: 0 6px 20px rgba(217, 70, 70, 0.4);
+        }
+
+        .btn-primary:hover {
+            box-shadow: 0 8px 28px rgba(217, 70, 70, 0.55);
+            transform: translateY(-1px);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.96) translateY(0);
+        }
+
+        .btn-ghost {
+            background: color-mix(in srgb, var(--text-main) 8%, transparent);
+            border: 1.5px solid color-mix(in srgb, var(--text-main) 16%, transparent);
+            color: color-mix(in srgb, var(--text-main) 88%, transparent);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.09);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Spinner inside button */
+        .spinner {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2.5px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #fff;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ==========================================
+         -  DIVIDER
+        ========================================== */
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: color-mix(in srgb, var(--text-main) 30%, transparent);
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin: 24px 0;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: color-mix(in srgb, var(--text-main) 12%, transparent);
+        }
+
+        /* ==========================================
+         -  FOOTER LINKS
+        ========================================== */
+        .footer-row {
+            margin-top: 26px;
+            text-align: center;
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .footer-row .link {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #e86d6d;
+            font-weight: 800;
+            font-size: 0.88rem;
+            font-family: 'Plus Jakarta Sans', system-ui;
+            transition: color 0.2s;
+            padding: 0;
+            margin-left: 4px;
+            touch-action: manipulation;
+        }
+
+        .footer-row .link:hover {
+            color: #fff;
+        }
+
+        /* ==========================================
+         -  SUCCESS STATE
+        ========================================== */
+        .success-view {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .success-icon {
+            font-size: 3.5rem;
+            margin-bottom: 16px;
+            animation: successPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+        }
+
+        @keyframes successPop {
+            from {
+                transform: scale(0.4);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-title {
+            font-size: 1.3rem;
+            font-weight: 900;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .success-sub {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ==========================================
+         -  TOAST
+        ========================================== */
+        .toast-wrap {
+            position: fixed;
+            bottom: calc(var(--sab) + 16px);
+            left: 16px;
+            right: 16px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background: #1a1a1a;
+            color: #fff;
+            padding: 13px 16px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.25s;
+            will-change: transform, opacity;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        body.reduce-motion *,
+        body.reduce-motion *::before,
+        body.reduce-motion *::after {
+            animation-duration: 0.001ms !important;
+            animation-iteration-count: 1 !important;
+            transition-duration: 0.001ms !important;
+            scroll-behavior: auto !important;
+        }
+
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+
+        /* ==========================================
+         -  PROGRESS BAR (page load)
+        ========================================== */
+        .page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            z-index: 9999;
+            background: linear-gradient(90deg, var(--a1), var(--a2));
+            transform-origin: left;
+            animation: loadBar 0.5s ease forwards;
+        }
+
+        @keyframes loadBar {
+            from {
+                transform: scaleX(0);
+            }
+
+            to {
+                transform: scaleX(1);
+                opacity: 0;
+            }
+        }
+
+        /* ==========================================
+         -  RESPONSIVE
+        ========================================== */
+        @media (max-width: 460px) {
+            .card {
+                padding: 10px;
+                border-radius: 24px;
+            }
+
+            .auth-side {
+                padding: 20px 16px;
+            }
+
+            .logo-title {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 920px) {
+            .card {
+                grid-template-columns: 1fr;
+                max-width: 460px;
+            }
+
+            .brand-side {
+                min-height: auto;
+                padding: 22px;
+            }
+
+            .brand-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-side {
+                min-height: auto;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+
+    <div class="page-loader"></div>
+
+    <!-- Background -->
+    <div class="bg"></div>
+    <div class="orb orb1"></div>
+    <div class="orb orb2"></div>
+    <div class="orb orb3"></div>
+
+    <!-- ==========================================
+     MAIN CARD
+=========================================== -->
+    <div class="card">
+
+        <aside class="brand-side">
+            <div>
+                <div class="brand-kicker">Platform Persiapan SNBT</div>
+                <h1 class="brand-title">Belajar lebih fokus, hasil lebih naik.</h1>
+                <p class="brand-sub">Masuk ke dashboard untuk lanjut latihan harian, cek progress, dan optimalkan strategi belajarmu.</p>
+
+                <div class="brand-points">
+                    <div class="brand-point">📚 Materi adaptif sesuai performa</div>
+                    <div class="brand-point">📊 Statistik perkembangan real-time</div>
+                    <div class="brand-point">🎯 Target harian yang bisa dipersonalisasi</div>
+                </div>
+            </div>
+
+            <div class="brand-stats">
+                <div class="brand-stat">
+                    <div class="brand-stat-label">Latihan Tersedia</div>
+                    <div class="brand-stat-value">2.500+ Soal</div>
+                </div>
+                <div class="brand-stat">
+                    <div class="brand-stat-label">Mode Belajar</div>
+                    <div class="brand-stat-value">SNBT Intensif</div>
+                </div>
+            </div>
+        </aside>
+
+        <section class="auth-side">
+
+        <div class="top-tools">
+            <button class="tool-chip" type="button" id="themeToggle" onclick="toggleTheme()">🌙 Tema: Gelap</button>
+            <button class="tool-chip" type="button" id="motionToggle" onclick="toggleMotion()">🏃 Gerak: Aktif</button>
+        </div>
+
+        <!-- ===== LOGIN VIEW ===== -->
+        <div class="view active" id="vLogin">
+            <div class="logo-wrap">
+                <div style="display:flex;justify-content:center;margin-bottom:14px">
+                    <div class="logo-icon">🎓</div>
+                </div>
+                <div class="logo-title">QuizNation</div>
+                <div class="logo-sub">Platform belajar SNBT yang dipersonalisasi</div>
+            </div>
+
+            <div class="quick-user" id="quickUserBox">
+                <button type="button" class="quick-user-btn" onclick="useRememberedEmail()" id="quickUserBtn">? Gunakan akun terakhir</button>
+            </div>
+
+            <div class="helper-note">Tips: gunakan email aktif agar progress belajarmu tersimpan otomatis.</div>
+
+            <form id="loginForm" novalidate>
+                <div class="form-group">
+                    <label class="form-label">✉️ Email</label>
+                    <div class="input-wrap">
+                        <input class="input" id="loginEmail" type="email" inputmode="email" autocomplete="email"
+                            placeholder="nama@email.com" autocapitalize="none">
+                        <span class="input-icon">✏️</span>
+                    </div>
+                    <div class="err-text" id="loginEmailErr">? Email tidak valid</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🔒 Kata Sandi</label>
+                    <div class="input-wrap">
+                        <input class="input has-eye" id="loginPwd" type="password" inputmode="text"
+                            autocomplete="current-password" placeholder="Masukkan kata sandi">
+                        <span class="input-icon">✏️</span>
+                        <button type="button" class="input-eye" onclick="togglePwd('loginPwd',this)"
+                            aria-label="Tampilkan sandi">👁️</button>
+                    </div>
+                    <div class="caps-warning" id="loginCaps">? Caps Lock aktif</div>
+                    <div class="err-text" id="loginPwdErr">? Kata sandi wajib diisi</div>
+                </div>
+
+                <div class="options-row">
+                    <label class="remember-check">
+                        <input type="checkbox" id="rememberMe"> Ingat Saya
+                    </label>
+                    <button type="button" class="forgot-btn" onclick="switchView('vForgot')">Lupa Sandi?</button>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="loginBtn" onclick="handleLogin(event)">
+                    Masuk Sekarang
+                </button>
+            </form>
+
+            <div class="divider">atau</div>
+
+            <button class="btn btn-ghost" onclick="loginAsGuest()">
+                👤 Lanjutkan sebagai Tamu
+            </button>
+
+            <div class="footer-row">
+                Belum punya akun?
+                <button class="link" onclick="switchView('vRegister')">Daftar Baru</button>
+            </div>
+        </div>
+
+        <!-- ===== REGISTER VIEW ===== -->
+        <div class="view" id="vRegister">
+            <div class="logo-wrap">
+                <div style="display:flex;justify-content:center;margin-bottom:14px">
+                    <div class="logo-icon">?</div>
+                </div>
+                <div class="logo-title">Buat Akun</div>
+                <div class="logo-sub">Mulai perjalanan belajarmu hari ini</div>
+            </div>
+
+            <div class="register-progress">
+                <div class="meter"><div class="meter-fill" id="registerMeter"></div></div>
+                <div class="meter-text" id="registerMeterText">Lengkapi formulir: 0%</div>
+            </div>
+
+            <form id="registerForm" novalidate>
+                <div class="form-group">
+                    <label class="form-label">👤 Nama Lengkap</label>
+                    <div class="input-wrap">
+                        <input class="input" id="regName" type="text" inputmode="text" autocomplete="name"
+                            placeholder="Nama lengkapmu" autocapitalize="words">
+                        <span class="input-icon">✏️</span>
+                    </div>
+                    <div class="err-text" id="regNameErr">? Nama wajib diisi (min. 2 karakter)</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">✉️ Email</label>
+                    <div class="input-wrap">
+                        <input class="input" id="regEmail" type="email" inputmode="email" autocomplete="email"
+                            placeholder="nama@email.com" autocapitalize="none">
+                        <span class="input-icon">✏️</span>
+                    </div>
+                    <div class="err-text" id="regEmailErr">? Email tidak valid</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🔒 Kata Sandi</label>
+                    <div class="input-wrap">
+                        <input class="input has-eye has-action" id="regPwd" type="password" inputmode="text"
+                            autocomplete="new-password" placeholder="Min. 8 karakter"
+                            oninput="checkStrength(this.value)">
+                        <span class="input-icon">✏️</span>
+                        <button type="button" class="input-action" onclick="generatePassword()">Buat</button>
+                        <button type="button" class="input-eye" onclick="togglePwd('regPwd',this)"
+                            aria-label="Tampilkan sandi">👁️</button>
+                    </div>
+                    <div class="caps-warning" id="regCaps">? Caps Lock aktif</div>
+                    <div class="pwd-strength" id="pwdStrength" style="display:none">
+                        <div class="strength-bar">
+                            <div class="strength-fill" id="strengthFill"></div>
+                        </div>
+                        <div class="strength-label" id="strengthLabel">Lemah</div>
+                    </div>
+                    <div class="pwd-hints" id="pwdHints">
+                        <div class="pwd-hint" id="hLen">- Minimal 8 karakter</div>
+                        <div class="pwd-hint" id="hUpper">- Ada huruf besar</div>
+                        <div class="pwd-hint" id="hNum">- Ada angka</div>
+                        <div class="pwd-hint" id="hSymbol">- Ada simbol</div>
+                    </div>
+                    <div class="err-text" id="regPwdErr">? Sandi minimal 8 karakter</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">🔒 Konfirmasi Sandi</label>
+                    <div class="input-wrap">
+                        <input class="input has-eye" id="regPwd2" type="password" inputmode="text"
+                            autocomplete="new-password" placeholder="Ulangi kata sandi">
+                        <span class="input-icon">✏️</span>
+                        <button type="button" class="input-eye" onclick="togglePwd('regPwd2',this)"
+                            aria-label="Tampilkan sandi">👁️</button>
+                    </div>
+                    <div class="err-text" id="regPwd2Err">? Kata sandi tidak cocok</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="registerBtn" onclick="handleRegister(event)"
+                    style="margin-top:6px">
+                    Buat Akun Sekarang
+                </button>
+            </form>
+
+            <div class="footer-row">
+                Sudah punya akun?
+                <button class="link" onclick="switchView('vLogin')">Masuk di sini</button>
+            </div>
+        </div>
+
+        <!-- ===== FORGOT PASSWORD VIEW ===== -->
+        <div class="view" id="vForgot">
+            <div class="logo-wrap">
+                <div style="display:flex;justify-content:center;margin-bottom:14px">
+                    <div class="logo-icon">🎓</div>
+                </div>
+                <div class="logo-title">Lupa Sandi?</div>
+                <div class="logo-sub">Kami akan kirim tautan pemulihan ke emailmu</div>
+            </div>
+
+            <form id="forgotForm" novalidate>
+                <div class="form-group" style="margin-bottom:24px">
+                    <label class="form-label">✉️ Email Terdaftar</label>
+                    <div class="input-wrap">
+                        <input class="input" id="forgotEmail" type="email" inputmode="email" autocomplete="email"
+                            placeholder="nama@email.com" autocapitalize="none">
+                        <span class="input-icon">✏️</span>
+                    </div>
+                    <div class="err-text" id="forgotEmailErr">? Email tidak valid</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="forgotBtn" onclick="handleForgot(event)">
+                    Kirim Tautan Pemulihan
+                </button>
+            </form>
+
+            <div class="footer-row">
+                <button class="link" onclick="switchView('vLogin')">? Kembali ke Login</button>
+            </div>
+        </div>
+
+        <!-- ===== SUCCESS VIEW (after forgot) ===== -->
+        <div class="view" id="vForgotSuccess">
+            <div class="success-view">
+                <div class="success-icon">✅</div>
+                <div class="success-title">Email Terkirim!</div>
+                <div class="success-sub" id="forgotSuccessMsg">
+                    Cek inbox kamu. Tautan pemulihan telah dikirim.
+                </div>
+            </div>
+            <button class="btn btn-ghost" style="margin-top:28px" onclick="switchView('vLogin')">
+                Kembali ke Login
+            </button>
+        </div>
+
+        </section>
+
+    </div>
+
+    <!-- Toast container -->
+    <div class="toast-wrap" id="toastWrap"></div>
+    <div class="sr-only" id="srAnnounce" aria-live="polite" aria-atomic="true"></div>
+
+    <script>
+        /* ==========================================
+         -  VIEW SWITCHING
+        =========================================== */
+        function switchView(id) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            // Reset errors on switch
+            document.querySelectorAll('.err-text').forEach(e => e.classList.remove('show'));
+            document.querySelectorAll('.input').forEach(i => i.classList.remove('error', 'success'));
+            updateRegisterProgress();
+        }
+
+        /* ==========================================
+         -  VALIDATION HELPERS
+        =========================================== */
+        const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        function setErr(inputId, errId, show) {
+            const inp = document.getElementById(inputId);
+            const err = document.getElementById(errId);
+            if (show) {
+                inp.classList.add('error'); inp.classList.remove('success');
+                err.classList.add('show');
+                inp.setAttribute('aria-invalid', 'true');
+            } else {
+                inp.classList.remove('error'); inp.classList.add('success');
+                err.classList.remove('show');
+                inp.setAttribute('aria-invalid', 'false');
+            }
+            return !show;
+        }
+
+        function clearState(inputId) {
+            const inp = document.getElementById(inputId);
+            inp.classList.remove('error', 'success');
+            inp.removeAttribute('aria-invalid');
+        }
+
+        /* ==========================================
+         -  TOGGLE PASSWORD VISIBILITY
+        =========================================== */
+        function togglePwd(inputId, btn) {
+            const inp = document.getElementById(inputId);
+            const isHidden = inp.type === 'password';
+            inp.type = isHidden ? 'text' : 'password';
+            btn.textContent = isHidden ? '👁️' : '🙈';
+            // Return focus so mobile keyboard stays up
+            inp.focus();
+        }
+
+        /* ==========================================
+         -  PASSWORD STRENGTH
+        =========================================== */
+        function checkStrength(pwd) {
+            const wrap = document.getElementById('pwdStrength');
+            const fill = document.getElementById('strengthFill');
+            const label = document.getElementById('strengthLabel');
+            if (!pwd) { wrap.style.display = 'none'; return; }
+            wrap.style.display = 'block';
+
+            let score = 0;
+            if (pwd.length >= 8) score++;
+            if (pwd.length >= 12) score++;
+            if (/[A-Z]/.test(pwd)) score++;
+            if (/[0-9]/.test(pwd)) score++;
+            if (/[^A-Za-z0-9]/.test(pwd)) score++;
+
+            const levels = [
+                { pct: '20%', color: '#ef4444', text: 'Sangat Lemah' },
+                { pct: '40%', color: '#f97316', text: 'Lemah' },
+                { pct: '60%', color: '#f59e0b', text: 'Sedang' },
+                { pct: '80%', color: '#84cc16', text: 'Kuat' },
+                { pct: '100%', color: '#10b981', text: 'Sangat Kuat' },
+            ];
+            const lv = levels[Math.max(0, score - 1)] || levels[0];
+            fill.style.width = lv.pct;
+            fill.style.background = lv.color;
+            label.textContent = lv.text;
+            label.style.color = lv.color;
+
+            markHint('hLen', pwd.length >= 8);
+            markHint('hUpper', /[A-Z]/.test(pwd));
+            markHint('hNum', /[0-9]/.test(pwd));
+            markHint('hSymbol', /[^A-Za-z0-9]/.test(pwd));
+            updateRegisterProgress();
+        }
+
+        function markHint(id, ok) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.classList.toggle('ok', ok);
+        }
+
+        function generatePassword() {
+            const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%^&*';
+            let pass = '';
+            for (let i = 0; i < 12; i++) {
+                pass += chars[Math.floor(Math.random() * chars.length)];
+            }
+            const regPwd = document.getElementById('regPwd');
+            const regPwd2 = document.getElementById('regPwd2');
+            regPwd.value = pass;
+            regPwd2.value = pass;
+            checkStrength(pass);
+            toast('Password otomatis dibuat', '#10b981');
+        }
+
+        /* ==========================================
+         -  BUTTON LOADING STATE
+        =========================================== */
+        function setLoading(btnId, loading, text = '') {
+            const btn = document.getElementById(btnId);
+            if (loading) {
+                btn.disabled = true;
+                btn.innerHTML = `<div class="spinner"></div>`;
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = text;
+            }
+        }
+
+        /* ==========================================
+         -  RATE LIMITING & LOCKOUT
+        =========================================== */
+        const MAX_ATTEMPTS = 5;
+        const LOCKOUT_MS = 2 * 60 * 1000; // 2 menit
+
+        function getAttempts(email) {
+            try { return JSON.parse(localStorage.getItem('qn_attempts_' + btoa(email)) || '{"count":0,"lockedUntil":0}'); }
+            catch { return { count: 0, lockedUntil: 0 }; }
+        }
+        function setAttempts(email, data) {
+            localStorage.setItem('qn_attempts_' + btoa(email), JSON.stringify(data));
+        }
+        function resetAttempts(email) {
+            localStorage.removeItem('qn_attempts_' + btoa(email));
+        }
+
+        function isLocked(email) {
+            const a = getAttempts(email);
+            if (a.lockedUntil && Date.now() < a.lockedUntil) return a.lockedUntil;
+            return false;
+        }
+
+        function recordFailedAttempt(email) {
+            const a = getAttempts(email);
+            a.count++;
+            if (a.count >= MAX_ATTEMPTS) {
+                a.lockedUntil = Date.now() + LOCKOUT_MS;
+                a.count = 0;
+            }
+            setAttempts(email, a);
+            return a;
+        }
+
+        // Countdown timer for lockout display
+        let lockTimer = null;
+        function showLockCountdown(until) {
+            clearInterval(lockTimer);
+            const btn = document.getElementById('loginBtn');
+            lockTimer = setInterval(() => {
+                const remaining = Math.ceil((until - Date.now()) / 1000);
+                if (remaining <= 0) {
+                    clearInterval(lockTimer);
+                    btn.disabled = false;
+                    btn.innerHTML = 'Masuk Sekarang';
+                    toast('Kamu sudah bisa mencoba lagi', '#10b981');
+                    return;
+                }
+                const m = Math.floor(remaining / 60);
+                const s = remaining % 60;
+                btn.disabled = true;
+                btn.innerHTML = `🔹 Tunggu ${m}:${s.toString().padStart(2, '0')}`;
+            }, 1000);
+        }
+
+        /* ==========================================
+         -  LOGIN HANDLER
+        =========================================== */
+        function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+            const pwd = document.getElementById('loginPwd').value;
+            let ok = true;
+
+            ok = setErr('loginEmail', 'loginEmailErr', !EMAIL_RE.test(email)) && ok;
+            ok = setErr('loginPwd', 'loginPwdErr', pwd.length < 1) && ok;
+            if (!ok) { vibrate(30); return; }
+
+            // Cek apakah sedang dikunci
+            const locked = isLocked(email);
+            if (locked) {
+                showLockCountdown(locked);
+                toast('Terlalu banyak percobaan. Tunggu sebentar.', '#ef4444');
+                vibrate([60, 30, 60]);
+                return;
+            }
+
+            setLoading('loginBtn', true);
+
+            setTimeout(() => {
+                const users = JSON.parse(localStorage.getItem('qn_users') || '{}');
+                const user = users[email];
+
+                // -- Akun tidak ditemukan --
+                if (!user) {
+                    recordFailedAttempt('__unknown__' + email);
+                    setLoading('loginBtn', false, 'Masuk Sekarang');
+                    setErr('loginEmail', 'loginEmailErr', true);
+                    document.getElementById('loginEmailErr').textContent = '? Email belum terdaftar. Silakan daftar dulu.';
+                    toast('Akun tidak ditemukan', '#ef4444');
+                    vibrate([40, 20, 40]);
+                    return;
+                }
+
+                // -- Kata sandi salah --
+                if (user.password !== hashSimple(pwd)) {
+                    const attempt = recordFailedAttempt(email);
+                    const sisa = MAX_ATTEMPTS - attempt.count;
+                    setLoading('loginBtn', false, 'Masuk Sekarang');
+                    setErr('loginPwd', 'loginPwdErr', true);
+
+                    if (attempt.lockedUntil) {
+                        // Baru saja dikunci
+                        document.getElementById('loginPwdErr').textContent = `? Akun dikunci 2 menit karena terlalu banyak percobaan`;
+                        toast('Akun terkunci 2 menit!', '#ef4444');
+                        showLockCountdown(attempt.lockedUntil);
+                    } else {
+                        document.getElementById('loginPwdErr').textContent =
+                            `? Kata sandi salah. Sisa ${sisa} percobaan`;
+                        toast(`Kata sandi salah - sisa ${sisa} percobaan`, '#ef4444');
+                    }
+                    vibrate([40, 20, 40]);
+                    return;
+                }
+
+                // -- Login berhasil --
+                resetAttempts(email);
+                if (document.getElementById('rememberMe').checked) {
+                    localStorage.setItem('qn_remember', email);
+                    localStorage.setItem('qn_remember_until', String(Date.now() + (30 * 24 * 60 * 60 * 1000)));
+                } else {
+                    localStorage.removeItem('qn_remember');
+                    localStorage.removeItem('qn_remember_until');
+                }
+                doLoginSuccess(email, user.name);
+            }, 700);
+        }
+
+        function doLoginSuccess(email, name) {
+            localStorage.setItem('qn_isGuest', 'false');
+            localStorage.setItem('qn_email', email);
+            localStorage.setItem('qn_name', name);
+            // Backwards compat
+            localStorage.setItem('currentUser', email);
+            localStorage.setItem('currentUserName', name);
+            localStorage.setItem('isGuest', 'false');
+
+            vibrate([50, 30, 50]);
+            toast('? Selamat datang, ' + name + '!', '#10b981');
+            setTimeout(() => { window.location.href = 'index.html'; }, 800);
+        }
+
+        /* ==========================================
+         -  GUEST LOGIN
+        =========================================== */
+        function loginAsGuest() {
+            localStorage.setItem('qn_isGuest', 'true');
+            localStorage.setItem('isGuest', 'true');
+            localStorage.removeItem('currentUser');
+            localStorage.setItem('currentUserName', 'Tamu');
+            localStorage.setItem('qn_name', 'Tamu');
+
+            const btn = document.querySelector('.btn-ghost');
+            btn.innerHTML = '<div class="spinner"></div>';
+            btn.disabled = true;
+
+            vibrate(30);
+            toast('Masuk sebagai tamu...', '#6b7280');
+            setTimeout(() => { window.location.href = 'index.html'; }, 700);
+        }
+
+        /* ==========================================
+         -  REGISTER HANDLER
+        =========================================== */
+        function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim().toLowerCase();
+            const pwd = document.getElementById('regPwd').value;
+            const pwd2 = document.getElementById('regPwd2').value;
+            let ok = true;
+
+            ok = setErr('regName', 'regNameErr', name.length < 2) && ok;
+            ok = setErr('regEmail', 'regEmailErr', !EMAIL_RE.test(email)) && ok;
+            ok = setErr('regPwd', 'regPwdErr', pwd.length < 8) && ok;
+            ok = setErr('regPwd', 'regPwdErr', !isPasswordPolicyValid(pwd)) && ok;
+            const pwdMatch = pwd === pwd2 && pwd2.length > 0;
+            ok = setErr('regPwd2', 'regPwd2Err', !pwdMatch) && ok;
+            if (!ok) { vibrate(30); return; }
+
+            setLoading('registerBtn', true);
+
+            setTimeout(() => {
+                const users = JSON.parse(localStorage.getItem('qn_users') || '{}');
+
+                // Cek duplikat email
+                if (users[email]) {
+                    setLoading('registerBtn', false, 'Buat Akun Sekarang');
+                    setErr('regEmail', 'regEmailErr', true);
+                    document.getElementById('regEmailErr').textContent = '? Email sudah terdaftar. Masuk saja!';
+                    toast('Email ini sudah terdaftar', '#ef4444');
+                    vibrate([40, 20, 40]);
+                    return;
+                }
+
+                // Simpan user baru - key = email lowercase
+                users[email] = {
+                    name,
+                    email,
+                    password: hashSimple(pwd),
+                    joinedAt: new Date().toISOString()
+                };
+                localStorage.setItem('qn_users', JSON.stringify(users));
+
+                toast('✅ Akun berhasil dibuat!', '#10b981');
+                doLoginSuccess(email, name);
+            }, 900);
+        }
+
+        /* ==========================================
+         -  FORGOT PASSWORD HANDLER
+        =========================================== */
+        function handleForgot(e) {
+            e.preventDefault();
+            const email = document.getElementById('forgotEmail').value.trim().toLowerCase();
+            if (!setErr('forgotEmail', 'forgotEmailErr', !EMAIL_RE.test(email))) {
+                vibrate(30); return;
+            }
+
+            setLoading('forgotBtn', true);
+
+            setTimeout(() => {
+                const users = JSON.parse(localStorage.getItem('qn_users') || '{}');
+                setLoading('forgotBtn', false, 'Kirim Tautan Pemulihan');
+                if (!users[email]) {
+                    setErr('forgotEmail', 'forgotEmailErr', true);
+                    document.getElementById('forgotEmailErr').textContent = '? Email ini belum terdaftar';
+                    toast('Email tidak ditemukan', '#ef4444');
+                    return;
+                }
+
+                document.getElementById('forgotSuccessMsg').textContent =
+                    `Instruksi pemulihan dikirim ke ${email}`;
+                vibrate([50, 30, 50]);
+                switchView('vForgotSuccess');
+            }, 1200);
+        }
+
+        function isPasswordPolicyValid(pwd) {
+            return pwd.length >= 8 && /[A-Z]/.test(pwd) && /[0-9]/.test(pwd) && /[^A-Za-z0-9]/.test(pwd);
+        }
+
+        /* ==========================================
+         -  SIMPLE HASH (NOT for real production)
+         -  Replace with actual bcrypt/server auth!
+        =========================================== */
+        function hashSimple(str) {
+            let h = 0;
+            for (let i = 0; i < str.length; i++) {
+                const c = str.charCodeAt(i);
+                h = ((h << 5) - h) + c; h |= 0;
+            }
+            return h.toString(36);
+        }
+
+        /* ==========================================
+         -  TOAST
+        =========================================== */
+        function toast(msg, color = '#10b981') {
+            const wrap = document.getElementById('toastWrap');
+            const t = document.createElement('div');
+            t.className = 'toast';
+            t.innerHTML = `<div class="toast-dot" style="background:${color}"></div><span>${msg}</span>`;
+            wrap.appendChild(t);
+            const sr = document.getElementById('srAnnounce');
+            if (sr) sr.textContent = msg;
+            requestAnimationFrame(() => setTimeout(() => t.classList.add('show'), 10));
+            setTimeout(() => {
+                t.classList.remove('show');
+                setTimeout(() => t.remove(), 320);
+            }, 3000);
+        }
+
+        /* ==========================================
+         -  VIBRATION
+        =========================================== */
+        function vibrate(p = 30) {
+            if ('vibrate' in navigator) navigator.vibrate(p);
+        }
+
+        /* ==========================================
+         -  AUTO-FILL REMEMBERED EMAIL
+        =========================================== */
+        const remembered = localStorage.getItem('qn_remember');
+        const rememberUntil = Number(localStorage.getItem('qn_remember_until') || 0);
+        if (remembered && rememberUntil > Date.now()) {
+            const el = document.getElementById('loginEmail');
+            if (el) { el.value = remembered; document.getElementById('rememberMe').checked = true; }
+            const quickUserBox = document.getElementById('quickUserBox');
+            const quickUserBtn = document.getElementById('quickUserBtn');
+            quickUserBox.classList.add('show');
+            quickUserBtn.textContent = `? Gunakan akun terakhir: ${remembered}`;
+        } else {
+            localStorage.removeItem('qn_remember');
+            localStorage.removeItem('qn_remember_until');
+        }
+
+        function useRememberedEmail() {
+            const rememberedEmail = localStorage.getItem('qn_remember');
+            if (!rememberedEmail) return;
+            document.getElementById('loginEmail').value = rememberedEmail;
+            document.getElementById('loginPwd').focus();
+            toast('Email akun terakhir dimasukkan', '#10b981');
+        }
+
+        function toggleTheme() {
+            if (typeof window.__quizNationApplyGlobalPreferences === 'function') { window.__quizNationApplyGlobalPreferences(); }
+            const isLight = document.body.classList.toggle('theme-light');
+            localStorage.setItem('qn_theme', isLight ? 'light' : 'dark');
+            document.getElementById('themeToggle').textContent = isLight ? '🌙 Tema: Terang' : '🌙 Tema: Gelap';
+            document.getElementById('themeColorMeta').setAttribute('content', isLight ? '#f8efef' : '#0a1120');
+        }
+
+        function toggleMotion() {
+            const reduced = document.body.classList.toggle('reduce-motion');
+            localStorage.setItem('qn_reduce_motion', reduced ? '1' : '0');
+            document.getElementById('motionToggle').textContent = reduced ? '🏃 Gerak: Minimal' : '🏃 Gerak: Aktif';
+        }
+
+        function updateRegisterProgress() {
+            const fields = [
+                document.getElementById('regName').value.trim().length >= 2,
+                EMAIL_RE.test(document.getElementById('regEmail').value.trim()),
+                isPasswordPolicyValid(document.getElementById('regPwd').value),
+                document.getElementById('regPwd2').value.length > 0 &&
+                document.getElementById('regPwd').value === document.getElementById('regPwd2').value
+            ];
+            const done = fields.filter(Boolean).length;
+            const pct = Math.round((done / fields.length) * 100);
+            document.getElementById('registerMeter').style.width = pct + '%';
+            document.getElementById('registerMeterText').textContent = `Lengkapi formulir: ${pct}%`;
+        }
+
+        function watchCaps(inputId, warningId) {
+            const inp = document.getElementById(inputId);
+            const warning = document.getElementById(warningId);
+            inp.addEventListener('keyup', (e) => {
+                warning.classList.toggle('show', e.getModifierState && e.getModifierState('CapsLock'));
+            });
+            inp.addEventListener('keydown', (e) => {
+                warning.classList.toggle('show', e.getModifierState && e.getModifierState('CapsLock'));
+            });
+            inp.addEventListener('blur', () => warning.classList.remove('show'));
+        }
+
+        /* ==========================================
+         -  REAL-TIME VALIDATION (blur events)
+        =========================================== */
+        document.getElementById('loginEmail').addEventListener('blur', function () {
+            if (this.value) setErr('loginEmail', 'loginEmailErr', !EMAIL_RE.test(this.value.trim()));
+            else clearState('loginEmail');
+        });
+        document.getElementById('regEmail').addEventListener('blur', function () {
+            if (this.value) setErr('regEmail', 'regEmailErr', !EMAIL_RE.test(this.value.trim()));
+            else clearState('regEmail');
+            updateRegisterProgress();
+        });
+        document.getElementById('regPwd').addEventListener('blur', function () {
+            if (this.value) setErr('regPwd', 'regPwdErr', !isPasswordPolicyValid(this.value));
+            else clearState('regPwd');
+            updateRegisterProgress();
+        });
+        document.getElementById('regPwd2').addEventListener('blur', function () {
+            const p = document.getElementById('regPwd').value;
+            if (this.value) setErr('regPwd2', 'regPwd2Err', this.value !== p);
+            else clearState('regPwd2');
+            updateRegisterProgress();
+        });
+        document.getElementById('regName').addEventListener('blur', function () {
+            if (this.value) setErr('regName', 'regNameErr', this.value.trim().length < 2);
+            else clearState('regName');
+            updateRegisterProgress();
+        });
+
+        ['regName', 'regEmail', 'regPwd', 'regPwd2'].forEach(id => {
+            document.getElementById(id).addEventListener('input', updateRegisterProgress);
+        });
+
+        /* ==========================================
+         -  ENTER KEY SUPPORT ON FORMS
+        =========================================== */
+        ['loginEmail', 'loginPwd'].forEach(id => {
+            document.getElementById(id).addEventListener('keydown', e => {
+                if (e.key === 'Enter') handleLogin(e);
+            });
+        });
+        ['regName', 'regEmail', 'regPwd', 'regPwd2'].forEach(id => {
+            document.getElementById(id).addEventListener('keydown', e => {
+                if (e.key === 'Enter') handleRegister(e);
+            });
+        });
+        document.getElementById('forgotEmail').addEventListener('keydown', e => {
+            if (e.key === 'Enter') handleForgot(e);
+        });
+
+        // Boot preferences
+        if (localStorage.getItem('qn_theme') === 'light') {
+            document.body.classList.add('theme-light');
+            document.getElementById('themeToggle').textContent = '🌙 Tema: Terang';
+            document.getElementById('themeColorMeta').setAttribute('content', '#f8efef');
+        }
+        if (localStorage.getItem('qn_reduce_motion') === '1') {
+            document.body.classList.add('reduce-motion');
+            document.getElementById('motionToggle').textContent = '🏃 Gerak: Minimal';
+        }
+
+        watchCaps('loginPwd', 'loginCaps');
+        watchCaps('regPwd', 'regCaps');
+        updateRegisterProgress();
+
+        /* Auto-redirect jika sudah login */
+        if (localStorage.getItem('qn_email') || localStorage.getItem('currentUser')) {
+            // Uncomment to auto-redirect if already logged in:
+            // window.location.href = 'index.html';
+        }
+    </script>
+</body>
+
+</html>
+
+

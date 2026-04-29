@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Vocabulary in Context - Library SNBT 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        /* Mobile Optimization */
+        html, body { max-width: 100%; overflow-x: hidden; }
+        * { -webkit-tap-highlight-color: transparent !important; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+        :root { --accent: #2563eb; --accent2: #06b6d4; --bg: #f0f2f8; --surface: rgba(255,255,255,0.72); --border: rgba(0,0,0,0.08); --text: #1a1a2e; --text2: #4b5563; --text3: #9ca3af; --glow: rgba(124,58,237,0.18); --radius: 20px }
+        body.dark { --bg: #050a15; --surface: rgba(255,255,255,0.055); --border: rgba(255,255,255,0.09); --text: #f0edff; --text2: rgba(240,237,255,0.65); --text3: rgba(240,237,255,0.35); --glow: rgba(124,58,237,0.28) }
+        html { scroll-behavior: smooth }
+        body { font-family: 'Bricolage Grotesque', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background .4s, color .4s; overflow-x: hidden }
+        .noise-overlay { position: fixed; inset: 0; z-index: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; opacity: .35 }
+        .topnav { position: sticky; top: 0; z-index: 100; background: var(--surface); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 16px 40px; display: flex; align-items: center; gap: 16px }
+        .topnav a { text-decoration: none; color: var(--accent); font-weight: 700; font-size: .9rem; display: flex; align-items: center; gap: 6px; transition: all .2s }
+        .topnav a:hover { gap: 10px }
+        .topnav-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--text); margin-left: auto }
+        .theme-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; width: 36px; height: 36px; cursor: pointer; font-size: 1rem; display: grid; place-items: center; transition: all .2s; margin-left: 8px }
+        .theme-btn:hover { border-color: var(--accent) }
+        .wrapper { max-width: 900px; margin: 0 auto; padding: 40px 30px 80px; position: relative; z-index: 1 }
+        .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(251,146,60,.12); color: #f59e0b; border: 1px solid rgba(251,146,60,.25); border-radius: 30px; padding: 5px 14px; font-size: .72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px }
+        .page-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: var(--text); line-height: 1.15; margin-bottom: 14px }
+        .page-title .grad { background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent }
+        .page-desc { font-size: 1.05rem; color: var(--text2); line-height: 1.8; margin-bottom: 40px; max-width: 700px }
+        .toc { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 40px }
+        .toc-title { font-weight: 800; font-size: .9rem; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px }
+        .toc ol { padding-left: 20px; display: flex; flex-direction: column; gap: 6px }
+        .toc li { color: var(--text2); font-size: .88rem }
+        .toc a { color: var(--accent); text-decoration: none; font-weight: 600; transition: color .2s }
+        .toc a:hover { color: var(--accent2) }
+        .section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 24px; transition: all .3s }
+        .section:hover { box-shadow: 0 10px 40px var(--glow); border-color: rgba(124,58,237,.2) }
+        .section h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 10px }
+        .section h3 { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin: 20px 0 10px }
+        .section p, .section li { font-size: .92rem; color: var(--text2); line-height: 1.85 }
+        .section ul, .section ol { padding-left: 20px; margin: 10px 0 }
+        .section li { margin-bottom: 6px }
+        .example { background: rgba(124,58,237,.06); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 16px 0; font-size: .88rem; color: var(--text2); line-height: 1.75 }
+        .example strong { color: var(--text) }
+        .tip { background: rgba(6,182,212,.08); border-left: 3px solid var(--accent2); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 16px 0; font-size: .88rem; color: var(--text2); line-height: 1.75 }
+        .tip strong { color: var(--accent2) }
+        .warning { background: rgba(244,63,94,.08); border-left: 3px solid #f43f5e; border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 16px 0; font-size: .88rem; color: var(--text2); line-height: 1.75 }
+        .warning strong { color: #f43f5e }
+        .nav-buttons { display: flex; gap: 14px; margin-top: 40px; flex-wrap: wrap }
+        .nav-btn { flex: 1; min-width: 200px; padding: 16px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; text-decoration: none; color: var(--text); font-weight: 700; font-size: .9rem; display: flex; align-items: center; gap: 10px; transition: all .3s }
+        .nav-btn:hover { border-color: var(--accent); box-shadow: 0 8px 24px var(--glow); transform: translateY(-2px) }
+        .nav-btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; border: none; box-shadow: 0 4px 16px rgba(124,58,237,.4) }
+        .nav-btn.primary:hover { box-shadow: 0 8px 28px rgba(124,58,237,.5); transform: translateY(-3px) }
+        .nav-btn-label { font-size: .7rem; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: .5px }
+        .nav-btn.primary .nav-btn-label { color: rgba(255,255,255,.7) }
+        footer { text-align: center; color: var(--text3); font-size: .8rem; padding: 20px; border-top: 1px solid var(--border); margin-top: 40px }
+        @media(max-width:768px) { .topnav { padding: 14px 16px } .wrapper { padding: 24px 16px 60px } .section { padding: 20px } .nav-buttons { flex-direction: column } }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">&#8592; Kembali ke Library</a>
+        <span class="topnav-title">Vocabulary in Context</span>
+        <button class="theme-btn" onclick="document.body.classList.toggle('dark')">&#127769;</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">Literasi Bahasa Inggris</div>
+        <h1 class="page-title">Vocabulary in <span class="grad">Context</span></h1>
+        <p class="page-desc">Tebak makna kata dari konteks kalimat, sinonim, antonim, dan word formation. Kuasai teknik-teknik yang membuat soal vocabulary SNBT terasa mudah.</p>
+
+        <div class="toc">
+            <div class="toc-title">&#128203; Daftar Isi</div>
+            <ol>
+                <li><a href="#context">The Power of Context Clues</a></li>
+                <li><a href="#roots">Decoding via Roots &amp; Affixes</a></li>
+                <li><a href="#synonym">Synonyms Replacement Test</a></li>
+                <li><a href="#idioms">Idiomatic Phrases &amp; Figurative Meanings</a></li>
+                <li><a href="#collocation">Collocations &amp; Word Families</a></li>
+                <li><a href="#tips">Strategi Menjawab SNBT</a></li>
+            </ol>
+        </div>
+
+        <div class="section" id="context">
+            <h2>&#128293; 1. The Power of Context Clues</h2>
+            <p>SNBT English will test advanced vocabulary (C1/C2 CEFR level). You do not need a dictionary; the sentence surrounding the word holds the secret. There are <strong>5 types</strong> of context clues:</p>
+            
+            <h3>A. Definition Clue</h3>
+            <p>The unfamiliar word is directly followed by its explanation, usually set off by a comma, dash, or "which means".</p>
+            <div class="example">
+                <strong>Example:</strong> "The CEO was a <u>misanthrope</u>, <b>a person who deeply distrusted human interaction</b>."<br>
+                <strong>Analysis:</strong> The definition is literally given after the comma.<br><br>
+                <strong>Signal words:</strong> <em>which is, that is, in other words, means, refers to, also known as</em>
+            </div>
+            
+            <h3>B. Synonym/Restatement Clue</h3>
+            <p>A nearby word or phrase has a similar meaning to the unknown word.</p>
+            <div class="example">
+                <strong>Example:</strong> "The politician's <u>candid</u> remarks surprised everyone; his <b>honest and straightforward</b> response was unusual."<br>
+                <strong>Analysis:</strong> "honest and straightforward" restates what "candid" means.
+            </div>
+
+            <h3>C. Antonym/Contrast Clue</h3>
+            <p>The sentence shows a contrast, meaning the unknown word is the <strong>opposite</strong> of another word nearby.</p>
+            <div class="example">
+                <strong>Example:</strong> "<em>Although</em> his brother was outgoing, he was highly <u>introverted</u> and preferred solitude."<br>
+                <strong>Signal words:</strong> <em>although, however, but, unlike, whereas, on the other hand, in contrast, nevertheless, yet, while</em>
+            </div>
+
+            <h3>D. Example Clue</h3>
+            <p>Specific examples are given that help illustrate the meaning of the word.</p>
+            <div class="example">
+                <strong>Example:</strong> "The archaeologist discovered several <u>artifacts</u>, <b>such as ancient pottery, bronze tools, and golden jewelry</b>."<br>
+                <strong>Signal words:</strong> <em>such as, for example, for instance, including, like</em>
+            </div>
+
+            <h3>E. Inference/Logic Clue</h3>
+            <p>No direct definition is given. You must use the overall sentence logic and tone to deduce the meaning.</p>
+            <div class="example">
+                <strong>Example:</strong> "After months of drought, the <u>parched</u> farmland yielded almost no harvest."<br>
+                <strong>Analysis:</strong> Drought causes dryness &#8594; parched = extremely dry.
+            </div>
+
+            <div class="warning">
+                <strong>&#128721; Common Trap:</strong> SNBT will offer a "common" meaning of a word that doesn't fit the context. For example, "fair" could mean "beautiful," "just," or "light-skinned." Always choose the meaning that fits THIS specific passage!
+            </div>
+        </div>
+
+        <div class="section" id="roots">
+            <h2>&#9889; 2. Decoding via Roots &amp; Affixes</h2>
+            <p>Many English words are built from Latin and Greek roots. Understanding word parts lets you decode unfamiliar words like a puzzle.</p>
+            
+            <h3>A. Common Prefixes (Awalan)</h3>
+            <ul>
+                <li><strong>Anti-</strong> (against): <em>antibody, antisocial, antidote</em></li>
+                <li><strong>Pre-</strong> (before): <em>predict, precaution, prerequisite</em></li>
+                <li><strong>Post-</strong> (after): <em>postgraduate, postwar, postpone</em></li>
+                <li><strong>Sub-</strong> (under): <em>submarine, subconscious, subordinate</em></li>
+                <li><strong>Super-/Sur-</strong> (above): <em>supernatural, surplus, surpass</em></li>
+                <li><strong>Mis-</strong> (wrong): <em>mislead, misinterpret, misconception</em></li>
+                <li><strong>Un-/In-/Im-/Il-/Ir-</strong> (not): <em>unable, invisible, impossible, illegal, irregular</em></li>
+                <li><strong>Re-</strong> (again): <em>rebuild, reconsider, rewrite</em></li>
+                <li><strong>Trans-</strong> (across): <em>transport, transform, translate</em></li>
+                <li><strong>Hyper-</strong> (excessive): <em>hyperactive, hypersensitive</em></li>
+            </ul>
+
+            <h3>B. Common Suffixes (Akhiran)</h3>
+            <ul>
+                <li><strong>-tion/-sion</strong> (noun): <em>education, decision, conclusion</em></li>
+                <li><strong>-ment</strong> (noun - result): <em>achievement, development, government</em></li>
+                <li><strong>-ness</strong> (noun - quality): <em>happiness, darkness, awareness</em></li>
+                <li><strong>-ful</strong> (adjective - full of): <em>beautiful, grateful, powerful</em></li>
+                <li><strong>-less</strong> (adjective - without): <em>homeless, careless, meaningless</em></li>
+                <li><strong>-ous/-ious</strong> (adjective): <em>dangerous, ambitious, conscious</em></li>
+                <li><strong>-able/-ible</strong> (adjective - capable): <em>readable, flexible, responsible</em></li>
+                <li><strong>-ize/-ise</strong> (verb - to cause): <em>modernize, realize, emphasize</em></li>
+                <li><strong>-ly</strong> (adverb): <em>quickly, carefully, significantly</em></li>
+            </ul>
+
+            <h3>C. Key Latin/Greek Roots</h3>
+            <ul>
+                <li><strong>Spect/Spec</strong> (to see): <em>spectator, inspect, perspective, spectrum</em></li>
+                <li><strong>Dict</strong> (to speak): <em>dictation, predict, contradict, verdict</em></li>
+                <li><strong>Chron</strong> (time): <em>chronological, chronic, synchronize</em></li>
+                <li><strong>Graph/Gram</strong> (to write): <em>biography, telegram, photograph</em></li>
+                <li><strong>Port</strong> (to carry): <em>transport, export, portable, report</em></li>
+                <li><strong>Duct/Duc</strong> (to lead): <em>conduct, reduce, introduce, educate</em></li>
+                <li><strong>Vert/Vers</strong> (to turn): <em>introvert, reverse, convert, diverse</em></li>
+                <li><strong>Bene</strong> (good): <em>benefit, benevolent, beneficial</em></li>
+                <li><strong>Mal</strong> (bad): <em>malfunction, malicious, malnutrition</em></li>
+            </ul>
+
+            <div class="tip">
+                <strong>&#128161; Power Combo:</strong> Decode complex words by combining prefix + root + suffix!<br>
+                <em>Un-predict-able</em> = not + to tell beforehand + capable of = cannot be predicted<br>
+                <em>Mis-interpret-ation</em> = wrong + to explain + process = wrong explanation
+            </div>
+        </div>
+
+        <div class="section" id="synonym">
+            <h2>&#129504; 3. Synonyms Replacement Test</h2>
+            <p>The most common vocabulary question format: <em>"The word 'obsolete' in paragraph 2 is closest in meaning to..."</em></p>
+            
+            <h3>The 3-Step Replacement Method</h3>
+            <ol>
+                <li><strong>Read the original sentence</strong> containing the target word and understand its overall meaning/tone.</li>
+                <li><strong>Replace the target word</strong> with each answer option, one by one.</li>
+                <li><strong>Check if the sentence</strong> still makes logical sense and maintains the same tone/meaning.</li>
+            </ol>
+
+            <div class="example">
+                <strong>Passage:</strong> "The company's <u>obsolete</u> equipment was replaced with modern technology."<br><br>
+                <strong>Options:</strong><br>
+                A. expensive &#8594; possible but doesn't explain WHY it was replaced<br>
+                B. outdated &#8594; &#9989; makes perfect sense!<br>
+                C. efficient &#8594; contradicts the logic of replacement<br>
+                D. portable &#8594; no logical connection<br><br>
+                <strong>Answer: B. outdated</strong>
+            </div>
+
+            <h3>Common SNBT Academic Vocabulary</h3>
+            <ul>
+                <li><strong>Ubiquitous</strong> = present everywhere, omnipresent</li>
+                <li><strong>Exacerbate</strong> = to make worse, worsen, aggravate</li>
+                <li><strong>Mitigate</strong> = to make less severe, reduce, alleviate</li>
+                <li><strong>Pragmatic</strong> = practical, realistic, sensible</li>
+                <li><strong>Ambiguous</strong> = unclear, open to interpretation, vague</li>
+                <li><strong>Unprecedented</strong> = never done before, unparalleled, novel</li>
+                <li><strong>Detrimental</strong> = harmful, damaging, injurious</li>
+                <li><strong>Facilitate</strong> = to make easier, assist, help</li>
+                <li><strong>Substantial</strong> = considerable, significant, large</li>
+                <li><strong>Inherent</strong> = built-in, innate, natural, intrinsic</li>
+                <li><strong>Coherent</strong> = logical, consistent, well-structured</li>
+                <li><strong>Elicit</strong> = to draw out, provoke, evoke</li>
+                <li><strong>Scrutinize</strong> = to examine closely, inspect carefully</li>
+                <li><strong>Advocate</strong> = to support, champion, promote</li>
+                <li><strong>Compelling</strong> = convincing, persuasive, powerful</li>
+            </ul>
+
+            <div class="warning">
+                <strong>&#128721; Beware of "False Friends":</strong> Some words look similar but have different meanings!<br>
+                &#8226; <em>Comprehensive</em> &#8800; "comprehensible" (thorough vs. understandable)<br>
+                &#8226; <em>Economic</em> &#8800; "economical" (related to economy vs. cost-saving)<br>
+                &#8226; <em>Historic</em> &#8800; "historical" (important in history vs. related to history)<br>
+                &#8226; <em>Sensible</em> &#8800; "sensitive" (practical vs. easily affected)
+            </div>
+        </div>
+
+        <div class="section" id="idioms">
+            <h2>&#128142; 4. Idiomatic Phrases &amp; Figurative Meanings</h2>
+            <p>SNBT passages may contain idiomatic expressions, phrasal verbs, or figurative language. The key is to understand them <strong>in context</strong>, not literally.</p>
+            
+            <h3>A. Common Phrasal Verbs in Academic Texts</h3>
+            <ul>
+                <li><strong>carry out</strong> = to perform, execute ("Scientists carried out the experiment.")</li>
+                <li><strong>come up with</strong> = to think of, devise ("She came up with a solution.")</li>
+                <li><strong>look into</strong> = to investigate, examine ("Police are looking into the case.")</li>
+                <li><strong>point out</strong> = to indicate, highlight ("The report points out several flaws.")</li>
+                <li><strong>give up</strong> = to abandon, stop trying ("He gave up his research.")</li>
+                <li><strong>put off</strong> = to postpone, delay ("The meeting was put off.")</li>
+                <li><strong>bring about</strong> = to cause, result in ("The policy brought about changes.")</li>
+                <li><strong>break down</strong> = to analyze/decompose ("Let's break down the data.")</li>
+                <li><strong>rule out</strong> = to eliminate, exclude ("Doctors ruled out heart disease.")</li>
+                <li><strong>account for</strong> = to explain, constitute ("This accounts for 40% of emissions.")</li>
+            </ul>
+
+            <h3>B. Common Idioms &amp; Fixed Expressions</h3>
+            <ul>
+                <li><strong>A blessing in disguise</strong> = something bad that turns out good</li>
+                <li><strong>The tip of the iceberg</strong> = a small visible part of a much larger problem</li>
+                <li><strong>A double-edged sword</strong> = something with both advantages and disadvantages</li>
+                <li><strong>Break new ground</strong> = to innovate, do something never done before</li>
+                <li><strong>Shed light on</strong> = to clarify, explain</li>
+                <li><strong>At the expense of</strong> = sacrificing something for another</li>
+                <li><strong>In the wake of</strong> = as a consequence of, following</li>
+                <li><strong>Pave the way for</strong> = to create conditions for something to happen</li>
+            </ul>
+
+            <div class="tip">
+                <strong>&#128161; Strategy for Unknown Idioms:</strong> If you encounter an idiom you've never seen:<br>
+                1. Read surrounding sentences to determine the <strong>tone</strong> (positive/negative/neutral).<br>
+                2. Look at the <strong>result or consequence</strong> mentioned after the idiom.<br>
+                3. Choose the answer option that matches the tone and logical flow.
+            </div>
+
+            <h3>C. Figurative Language</h3>
+            <ul>
+                <li><strong>Metaphor:</strong> "The classroom was a <em>zoo</em>." (chaotic, not literally a zoo)</li>
+                <li><strong>Simile:</strong> "She runs <em>like the wind</em>." (very fast)</li>
+                <li><strong>Hyperbole:</strong> "I've told you a <em>million times</em>." (many times, not literally)</li>
+                <li><strong>Personification:</strong> "The <em>wind whispered</em> through the trees." (wind doesn't whisper)</li>
+            </ul>
+        </div>
+
+        <div class="section" id="collocation">
+            <h2>&#128218; 5. Collocations &amp; Word Families</h2>
+            <p>Collocations are words that naturally go together. SNBT often tests whether you know which words pair correctly.</p>
+
+            <h3>Common Academic Collocations</h3>
+            <ul>
+                <li><strong>make</strong> a decision / discovery / progress / contribution</li>
+                <li><strong>do</strong> research / damage / harm / justice</li>
+                <li><strong>take</strong> measures / action / responsibility / into account</li>
+                <li><strong>pay</strong> attention / tribute / a price</li>
+                <li><strong>draw</strong> a conclusion / attention / a comparison</li>
+                <li><strong>raise</strong> awareness / concerns / questions / funds</li>
+                <li><strong>pose</strong> a threat / challenge / question / risk</li>
+                <li><strong>reach</strong> a consensus / agreement / conclusion</li>
+            </ul>
+
+            <div class="example">
+                <strong>SNBT Question Type:</strong> "Which word best completes the sentence?"<br>
+                "The government needs to ___ immediate action to address climate change."<br>
+                A. do &nbsp; B. make &nbsp; C. take &nbsp; D. have<br>
+                <strong>Answer: C. take</strong> (take action is the correct collocation)
+            </div>
+
+            <h3>Word Formation Patterns</h3>
+            <ul>
+                <li><strong>succeed</strong> (v) &#8594; success (n) &#8594; successful (adj) &#8594; successfully (adv)</li>
+                <li><strong>create</strong> (v) &#8594; creation (n) &#8594; creative (adj) &#8594; creatively (adv)</li>
+                <li><strong>develop</strong> (v) &#8594; development (n) &#8594; developmental (adj)</li>
+                <li><strong>signify</strong> (v) &#8594; significance (n) &#8594; significant (adj) &#8594; significantly (adv)</li>
+                <li><strong>analyze</strong> (v) &#8594; analysis (n) &#8594; analytical (adj) &#8594; analytically (adv)</li>
+            </ul>
+        </div>
+        
+        <div class="section" id="tips">
+            <h2>&#127919; 6. Strategi Menjawab SNBT</h2>
+            <ol>
+                <li><strong>Never guess from memory alone.</strong> Don't select a meaning just because it's the most common dictionary definition. Always verify against the specific context!</li>
+                <li><strong>Use the Substitution Test.</strong> Replace the target word with each answer option. The correct answer will maintain both the meaning AND the tone of the original sentence.</li>
+                <li><strong>Look for signal words.</strong> Words like "however," "although," "for example," "in other words" are powerful clues about the relationship between the unknown word and surrounding text.</li>
+                <li><strong>Pay attention to word charge.</strong> Is the overall paragraph positive, negative, or neutral? The unknown word's meaning should match this tone.</li>
+                <li><strong>Break down unfamiliar words.</strong> Use your knowledge of prefixes, roots, and suffixes to make educated guesses.</li>
+                <li><strong>Eliminate obviously wrong options first.</strong> Usually 2 out of 4/5 options can be eliminated quickly, making your final choice easier.</li>
+            </ol>
+            <div class="tip">
+                <strong>&#128161; Time Management:</strong> Vocabulary questions should take 30-45 seconds each. If you're stuck for more than 1 minute, mark your best guess and move on. Your subconscious will continue processing!
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="library.html" class="nav-btn">
+                <div>
+                    <div class="nav-btn-label">&#8592; Kembali</div>Library SNBT
+                </div>
+            </a>
+            <a href="lib-grammar-structure.html" class="nav-btn primary">
+                <div>
+                    <div class="nav-btn-label">Materi Selanjutnya &rarr;</div>Grammar &amp; Structure
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>&copy; 2025 QuizNation &mdash; Library SNBT 2025</footer>
+    <script>if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark')</script>
+</body>
+
+</html>

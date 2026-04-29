@@ -1,0 +1,856 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <title>Dialog & Percakapan Sehari-hari - QuizNation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&display=swap"
+        rel="stylesheet">
+    <style>
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --bg: #f7f2f0;
+            --surface: #fff;
+            --surface2: #efe8e4;
+            --border: #e0d6d0;
+            --text: #1e1614;
+            --text2: #5e4840;
+            --text3: #a08878;
+            --ink: #1e1614;
+            --accent: #c2410c;
+            --accent-mid: #ea580c;
+            --accent-light: #fff7ed;
+            --accent-glow: rgba(194, 65, 12, .12);
+            --teal: #0f766e;
+            --teal-light: #ccfbf1;
+            --blue: #1d4ed8;
+            --blue-light: #dbeafe;
+            --rose: #9f1239;
+            --rose-light: #ffe4e6;
+            --sidebar-w: 260px;
+            --r: 20px;
+            --r-sm: 12px;
+            --shadow: 0 2px 20px rgba(0, 0, 0, .06);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, .09)
+        }
+
+        body.dark {
+            --bg: #100c0a;
+            --surface: #1a1410;
+            --surface2: #221c18;
+            --border: #2e2820;
+            --text: #f4ece8;
+            --text2: #b09880;
+            --text3: #706050;
+            --ink: #f4ece8;
+            --accent-light: rgba(194, 65, 12, .2);
+            --teal-light: rgba(15, 118, 110, .15);
+            --blue-light: rgba(29, 78, 216, .2);
+            --rose-light: rgba(159, 18, 57, .2);
+            --shadow: 0 2px 20px rgba(0, 0, 0, .35);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, .5)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .45);
+            backdrop-filter: blur(4px);
+            z-index: 90;
+            opacity: 0;
+            visibility: hidden;
+            transition: .3s
+        }
+
+        .backdrop.open {
+            opacity: 1;
+            visibility: visible
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-w);
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            z-index: 100;
+            padding: 28px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform .4s cubic-bezier(.4, 0, .2, 1)
+        }
+
+        @media(min-width:1024px) {
+            .sidebar {
+                transform: translateX(0)
+            }
+        }
+
+        .sidebar.open {
+            transform: translateX(0)
+        }
+
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 28px;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .logo-close {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text2);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 8px;
+            line-height: 1
+        }
+
+        @media(max-width:1023px) {
+            .logo-close {
+                display: block
+            }
+        }
+
+        .nav-label {
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--text3);
+            padding: 16px 12px 6px
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--r-sm);
+            text-decoration: none;
+            font-size: .88rem;
+            font-weight: 500;
+            color: var(--text2);
+            transition: .15s
+        }
+
+        .nav-link:hover {
+            background: var(--surface2);
+            color: var(--text)
+        }
+
+        .nav-link.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700
+        }
+
+        .hamburger {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--text);
+            box-shadow: var(--shadow)
+        }
+
+        @media(max-width:1023px) {
+            .hamburger {
+                display: flex
+            }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            transition: .3s
+        }
+
+        .main {
+            flex: 1;
+            margin-left: 0;
+            transition: margin .4s;
+            min-width: 0
+        }
+
+        @media(min-width:1024px) {
+            .main {
+                margin-left: var(--sidebar-w)
+            }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--teal));
+            z-index: 200;
+            transition: width .15s;
+            border-radius: 0 2px 2px 0
+        }
+
+        .hero {
+            padding: 80px 48px 56px;
+            max-width: 840px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: rise .7s .1s cubic-bezier(.16, 1, .3, 1) forwards
+        }
+
+        @media(max-width:768px) {
+            .hero {
+                padding: 72px 24px 40px
+            }
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .8rem;
+            color: var(--text3);
+            margin-bottom: 28px;
+            font-weight: 500
+        }
+
+        .breadcrumb span {
+            color: var(--text2)
+        }
+
+        .module-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 100px;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: .75rem;
+            font-weight: 700;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border: 1px solid rgba(194, 65, 12, .15)
+        }
+
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--text);
+            margin-bottom: 20px;
+            letter-spacing: -.02em
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--accent)
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text2);
+            max-width: 560px
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 36px;
+            flex-wrap: wrap
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .85rem;
+            color: var(--text2);
+            font-weight: 500
+        }
+
+        .stat-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent)
+        }
+
+        .content {
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 0 48px 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px
+        }
+
+        @media(max-width:768px) {
+            .content {
+                padding: 0 20px 80px
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 36px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(24px);
+            transition: box-shadow .3s, transform .3s
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity .6s cubic-bezier(.16, 1, .3, 1), transform .6s cubic-bezier(.16, 1, .3, 1), box-shadow .3s
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md)
+        }
+
+        @media(max-width:768px) {
+            .card {
+                padding: 24px
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: var(--accent-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0
+        }
+
+        .card-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -.01em
+        }
+
+        .card-subtitle {
+            font-size: .82rem;
+            color: var(--text3);
+            margin-top: 2px;
+            font-weight: 500
+        }
+
+        .body-text {
+            font-size: .97rem;
+            line-height: 1.8;
+            color: var(--text2);
+            margin-bottom: 24px
+        }
+
+        .body-text strong {
+            color: var(--text);
+            font-weight: 700
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px
+        }
+
+        .mini-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            transition: .25s;
+            cursor: default
+        }
+
+        .mini-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 20px var(--accent-glow);
+            transform: translateY(-2px)
+        }
+
+        .mini-icon {
+            font-size: 1.4rem;
+            margin-bottom: 12px
+        }
+
+        .mini-title {
+            font-weight: 700;
+            font-size: .9rem;
+            color: var(--text);
+            margin-bottom: 7px
+        }
+
+        .mini-text {
+            font-size: .82rem;
+            line-height: 1.6;
+            color: var(--text2)
+        }
+
+        .mini-text em {
+            font-style: normal;
+            font-weight: 600;
+            color: var(--accent)
+        }
+
+        .example-block {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 12px
+        }
+
+        .ex-label {
+            font-size: .7rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            color: var(--text3);
+            margin-bottom: 10px
+        }
+
+        .ex-text {
+            font-size: .92rem;
+            line-height: 1.8;
+            color: var(--text2)
+        }
+
+        .ex-text strong {
+            color: var(--text)
+        }
+
+        .phonetic {
+            font-family: monospace;
+            background: var(--accent-light);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: .88rem;
+            color: var(--accent);
+            font-weight: 600
+        }
+
+        .highlight-box {
+            background: var(--accent-light);
+            border: 1px solid rgba(194, 65, 12, .18);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px
+        }
+
+        .hl-icon {
+            font-size: 1.05rem;
+            flex-shrink: 0;
+            margin-top: 1px
+        }
+
+        .hl-text {
+            font-size: .87rem;
+            line-height: 1.65;
+            color: var(--accent);
+            font-weight: 500
+        }
+
+        .hl-text strong {
+            font-weight: 700
+        }
+
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px
+        }
+
+        .tip-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 14px 16px;
+            background: var(--surface2);
+            border-radius: 12px;
+            border: 1px solid var(--border)
+        }
+
+        .tip-num {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--accent-light);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .78rem;
+            font-weight: 800;
+            flex-shrink: 0
+        }
+
+        .tip-text {
+            font-size: .88rem;
+            line-height: 1.65;
+            color: var(--text2)
+        }
+
+        .tip-text strong {
+            color: var(--text);
+            font-weight: 700
+        }
+
+        .quiz-card {
+            background: linear-gradient(135deg, #c2410c, #0f766e);
+            border-radius: 20px;
+            padding: 36px;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden
+        }
+
+        .quiz-card::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .05)
+        }
+
+        .quiz-card::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -5%;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .04)
+        }
+
+        .quiz-prompt {
+            font-size: .78rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            opacity: .65;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1
+        }
+
+        .quiz-q {
+            font-family: 'Fraunces', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            position: relative;
+            z-index: 1
+        }
+
+        .q-option {
+            background: rgba(255, 255, 255, .12);
+            border: 1.5px solid rgba(255, 255, 255, .22);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: .85rem;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            transition: .2s;
+            text-align: center;
+            font-family: 'Plus Jakarta Sans', sans-serif
+        }
+
+        .q-option:hover {
+            background: rgba(255, 255, 255, .22);
+            transform: translateY(-1px)
+        }
+
+        .q-option.correct {
+            background: rgba(255, 255, 255, .28);
+            border-color: #fff
+        }
+
+        .q-option.wrong {
+            background: rgba(0, 0, 0, .25);
+            border-color: rgba(255, 100, 100, .5)
+        }
+
+        .quiz-feedback {
+            margin-top: 14px;
+            font-size: .85rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: .3s;
+            position: relative;
+            z-index: 1;
+            line-height: 1.5
+        }
+
+        .quiz-feedback.show {
+            opacity: 1
+        }
+
+        .quiz-next {
+            margin-top: 16px;
+            background: #fff;
+            color: #c2410c;
+            border: none;
+            padding: 11px 26px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: .88rem;
+            cursor: pointer;
+            display: none;
+            transition: .2s;
+            position: relative;
+            z-index: 1;
+            font-family: 'Plus Jakarta Sans', sans-serif
+        }
+
+        .quiz-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .2)
+        }
+
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--text3);
+            font-size: .75rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border)
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 16px
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: .93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: .25s;
+            font-family: 'Plus Jakarta Sans', sans-serif
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-glow)
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: .93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: .25s;
+            font-family: 'Plus Jakarta Sans', sans-serif
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px)
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(20px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="backdrop" id="backdrop" onclick="closeSidebar()"></div>
+    <nav class="sidebar" id="sidebar">
+        <div class="logo">QuizNation <button class="logo-close" onclick="closeSidebar()">✕</button></div>
+        <div class="nav-label">Menu Utama</div><a href="index.html" class="nav-link">📚 Materi</a>
+                    <a href="materi-idiom-slang.html" class="btn-primary">Lanjut: Idiom & Slang 🔹</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        const saved = localStorage.getItem('theme'); if (saved === 'dark') { document.body.classList.add('dark'); document.getElementById('themeBtn').textContent = '🔹' }
+        function toggleTheme() { const d = document.body.classList.toggle('dark'); localStorage.setItem('theme', d ? 'dark' : 'light'); document.getElementById('themeBtn').textContent = d ? '🔹' : '🔹' }
+        function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('backdrop').classList.add('open') }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('backdrop').classList.remove('open') }
+        window.addEventListener('scroll', () => { const el = document.documentElement; document.getElementById('progressBar').style.width = (el.scrollTop / (el.scrollHeight - el.clientHeight) * 100) + '%' });
+        const obs = new IntersectionObserver(entries => { entries.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 55); obs.unobserve(e.target) } }) }, { threshold: .07 }); document.querySelectorAll('[data-card]').forEach(c => obs.observe(c));
+        const questions = [
+            { q: "What should you say to order respectfully at a restaurant?", opts: ["I want steak.", "Give me steak.", "I'll have the steak, please.", "Get me steak."], ans: 2, exp: "? 'I'll have...' atau 'I would like...' adalah cara paling sopan." },
+            { q: "How do you ask for the check?", opts: ["Money please.", "Could we get the bill, please?", "I want to pay.", "Bill me!"], ans: 1, exp: "? 'Could we get the bill/check, please?' sangat umum dan sopan." },
+            { q: "At the hotel check-in, you say...", opts: ["I want a room.", "I have a reservation under the name John.", "Give me the keys.", "Where is my room?"], ans: 1, exp: "? 'I have a reservation under...' adalah standar di resepsionis." },
+            { q: "Someone says something you didn't hear. You reply:", opts: ["Speak louder!", "What?", "Pardon?", "Say it again."], ans: 2, exp: "? 'Pardon?' atau 'Could you repeat that?' jauh lebih sopan daripada 'What?'." },
+            { q: "How to accept an idea politely?", opts: ["Yes.", "Absolutely, that's a good point.", "Okay done.", "I don't mind."], ans: 1, exp: "? 'Absolutely, that's a good point' menunjukkan persetujuan yang antusias dan sopan." },
+            { q: "When greeting a friend, instead of 'How are you?', you can naturally say:", opts: ["What have you been up to?", "Are you okay?", "Do you have a life?", "Tell me your day."], ans: 0, exp: "? 'What have you been up to?' sangat natural untuk bertanya kabar." },
+            { q: "If someone asks 'How's it going?' and you are doing very well, reply with:", opts: ["Not bad.", "Can't complain!", "I am existing.", "Why do you ask?"], ans: 1, exp: "? 'Can't complain!' adalah idiom umum yang berarti semuanya berjalan sangat baik." },
+            { q: "You want to try on a shirt at a store. You ask:", opts: ["Can I wear this?", "Can I try this on?", "I take this to room.", "Try this, yes?"], ans: 1, exp: "? Phrasal verb yang benar untuk mencoba pakaian adalah 'try on'." },
+            { q: "You are lost and want to go to the museum. You say:", opts: ["Where is museum?", "How do I get to the museum?", "Museum go?", "Give me map to museum."], ans: 1, exp: "? 'How do I get to...' adalah cara teraman dan paling natural." },
+            { q: "To end a conversation politely, you say:", opts: ["Stop talking.", "I'm leaving.", "It was great catching up.", "Go away."], ans: 2, exp: "? 'It was great catching up' sangat hangat dan sopan." },
+            { q: "If you call someone and want to be connected to the manager, you say:", opts: ["Give me boss.", "Put me through to the manager.", "Connect me to boss.", "Manager please."], ans: 1, exp: "? 'Put me through to...' adalah frasa natural untuk menyambungkan telepon." },
+            { q: "You bought a defective phone and want to return it. You say:", opts: ["This is garbage.", "Return this.", "I'd like to return this, please.", "Money back now."], ans: 2, exp: "? Selalu mulai dengan sopan 'I'd like to return this, please.'" },
+            { q: "To strongly agree with someone, you can say:", opts: ["I couldn't agree more.", "I agree very much.", "You are so correct.", "I disagree less."], ans: 0, exp: "? 'I couldn't agree more' berarti Anda sudah pada titik maksimal setuju." },
+            { q: "Instead of 'My mistake' in a very casual setting with friends, use:", opts: ["My apologies.", "My bad!", "I am the fault.", "Sorry for my existing."], ans: 1, exp: "? 'My bad!' sangat umum digunakan teman sebayanya untuk kesalahan kecil." },
+            { q: "You want to say no to an invitation nicely. You say:", opts: ["No way.", "I'd love to, but I have other plans.", "I don't want to.", "Never."], ans: 1, exp: "? 'I'd love to, but...' adalah cara teraman menolak ajakan tanpa menyakiti." }
+        ];
+        let current = 0, score = 0, answered = false;
+        function renderQuestion() { const q = questions[current]; document.getElementById('qNum').textContent = current + 1; document.getElementById('qTotal').textContent = questions.length; document.getElementById('qText').textContent = q.q; document.getElementById('qFeedback').textContent = ''; document.getElementById('qFeedback').classList.remove('show'); document.getElementById('qNext').style.display = 'none'; answered = false; const o = document.getElementById('qOptions'); o.innerHTML = ''; q.opts.forEach((opt, i) => { const b = document.createElement('button'); b.className = 'q-option'; b.textContent = opt; b.onclick = () => selectAnswer(i); o.appendChild(b) }) }
+        function selectAnswer(i) { if (answered) return; answered = true; const q = questions[current]; const opts = document.querySelectorAll('.q-option'); opts[i].classList.add(i === q.ans ? 'correct' : 'wrong'); if (i !== q.ans) opts[q.ans].classList.add('correct'); else score++; const fb = document.getElementById('qFeedback'); fb.textContent = i === q.ans ? q.exp : '? ' + q.exp; fb.classList.add('show'); const n = document.getElementById('qNext'); n.style.display = 'inline-block'; if (current === questions.length - 1) n.textContent = 'Lihat Hasil 🔹' }
+        function nextQuestion() { current++; if (current < questions.length) { renderQuestion(); return } const s = score, t = questions.length, g = s >= 13 ? '🔹' : s >= 9 ? '🔹' : '🔹', m = s === t ? 'Sempurna!' : s >= 10 ? 'Bagus!' : s >= 7 ? 'Lumayan!' : 'Ayo ulangi.'; document.getElementById('quizCard').innerHTML = `<div class="quiz-prompt" style="position:relative;z-index:1">Hasil Akhir</div><div class="quiz-q" style="position:relative;z-index:1;font-size:2.8rem">${g}</div><div class="quiz-q" style="position:relative;z-index:1">Skor: ${s} / ${t}</div><p style="position:relative;z-index:1;opacity:.82;font-size:.88rem;margin-top:6px">${m}</p><button class="quiz-next" style="display:inline-block;margin-top:16px" onclick="restartQuiz()">Ulangi Quiz</button>` }
+        function restartQuiz() { current = 0; score = 0; document.getElementById('quizCard').innerHTML = `<div class="quiz-prompt">Pertanyaan <span id="qNum">1</span> dari <span id="qTotal">15</span></div><div class="quiz-q" id="qText"></div><div class="quiz-options" id="qOptions"></div><div class="quiz-feedback" id="qFeedback"></div><button class="quiz-next" id="qNext" onclick="nextQuestion()">Pertanyaan Berikutnya ?</button>`; renderQuestion() }
+        renderQuestion();
+    </script>
+</body>
+
+</html>
+
+
+
+

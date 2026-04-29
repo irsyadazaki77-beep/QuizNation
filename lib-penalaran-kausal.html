@@ -1,0 +1,652 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Penalaran Kausal & Sebab-Akibat - Library SNBT 2025</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --accent: #2563eb;
+            --accent2: #06b6d4;
+            --bg: #f0f2f8;
+            --surface: rgba(255, 255, 255, 0.72);
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #1a1a2e;
+            --text2: #4b5563;
+            --text3: #9ca3af;
+            --glow: rgba(124, 58, 237, 0.18);
+            --radius: 20px
+        }
+
+        body.dark {
+            --bg: #050a15;
+            --surface: rgba(255, 255, 255, 0.055);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #f0edff;
+            --text2: rgba(240, 237, 255, 0.65);
+            --text3: rgba(240, 237, 255, 0.35);
+            --glow: rgba(124, 58, 237, 0.28)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: .35
+        }
+
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            gap: 16px
+        }
+
+        .topnav a {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .2s
+        }
+
+        .topnav a:hover {
+            gap: 10px
+        }
+
+        .topnav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-left: auto
+        }
+
+        .theme-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: grid;
+            place-items: center;
+            transition: all .2s;
+            margin-left: 8px
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent)
+        }
+
+        .wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px 80px;
+            position: relative;
+            z-index: 1
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(251, 146, 60, .12);
+            color: #f59e0b;
+            border: 1px solid rgba(251, 146, 60, .25);
+            border-radius: 30px;
+            padding: 5px 14px;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.15;
+            margin-bottom: 14px
+        }
+
+        .page-title .grad {
+            background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .page-desc {
+            font-size: 1.05rem;
+            color: var(--text2);
+            line-height: 1.8;
+            margin-bottom: 40px;
+            max-width: 700px
+        }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 40px
+        }
+
+        .toc-title {
+            font-weight: 800;
+            font-size: .9rem;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .toc ol {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .toc li {
+            color: var(--text2);
+            font-size: .88rem
+        }
+
+        .toc a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color .2s
+        }
+
+        .toc a:hover {
+            color: var(--accent2)
+        }
+
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: all .3s
+        }
+
+        .section:hover {
+            box-shadow: 0 10px 40px var(--glow);
+            border-color: rgba(124, 58, 237, .2)
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .section h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 20px 0 10px
+        }
+
+        .section p,
+        .section li {
+            font-size: .92rem;
+            color: var(--text2);
+            line-height: 1.85
+        }
+
+        .section ul,
+        .section ol {
+            padding-left: 20px;
+            margin: 10px 0
+        }
+
+        .section li {
+            margin-bottom: 6px
+        }
+
+        .example {
+            background: rgba(124, 58, 237, .06);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .example strong {
+            color: var(--text)
+        }
+
+        .tip {
+            background: rgba(6, 182, 212, .08);
+            border-left: 3px solid var(--accent2);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .tip strong {
+            color: var(--accent2)
+        }
+
+        .warning {
+            background: rgba(244, 63, 94, .08);
+            border-left: 3px solid #f43f5e;
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 14px;
+            margin-top: 40px;
+            flex-wrap: wrap
+        }
+
+        .nav-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all .3s
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px var(--glow);
+            transform: translateY(-2px)
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, .4)
+        }
+
+        .nav-btn.primary:hover {
+            box-shadow: 0 8px 28px rgba(124, 58, 237, .5);
+            transform: translateY(-3px)
+        }
+
+        .nav-btn-label {
+            font-size: .7rem;
+            color: var(--text3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .nav-btn.primary .nav-btn-label {
+            color: rgba(255, 255, 255, .7)
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text3);
+            font-size: .8rem;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px
+        }
+
+        @media(max-width:768px) {
+            .topnav {
+                padding: 14px 16px
+            }
+
+            .wrapper {
+                padding: 24px 16px 60px
+            }
+
+            .section {
+                padding: 20px
+            }
+
+            .nav-buttons {
+                flex-direction: column
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">? Kembali ke Library</a>
+        <span class="topnav-title">Penalaran Kausal</span>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">🔹 Penalaran Umum</div>
+        <h1 class="page-title">Penalaran <span class="grad">Kausal</span><br>& Sebab-Akibat</h1>
+        <p class="page-desc">Materi ini membahas cara menganalisis hubungan sebab-akibat secara kritis. Kamu akan
+            belajar membedakan korelasi dan kausalitas, mengenali variabel perancu, serta menyusun argumen kausal yang
+            valid untuk soal SNBT.</p>
+
+        <div class="toc">
+            <div class="toc-title">📑 Daftar Isi</div>
+            <ol>
+                <li><a href="#dasar">Konsep Dasar Kausalitas</a></li>
+                <li><a href="#korelasi">Korelasi vs Kausalitas</a></li>
+                <li><a href="#perancu">Variabel Perancu (Confounding)</a></li>
+                <li><a href="#uji">Uji Klaim Sebab-Akibat</a></li>
+                <li><a href="#contoh">Contoh Soal & Pembahasan</a></li>
+                <li><a href="#strategi">Strategi Menjawab Soal</a></li>
+                <li><a href="#rantai">Rantai Kausal (Causal Chain)</a></li>
+                <li><a href="#syarat">Syarat Perlu vs Syarat Cukup</a></li>
+                <li><a href="#reverse">Reverse Causality</a></li>
+                <li><a href="#medmod">Mediator & Moderator</a></li>
+                <li><a href="#kriteria">Kriteria Kausal Praktis</a></li>
+                <li><a href="#desain">Desain Studi & Kekuatan Bukti</a></li>
+                <li><a href="#counter">Counterfactual Thinking</a></li>
+                <li><a href="#validasi">Validasi Data Kausal</a></li>
+                <li><a href="#framework">Framework 5 Langkah Cepat</a></li>
+                <li><a href="#drillplus">Drill Tambahan</a></li>
+            </ol>
+        </div>
+
+        <div class="section" id="dasar">
+            <h2>🔹 1. Konsep Dasar Kausalitas</h2>
+            <p>Kausalitas adalah relasi ketika suatu faktor (sebab) memengaruhi munculnya faktor lain (akibat).</p>
+            <ul>
+                <li><strong>Sebab:</strong> Faktor pemicu perubahan.</li>
+                <li><strong>Akibat:</strong> Dampak yang muncul setelah sebab bekerja.</li>
+                <li><strong>Arah hubungan:</strong> Bisa satu arah atau saling memengaruhi.</li>
+            </ul>
+            <div class="example">
+                <strong>Contoh:</strong> Intensitas latihan meningkat ? kemampuan mengerjakan soal meningkat.
+            </div>
+        </div>
+
+        <div class="section" id="korelasi">
+            <h2>? 2. Korelasi vs Kausalitas</h2>
+            <p><strong>Korelasi</strong> berarti dua hal berubah bersamaan. <strong>Kausalitas</strong> berarti satu hal
+                menyebabkan hal lain.</p>
+            <ul>
+                <li>Korelasi tidak otomatis membuktikan sebab-akibat.</li>
+                <li>Hubungan bisa kebetulan atau dipengaruhi faktor ketiga.</li>
+            </ul>
+            <div class="warning">
+                <strong>🔹 Waspada:</strong> Banyak opsi jawaban SNBT menjebak dengan hubungan korelatif yang tampak
+                kausal.
+            </div>
+        </div>
+
+        <div class="section" id="perancu">
+            <h2>🔹 3. Variabel Perancu (Confounding)</h2>
+            <p>Variabel perancu adalah faktor tersembunyi yang memengaruhi dua variabel sekaligus sehingga terlihat
+                seolah-olah saling menyebabkan.</p>
+            <h3>Contoh pola perancu</h3>
+            <ul>
+                <li>Penjualan es krim naik dan kasus tenggelam naik.</li>
+                <li>Bukan es krim penyebab tenggelam; faktor perancunya adalah cuaca panas/musim liburan.</li>
+            </ul>
+            <div class="tip"><strong>🔹 Tips:</strong> Cari faktor ketiga sebelum menyimpulkan sebab-akibat.</div>
+        </div>
+
+        <div class="section" id="uji">
+            <h2>🔹 4. Uji Klaim Sebab-Akibat</h2>
+            <ol>
+                <li>Periksa urutan waktu: sebab harus terjadi sebelum akibat.</li>
+                <li>Uji konsistensi: apakah pola muncul berulang?</li>
+                <li>Cari alternatif penjelasan (perancu).</li>
+                <li>Periksa mekanisme logis: bagaimana sebab menghasilkan akibat?</li>
+                <li>Cek data pembanding: kelompok kontrol, data sebelum-sesudah, dll.</li>
+            </ol>
+        </div>
+
+        <div class="section" id="contoh">
+            <h2>🔹 5. Contoh Soal & Pembahasan</h2>
+            <div class="example">
+                <strong>Soal 1:</strong> Setelah sekolah menambah jam belajar malam, rata-rata nilai naik. Apakah ini
+                cukup untuk menyatakan jam belajar malam menyebabkan kenaikan nilai?<br><br>
+                <strong>Pembahasan:</strong> Belum cukup. Perlu cek faktor lain: kualitas guru, tingkat kesulitan soal,
+                program bimbingan tambahan, serta data pembanding.
+            </div>
+            <div class="example">
+                <strong>Soal 2:</strong> Daerah dengan lebih banyak perpustakaan memiliki angka literasi lebih tinggi.
+                Kesimpulan paling tepat?<br><br>
+                <strong>Pembahasan:</strong> Ada korelasi, tetapi belum tentu kausal. Mungkin faktor ekonomi dan akses
+                pendidikan menjadi variabel perancu.
+            </div>
+        </div>
+
+        <div class="section" id="strategi">
+            <h2>🔹 6. Strategi Menjawab Soal</h2>
+            <ul>
+                <li>Tandai kata kunci: sebab, akibat, memengaruhi, berdampak, karena.</li>
+                <li>Tanyakan: "Apa bukti bahwa ini bukan sekadar korelasi?"</li>
+                <li>Cari variabel perancu paling masuk akal.</li>
+                <li>Gunakan eliminasi terhadap opsi yang terlalu absolut.</li>
+                <li>Pilih jawaban yang paling hati-hati secara ilmiah.</li>
+            </ul>
+            <div class="tip"><strong>🔹 Strategi Waktu:</strong> Untuk soal kausal, alokasikan 1 menit pertama membaca
+                skenario, 30 detik berikutnya menguji alternatif penjelasan.</div>
+        </div>
+
+        <div class="section" id="rantai">
+            <h2>🔹 7. Rantai Kausal (Causal Chain)</h2>
+            <p>Hubungan sebab-akibat sering tidak langsung. Banyak soal menyajikan pola bertahap:</p>
+            <div class="example"><strong>A ? B ? C</strong><br>A menyebabkan B, lalu B menyebabkan C.</div>
+            <ul>
+                <li>Jangan langsung menyimpulkan A selalu penyebab tunggal C.</li>
+                <li>Cek apakah ada jalur alternatif selain B.</li>
+                <li>Uji apakah jika B hilang, efek C tetap muncul atau tidak.</li>
+            </ul>
+        </div>
+
+        <div class="section" id="syarat">
+            <h2>🔹 8. Syarat Perlu vs Syarat Cukup</h2>
+            <ul>
+                <li><strong>Syarat perlu:</strong> tanpa faktor ini, akibat tidak terjadi.</li>
+                <li><strong>Syarat cukup:</strong> jika faktor ini ada, akibat pasti terjadi (dalam model soal).</li>
+            </ul>
+            <div class="example">
+                <strong>Contoh:</strong> "Belajar" adalah syarat perlu untuk nilai baik, tetapi belum tentu syarat
+                cukup jika tidak dibarengi strategi yang benar.
+            </div>
+        </div>
+
+        <div class="section" id="reverse">
+            <h2>🔹 9. Reverse Causality</h2>
+            <p>Terkadang arah kausal dibaca terbalik. Ini jebakan klasik soal penalaran.</p>
+            <div class="warning"><strong>Contoh jebakan:</strong> "Siswa ranking atas lebih sering ikut tryout" tidak
+                otomatis berarti tryout adalah satu-satunya penyebab ranking tinggi; bisa jadi siswa yang sudah kuat lebih
+                termotivasi mengikuti tryout.</div>
+            <p>Selalu cek dua arah hubungan sebelum memilih jawaban.</p>
+        </div>
+
+        <div class="section" id="medmod">
+            <h2>🔹 10. Mediator & Moderator</h2>
+            <h3>Mediator</h3>
+            <p>Variabel penghubung yang menjelaskan <em>bagaimana</em> sebab memengaruhi akibat.</p>
+            <h3>Moderator</h3>
+            <p>Variabel yang mengubah <em>seberapa kuat</em> hubungan sebab-akibat.</p>
+            <div class="example">
+                <strong>Contoh:</strong> Program belajar (sebab) meningkatkan nilai (akibat).<br>
+                Disiplin belajar = mediator, sedangkan kualitas internet = moderator.
+            </div>
+        </div>
+
+        <div class="section" id="kriteria">
+            <h2>? 11. Kriteria Kausal Praktis</h2>
+            <p>Gunakan checklist ringkas ini saat menilai klaim sebab-akibat:</p>
+            <ol>
+                <li>Urutan waktu benar (sebab lebih dulu).</li>
+                <li>Hubungan konsisten pada data berbeda.</li>
+                <li>Ada penjelasan mekanisme yang masuk akal.</li>
+                <li>Kekuatan hubungan cukup jelas.</li>
+                <li>Alternatif penjelasan sudah diuji.</li>
+            </ol>
+        </div>
+
+        <div class="section" id="desain">
+            <h2>🔹 12. Desain Studi & Kekuatan Bukti</h2>
+            <ul>
+                <li><strong>Eksperimen terkontrol:</strong> bukti kausal paling kuat.</li>
+                <li><strong>Quasi eksperimen:</strong> kuat, tapi kontrol tidak penuh.</li>
+                <li><strong>Observasional:</strong> bagus untuk indikasi awal, rawan confounding.</li>
+            </ul>
+            <div class="tip"><strong>Tips SNBT:</strong> Jika opsi menyebut "studi observasional", jangan terlalu cepat
+                menerima klaim kausal mutlak.</div>
+        </div>
+
+        <div class="section" id="counter">
+            <h2>🔹 13. Counterfactual Thinking</h2>
+            <p>Pertanyaan inti kausal: "Apa yang terjadi jika sebab itu tidak ada?"</p>
+            <div class="example">
+                <strong>Contoh:</strong> "Jika siswa yang ikut program tetap memperoleh nilai yang sama seperti sebelum
+                program, maka efek kausal program lemah."
+            </div>
+            <p>Teknik ini membantu menghindari kesimpulan yang terlalu cepat.</p>
+        </div>
+
+        <div class="section" id="validasi">
+            <h2>🔹 14. Validasi Data Kausal</h2>
+            <ul>
+                <li>Cek ukuran sampel dan representativitas.</li>
+                <li>Cek konsistensi definisi variabel.</li>
+                <li>Cek adanya bias seleksi dan bias pengukuran.</li>
+                <li>Cek apakah periode data cukup panjang untuk menangkap pola.</li>
+            </ul>
+            <div class="warning"><strong>Perhatian:</strong> Data besar tidak selalu berarti kesimpulan kausal valid jika
+                cara pengukuran salah.</div>
+        </div>
+
+        <div class="section" id="framework">
+            <h2>🔹 15. Framework 5 Langkah Cepat</h2>
+            <ol>
+                <li>Tentukan klaim kausal utama di soal.</li>
+                <li>Identifikasi variabel sebab, akibat, dan kemungkinan perancu.</li>
+                <li>Uji arah hubungan (hindari reverse causality).</li>
+                <li>Bandingkan kekuatan tiap opsi jawaban.</li>
+                <li>Pilih opsi paling hati-hati yang tetap logis.</li>
+            </ol>
+            <div class="tip"><strong>Formula cepat:</strong> waktu + mekanisme + kontrol perancu = jawaban kausal yang
+                lebih kuat.</div>
+        </div>
+
+        <div class="section" id="drillplus">
+            <h2>🔹 16. Drill Tambahan</h2>
+            <div class="example">
+                <strong>Soal A:</strong> "Siswa yang sering tidur cukup cenderung nilai lebih baik." Apa kesimpulan
+                paling aman?<br><br>
+                <strong>Pembahasan:</strong> Ada hubungan positif, tetapi kausalitas perlu kontrol faktor lain seperti
+                disiplin, kesehatan, dan beban belajar.
+            </div>
+            <div class="example">
+                <strong>Soal B:</strong> "Sekolah X menaikkan durasi belajar dan nilai naik." Data tambahan apa paling
+                penting?<br><br>
+                <strong>Pembahasan:</strong> Data kelompok pembanding (sekolah serupa tanpa kebijakan tersebut) untuk
+                mengecek efek kebijakan secara lebih kausal.
+            </div>
+            <div class="tip"><strong>Target:</strong> Latihan minimal 15 soal kausal agar refleks membedakan korelasi
+                vs kausalitas terbentuk.</div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="library.html" class="nav-btn">
+                <div>
+                    <div class="nav-btn-label">? Kembali</div>Library SNBT
+                </div>
+            </a>
+            <a href="lib-pu-strategi-logika.html" class="nav-btn primary">
+                <div>
+                    <div class="nav-btn-label">Materi Selanjutnya ?</div>Strategi Pemecahan Soal Logika
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>- 2025 QuizNation - Library SNBT 2025</footer>
+    <script>if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark')</script>
+</body>
+
+</html>
+

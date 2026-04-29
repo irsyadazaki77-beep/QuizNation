@@ -1,0 +1,821 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Kombinatorika & Peluang Terapan - Library SNBT 2026</title>
+    <meta name="description"
+        content="Materi lengkap Pengetahuan Kuantitatif: aturan pencacahan, permutasi, kombinasi, peluang kejadian majemuk, peluang bersyarat, dan latihan SNBT 2026." />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --accent: #2563eb;
+            --accent2: #06b6d4;
+            --bg: #f0f2f8;
+            --surface: rgba(255, 255, 255, 0.72);
+            --surface2: rgba(255, 255, 255, 0.5);
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #1a1a2e;
+            --text2: #4b5563;
+            --text3: #9ca3af;
+            --glow: rgba(124, 58, 237, 0.18);
+            --radius: 20px
+        }
+
+        body.dark {
+            --bg: #050a15;
+            --surface: rgba(255, 255, 255, 0.055);
+            --surface2: rgba(255, 255, 255, 0.035);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #f0edff;
+            --text2: rgba(240, 237, 255, 0.7);
+            --text3: rgba(240, 237, 255, 0.4);
+            --glow: rgba(124, 58, 237, 0.28)
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: .35
+        }
+
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .topnav a {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .2s
+        }
+
+        .topnav a:hover {
+            gap: 10px
+        }
+
+        .topnav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.03rem;
+            color: var(--text);
+            margin-left: auto
+        }
+
+        .theme-btn {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: grid;
+            place-items: center;
+            color: var(--text);
+            transition: all .2s
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent)
+        }
+
+        .wrapper {
+            max-width: 940px;
+            margin: 0 auto;
+            padding: 36px 20px 80px;
+            position: relative;
+            z-index: 1
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(6, 182, 212, .12);
+            color: #0891b2;
+            border: 1px solid rgba(6, 182, 212, .25);
+            border-radius: 30px;
+            padding: 5px 14px;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.15;
+            margin-bottom: 14px
+        }
+
+        .page-title .grad {
+            background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .page-desc {
+            font-size: 1.03rem;
+            color: var(--text2);
+            line-height: 1.8;
+            margin-bottom: 28px;
+            max-width: 760px
+        }
+
+        .quick-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 10px;
+            margin-bottom: 28px
+        }
+
+        .meta {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 14px
+        }
+
+        .meta-k {
+            font-size: .72rem;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            margin-bottom: 3px
+        }
+
+        .meta-v {
+            font-size: .9rem;
+            color: var(--text2);
+            font-weight: 700
+        }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 24px
+        }
+
+        .toc-title {
+            font-weight: 800;
+            font-size: .95rem;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .toc ol {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .toc li {
+            color: var(--text2);
+            font-size: .88rem
+        }
+
+        .toc a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600
+        }
+
+        .toc a:hover {
+            color: var(--accent2)
+        }
+
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 18px;
+            transition: all .25s
+        }
+
+        .section:hover {
+            box-shadow: 0 10px 38px var(--glow);
+            border-color: rgba(124, 58, 237, .25)
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.42rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 14px
+        }
+
+        .section h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 16px 0 8px
+        }
+
+        .section p,
+        .section li {
+            color: var(--text2);
+            font-size: .94rem;
+            line-height: 1.75
+        }
+
+        .section ul,
+        .section ol {
+            padding-left: 20px;
+            margin-top: 8px
+        }
+
+        .formula {
+            background: rgba(255, 255, 255, .6);
+            border: 1px dashed rgba(124, 58, 237, .35);
+            border-radius: 12px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: 'DM Mono', monospace;
+            font-size: .86rem;
+            color: var(--text);
+            overflow-x: auto
+        }
+
+        body.dark .formula {
+            background: rgba(255, 255, 255, .03)
+        }
+
+        .tip {
+            margin-top: 12px;
+            background: rgba(6, 182, 212, .12);
+            border: 1px solid rgba(6, 182, 212, .26);
+            border-radius: 12px;
+            padding: 10px 12px;
+            color: #0e7490;
+            font-size: .86rem;
+            font-weight: 600
+        }
+
+        .warn {
+            margin-top: 12px;
+            background: rgba(244, 114, 182, .12);
+            border: 1px solid rgba(244, 114, 182, .26);
+            border-radius: 12px;
+            padding: 10px 12px;
+            color: #0369a1;
+            font-size: .86rem;
+            font-weight: 600
+        }
+
+        .qa {
+            display: grid;
+            gap: 12px;
+            margin-top: 12px
+        }
+
+        .qitem {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px
+        }
+
+        .q {
+            color: var(--text);
+            font-weight: 700;
+            margin-bottom: 8px
+        }
+
+        .a {
+            color: #0f766e;
+            font-weight: 700;
+            font-size: .9rem
+        }
+
+        .next-nav {
+            margin-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        .essay-wrap {
+            display: grid;
+            gap: 12px;
+            margin-top: 12px
+        }
+
+        .essay-item {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px
+        }
+
+        .essay-q {
+            color: var(--text);
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: .93rem
+        }
+
+        .essay-input {
+            width: 100%;
+            min-height: 110px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            border-radius: 10px;
+            padding: 10px;
+            font-family: 'Bricolage Grotesque', sans-serif;
+            font-size: .9rem;
+            line-height: 1.6;
+            resize: vertical
+        }
+
+        .essay-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px
+        }
+
+        .essay-btn {
+            border: 0;
+            border-radius: 10px;
+            padding: 9px 12px;
+            font-size: .84rem;
+            font-weight: 700;
+            cursor: pointer;
+            color: white;
+            background: linear-gradient(135deg, var(--accent), var(--accent2))
+        }
+
+        .essay-btn.alt {
+            background: #6b7280
+        }
+
+        .essay-status {
+            margin-top: 10px;
+            font-size: .86rem;
+            font-weight: 700;
+            color: var(--text2)
+        }
+
+        .review-result {
+            margin-top: 12px;
+            display: grid;
+            gap: 10px
+        }
+
+        .review-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px
+        }
+
+        .review-title {
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 6px;
+            font-size: .9rem
+        }
+
+        .review-meta {
+            font-size: .82rem;
+            color: var(--text3);
+            margin-bottom: 6px
+        }
+
+        .review-note {
+            font-size: .87rem;
+            color: var(--text2)
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            color: white;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: .86rem;
+            font-weight: 700
+        }
+
+        @media (max-width: 680px) {
+            .topnav {
+                padding: 14px 14px
+            }
+
+            .topnav-title {
+                display: none
+            }
+
+            .wrapper {
+                padding: 30px 14px 70px
+            }
+
+            .section,
+            .toc {
+                padding: 18px
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+
+    <nav class="topnav">
+        <a href="library.html">? Kembali ke Library</a>
+        <div class="topnav-title">Materi PK - Kombinatorika & Peluang</div>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <main class="wrapper">
+        <div class="hero-badge">PK - Lanjutan</div>
+        <h1 class="page-title">Kombinatorika & <span class="grad">Peluang Terapan</span></h1>
+        <p class="page-desc">
+            Bab ini melatih cara berpikir sistematis untuk menghitung banyak kemungkinan dan menentukan peluang.
+            Fokus SNBT adalah memilih pendekatan yang tepat: aturan pencacahan, permutasi, kombinasi, atau peluang bersyarat.
+        </p>
+
+        <div class="quick-meta">
+            <div class="meta">
+                <div class="meta-k">Estimasi Belajar</div>
+                <div class="meta-v">3 Jam</div>
+            </div>
+            <div class="meta">
+                <div class="meta-k">Jumlah Topik</div>
+                <div class="meta-v">11 Topik Inti</div>
+            </div>
+            <div class="meta">
+                <div class="meta-k">Fokus Ujian</div>
+                <div class="meta-v">Soal HOTS & Konteks</div>
+            </div>
+            <div class="meta">
+                <div class="meta-k">Tingkat</div>
+                <div class="meta-v">Lanjutan</div>
+            </div>
+        </div>
+
+        <section class="toc">
+            <div class="toc-title">Daftar Isi Cepat</div>
+            <ol>
+                <li><a href="#pencacahan">Aturan Pencacahan</a></li>
+                <li><a href="#faktorial">Faktorial, Permutasi, Kombinasi</a></li>
+                <li><a href="#special-case">Kasus Khusus Permutasi</a></li>
+                <li><a href="#peluang-dasar">Peluang Dasar & Kejadian Majemuk</a></li>
+                <li><a href="#peluang-bersyarat">Peluang Bersyarat</a></li>
+                <li><a href="#binomial">Distribusi Binomial Sederhana</a></li>
+                <li><a href="#strategi">Strategi Cepat Mengerjakan Soal</a></li>
+                <li><a href="#contoh">Contoh Soal & Pembahasan</a></li>
+                <li><a href="#latihan">Latihan Campuran</a></li>
+                <li><a href="#esai">Soal Esai Interaktif</a></li>
+            </ol>
+        </section>
+
+        <section class="section" id="pencacahan">
+            <h2>1) Aturan Pencacahan</h2>
+            <p>Jika proses memiliki beberapa tahap berurutan, jumlah cara diperoleh dengan aturan perkalian.</p>
+            <div class="formula">Jika tahap 1 ada a cara dan tahap 2 ada b cara, total = a x b</div>
+            <p>Jika pilihan bersifat alternatif (saling lepas), gunakan penjumlahan.</p>
+            <div class="formula">total = a + b + c + ...</div>
+            <div class="tip">Tip: tentukan dulu apakah situasinya "dan" (perkalian) atau "atau" (penjumlahan).</div>
+        </section>
+
+        <section class="section" id="faktorial">
+            <h2>2) Faktorial, Permutasi, Kombinasi</h2>
+            <h3>Faktorial</h3>
+            <div class="formula">n! = n x (n-1) x (n-2) x ... x 1, dan 0! = 1</div>
+            <h3>Permutasi (urutan penting)</h3>
+            <div class="formula">nPr = n! / (n-r)!</div>
+            <h3>Kombinasi (urutan tidak penting)</h3>
+            <div class="formula">nCr = n! / (r! (n-r)!)</div>
+            <div class="warn">Kesalahan umum: memakai permutasi padahal urutan tidak dipedulikan.</div>
+        </section>
+
+        <section class="section" id="special-case">
+            <h2>3) Kasus Khusus Permutasi</h2>
+            <h3>Permutasi dengan unsur sama</h3>
+            <div class="formula">banyak susunan = n! / (a! b! c! ...)</div>
+            <p>Contoh susunan huruf pada kata "MAMA": 4!/(2!2!) = 6 susunan.</p>
+            <h3>Permutasi melingkar</h3>
+            <div class="formula">(n-1)!</div>
+            <p>Dipakai untuk duduk melingkar saat rotasi dianggap sama.</p>
+        </section>
+
+        <section class="section" id="peluang-dasar">
+            <h2>4) Peluang Dasar & Kejadian Majemuk</h2>
+            <div class="formula">P(A) = n(A) / n(S)</div>
+            <div class="formula">P(A atau B) = P(A) + P(B) - P(A dan B)</div>
+            <div class="formula">Jika independen: P(A dan B) = P(A) x P(B)</div>
+            <p>Selalu cek dulu apakah kejadian saling bebas (independen) atau saling memengaruhi.</p>
+        </section>
+
+        <section class="section" id="peluang-bersyarat">
+            <h2>5) Peluang Bersyarat</h2>
+            <div class="formula">P(A|B) = P(A dan B) / P(B)</div>
+            <p>Maknanya peluang A dengan syarat B sudah terjadi.</p>
+            <h3>Tanpa pengembalian</h3>
+            <p>Pada pengambilan tanpa pengembalian, penyebut berubah tiap tahap.</p>
+            <div class="tip">Teknik aman: tulis ruang sampel baru setelah syarat diterapkan, baru hitung peluang.</div>
+        </section>
+
+        <section class="section" id="binomial">
+            <h2>6) Distribusi Binomial Sederhana</h2>
+            <p>Untuk peluang tepat r sukses dari n percobaan independen:</p>
+            <div class="formula">P(X=r) = nCr x p^r x (1-p)^(n-r)</div>
+            <p>Contoh umum: peluang muncul tepat 3 angka saat melempar koin 5 kali.</p>
+        </section>
+
+        <section class="section" id="strategi">
+            <h2>7) Strategi Cepat Mengerjakan Soal</h2>
+            <ul>
+                <li>Identifikasi kata kunci: "urutan", "dipilih", "tanpa pengembalian", "minimal", "tepat".</li>
+                <li>Sketsa kasus kecil dulu agar pola mudah terlihat.</li>
+                <li>Sederhanakan faktorial sebelum dikalikan penuh.</li>
+                <li>Jangan lupa komplemen: P(tidak A) = 1 - P(A).</li>
+                <li>Untuk peluang bertahap, cek apakah denominator berubah.</li>
+            </ul>
+        </section>
+
+        <section class="section" id="contoh">
+            <h2>8) Contoh Soal & Pembahasan</h2>
+            <div class="qa">
+                <div class="qitem">
+                    <div class="q">Soal 1: Dari 8 siswa dipilih ketua dan wakil. Berapa banyak cara?</div>
+                    <div class="formula">urutan penting: 8P2 = 8 x 7 = 56</div>
+                    <div class="a">Jawaban: 56 cara</div>
+                </div>
+
+                <div class="qitem">
+                    <div class="q">Soal 2: Dari 10 orang dipilih 3 orang tim inti. Berapa banyak cara?</div>
+                    <div class="formula">urutan tidak penting: 10C3 = (10 x 9 x 8)/(3 x 2 x 1) = 120</div>
+                    <div class="a">Jawaban: 120 cara</div>
+                </div>
+
+                <div class="qitem">
+                    <div class="q">Soal 3: Kotak berisi 5 merah dan 3 biru. Diambil 2 tanpa pengembalian. Peluang keduanya merah?</div>
+                    <div class="formula">P = (5/8) x (4/7) = 20/56 = 5/14</div>
+                    <div class="a">Jawaban: 5/14</div>
+                </div>
+
+                <div class="qitem">
+                    <div class="q">Soal 4: Dalam 4 lemparan koin adil, peluang tepat 2 gambar?</div>
+                    <div class="formula">P = 4C2 x (1/2)^2 x (1/2)^2 = 6/16 = 3/8</div>
+                    <div class="a">Jawaban: 3/8</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="latihan">
+            <h2>9) Latihan Campuran</h2>
+            <div class="qa">
+                <div class="qitem">
+                    <div class="q">A. Banyak susunan huruf kata "STATISTIK" adalah ...</div>
+                    <div class="a">Kunci: 9!/(3!2!2!) = 15120</div>
+                </div>
+                <div class="qitem">
+                    <div class="q">B. Dari 12 peserta dipilih ketua, sekretaris, bendahara. Banyak cara ...</div>
+                    <div class="a">Kunci: 12P3 = 1320</div>
+                </div>
+                <div class="qitem">
+                    <div class="q">C. Peluang minimal satu angka saat melempar 2 dadu?</div>
+                    <div class="a">Kunci: 1 - (5/6 x 5/6) = 11/36</div>
+                </div>
+                <div class="qitem">
+                    <div class="q">D. Dari 7 pria dan 5 wanita dipilih 4 orang, tepat 2 wanita. Banyak cara ...</div>
+                    <div class="a">Kunci: 5C2 x 7C2 = 210</div>
+                </div>
+                <div class="qitem">
+                    <div class="q">E. Dalam pengambilan 3 kartu tanpa pengembalian, peluang semua kartu merah?</div>
+                    <div class="a">Kunci: (26/52) x (25/51) x (24/50) = 2/17</div>
+                </div>
+            </div>
+            <div class="tip">Target latihan: kerjakan minimal 20 soal kombinatorika-peluang campuran agar pola soal cepat terbaca.</div>
+        </section>
+
+        <section class="section" id="esai">
+            <h2>10) Soal Esai Interaktif</h2>
+            <p>Tulis jawabanmu langsung pada kolom di bawah. Jawaban akan tersimpan otomatis di browser perangkatmu.</p>
+
+            <div class="essay-wrap">
+                <div class="essay-item">
+                    <div class="essay-q">Esai 1. Jelaskan perbedaan permutasi dan kombinasi, lalu berikan masing-masing satu contoh konteks soal SNBT.</div>
+                    <textarea class="essay-input" id="essay1" placeholder="Tulis jawaban esai 1 di sini..."></textarea>
+                </div>
+
+                <div class="essay-item">
+                    <div class="essay-q">Esai 2. Dalam pemilihan pengurus kelas (ketua, sekretaris, bendahara) dari 10 siswa, mengapa digunakan permutasi? Jelaskan alasan matematisnya.</div>
+                    <textarea class="essay-input" id="essay2" placeholder="Tulis jawaban esai 2 di sini..."></textarea>
+                </div>
+
+                <div class="essay-item">
+                    <div class="essay-q">Esai 3. Uraikan langkah penyelesaian peluang terambil 2 bola merah dari kotak berisi 5 merah dan 3 biru tanpa pengembalian.</div>
+                    <textarea class="essay-input" id="essay3" placeholder="Tulis jawaban esai 3 di sini..."></textarea>
+                </div>
+
+                <div class="essay-item">
+                    <div class="essay-q">Esai 4. Jelaskan kapan rumus peluang bersyarat diperlukan, dan berikan contoh situasi sederhana yang memakainya.</div>
+                    <textarea class="essay-input" id="essay4" placeholder="Tulis jawaban esai 4 di sini..."></textarea>
+                </div>
+
+                <div class="essay-item">
+                    <div class="essay-q">Esai 5. Menurutmu, strategi apa yang paling efektif untuk membedakan soal peluang yang diselesaikan dengan komplemen dibanding cara langsung? Jelaskan.</div>
+                    <textarea class="essay-input" id="essay5" placeholder="Tulis jawaban esai 5 di sini..."></textarea>
+                </div>
+            </div>
+
+            <div class="essay-actions">
+                <button class="essay-btn" id="checkEssayBtn" type="button">Cek Progres Jawaban</button>
+                <button class="essay-btn" id="reviewEssayBtn" type="button">Review Jawaban Saya</button>
+                <button class="essay-btn alt" id="clearEssayBtn" type="button">Hapus Semua Jawaban</button>
+            </div>
+            <div class="essay-status" id="essayStatus">Progres esai: 0/5 terisi.</div>
+            <div class="review-result" id="reviewResult"></div>
+            <div class="tip">Panduan: usahakan setiap jawaban memuat definisi, alasan rumus, dan langkah hitung singkat bila ada angka.</div>
+        </section>
+
+        <div class="next-nav">
+            <a class="nav-btn" href="lib-pk-persen-bunga.html">? Materi Sebelumnya</a>
+            <a class="nav-btn" href="library.html">Kembali ke Library ?</a>
+        </div>
+    </main>
+
+    <script>
+        const themeBtn = document.getElementById('themeBtn');
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') {
+            document.body.classList.add('dark');
+            themeBtn.textContent = '🔹';
+        }
+
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            const dark = document.body.classList.contains('dark');
+            localStorage.setItem('theme', dark ? 'dark' : 'light');
+            themeBtn.textContent = dark ? '🌙' : '☀️';
+        });
+
+        const essayInputs = Array.from(document.querySelectorAll('.essay-input'));
+        const essayStatus = document.getElementById('essayStatus');
+        const checkEssayBtn = document.getElementById('checkEssayBtn');
+        const reviewEssayBtn = document.getElementById('reviewEssayBtn');
+        const clearEssayBtn = document.getElementById('clearEssayBtn');
+        const reviewResult = document.getElementById('reviewResult');
+
+        const rubric = {
+            essay1: ['permutasi', 'kombinasi', 'urutan', 'contoh'],
+            essay2: ['urutan', 'jabatan', 'berbeda', 'permutasi'],
+            essay3: ['tanpa pengembalian', '5/8', '4/7', '5/14'],
+            essay4: ['peluang bersyarat', 'syarat', 'P(A|B)', 'contoh'],
+            essay5: ['komplemen', '1 - P(A)', 'langsung', 'strategi']
+        };
+
+        function updateEssayStatus() {
+            const filled = essayInputs.filter((input) => input.value.trim().length > 0).length;
+            essayStatus.textContent = `Progres esai: ${filled}/5 terisi.`;
+        }
+
+        essayInputs.forEach((input) => {
+            const key = `quiznation-essay-${input.id}`;
+            const savedValue = localStorage.getItem(key);
+            if (savedValue) {
+                input.value = savedValue;
+            }
+            input.addEventListener('input', () => {
+                localStorage.setItem(key, input.value);
+                updateEssayStatus();
+            });
+        });
+
+        checkEssayBtn.addEventListener('click', () => {
+            updateEssayStatus();
+            const filled = essayInputs.filter((input) => input.value.trim().length > 0).length;
+            if (filled === essayInputs.length) {
+                essayStatus.textContent = 'Progres esai: 5/5 terisi. Mantap! Siap lanjut review jawaban.';
+            }
+        });
+
+        reviewEssayBtn.addEventListener('click', () => {
+            reviewResult.innerHTML = '';
+            let reviewedCount = 0;
+
+            essayInputs.forEach((input, index) => {
+                const answer = input.value.trim();
+                if (!answer) {
+                    return;
+                }
+
+                reviewedCount += 1;
+                const answerLower = answer.toLowerCase();
+                const expected = rubric[input.id] || [];
+                let hit = 0;
+
+                expected.forEach((key) => {
+                    if (answerLower.includes(key.toLowerCase())) {
+                        hit += 1;
+                    }
+                });
+
+                const percent = expected.length ? Math.round((hit / expected.length) * 100) : 0;
+                let note = 'Jawaban sudah bagus, tapi masih bisa diperdalam dengan istilah kunci.';
+                if (percent >= 75) {
+                    note = 'Jawaban kuat dan sudah memuat mayoritas poin penting.';
+                } else if (percent < 40) {
+                    note = 'Jawaban masih umum. Tambahkan definisi, alasan rumus, dan contoh langkah hitung.';
+                }
+
+                const card = document.createElement('div');
+                card.className = 'review-card';
+                card.innerHTML = `
+                    <div class="review-title">Review Esai ${index + 1}</div>
+                    <div class="review-meta">Cakupan poin kunci: ${hit}/${expected.length} (${percent}%)</div>
+                    <div class="review-note">${note}</div>
+                `;
+                reviewResult.appendChild(card);
+            });
+
+            if (reviewedCount === 0) {
+                reviewResult.innerHTML = '<div class="review-card"><div class="review-note">Belum ada jawaban yang bisa direview. Isi minimal satu esai dulu.</div></div>';
+            }
+        });
+
+        clearEssayBtn.addEventListener('click', () => {
+            essayInputs.forEach((input) => {
+                input.value = '';
+                localStorage.removeItem(`quiznation-essay-${input.id}`);
+            });
+            reviewResult.innerHTML = '';
+            updateEssayStatus();
+        });
+
+        updateEssayStatus();
+    </script>
+</body>
+
+</html>
+

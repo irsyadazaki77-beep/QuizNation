@@ -1,0 +1,967 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta name="theme-color" content="#0a1120"/>
+    <meta name="mobile-web-app-capable" content="yes"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Kalimat Efektif & Kepaduan - Library SNBT 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        html,body{max-width:100%;overflow-x:hidden}
+        *{-webkit-tap-highlight-color:transparent!important}
+        *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+        :root{
+            --accent:#2563eb;--accent2:#06b6d4;--accent3:#f59e0b;
+            --bg:#f0f2f8;--surface:rgba(255,255,255,0.72);
+            --border:rgba(0,0,0,0.08);--text:#1a1a2e;--text2:#4b5563;
+            --text3:#9ca3af;--glow:rgba(124,58,237,0.18);--radius:20px;
+            --green:#10b981;--red:#f43f5e;
+        }
+        body.dark{
+            --bg:#050a15;--surface:rgba(255,255,255,0.055);
+            --border:rgba(255,255,255,0.09);--text:#f0edff;
+            --text2:rgba(240,237,255,0.65);--text3:rgba(240,237,255,0.35);
+            --glow:rgba(124,58,237,0.28);
+        }
+        html{scroll-behavior:smooth}
+        body{font-family:'Bricolage Grotesque',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;transition:background .4s,color .4s}
+        .noise-overlay{position:fixed;inset:0;z-index:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;opacity:.35}
+
+        .topnav{position:sticky;top:0;z-index:100;background:var(--surface);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:16px 40px;display:flex;align-items:center;gap:16px}
+        .topnav a{text-decoration:none;color:var(--accent);font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:6px;transition:all .2s}
+        .topnav a:hover{gap:10px}
+        .topnav-title{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;color:var(--text);margin-left:auto}
+        .theme-btn{background:var(--surface);border:1px solid var(--border);border-radius:10px;width:36px;height:36px;cursor:pointer;font-size:1rem;display:grid;place-items:center;transition:all .2s;margin-left:8px}
+        .theme-btn:hover{border-color:var(--accent)}
+
+        .wrapper{max-width:900px;margin:0 auto;padding:40px 30px 80px;position:relative;z-index:1}
+        .hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(251,146,60,.12);color:#f59e0b;border:1px solid rgba(251,146,60,.25);border-radius:30px;padding:5px 14px;font-size:.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:16px}
+        .page-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,4vw,3rem);font-weight:800;color:var(--text);line-height:1.15;margin-bottom:14px}
+        .page-title .grad{background:linear-gradient(135deg,var(--accent),#60a5fa,var(--accent2));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+        .page-desc{font-size:1.05rem;color:var(--text2);line-height:1.8;margin-bottom:40px;max-width:700px}
+
+        .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px}
+        .stat-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px;text-align:center}
+        .stat-num{font-family:'DM Mono',monospace;font-size:1.6rem;font-weight:700;color:var(--accent)}
+        .stat-label{font-size:.72rem;color:var(--text3);margin-top:2px;text-transform:uppercase;letter-spacing:.5px}
+
+        .toc{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px 28px;margin-bottom:40px}
+        .toc-title{font-weight:800;font-size:.9rem;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+        .toc ol{padding-left:20px;display:flex;flex-direction:column;gap:6px}
+        .toc li{color:var(--text2);font-size:.88rem}
+        .toc a{color:var(--accent);text-decoration:none;font-weight:600;transition:color .2s}
+        .toc a:hover{color:var(--accent2)}
+
+        .section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:32px;margin-bottom:24px;transition:all .3s}
+        .section:hover{box-shadow:0 10px 40px var(--glow);border-color:rgba(124,58,237,.2)}
+        .section h2{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--text);margin-bottom:16px;display:flex;align-items:center;gap:10px}
+        .section h3{font-size:1.05rem;font-weight:700;color:var(--accent);margin:22px 0 10px}
+        .section h4{font-size:.95rem;font-weight:700;color:var(--text);margin:14px 0 6px}
+        .section p,.section li{font-size:.92rem;color:var(--text2);line-height:1.85}
+        .section ul,.section ol{padding-left:20px;margin:10px 0}
+        .section li{margin-bottom:6px}
+
+        .example{background:rgba(124,58,237,.06);border-left:3px solid var(--accent);border-radius:0 12px 12px 0;padding:16px 20px;margin:14px 0;font-size:.88rem;color:var(--text2);line-height:1.75}
+        .example strong{color:var(--text)}
+        .tip{background:rgba(6,182,212,.08);border-left:3px solid var(--accent2);border-radius:0 12px 12px 0;padding:16px 20px;margin:14px 0;font-size:.88rem;color:var(--text2);line-height:1.75}
+        .tip strong{color:var(--accent2)}
+        .warning{background:rgba(244,63,94,.08);border-left:3px solid #f43f5e;border-radius:0 12px 12px 0;padding:16px 20px;margin:14px 0;font-size:.88rem;color:var(--text2);line-height:1.75}
+        .warning strong{color:#f43f5e}
+        .success{background:rgba(16,185,129,.08);border-left:3px solid #10b981;border-radius:0 12px 12px 0;padding:16px 20px;margin:14px 0;font-size:.88rem;color:var(--text2);line-height:1.75}
+        .success strong{color:#10b981}
+
+        .table-wrap{overflow-x:auto;margin:16px 0;border-radius:12px;border:1px solid var(--border)}
+        table{width:100%;border-collapse:collapse;font-size:.85rem}
+        th{background:rgba(124,58,237,.1);color:var(--text);padding:10px 14px;text-align:left;font-weight:700;font-size:.82rem}
+        td{padding:10px 14px;color:var(--text2);border-top:1px solid var(--border)}
+        tr:hover td{background:rgba(124,58,237,.04)}
+
+        .compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+        .compare-box{border-radius:12px;padding:14px 16px;font-size:.85rem;line-height:1.75}
+        .compare-box.bad{background:rgba(244,63,94,.08);border:1px solid rgba(244,63,94,.2)}
+        .compare-box.good{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2)}
+        .compare-box .cb-label{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+        .compare-box.bad .cb-label{color:#f43f5e}
+        .compare-box.good .cb-label{color:#10b981}
+        .compare-box p{font-size:.85rem;color:var(--text2);line-height:1.7;margin:4px 0}
+
+        .affiks-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:14px 0}
+        .affiks-card{background:rgba(124,58,237,.06);border:1px solid rgba(124,58,237,.12);border-radius:12px;padding:12px 14px}
+        .affiks-card .affix{font-family:'DM Mono',monospace;font-weight:700;color:var(--accent);font-size:.9rem}
+        .affiks-card .af-type{font-size:.7rem;color:var(--text3);margin-bottom:4px}
+        .affiks-card .af-example{font-size:.8rem;color:var(--text2);margin-top:4px}
+
+        .konj-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+        .konj-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px}
+        .konj-card .konj-type{font-size:.75rem;font-weight:700;color:var(--accent3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+        .konj-list{display:flex;flex-wrap:wrap;gap:6px}
+        .konj-tag{background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.15);border-radius:6px;padding:3px 9px;font-size:.78rem;font-family:'DM Mono',monospace;color:var(--text2)}
+
+        .pleo-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+        .pleo-item{display:flex;gap:8px;align-items:flex-start;background:rgba(244,63,94,.05);border-radius:8px;padding:8px 10px;font-size:.83rem;color:var(--text2)}
+        .pleo-arrow{color:var(--accent);font-weight:700;flex-shrink:0;margin-top:1px}
+
+        /* Quiz / Soal styles */
+        .quiz-section{background:linear-gradient(135deg,rgba(124,58,237,.06),rgba(6,182,212,.04));border:1px solid rgba(124,58,237,.15);border-radius:var(--radius);padding:32px;margin-bottom:24px}
+        .quiz-section h2{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;color:var(--text);margin-bottom:6px;display:flex;align-items:center;gap:10px}
+        .quiz-subtitle{font-size:.82rem;color:var(--text3);margin-bottom:24px;font-family:'DM Mono',monospace}
+        .soal{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:24px;margin-bottom:20px;transition:all .3s}
+        .soal:hover{box-shadow:0 8px 30px var(--glow)}
+        .soal-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+        .soal-num{background:var(--accent);color:white;border-radius:8px;padding:4px 10px;font-size:.75rem;font-weight:700;font-family:'DM Mono',monospace;flex-shrink:0}
+        .soal-tag{background:rgba(245,158,11,.12);color:var(--accent3);border:1px solid rgba(245,158,11,.2);border-radius:20px;padding:3px 10px;font-size:.7rem;font-weight:700;letter-spacing:.5px}
+        .soal-tag.real{background:rgba(244,63,94,.1);color:#f43f5e;border-color:rgba(244,63,94,.2)}
+        .soal-tag.medium{background:rgba(6,182,212,.1);color:var(--accent2);border-color:rgba(6,182,212,.2)}
+        .soal-tag.hard{background:rgba(124,58,237,.1);color:var(--accent);border-color:rgba(124,58,237,.2)}
+        .soal-teks{font-size:.9rem;color:var(--text2);line-height:1.8;margin-bottom:16px;padding:14px 16px;background:rgba(0,0,0,.03);border-radius:10px}
+        body.dark .soal-teks{background:rgba(255,255,255,.04)}
+        .soal-pertanyaan{font-size:.92rem;font-weight:700;color:var(--text);margin-bottom:12px}
+        .options{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+        .option{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;border:1px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;font-size:.88rem;color:var(--text2);background:var(--surface)}
+        .option:hover{border-color:var(--accent);background:rgba(124,58,237,.04)}
+        .option.correct{border-color:#10b981!important;background:rgba(16,185,129,.08)!important;color:var(--text)}
+        .option.wrong{border-color:#f43f5e!important;background:rgba(244,63,94,.08)!important}
+        .opt-letter{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;border:1px solid var(--border);font-family:'DM Mono',monospace;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:1px;background:var(--bg)}
+        .option.correct .opt-letter{background:#10b981;border-color:#10b981;color:white}
+        .option.wrong .opt-letter{background:#f43f5e;border-color:#f43f5e;color:white}
+        .show-answer-btn{display:inline-flex;align-items:center;gap:6px;background:none;border:1px solid var(--border);border-radius:8px;padding:7px 14px;cursor:pointer;font-size:.8rem;font-weight:700;color:var(--accent);font-family:'Bricolage Grotesque',sans-serif;transition:all .2s}
+        .show-answer-btn:hover{background:rgba(124,58,237,.06);border-color:var(--accent)}
+        .pembahasan{margin-top:16px;background:rgba(124,58,237,.05);border:1px solid rgba(124,58,237,.12);border-radius:12px;padding:18px;font-size:.87rem;color:var(--text2);line-height:1.75;display:none}
+        .pembahasan.visible{display:block}
+        .pembahasan-title{font-weight:800;color:var(--accent);font-size:.82rem;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+        .pembahasan strong{color:var(--text)}
+        .jawaban-label{display:inline-block;background:#10b981;color:white;border-radius:6px;padding:2px 10px;font-size:.75rem;font-weight:700;margin-bottom:8px;font-family:'DM Mono',monospace}
+
+        .hl-red{color:#f43f5e;font-weight:700}
+        .hl-green{color:#10b981;font-weight:700}
+        .hl-purple{color:var(--accent);font-weight:700}
+        .hl-cyan{color:var(--accent2);font-weight:700}
+
+        .nav-buttons{display:flex;gap:14px;margin-top:40px;flex-wrap:wrap}
+        .nav-btn{flex:1;min-width:200px;padding:16px 24px;background:var(--surface);border:1px solid var(--border);border-radius:16px;text-decoration:none;color:var(--text);font-weight:700;font-size:.9rem;display:flex;align-items:center;gap:10px;transition:all .3s}
+        .nav-btn:hover{border-color:var(--accent);box-shadow:0 8px 24px var(--glow);transform:translateY(-2px)}
+        .nav-btn.primary{background:linear-gradient(135deg,var(--accent),var(--accent2));color:white;border:none;box-shadow:0 4px 16px rgba(124,58,237,.4)}
+        .nav-btn.primary:hover{box-shadow:0 8px 28px rgba(124,58,237,.5);transform:translateY(-3px)}
+        .nav-btn-label{font-size:.7rem;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+        .nav-btn.primary .nav-btn-label{color:rgba(255,255,255,.7)}
+
+        footer{text-align:center;color:var(--text3);font-size:.8rem;padding:20px;border-top:1px solid var(--border);margin-top:40px}
+
+        @media(max-width:768px){
+            .topnav{padding:14px 16px}
+            .wrapper{padding:24px 16px 60px}
+            .section,.quiz-section,.soal{padding:18px}
+            .nav-buttons,.compare,.pleo-grid,.konj-grid{flex-direction:column}
+            .compare,.pleo-grid,.konj-grid{grid-template-columns:1fr}
+            .stats-bar{grid-template-columns:repeat(2,1fr)}
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+<body>
+<div class="noise-overlay"></div>
+<nav class="topnav">
+    <a href="library.html">? Kembali ke Library</a>
+    <span class="topnav-title">Kalimat Efektif &amp; Kepaduan</span>
+    <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+</nav>
+
+<div class="wrapper">
+    <div class="hero-badge">📖 Literasi Bahasa Indonesia - SNBT 2025</div>
+    <h1 class="page-title">Kalimat Efektif &amp;<br><span class="grad">Kepaduan Paragraf</span></h1>
+    <p class="page-desc">Materi lengkap kaidah kalimat efektif, kohesi-koherensi paragraf, paralelisme, pleonasme, ambiguitas, dan kalimat sumbang - disertai <strong>contoh soal SNBT dengan pembahasan menyeluruh</strong>.</p>
+
+    <div class="stats-bar">
+        <div class="stat-card"><div class="stat-num">6</div><div class="stat-label">Topik Materi</div></div>
+        <div class="stat-card"><div class="stat-num">15</div><div class="stat-label">Soal Latihan</div></div>
+        <div class="stat-card"><div class="stat-num">~30%</div><div class="stat-label">Porsi di SNBT</div></div>
+        <div class="stat-card"><div class="stat-num">🔹?</div><div class="stat-label">Kesulitan</div></div>
+    </div>
+
+    <div class="toc">
+        <div class="toc-title">📑 Daftar Isi</div>
+        <ol>
+            <li><a href="#subjek">Kejelasan Subjek &amp; Predikat</a> - kata depan perusak subjek, kasus pasif</li>
+            <li><a href="#paralel">Kesejajaran (Paralelisme)</a> - imbuhan, frasa nomina, konjungsi korelatif</li>
+            <li><a href="#hemat">Kehematan Kata (Pleonasme)</a> - pengulangan makna, konjungsi ganda</li>
+            <li><a href="#logis">Kelogisan &amp; Ambiguitas</a> - kalimat tidak nalar, makna ganda, diksi</li>
+            <li><a href="#kohesi">Kohesi &amp; Koherensi Paragraf</a> - konjungsi, kalimat sumbang, rumpang</li>
+            <li><a href="#latihan">Latihan Soal SNBT</a> - 15 soal + pembahasan lengkap</li>
+        </ol>
+    </div>
+
+    <!-- SECTION 1 -->
+    <div class="section" id="subjek">
+        <h2>🔹 1. Kejelasan Subjek dan Predikat</h2>
+        <p>Kalimat efektif <strong>minimal harus memiliki Subjek (S) dan Predikat (P)</strong>. Kesalahan paling sering di SNBT adalah hilangnya Subjek karena kata depan (preposisi) diletakkan tepat di awal kalimat.</p>
+
+        <h3>Kata Depan Perusak Subjek</h3>
+        <div class="tip">
+            <strong>Daftar Kata Depan yang Sering Menghilangkan Subjek:</strong><br>
+            <span style="font-family:'DM Mono',monospace;background:rgba(6,182,212,.1);padding:2px 8px;border-radius:4px;font-size:.85em">Di - Dalam - Untuk - Bagi - Kepada - Dari - Dengan - Oleh - Menurut - Mengenai - Tentang - Berdasarkan</span><br><br>
+            Bila kata-kata ini <em>membuka kalimat utama</em> dan diikuti nomina, maka nomina itu menjadi <strong>Keterangan</strong>, bukan Subjek. Akibatnya predikat tidak punya subjek ? kalimat tidak efektif.
+        </div>
+
+        <h3>Contoh Kasus &amp; Perbaikan</h3>
+        <div class="compare">
+            <div class="compare-box bad">
+                <div class="cb-label">? Tidak Efektif</div>
+                <p><em>Bagi mahasiswa yang lulus pada tahun 2024 wajib menyerahkan pasfoto.</em></p>
+                <p style="margin-top:6px;font-size:.8rem">"Bagi mahasiswa-" = frasa keterangan. Tidak ada subjek untuk predikat "wajib menyerahkan".</p>
+            </div>
+            <div class="compare-box good">
+                <div class="cb-label">? Efektif</div>
+                <p><em>Mahasiswa yang lulus pada tahun 2024 wajib menyerahkan pasfoto.</em></p>
+                <p style="margin-top:6px;font-size:.8rem">S = "Mahasiswa yang lulus-" | P = "wajib menyerahkan"</p>
+            </div>
+        </div>
+        <div class="compare">
+            <div class="compare-box bad">
+                <div class="cb-label">? Tidak Efektif</div>
+                <p><em>Dalam penelitian ini menunjukkan bahwa konsumsi gula berlebih berbahaya.</em></p>
+                <p style="margin-top:6px;font-size:.8rem">"Dalam penelitian ini" = keterangan. "Menunjukkan" tidak punya subjek.</p>
+            </div>
+            <div class="compare-box good">
+                <div class="cb-label">? Efektif</div>
+                <p><em>Penelitian ini menunjukkan bahwa konsumsi gula berlebih berbahaya.</em></p>
+                <p style="margin-top:6px;font-size:.8rem">S = "Penelitian ini" | P = "menunjukkan"</p>
+            </div>
+        </div>
+        <div class="compare">
+            <div class="compare-box bad">
+                <div class="cb-label">? Tidak Efektif (Double Error)</div>
+                <p><em>Menurut dari hasil penelitian itu membuktikan bahwa kafein mempengaruhi kualitas tidur.</em></p>
+                <p style="margin-top:6px;font-size:.8rem">"Menurut dari" = pleonasme + frasa keterangan bukan subjek.</p>
+            </div>
+            <div class="compare-box good">
+                <div class="cb-label">? Efektif</div>
+                <p><em>Hasil penelitian itu membuktikan bahwa kafein mempengaruhi kualitas tidur.</em></p>
+                <p style="margin-top:6px;font-size:.8rem">S = "Hasil penelitian itu" | P = "membuktikan"</p>
+            </div>
+        </div>
+
+        <h3>Trik Cepat Mendeteksi Kalimat Tanpa Subjek</h3>
+        <div class="tip">
+            <strong>🔹 Tanya: "Siapa/Apa yang [Predikat]?"</strong><br>
+            Jika pertanyaan itu tidak bisa dijawab menggunakan kata-kata dalam kalimat ? kalimat tidak bersubjek ? tidak efektif.<br><br>
+            Contoh: <em>"Bagi mahasiswa yang lulus wajib menyerahkan pasfoto."</em><br>
+            Pertanyaan: Siapa yang wajib menyerahkan? ? Tidak ada jawabannya di kalimat itu. ? Salah!
+        </div>
+    </div>
+
+    <!-- SECTION 2 -->
+    <div class="section" id="paralel">
+        <h2>🔹 2. Kesejajaran (Paralelisme)</h2>
+        <p>Elemen-elemen yang setara perannya dalam kalimat harus memiliki bentuk gramatikal yang <strong>sama</strong> - baik imbuhan, jenis kata, maupun struktur frasa.</p>
+
+        <h3>A. Kesejajaran Imbuhan Verba</h3>
+        <div class="affiks-grid">
+            <div class="affiks-card">
+                <div class="af-type">Aktif transitif</div>
+                <div class="affix">me(N)-</div>
+                <div class="af-example">membaca, menulis, menyetujui</div>
+            </div>
+            <div class="affiks-card">
+                <div class="af-type">Pasif</div>
+                <div class="affix">di-</div>
+                <div class="af-example">dibaca, ditulis, disetujui</div>
+            </div>
+            <div class="affiks-card">
+                <div class="af-type">Resiprokal</div>
+                <div class="affix">ber-</div>
+                <div class="af-example">berlari, bekerja, belajar</div>
+            </div>
+            <div class="affiks-card">
+                <div class="af-type">Akhiran tujuan</div>
+                <div class="affix">-kan / -i</div>
+                <div class="af-example">membuatkan, membacai</div>
+            </div>
+        </div>
+
+        <div class="warning">
+            <strong>🔹 Tidak Sejajar:</strong><br>
+            Syarat pendaftaran adalah <span class="hl-red">mengisi</span> formulir, <span class="hl-red">membayar</span> biaya, dan <span class="hl-red">dilakukan</span> pemeriksaan dokumen.<br>
+            ? "dilakukan" = pasif (di-), dua lainnya aktif (me-). Tidak sejajar!
+        </div>
+        <div class="success">
+            <strong>? Sejajar:</strong><br>
+            Syarat pendaftaran adalah <span class="hl-green">mengisi</span> formulir, <span class="hl-green">membayar</span> biaya, dan <span class="hl-green">menyerahkan</span> dokumen. - semua berawalan <strong>me-</strong>
+        </div>
+
+        <h3>B. Kesejajaran Frasa Nomina dan Verba Campuran</h3>
+        <div class="compare">
+            <div class="compare-box bad">
+                <div class="cb-label">? Tidak Sejajar</div>
+                <p><em>Program bertujuan: meningkatkan daya saing, efisiensi anggaran, dan memperluas jangkauan.</em></p>
+                <p style="font-size:.8rem;margin-top:4px">verba - nomina - verba</p>
+            </div>
+            <div class="compare-box good">
+                <div class="cb-label">? Sejajar</div>
+                <p><em>Program bertujuan: meningkatkan daya saing, meningkatkan efisiensi, dan memperluas jangkauan.</em></p>
+                <p style="font-size:.8rem;margin-top:4px">verba - verba - verba</p>
+            </div>
+        </div>
+
+        <h3>C. Konjungsi Korelatif - Menuntut Paralelisme Ketat</h3>
+        <div class="table-wrap">
+            <table>
+                <tr><th>Konjungsi Korelatif</th><th>Contoh Benar</th></tr>
+                <tr><td><code>baik - maupun -</code></td><td>Baik <em>membaca</em> maupun <em>menulis</em> perlu dilatih setiap hari.</td></tr>
+                <tr><td><code>tidak - tetapi -</code></td><td>Ia tidak <em>malas</em> tetapi <em>lelah</em>.</td></tr>
+                <tr><td><code>bukan - melainkan -</code></td><td>Bukan <em>membeli</em> melainkan <em>meminjam</em>.</td></tr>
+                <tr><td><code>semakin - semakin -</code></td><td>Semakin <em>rajin belajar</em>, semakin <em>tinggi prestasinya</em>.</td></tr>
+            </table>
+        </div>
+
+        <h3>D. Kesejajaran dalam Rincian Bernomor</h3>
+        <div class="compare">
+            <div class="compare-box bad">
+                <div class="cb-label">? Tidak Sejajar</div>
+                <p>Kegiatan meliputi:<br>1. Penulisan laporan<br>2. Menganalisis data<br>3. Presentasi hasil</p>
+            </div>
+            <div class="compare-box good">
+                <div class="cb-label">? Sejajar (semua nomina)</div>
+                <p>Kegiatan meliputi:<br>1. Penulisan laporan<br>2. Analisis data<br>3. Presentasi hasil</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION 3 -->
+    <div class="section" id="hemat">
+        <h2>🔹 3. Kehematan Kata (Pleonasme)</h2>
+        <p>Kalimat efektif tidak menggunakan kata yang <strong>berulang maknanya</strong> (pleonasme) atau pemborosan kata yang tidak menambah informasi baru.</p>
+
+        <h3>A. Daftar Pleonasme Paling Sering Muncul di SNBT</h3>
+        <div class="pleo-grid">
+            <div class="pleo-item"><span class="pleo-arrow">?</span><span><span class="hl-red">Para ibu-ibu</span> ? Para ibu / Ibu-ibu</span></div>
+            <div class="pleo-item"><span class="pleo-arrow">?</span><span><span class="hl-red">Mundur ke belakang</span> ? Mundur</span></div>
+            <div class="pleo-item"><span class="pleo-arrow">?</span><span><span class="hl-red">Naik ke atas</span> ? Naik</span></div>
+            <div class="pleo-item"><span class="pleo-arrow">?</span><span><span class="hl-red">Turun ke bawah</span> ? Turun</span></div>
+            <div class="pleo-item"><span class="pleo-arrow">?</span><span><span class="hl-red">Sejak dari dulu</span> ? Sejak dulu / Dari dulu</span></div>
+            <div class="pleo-item"><span class="pleo-arrow">?</span><span><span class="hl-red">Agar supaya</span> ? Agar / Supaya</span></div>
+            <div class="pleo-item"><span class="pleo-arrow">?</span><span><span class="hl-red">Adalah merupakan</span> ? Adalah / Merupakan</span></div>
+            <div class="pleo-item"><span class="pleo-arrow">?</span><span><span class="hl-red">Demi untuk</span> ? Demi / Untuk</span></div>
+            <div class="pleo-item"><span class="pleo-arrow">?</span><span><span class="hl-red">Disebabkan karena</span> ? Disebabkan oleh / Karena</span></div>
+            <div class="pleo-item"><span class="pleo-arrow">?</span><span><span class="hl-red">Saling tolong-menolong</span> ? Saling menolong / Tolong-menolong</span></div>
+            <div class="pleo-item"><span class="pleo-arrow">?</span><span><span class="hl-red">Amat sangat luar biasa</span> ? Sangat luar biasa</span></div>
+            <div class="pleo-item"><span class="pleo-arrow">?</span><span><span class="hl-red">Menurut dari</span> ? Menurut / Berdasarkan</span></div>
+            <div class="pleo-item"><span class="pleo-arrow">?</span><span><span class="hl-red">Semua siswa-siswa</span> ? Semua siswa / Siswa-siswa</span></div>
+            <div class="pleo-item"><span class="pleo-arrow">?</span><span><span class="hl-red">Pada saat ini</span> ? Saat ini / Kini</span></div>
+        </div>
+
+        <h3>B. Penggunaan Dua Konjungsi Bersinonim</h3>
+        <div class="example">
+            <strong>Konjungsi konsesif ganda:</strong><br>
+            ? <em>Walaupun <span class="hl-red">meskipun</span> ia sakit, <span class="hl-red">tetapi</span> ia tetap masuk.</em><br>
+            ? <em>Walaupun ia sakit, ia tetap masuk sekolah.</em><br><br>
+            <strong>Predikat ganda bersinonim:</strong><br>
+            ? <em>Masalah itu <span class="hl-red">adalah merupakan</span> tanggung jawab kita.</em><br>
+            ? <em>Masalah itu merupakan tanggung jawab kita.</em>
+        </div>
+
+        <div class="tip">
+            <strong>🔹 Rumus Deteksi Pleonasme:</strong><br>
+            Jika dua kata dapat dihapus <em>salah satunya</em> tanpa mengubah makna ? itu pleonasme. Di SNBT, soal pleonasme biasanya meminta mengidentifikasi <em>pasangan</em> kata yang mubazir, bukan kata tunggal.
+        </div>
+    </div>
+
+    <!-- SECTION 4 -->
+    <div class="section" id="logis">
+        <h2>🔹 4. Kelogisan Makna &amp; Ambiguitas</h2>
+
+        <h3>A. Ketidaklogisan Makna</h3>
+        <p>Kalimat harus masuk akal. Subjek dan predikat harus sepadan secara semantis.</p>
+        <div class="warning">
+            <strong>🔹 Tidak Logis (Klasik SNBT):</strong><br>
+            <em>"Waktu dan tempat kami persilakan."</em><br>
+            ? Waktu dan tempat adalah benda abstrak/konkret - tidak bisa "dipersilakan" tampil di panggung.<br><br>
+            ? <em>"Bapak pembicara kami persilakan untuk menyampaikan materi."</em>
+        </div>
+
+        <div class="table-wrap">
+            <table>
+                <tr><th>Kalimat Tidak Logis</th><th>Letak Masalah</th><th>Perbaikan</th></tr>
+                <tr>
+                    <td><em>Rumah itu murah sehingga banyak yang tidak mampu membelinya.</em></td>
+                    <td>"Murah" kontradiktif dengan "tidak mampu membeli"</td>
+                    <td><em>Rumah itu mahal sehingga banyak yang tidak mampu membelinya.</em></td>
+                </tr>
+                <tr>
+                    <td><em>Semakin tinggi pendidikan, semakin banyak pengangguran.</em></td>
+                    <td>Hubungan proporsional tidak logis secara umum</td>
+                    <td><em>Semakin tinggi pendidikan, semakin besar peluang kerja.</em></td>
+                </tr>
+                <tr>
+                    <td><em>Kepala sekolah mempersilakan lantai kepada orang tua.</em></td>
+                    <td>Lantai (benda) tidak bisa dipersilakan</td>
+                    <td><em>Kepala sekolah mempersilakan orang tua untuk duduk.</em></td>
+                </tr>
+            </table>
+        </div>
+
+        <h3>B. Kalimat Ambigu - Bermakna Ganda</h3>
+        <div class="example">
+            <strong>Ambiguitas Struktural:</strong><br>
+            <em>"Ibu melihat adik dengan teropong baru."</em><br>
+            ? Siapa yang punya teropong? Ibu (ibu memakai teropong) atau adik (adik membawa teropong)?<br>
+            ? <em>"Dengan teropong barunya, Ibu melihat adik."</em> - Ibu yang memegang.
+        </div>
+        <div class="example">
+            <strong>Ambiguitas Referensial (kata ganti -nya tidak jelas):</strong><br>
+            <em>"Dosen meminta mahasiswa mengumpulkan tugas di ruangannya."</em><br>
+            ? "ruangannya" = ruangan dosen atau ruangan mahasiswa?<br>
+            ? <em>"Dosen meminta mahasiswa mengumpulkan tugas di ruangan dosen."</em>
+        </div>
+        <div class="example">
+            <strong>Ambiguitas Leksikal (kata bermakna ganda):</strong><br>
+            <em>"Ani bertemu Budi setelah ia lulus ujian."</em><br>
+            ? "ia" = Ani atau Budi?<br>
+            ? <em>"Setelah Ani lulus ujian, ia bertemu Budi."</em>
+        </div>
+
+        <h3>C. Kesalahan Diksi (Pilihan Kata Tidak Tepat)</h3>
+        <div class="table-wrap">
+            <table>
+                <tr><th>Salah</th><th>Benar</th><th>Keterangan</th></tr>
+                <tr><td><em>mengalami keuntungan</em></td><td><em>memperoleh / meraih keuntungan</em></td><td>"Mengalami" lazim untuk hal negatif</td></tr>
+                <tr><td><em>dikarenakan</em></td><td><em>karena / disebabkan oleh</em></td><td>Bentuk tidak baku</td></tr>
+                <tr><td><em>mempermasalahkan masalah</em></td><td><em>mempersoalkan / membahas</em></td><td>Tautologi</td></tr>
+                <tr><td><em>sangat - sekali</em></td><td><em>sangat - / - sekali</em></td><td>Penguatan ganda = pleonasme</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- SECTION 5 -->
+    <div class="section" id="kohesi">
+        <h2>🔹 5. Kohesi &amp; Koherensi Paragraf</h2>
+        <p><strong>Kohesi</strong> = keterkaitan antar kalimat secara bentuk (konjungsi, kata ganti, repetisi).<br>
+        <strong>Koherensi</strong> = keterkaitan antar kalimat secara makna (alur logis, ide yang saling melanjutkan).</p>
+
+        <h3>A. Konjungsi Intrakalimat (dalam satu kalimat)</h3>
+        <div class="konj-grid">
+            <div class="konj-card">
+                <div class="konj-type">Penambahan</div>
+                <div class="konj-list"><span class="konj-tag">dan</span><span class="konj-tag">serta</span><span class="konj-tag">juga</span></div>
+            </div>
+            <div class="konj-card">
+                <div class="konj-type">Pertentangan</div>
+                <div class="konj-list"><span class="konj-tag">tetapi</span><span class="konj-tag">namun</span><span class="konj-tag">melainkan</span></div>
+            </div>
+            <div class="konj-card">
+                <div class="konj-type">Sebab-Akibat</div>
+                <div class="konj-list"><span class="konj-tag">karena</span><span class="konj-tag">sehingga</span><span class="konj-tag">sebab</span></div>
+            </div>
+            <div class="konj-card">
+                <div class="konj-type">Tujuan</div>
+                <div class="konj-list"><span class="konj-tag">agar</span><span class="konj-tag">supaya</span><span class="konj-tag">demi</span></div>
+            </div>
+            <div class="konj-card">
+                <div class="konj-type">Syarat</div>
+                <div class="konj-list"><span class="konj-tag">jika</span><span class="konj-tag">apabila</span><span class="konj-tag">asalkan</span></div>
+            </div>
+            <div class="konj-card">
+                <div class="konj-type">Konsesif</div>
+                <div class="konj-list"><span class="konj-tag">walaupun</span><span class="konj-tag">meskipun</span><span class="konj-tag">kendati</span></div>
+            </div>
+        </div>
+
+        <h3>B. Konjungsi Antarkalimat (diikuti koma, awal kalimat baru)</h3>
+        <div class="table-wrap">
+            <table>
+                <tr><th>Konjungsi</th><th>Fungsi</th><th>Contoh</th></tr>
+                <tr><td><strong>Namun, / Akan tetapi,</strong></td><td>Pertentangan</td><td><em>Ia rajin. Namun, nilainya tetap rendah.</em></td></tr>
+                <tr><td><strong>Oleh karena itu, / Dengan demikian,</strong></td><td>Akibat / Simpulan</td><td><em>Hujan deras. Oleh karena itu, jalan tergenang.</em></td></tr>
+                <tr><td><strong>Sebaliknya,</strong></td><td>Kontras penuh</td><td><em>Kota A maju. Sebaliknya, Kota B tertinggal.</em></td></tr>
+                <tr><td><strong>Selain itu, / Di samping itu,</strong></td><td>Penambahan</td><td><em>Program itu murah. Selain itu, mudah diakses.</em></td></tr>
+                <tr><td><strong>Di sisi lain,</strong></td><td>Perspektif berbeda</td><td><em>A berpendapat X. Di sisi lain, B berpendapat Y.</em></td></tr>
+                <tr><td><strong>Sementara itu,</strong></td><td>Kesamaan waktu</td><td><em>Tim A bertanding. Sementara itu, Tim B istirahat.</em></td></tr>
+                <tr><td><strong>Bahkan,</strong></td><td>Intensifikasi</td><td><em>Ia tidak hadir. Bahkan, tak memberi kabar.</em></td></tr>
+                <tr><td><strong>Walaupun demikian,</strong></td><td>Konsesif antarkalimat</td><td><em>Dananya minim. Walaupun demikian, proyek jalan.</em></td></tr>
+            </table>
+        </div>
+
+        <h3>C. Kalimat Sumbang</h3>
+        <p>Kalimat sumbang adalah kalimat yang topiknya <strong>tidak relevan dengan ide pokok paragraf</strong>.</p>
+        <div class="tip">
+            <strong>🔹 Cara Menemukan Kalimat Sumbang:</strong><br>
+            1. Baca kalimat pertama ? itu biasanya ide pokok paragraf.<br>
+            2. Tanya tiap kalimat berikutnya: "Apakah ini mendukung/menjelaskan ide pokok?"<br>
+            3. Yang jawabannya <em>tidak</em> = kalimat sumbang.<br><br>
+            Contoh: Paragraf tentang kemacetan Jakarta. Di tengah ada kalimat: <em>"Jakarta adalah kota terbesar di Indonesia."</em> ? Ini fakta umum, tidak membahas kemacetan ? <strong>SUMBANG</strong>.
+        </div>
+
+        <h3>D. Panduan Isian Konjungsi Rumpang</h3>
+        <div class="table-wrap">
+            <table>
+                <tr><th>Kalimat Sebelum Rumpang</th><th>Kalimat Sesudah Rumpang</th><th>Konjungsi Tepat</th></tr>
+                <tr><td>Fakta / pernyataan umum</td><td>Kontras / berlawanan</td><td><em>Namun, / Akan tetapi,</em></td></tr>
+                <tr><td>Pendapat A</td><td>Pendapat B yang berbeda</td><td><em>Di sisi lain, / Sebaliknya,</em></td></tr>
+                <tr><td>Sebab / premis</td><td>Akibat / hasil</td><td><em>Oleh karena itu, / Akibatnya,</em></td></tr>
+                <tr><td>Fakta 1</td><td>Fakta 2 yang senada</td><td><em>Selain itu, / Di samping itu,</em></td></tr>
+                <tr><td>Kondisi ideal</td><td>Hambatan / realita</td><td><em>Walaupun demikian, / Meski begitu,</em></td></tr>
+                <tr><td>Argumen utama</td><td>Penguatan / intensifikasi</td><td><em>Bahkan,</em></td></tr>
+                <tr><td>Beberapa premis</td><td>Simpulan</td><td><em>Dengan demikian, / Jadi,</em></td></tr>
+            </table>
+        </div>
+    </div>
+
+    <!-- LATIHAN SOAL -->
+    <div class="quiz-section" id="latihan">
+        <h2>🔹 Latihan Soal SNBT</h2>
+        <div class="quiz-subtitle">15 Soal - Klik opsi untuk menjawab - Klik tombol untuk lihat pembahasan</div>
+
+        <!-- SOAL 1 -->
+        <div class="soal">
+            <div class="soal-header"><span class="soal-num">01</span><span class="soal-tag real">SNBT 2023</span><span class="soal-tag">Subjek-Predikat</span></div>
+            <div class="soal-teks"><em>"Bagi para pelajar yang ingin mendaftar beasiswa wajib mengumpulkan nilai rapor semester terakhir."</em></div>
+            <div class="soal-pertanyaan">Kalimat tersebut tidak efektif karena -</div>
+            <div class="options" id="opt1">
+                <div class="option" onclick="pilih(this,'1','A')"><span class="opt-letter">A</span>Terdapat pleonasme pada kata "para pelajar"</div>
+                <div class="option" onclick="pilih(this,'1','B')"><span class="opt-letter">B</span>Predikatnya ambigu dan bermakna ganda</div>
+                <div class="option" onclick="pilih(this,'1','C')"><span class="opt-letter">C</span>Kalimat tidak memiliki subjek karena diawali kata depan "Bagi"</div>
+                <div class="option" onclick="pilih(this,'1','D')"><span class="opt-letter">D</span>Terdapat ketidaklogisan antara subjek dan predikat</div>
+                <div class="option" onclick="pilih(this,'1','E')"><span class="opt-letter">E</span>Konjungsi yang digunakan tidak tepat</div>
+            </div>
+            <button class="show-answer-btn" onclick="toggleP('p1')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p1">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: C</div>
+                <p>Kalimat diawali frasa preposisional <strong>"Bagi para pelajar-"</strong>. Kata <em>Bagi</em> adalah preposisi - frasa setelahnya menjadi <strong>keterangan</strong>, bukan subjek. Predikat "wajib mengumpulkan" tidak memiliki subjek ? kalimat tidak efektif.<br><br>
+                <strong>Perbaikan:</strong> <em>"Para pelajar yang ingin mendaftar beasiswa wajib mengumpulkan nilai rapor semester terakhir."</em><br><br>
+                Catatan: Pilihan A (pleonasme "para pelajar") juga benar secara minor, tetapi bukan alasan paling mendasar. Tidak adanya subjek adalah kesalahan yang lebih fundamental.</p>
+            </div>
+        </div>
+
+        <!-- SOAL 2 -->
+        <div class="soal">
+            <div class="soal-header"><span class="soal-num">02</span><span class="soal-tag medium">Medium</span><span class="soal-tag">Paralelisme</span></div>
+            <div class="soal-teks">Manakah kalimat yang menunjukkan kesejajaran yang benar?</div>
+            <div class="soal-pertanyaan">Pilih kalimat yang PALING efektif:</div>
+            <div class="options" id="opt2">
+                <div class="option" onclick="pilih(this,'2','A')"><span class="opt-letter">A</span>Tugas panitia adalah menyusun acara, perlengkapan, dan mengundang tamu.</div>
+                <div class="option" onclick="pilih(this,'2','B')"><span class="opt-letter">B</span>Tugas panitia adalah menyusun acara, menyiapkan perlengkapan, dan mengundang tamu.</div>
+                <div class="option" onclick="pilih(this,'2','C')"><span class="opt-letter">C</span>Tugas panitia adalah menyusun acara, perlengkapan disiapkan, dan undangan tamu.</div>
+                <div class="option" onclick="pilih(this,'2','D')"><span class="opt-letter">D</span>Tugas panitia adalah acara disusun, menyiapkan perlengkapan, dan tamu diundang.</div>
+                <div class="option" onclick="pilih(this,'2','E')"><span class="opt-letter">E</span>Tugas panitia adalah penyusunan acara, perlengkapan, dan mengundang tamu.</div>
+            </div>
+            <button class="show-answer-btn" onclick="toggleP('p2')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p2">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: B</div>
+                <p>? A: menyusun (me-), perlengkapan (nomina), mengundang (me-) ? tidak sejajar<br>
+                ? B: <em>menyusun, menyiapkan, mengundang</em> ? semua berawalan <strong>me-</strong> ? SEJAJAR<br>
+                ? C: campuran aktif, pasif, nomina<br>
+                ? D: campuran pasif, aktif, pasif<br>
+                ? E: nomina, nomina, verba aktif ? tidak sejajar<br><br>
+                Kunci: Setelah kata "adalah", pilih deretan nomina ATAU deretan verba - konsistenlah pada satu bentuk.</p>
+            </div>
+        </div>
+
+        <!-- SOAL 3 -->
+        <div class="soal">
+            <div class="soal-header"><span class="soal-num">03</span><span class="soal-tag real">SNBT 2022</span><span class="soal-tag">Pleonasme</span></div>
+            <div class="soal-teks"><em>"Semua siswa-siswa yang hadir wajib mengisi daftar hadir yang telah disediakan oleh panitia."</em></div>
+            <div class="soal-pertanyaan">Kata yang mubazir dalam kalimat tersebut adalah -</div>
+            <div class="options" id="opt3">
+                <div class="option" onclick="pilih(this,'3','A')"><span class="opt-letter">A</span>wajib dan mengisi</div>
+                <div class="option" onclick="pilih(this,'3','B')"><span class="opt-letter">B</span>Semua dan siswa-siswa</div>
+                <div class="option" onclick="pilih(this,'3','C')"><span class="opt-letter">C</span>daftar hadir dan hadir</div>
+                <div class="option" onclick="pilih(this,'3','D')"><span class="opt-letter">D</span>yang telah disediakan dan oleh</div>
+                <div class="option" onclick="pilih(this,'3','E')"><span class="opt-letter">E</span>panitia dan disediakan</div>
+            </div>
+            <button class="show-answer-btn" onclick="toggleP('p3')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p3">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: B</div>
+                <p><strong>"Semua"</strong> = kata kuantitas jamak. <strong>"Siswa-siswa"</strong> = pengulangan nomina yang juga bermakna jamak. Keduanya dipakai bersamaan = pleonasme.<br><br>
+                ? Cukup: <em>"Semua siswa yang hadir-"</em> - ATAU - <em>"Siswa-siswa yang hadir-"</em><br><br>
+                Catatan: "daftar hadir" bukan pleonasme - ini frasa baku (attendance list), bukan pengulangan makna.</p>
+            </div>
+        </div>
+
+        <!-- SOAL 4 -->
+        <div class="soal">
+            <div class="soal-header"><span class="soal-num">04</span><span class="soal-tag hard">Sulit</span><span class="soal-tag">Ambiguitas</span></div>
+            <div class="soal-teks"><em>"Dosen meminta mahasiswa mengumpulkan tugas di ruangannya."</em></div>
+            <div class="soal-pertanyaan">Mengapa kalimat tersebut termasuk kalimat ambigu?</div>
+            <div class="options" id="opt4">
+                <div class="option" onclick="pilih(this,'4','A')"><span class="opt-letter">A</span>Karena "dosen" tidak memiliki predikat yang jelas</div>
+                <div class="option" onclick="pilih(this,'4','B')"><span class="opt-letter">B</span>Karena "ruangannya" dapat merujuk ke ruangan dosen atau ruangan mahasiswa</div>
+                <div class="option" onclick="pilih(this,'4','C')"><span class="opt-letter">C</span>Karena "tugas" bermakna ganda antara pekerjaan dan kewajiban</div>
+                <div class="option" onclick="pilih(this,'4','D')"><span class="opt-letter">D</span>Karena tidak ada konjungsi yang menghubungkan klausa</div>
+                <div class="option" onclick="pilih(this,'4','E')"><span class="opt-letter">E</span>Karena kalimat tidak memiliki objek langsung</div>
+            </div>
+            <button class="show-answer-btn" onclick="toggleP('p4')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p4">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: B</div>
+                <p>Kalimat ini ambigu secara <strong>referensial</strong>. Sufiks "-nya" pada "ruangannya" tidak jelas merujuk ke siapa:<br><br>
+                🔹 Tafsir 1: Mahasiswa mengumpulkan tugas <em>di ruangan dosen</em>.<br>
+                🔹 Tafsir 2: Mahasiswa mengumpulkan tugas <em>di ruangan mahasiswa itu sendiri</em>.<br><br>
+                ? Perbaikan: <em>"Dosen meminta mahasiswa mengumpulkan tugas di ruangan dosen."</em></p>
+            </div>
+        </div>
+
+        <!-- SOAL 5 -->
+        <div class="soal">
+            <div class="soal-header"><span class="soal-num">05</span><span class="soal-tag real">SNBT 2023</span><span class="soal-tag">Kalimat Sumbang</span></div>
+            <div class="soal-teks"><em>(1) Kemacetan lalu lintas di Jakarta semakin memburuk setiap tahunnya. (2) Jumlah kendaraan pribadi yang terus bertambah menjadi salah satu penyebab utamanya. (3) Pemerintah telah berupaya mengatasi masalah ini dengan membangun infrastruktur transportasi publik. (4) Jakarta merupakan kota terbesar dan terpadat di Indonesia. (5) Meski begitu, kemacetan belum sepenuhnya teratasi karena kesadaran masyarakat masih rendah.</em></div>
+            <div class="soal-pertanyaan">Kalimat yang tidak padu dalam paragraf tersebut adalah -</div>
+            <div class="options" id="opt5">
+                <div class="option" onclick="pilih(this,'5','A')"><span class="opt-letter">A</span>Kalimat (1)</div>
+                <div class="option" onclick="pilih(this,'5','B')"><span class="opt-letter">B</span>Kalimat (2)</div>
+                <div class="option" onclick="pilih(this,'5','C')"><span class="opt-letter">C</span>Kalimat (3)</div>
+                <div class="option" onclick="pilih(this,'5','D')"><span class="opt-letter">D</span>Kalimat (4)</div>
+                <div class="option" onclick="pilih(this,'5','E')"><span class="opt-letter">E</span>Kalimat (5)</div>
+            </div>
+            <button class="show-answer-btn" onclick="toggleP('p5')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p5">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: D</div>
+                <p>Ide pokok = <strong>kemacetan Jakarta dan upaya mengatasinya</strong>.<br><br>
+                ? (1) Pernyataan masalah ? relevan<br>
+                ? (2) Penyebab kemacetan ? relevan<br>
+                ? (3) Upaya pemerintah ? relevan<br>
+                ? (4) <em>"Jakarta kota terbesar dan terpadat"</em> = fakta umum, tidak membahas kemacetan ? <strong>SUMBANG</strong><br>
+                ? (5) Evaluasi hasil upaya ? relevan<br><br>
+                Cara cepat: Tanya tiap kalimat - "Apakah ini soal kemacetan atau penanganannya?" Kalimat (4) tidak.</p>
+            </div>
+        </div>
+
+        <!-- SOAL 6 -->
+        <div class="soal">
+            <div class="soal-header"><span class="soal-num">06</span><span class="soal-tag medium">Medium</span><span class="soal-tag">Konjungsi Rumpang</span></div>
+            <div class="soal-teks"><em>"Beberapa peneliti menyarankan penggunaan energi terbarukan untuk mengurangi emisi karbon. [___], ada pula pihak yang menilai bahwa transisi energi ini memerlukan investasi besar yang belum tentu terjangkau oleh negara berkembang."</em></div>
+            <div class="soal-pertanyaan">Konjungsi antarkalimat yang paling tepat untuk mengisi bagian rumpang adalah -</div>
+            <div class="options" id="opt6">
+                <div class="option" onclick="pilih(this,'6','A')"><span class="opt-letter">A</span>Oleh karena itu</div>
+                <div class="option" onclick="pilih(this,'6','B')"><span class="opt-letter">B</span>Dengan demikian</div>
+                <div class="option" onclick="pilih(this,'6','C')"><span class="opt-letter">C</span>Di samping itu</div>
+                <div class="option" onclick="pilih(this,'6','D')"><span class="opt-letter">D</span>Namun</div>
+                <div class="option" onclick="pilih(this,'6','E')"><span class="opt-letter">E</span>Bahkan</div>
+            </div>
+            <button class="show-answer-btn" onclick="toggleP('p6')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p6">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: D</div>
+                <p>Kalimat 1: saran pro energi terbarukan. Kalimat 2: ada pihak yang keberatan. Hubungan = <strong>pertentangan</strong>.<br><br>
+                ? A & B: akibat/simpulan ? tidak tepat<br>
+                ? C: "Di samping itu" = penambahan senada ? tidak tepat<br>
+                ? D: "Namun" = pertentangan ? TEPAT<br>
+                ? E: "Bahkan" = memperkuat kalimat sebelumnya ? tidak tepat</p>
+            </div>
+        </div>
+
+        <!-- SOAL 7 -->
+        <div class="soal">
+            <div class="soal-header"><span class="soal-num">07</span><span class="soal-tag real">SNBT 2024</span><span class="soal-tag">Kalimat Efektif</span></div>
+            <div class="soal-teks">Pilihlah kalimat yang PALING efektif.</div>
+            <div class="soal-pertanyaan">Kalimat yang efektif adalah -</div>
+            <div class="options" id="opt7">
+                <div class="option" onclick="pilih(this,'7','A')"><span class="opt-letter">A</span>Proyek itu direncanakan oleh pemerintah pusat dan akan dilaksanakan dalam waktu dekat ini.</div>
+                <div class="option" onclick="pilih(this,'7','B')"><span class="opt-letter">B</span>Dalam rangka meningkatkan kesejahteraan masyarakat menjadi tujuan utama pemerintah.</div>
+                <div class="option" onclick="pilih(this,'7','C')"><span class="opt-letter">C</span>Pemerintah berencana melaksanakan proyek infrastruktur dalam waktu dekat.</div>
+                <div class="option" onclick="pilih(this,'7','D')"><span class="opt-letter">D</span>Adalah merupakan tanggung jawab pemerintah untuk meningkatkan kesejahteraan rakyat.</div>
+                <div class="option" onclick="pilih(this,'7','E')"><span class="opt-letter">E</span>Untuk mengatasi kemiskinan banyak program-program pemerintah yang sudah dilaksanakan.</div>
+            </div>
+            <button class="show-answer-btn" onclick="toggleP('p7')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p7">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: C</div>
+                <p>? A: "dalam waktu dekat ini" = pleonasme ("dekat" dan "ini" menunjuk waktu yang sama)<br>
+                ? B: diawali "Dalam rangka-" = frasa preposisional ? kehilangan subjek<br>
+                ? C: S=Pemerintah | P=berencana melaksanakan | O=proyek infrastruktur | K=dalam waktu dekat ? efektif dan hemat<br>
+                ? D: "Adalah merupakan" = dua predikat bersinonim (pleonasme ganda)<br>
+                ? E: "Untuk mengatasi kemiskinan" di awal ? kehilangan subjek + "banyak program-program" = pleonasme</p>
+            </div>
+        </div>
+
+        <!-- SOAL 8 -->
+        <div class="soal">
+            <div class="soal-header"><span class="soal-num">08</span><span class="soal-tag hard">Sulit</span><span class="soal-tag">Paralelisme Lanjutan</span></div>
+            <div class="soal-teks"><em>"Presiden menegaskan bahwa kebijakan ini bertujuan untuk (1) meningkatkan daya saing industri nasional, (2) menciptakan lapangan kerja yang lebih luas, dan (3) pemerataan distribusi pendapatan ke seluruh daerah."</em></div>
+            <div class="soal-pertanyaan">Perbaikan yang tepat pada bagian (3) agar kalimat menjadi sejajar adalah -</div>
+            <div class="options" id="opt8">
+                <div class="option" onclick="pilih(this,'8','A')"><span class="opt-letter">A</span>distribusi pendapatan yang merata ke seluruh daerah</div>
+                <div class="option" onclick="pilih(this,'8','B')"><span class="opt-letter">B</span>meratakan distribusi pendapatan ke seluruh daerah</div>
+                <div class="option" onclick="pilih(this,'8','C')"><span class="opt-letter">C</span>pemerataan distribusi pendapatan yang dilakukan ke seluruh daerah</div>
+                <div class="option" onclick="pilih(this,'8','D')"><span class="opt-letter">D</span>memeratakan pendapatan yang terdistribusi ke seluruh daerah</div>
+                <div class="option" onclick="pilih(this,'8','E')"><span class="opt-letter">E</span>distribusikan pendapatan secara merata ke seluruh daerah</div>
+            </div>
+            <button class="show-answer-btn" onclick="toggleP('p8')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p8">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: B</div>
+                <p>Pola (1) dan (2): <strong>me(N)-kan + objek</strong> ? meningkatkan -, menciptakan -<br>
+                Maka (3) harus: <strong>me(N)-kan + objek</strong> juga.<br><br>
+                ? A: "distribusi pendapatan yang merata" = frasa nomina ? tidak sejajar<br>
+                ? B: <strong>"meratakan distribusi pendapatan"</strong> = me-kan + objek ? SEJAJAR<br>
+                ? C: nomina + klausa relatif ? tidak sejajar<br>
+                ? D: "memeratakan" benar, tetapi "yang terdistribusi" menambah klausa yang merusak kesejajaran<br>
+                ? E: Bentuk imperatif tidak tepat dalam konteks pernyataan tujuan</p>
+            </div>
+        </div>
+
+        <!-- SOAL 9 -->
+        <div class="soal">
+            <div class="soal-header"><span class="soal-num">09</span><span class="soal-tag real">SNBT 2022</span><span class="soal-tag">Kelogisan</span></div>
+            <div class="soal-teks"><em>"Semakin tinggi tingkat pendidikan seseorang, semakin banyak pengangguran yang terjadi di negeri ini."</em></div>
+            <div class="soal-pertanyaan">Kalimat di atas tidak efektif karena -</div>
+            <div class="options" id="opt9">
+                <div class="option" onclick="pilih(this,'9','A')"><span class="opt-letter">A</span>Menggunakan konjungsi yang tidak tepat</div>
+                <div class="option" onclick="pilih(this,'9','B')"><span class="opt-letter">B</span>Terdapat pleonasme pada frasa "semakin tinggi"</div>
+                <div class="option" onclick="pilih(this,'9','C')"><span class="opt-letter">C</span>Hubungan antara klausa pertama dan kedua tidak logis</div>
+                <div class="option" onclick="pilih(this,'9','D')"><span class="opt-letter">D</span>Tidak memiliki predikat yang jelas</div>
+                <div class="option" onclick="pilih(this,'9','E')"><span class="opt-letter">E</span>Subjeknya tidak konsisten antara klausa pertama dan kedua</div>
+            </div>
+            <button class="show-answer-btn" onclick="toggleP('p9')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p9">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: C</div>
+                <p>Pola "semakin A, semakin B" menyatakan hubungan proporsional. Secara logika umum: makin tinggi pendidikan ? makin kompeten ? pengangguran seharusnya <em>berkurang</em>, bukan bertambah. Hubungan sebab-akibat ini <strong>tidak logis</strong>.<br><br>
+                ? Perbaikan: <em>"Semakin tinggi tingkat pendidikan seseorang, semakin besar peluang kerjanya."</em></p>
+            </div>
+        </div>
+
+        <!-- SOAL 10 -->
+        <div class="soal">
+            <div class="soal-header"><span class="soal-num">10</span><span class="soal-tag medium">Medium</span><span class="soal-tag">Kalimat Sumbang</span></div>
+            <div class="soal-teks"><em>(1) Minat baca masyarakat Indonesia dinilai masih sangat rendah. (2) Survei UNESCO menempatkan Indonesia pada urutan kedua dari bawah dalam hal indeks minat baca di antara 61 negara. (3) Kondisi ini diperparah oleh penetrasi media sosial yang sangat masif. (4) TikTok menjadi platform media sosial terpopuler di kalangan remaja Indonesia saat ini. (5) Rendahnya minat baca berdampak pada kualitas sumber daya manusia Indonesia di kancah global.</em></div>
+            <div class="soal-pertanyaan">Kalimat sumbang dalam paragraf tersebut adalah -</div>
+            <div class="options" id="opt10">
+                <div class="option" onclick="pilih(this,'10','A')"><span class="opt-letter">A</span>Kalimat (1)</div>
+                <div class="option" onclick="pilih(this,'10','B')"><span class="opt-letter">B</span>Kalimat (2)</div>
+                <div class="option" onclick="pilih(this,'10','C')"><span class="opt-letter">C</span>Kalimat (3)</div>
+                <div class="option" onclick="pilih(this,'10','D')"><span class="opt-letter">D</span>Kalimat (4)</div>
+                <div class="option" onclick="pilih(this,'10','E')"><span class="opt-letter">E</span>Kalimat (5)</div>
+            </div>
+            <button class="show-answer-btn" onclick="toggleP('p10')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p10">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: D</div>
+                <p>Ide pokok: <strong>rendahnya minat baca dan dampaknya</strong>.<br><br>
+                ? (1) Pernyataan masalah ? relevan<br>
+                ? (2) Data pendukung ? relevan<br>
+                ? (3) Faktor penyebab (media sosial mengganggu minat baca) ? relevan<br>
+                ? (4) "TikTok adalah platform terpopuler" = fakta popularitas saja, tidak menyebut dampaknya pada minat baca ? <strong>SUMBANG</strong><br>
+                ? (5) Dampak rendahnya minat baca ? relevan<br><br>
+                Kalimat (4) baru relevan jika menyebut: <em>"TikTok mengalihkan perhatian remaja dari membaca buku."</em></p>
+            </div>
+        </div>
+
+        <!-- SOAL 11 -->
+        <div class="soal">
+            <div class="soal-header"><span class="soal-num">11</span><span class="soal-tag real">SNBT 2024</span><span class="soal-tag">Konjungsi Rumpang</span></div>
+            <div class="soal-teks"><em>"Sebagian peneliti berpendapat bahwa perubahan iklim disebabkan terutama oleh aktivitas manusia, seperti pembakaran bahan bakar fosil. [___], ada kelompok ilmuwan yang menyebut bahwa siklus alam juga memainkan peran besar dalam perubahan suhu Bumi."</em></div>
+            <div class="soal-pertanyaan">Konjungsi yang paling tepat mengisi bagian rumpang adalah -</div>
+            <div class="options" id="opt11">
+                <div class="option" onclick="pilih(this,'11','A')"><span class="opt-letter">A</span>Selain itu</div>
+                <div class="option" onclick="pilih(this,'11','B')"><span class="opt-letter">B</span>Sementara itu</div>
+                <div class="option" onclick="pilih(this,'11','C')"><span class="opt-letter">C</span>Di sisi lain</div>
+                <div class="option" onclick="pilih(this,'11','D')"><span class="opt-letter">D</span>Oleh karena itu</div>
+                <div class="option" onclick="pilih(this,'11','E')"><span class="opt-letter">E</span>Bahkan</div>
+            </div>
+            <button class="show-answer-btn" onclick="toggleP('p11')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p11">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: C</div>
+                <p>Kalimat 1 = pendapat A (aktivitas manusia). Kalimat 2 = pendapat B (siklus alam). Dua perspektif berbeda dalam debat ilmiah.<br><br>
+                ? A: "Selain itu" = menambahkan hal senada ? tidak tepat<br>
+                ? B: "Sementara itu" = kesamaan waktu ? tidak tepat<br>
+                ? C: <strong>"Di sisi lain"</strong> = menyajikan perspektif yang berbeda ? TEPAT<br>
+                ? D: "Oleh karena itu" = akibat ? tidak tepat<br>
+                ? E: "Bahkan" = memperkuat kalimat sebelumnya ? tidak tepat</p>
+            </div>
+        </div>
+
+        <!-- SOAL 12 -->
+        <div class="soal">
+            <div class="soal-header"><span class="soal-num">12</span><span class="soal-tag medium">Medium</span><span class="soal-tag">Diksi</span></div>
+            <div class="soal-teks"><em>"Perusahaan itu <u>mengalami</u> keuntungan besar tahun ini berkat strategi pemasaran yang inovatif."</em></div>
+            <div class="soal-pertanyaan">Kata bergaris bawah tidak tepat dan sebaiknya diganti dengan -</div>
+            <div class="options" id="opt12">
+                <div class="option" onclick="pilih(this,'12','A')"><span class="opt-letter">A</span>mendapatkan</div>
+                <div class="option" onclick="pilih(this,'12','B')"><span class="opt-letter">B</span>memperoleh</div>
+                <div class="option" onclick="pilih(this,'12','C')"><span class="opt-letter">C</span>meraih</div>
+                <div class="option" onclick="pilih(this,'12','D')"><span class="opt-letter">D</span>A, B, dan C semuanya benar</div>
+                <div class="option" onclick="pilih(this,'12','E')"><span class="opt-letter">E</span>membukukan</div>
+            </div>
+            <button class="show-answer-btn" onclick="toggleP('p12')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p12">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: D</div>
+                <p>Kata <em>"mengalami"</em> lazim untuk hal negatif atau yang menimpa seseorang secara tidak disengaja: mengalami kecelakaan, kerugian, kegagalan.<br><br>
+                Keuntungan adalah hal positif yang diraih secara aktif. Kata yang tepat:<br>
+                ? mendapatkan - memperoleh - meraih - membukukan<br><br>
+                Karena A, B, C semuanya benar ? jawaban D.</p>
+            </div>
+        </div>
+
+        <!-- SOAL 13 -->
+        <div class="soal">
+            <div class="soal-header"><span class="soal-num">13</span><span class="soal-tag hard">Sulit</span><span class="soal-tag">Analisis Koherensi</span></div>
+            <div class="soal-teks"><em>"(1) Reformasi birokrasi merupakan agenda penting untuk meningkatkan kualitas pelayanan publik. (2) Upaya ini mencakup penyederhanaan regulasi, peningkatan kompetensi aparatur, dan digitalisasi layanan. (3) Selain itu, transparansi dan akuntabilitas menjadi pilar yang harus diperkuat agar kepercayaan masyarakat terus tumbuh. (4) Walaupun demikian, hambatan struktural dan budaya birokrasi yang mengakar menjadi tantangan nyata yang harus diatasi secara sistematis."</em></div>
+            <div class="soal-pertanyaan">Hubungan logis antara kalimat (3) dan (4) adalah -</div>
+            <div class="options" id="opt13">
+                <div class="option" onclick="pilih(this,'13','A')"><span class="opt-letter">A</span>Kalimat (4) merupakan akibat dari kalimat (3)</div>
+                <div class="option" onclick="pilih(this,'13','B')"><span class="opt-letter">B</span>Kalimat (4) memperkuat gagasan kalimat (3)</div>
+                <div class="option" onclick="pilih(this,'13','C')"><span class="opt-letter">C</span>Kalimat (4) mengontraskan kondisi ideal dengan kenyataan</div>
+                <div class="option" onclick="pilih(this,'13','D')"><span class="opt-letter">D</span>Kalimat (4) merupakan penjelasan rinci dari kalimat (3)</div>
+                <div class="option" onclick="pilih(this,'13','E')"><span class="opt-letter">E</span>Kalimat (4) menyimpulkan seluruh isi paragraf</div>
+            </div>
+            <button class="show-answer-btn" onclick="toggleP('p13')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p13">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: C</div>
+                <p>Kalimat (3) = kondisi <em>ideal</em> yang diinginkan (transparansi harus diperkuat).<br>
+                Kalimat (4) = kondisi <em>nyata</em> yang berbeda (ada hambatan struktural).<br>
+                Konjungsi "Walaupun demikian" = konsesif ? mengakui kondisi ideal tetapi menghadirkan realita yang mengontrasnya.<br><br>
+                ? C: mengontraskan kondisi ideal dengan kenyataan ? paling tepat<br>
+                ? A: tidak ada hubungan sebab-akibat langsung<br>
+                ? B: justru berlawanan, bukan memperkuat<br>
+                ? D: bukan penjelasan rinci melainkan kontras<br>
+                ? E: bukan simpulan, melainkan hambatan baru</p>
+            </div>
+        </div>
+
+        <!-- SOAL 14 -->
+        <div class="soal">
+            <div class="soal-header"><span class="soal-num">14</span><span class="soal-tag real">SNBT 2023</span><span class="soal-tag">Perbaikan Kalimat</span></div>
+            <div class="soal-teks"><em>"Menurut dari hasil penelitian tersebut membuktikan bahwa pola makan sehat berpengaruh signifikan terhadap produktivitas kerja."</em></div>
+            <div class="soal-pertanyaan">Perbaikan kalimat yang paling tepat adalah -</div>
+            <div class="options" id="opt14">
+                <div class="option" onclick="pilih(this,'14','A')"><span class="opt-letter">A</span>Menurut hasil penelitian tersebut membuktikan bahwa pola makan sehat berpengaruh signifikan terhadap produktivitas kerja.</div>
+                <div class="option" onclick="pilih(this,'14','B')"><span class="opt-letter">B</span>Hasil penelitian tersebut membuktikan bahwa pola makan sehat berpengaruh signifikan terhadap produktivitas kerja.</div>
+                <div class="option" onclick="pilih(this,'14','C')"><span class="opt-letter">C</span>Dari hasil penelitian tersebut membuktikan bahwa pola makan sehat berpengaruh signifikan terhadap produktivitas kerja.</div>
+                <div class="option" onclick="pilih(this,'14','D')"><span class="opt-letter">D</span>Menurut dari penelitian tersebut, pola makan sehat berpengaruh signifikan terhadap produktivitas kerja.</div>
+                <div class="option" onclick="pilih(this,'14','E')"><span class="opt-letter">E</span>Penelitian tersebut membuktikan, menurut dari hasilnya, pola makan sehat berpengaruh signifikan.</div>
+            </div>
+            <button class="show-answer-btn" onclick="toggleP('p14')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p14">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: B</div>
+                <p>Kesalahan kalimat asal: (1) "Menurut dari" = pleonasme. (2) "Menurut hasil penelitian" = frasa preposisional ? bukan subjek ? kalimat kehilangan subjek.<br><br>
+                ? A: Masih diawali "Menurut" ? tetap tidak bersubjek<br>
+                ? B: S = "Hasil penelitian tersebut" | P = "membuktikan" ? efektif, hemat, jelas<br>
+                ? C: "Dari hasil penelitian-" = masih frasa preposisional ? tidak bersubjek<br>
+                ? D: "Menurut dari" masih pleonasme<br>
+                ? E: Struktur kacau dan boros kata</p>
+            </div>
+        </div>
+
+        <!-- SOAL 15 -->
+        <div class="soal">
+            <div class="soal-header"><span class="soal-num">15</span><span class="soal-tag hard">Sulit</span><span class="soal-tag">Integrasi Semua Konsep</span></div>
+            <div class="soal-teks"><em>"(1) Generasi muda saat ini menghadapi tantangan yang jauh berbeda dengan generasi sebelumnya. (2) Perkembangan teknologi yang pesat menuntut mereka terus beradaptasi dan belajar hal baru. (3) Di sisi lain, tekanan sosial yang bersumber dari media sosial menambah beban psikologis yang signifikan. (4) Oleh karena itu, penting bagi orang tua dan pendidik untuk memahami tantangan tersebut agar dapat memberikan dukungan yang tepat. (5) Media sosial pertama kali muncul pada awal tahun 2000-an dengan platform seperti Friendster dan MySpace."</em><br><br>
+            Kalimat (5) adalah kalimat sumbang. Jika diganti kalimat penutup yang koheren, pilihan yang paling tepat adalah -</div>
+            <div class="soal-pertanyaan">Kalimat penutup yang paling koheren adalah -</div>
+            <div class="options" id="opt15">
+                <div class="option" onclick="pilih(this,'15','A')"><span class="opt-letter">A</span>Dengan demikian, generasi muda perlu diberi ruang dan waktu yang lebih banyak untuk bermain.</div>
+                <div class="option" onclick="pilih(this,'15','B')"><span class="opt-letter">B</span>Dengan pemahaman dan pendampingan yang baik, generasi muda dapat menghadapi tantangan zaman dengan lebih tangguh.</div>
+                <div class="option" onclick="pilih(this,'15','C')"><span class="opt-letter">C</span>Namun, tidak semua generasi muda memiliki akses terhadap teknologi yang memadai.</div>
+                <div class="option" onclick="pilih(this,'15','D')"><span class="opt-letter">D</span>Selain itu, pemerintah juga harus meregulasi penggunaan media sosial secara ketat.</div>
+                <div class="option" onclick="pilih(this,'15','E')"><span class="opt-letter">E</span>Oleh karena itu, sekolah-sekolah perlu menambah mata pelajaran coding dan pemrograman.</div>
+            </div>
+            <button class="show-answer-btn" onclick="toggleP('p15')">🔹 Lihat Pembahasan</button>
+            <div class="pembahasan" id="p15">
+                <div class="pembahasan-title">🔹 Pembahasan</div>
+                <div class="jawaban-label">Jawaban: B</div>
+                <p>Ide pokok paragraf: tantangan generasi muda + pentingnya dukungan orang tua/pendidik (kalimat 4). Kalimat penutup harus merangkum dan menyimpulkan tanpa memperkenalkan topik baru.<br><br>
+                ? A: "diberi ruang bermain" ? terlalu sempit, tidak relevan dengan konteks<br>
+                ? B: <strong>"Dengan pemahaman dan pendampingan yang baik-"</strong> ? merangkum kalimat (4) dan menyimpulkan seluruh paragraf secara koheren<br>
+                ? C: Isu aksesibilitas teknologi ? topik baru<br>
+                ? D: Regulasi pemerintah ? perluasan topik yang tidak dibahas sebelumnya<br>
+                ? E: Mata pelajaran coding ? terlalu spesifik, melenceng dari tema dukungan psikologis</p>
+            </div>
+        </div>
+
+    </div><!-- end quiz-section -->
+
+    <!-- TIPS CEPAT -->
+    <div class="section">
+        <h2>🔹 Cheat Sheet Strategi SNBT</h2>
+        <div class="table-wrap">
+            <table>
+                <tr><th>Tanda Bahaya</th><th>Jenis Kesalahan</th><th>Cara Perbaikan</th></tr>
+                <tr><td>Diawali: Di, Dalam, Bagi, Untuk, Dari, Menurut, Dengan, Oleh</td><td>Kalimat tanpa Subjek</td><td>Hapus kata depan atau posisikan sebagai keterangan saja</td></tr>
+                <tr><td>"adalah merupakan", "agar supaya", "menurut dari"</td><td>Pleonasme predikat/konjungsi</td><td>Pilih salah satu</td></tr>
+                <tr><td>"para ibu-ibu", "semua siswa-siswa"</td><td>Pleonasme nomina jamak</td><td>Pilih "para ibu" ATAU "ibu-ibu"</td></tr>
+                <tr><td>"naik ke atas", "turun ke bawah", "mundur ke belakang"</td><td>Pleonasme verba + arah</td><td>Gunakan kata gerak saja</td></tr>
+                <tr><td>"walaupun - tetapi", "meskipun - namun"</td><td>Pleonasme konjungsi</td><td>Pilih satu konjungsi</td></tr>
+                <tr><td>Rincian dengan imbuhan berbeda-beda</td><td>Paralelisme rusak</td><td>Seragamkan imbuhan semua unsur</td></tr>
+                <tr><td>Kata ganti -nya tidak jelas merujuk ke siapa</td><td>Ambiguitas referensial</td><td>Ganti dengan nama/nomina spesifik</td></tr>
+                <tr><td>Kalimat yang tidak relevan dengan ide pokok</td><td>Kalimat sumbang</td><td>Identifikasi dan hapus/ganti</td></tr>
+            </table>
+        </div>
+
+        <h3>Tips Per Tipe Soal</h3>
+        <div class="tip"><strong>Soal "Kalimat Tidak Efektif":</strong><br>
+        ? Cari kata depan di awal kalimat (hilangnya subjek)<br>
+        ? Cari kata ganda bermakna sama (pleonasme)<br>
+        ? Cari inkonsistensi imbuhan (paralelisme rusak)</div>
+
+        <div class="tip"><strong>Soal "Kalimat Sumbang":</strong><br>
+        ? Baca kalimat pertama ? itu ide pokok<br>
+        ? Tanya tiap kalimat: "Apakah ini membahas ide pokok?"<br>
+        ? Yang jawabannya tidak = sumbang</div>
+
+        <div class="tip"><strong>Soal "Kalimat Rumpang":</strong><br>
+        ? Baca sebelum dan sesudah titik rumpang<br>
+        ? Tentukan hubungannya: pertentangan? penambahan? akibat? simpulan?<br>
+        ? Cocokkan dengan fungsi konjungsi yang tersedia</div>
+
+        <div class="tip"><strong>Soal "Perbaikan Kalimat":</strong><br>
+        ? Identifikasi SEMUA kesalahan dalam kalimat asli<br>
+        ? Cari opsi yang memperbaiki semua kesalahan sekaligus<br>
+        ? Waspada opsi yang memperbaiki satu masalah tapi menimbulkan masalah baru</div>
+    </div>
+
+    <div class="nav-buttons">
+        <a href="library.html" class="nav-btn">
+            <div><div class="nav-btn-label">? Kembali</div>Library SNBT</div>
+        </a>
+        <a href="lib-ejaan-tanda-baca.html" class="nav-btn primary">
+            <div><div class="nav-btn-label">Materi Selanjutnya ?</div>Ejaan, Tanda Baca &amp; PUEBI</div>
+        </a>
+    </div>
+</div>
+
+<footer>- 2025 QuizNation - Library SNBT 2025</footer>
+
+<script>
+    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+    document.getElementById('themeBtn').addEventListener('click', function () {
+        document.body.classList.toggle('dark');
+        localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+
+    const ANSWERS = {
+        '1':'C','2':'B','3':'B','4':'B','5':'D',
+        '6':'D','7':'C','8':'B','9':'C','10':'D',
+        '11':'C','12':'D','13':'C','14':'B','15':'B'
+    };
+
+    function pilih(el, soalId, letter) {
+        const container = document.getElementById('opt' + soalId);
+        if (container.dataset.answered) return;
+        container.dataset.answered = '1';
+        const correct = ANSWERS[soalId];
+        container.querySelectorAll('.option').forEach(opt => {
+            const l = opt.querySelector('.opt-letter').textContent;
+            if (l === correct) opt.classList.add('correct');
+            else if (l === letter && letter !== correct) opt.classList.add('wrong');
+        });
+    }
+
+    function toggleP(id) {
+        const el = document.getElementById(id);
+        el.classList.toggle('visible');
+        const btn = el.previousElementSibling;
+        btn.textContent = el.classList.contains('visible') ? '🔹 Sembunyikan' : '🔹 Lihat Pembahasan';
+    }
+</script>
+</body>
+</html>

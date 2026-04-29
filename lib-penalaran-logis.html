@@ -1,0 +1,575 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Penalaran Logis - Library SNBT 2025</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Mobile Optimization */
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --accent: #2563eb;
+            --accent2: #06b6d4;
+            --bg: #f0f2f8;
+            --surface: rgba(255, 255, 255, 0.72);
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #1a1a2e;
+            --text2: #4b5563;
+            --text3: #9ca3af;
+            --glow: rgba(124, 58, 237, 0.18);
+            --radius: 20px
+        }
+
+        body.dark {
+            --bg: #050a15;
+            --surface: rgba(255, 255, 255, 0.055);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #f0edff;
+            --text2: rgba(240, 237, 255, 0.65);
+            --text3: rgba(240, 237, 255, 0.35);
+            --glow: rgba(124, 58, 237, 0.28)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: .35
+        }
+
+        /* Top Nav */
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            gap: 16px
+        }
+
+        .topnav a {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .2s
+        }
+
+        .topnav a:hover {
+            gap: 10px
+        }
+
+        .topnav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-left: auto
+        }
+
+        .theme-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: grid;
+            place-items: center;
+            transition: all .2s;
+            margin-left: 8px
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent)
+        }
+
+        /* Content */
+        .wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px 80px;
+            position: relative;
+            z-index: 1
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(251, 146, 60, .12);
+            color: #f59e0b;
+            border: 1px solid rgba(251, 146, 60, .25);
+            border-radius: 30px;
+            padding: 5px 14px;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.15;
+            margin-bottom: 14px
+        }
+
+        .page-title .grad {
+            background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .page-desc {
+            font-size: 1.05rem;
+            color: var(--text2);
+            line-height: 1.8;
+            margin-bottom: 40px;
+            max-width: 700px
+        }
+
+        /* TOC */
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 40px
+        }
+
+        .toc-title {
+            font-weight: 800;
+            font-size: .9rem;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .toc ol {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .toc li {
+            color: var(--text2);
+            font-size: .88rem
+        }
+
+        .toc a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color .2s
+        }
+
+        .toc a:hover {
+            color: var(--accent2)
+        }
+
+        /* Sections */
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: all .3s
+        }
+
+        .section:hover {
+            box-shadow: 0 10px 40px var(--glow);
+            border-color: rgba(124, 58, 237, .2)
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .section h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 20px 0 10px
+        }
+
+        .section p,
+        .section li {
+            font-size: .92rem;
+            color: var(--text2);
+            line-height: 1.85
+        }
+
+        .section ul,
+        .section ol {
+            padding-left: 20px;
+            margin: 10px 0
+        }
+
+        .section li {
+            margin-bottom: 6px
+        }
+
+        /* Example Box */
+        .example {
+            background: rgba(124, 58, 237, .06);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .example strong {
+            color: var(--text)
+        }
+
+        /* Tip Box */
+        .tip {
+            background: rgba(6, 182, 212, .08);
+            border-left: 3px solid var(--accent2);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .tip strong {
+            color: var(--accent2)
+        }
+
+        /* Warning */
+        .warning {
+            background: rgba(244, 63, 94, .08);
+            border-left: 3px solid #f43f5e;
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        /* Nav buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 14px;
+            margin-top: 40px;
+            flex-wrap: wrap
+        }
+
+        .nav-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all .3s
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px var(--glow);
+            transform: translateY(-2px)
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, .4)
+        }
+
+        .nav-btn.primary:hover {
+            box-shadow: 0 8px 28px rgba(124, 58, 237, .5);
+            transform: translateY(-3px)
+        }
+
+        .nav-btn-label {
+            font-size: .7rem;
+            color: var(--text3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .nav-btn.primary .nav-btn-label {
+            color: rgba(255, 255, 255, .7)
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text3);
+            font-size: .8rem;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px
+        }
+
+        @media(max-width:768px) {
+            .topnav {
+                padding: 14px 16px
+            }
+
+            .wrapper {
+                padding: 24px 16px 60px
+            }
+
+            .section {
+                padding: 20px
+            }
+
+            .nav-buttons {
+                flex-direction: column
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">? Kembali ke Library</a>
+        <span class="topnav-title">Penalaran Logis</span>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">🔹 Penalaran Umum</div>
+        <h1 class="page-title">Penalaran <span class="grad">Logis</span><br>(Logika Formal)</h1>
+        <p class="page-desc">Kuasai dasar-dasar logika formal yang menjadi fondasi soal Penalaran Umum di SNBT 2025.
+            Materi ini mencakup silogisme, proposisi, penalaran deduktif-induktif, dan berbagai jenis kesalahan logika.
+        </p>
+
+        <div class="toc">
+            <div class="toc-title">📑 Daftar Isi</div>
+            <ol>
+                <li><a href="#proposisi">Proposisi & Jenis-jenisnya</a></li>
+                <li><a href="#silogisme">Silogisme Kategoris</a></li>
+                <li><a href="#deduktif">Penalaran Deduktif</a></li>
+                <li><a href="#induktif">Penalaran Induktif</a></li>
+                <li><a href="#kesalahan">Kesalahan Logika (Logical Fallacy)</a></li>
+                <li><a href="#tips">Tips & Strategi Menjawab Soal</a></li>
+            </ol>
+        </div>
+
+        <div class="section" id="proposisi">
+            <h2>🔹 1. Proposisi & Jenis-jenisnya</h2>
+            <p>Proposisi adalah pernyataan yang memiliki nilai kebenaran - bisa bernilai <strong>benar</strong> atau
+                <strong>salah</strong>, tetapi tidak keduanya sekaligus.
+            </p>
+            <h3>Jenis Proposisi</h3>
+            <ul>
+                <li><strong>Proposisi Tunggal:</strong> Pernyataan sederhana. Contoh: "Semua kucing adalah mamalia."
+                </li>
+                <li><strong>Proposisi Majemuk:</strong> Gabungan dua atau lebih proposisi dengan kata hubung logis (dan,
+                    atau, jika...maka, jika dan hanya jika).</li>
+            </ul>
+            <h3>Operator Logika</h3>
+            <ul>
+                <li><strong>Konjungsi (? / DAN):</strong> Bernilai benar hanya jika kedua proposisi benar.</li>
+                <li><strong>Disjungsi (? / ATAU):</strong> Bernilai benar jika minimal satu proposisi benar.</li>
+                <li><strong>Implikasi (? / JIKA...MAKA):</strong> Bernilai salah hanya jika premis benar tapi kesimpulan
+                    salah.</li>
+                <li><strong>Biimplikasi (?):</strong> Bernilai benar jika kedua proposisi bernilai sama.</li>
+                <li><strong>Negasi (- / BUKAN):</strong> Membalik nilai kebenaran.</li>
+            </ul>
+            <div class="example">
+                <strong>Contoh Soal:</strong><br>
+                Jika hujan turun, maka jalanan basah. Jalanan tidak basah. Maka...<br><br>
+                <strong>Jawaban:</strong> Hujan tidak turun. (Modus Tollens: p?q, -q, maka -p)
+            </div>
+        </div>
+
+        <div class="section" id="silogisme">
+            <h2>? 2. Silogisme Kategoris</h2>
+            <p>Silogisme adalah bentuk penalaran yang terdiri dari <strong>dua premis</strong> dan satu
+                <strong>kesimpulan</strong>.
+            </p>
+            <h3>Struktur Silogisme</h3>
+            <ul>
+                <li><strong>Premis Mayor:</strong> Pernyataan umum. "Semua manusia adalah makhluk mortal."</li>
+                <li><strong>Premis Minor:</strong> Pernyataan khusus. "Socrates adalah manusia."</li>
+                <li><strong>Kesimpulan:</strong> "Socrates adalah makhluk mortal."</li>
+            </ul>
+            <h3>4 Bentuk Proposisi Kategoris</h3>
+            <ul>
+                <li><strong>A (Universal Afirmatif):</strong> Semua S adalah P</li>
+                <li><strong>E (Universal Negatif):</strong> Tidak ada S yang P</li>
+                <li><strong>I (Partikular Afirmatif):</strong> Beberapa S adalah P</li>
+                <li><strong>O (Partikular Negatif):</strong> Beberapa S bukan P</li>
+            </ul>
+            <div class="example">
+                <strong>Contoh:</strong><br>
+                Premis 1: Semua dokter adalah sarjana. (A)<br>
+                Premis 2: Beberapa atlet adalah dokter. (I)<br>
+                Kesimpulan: Beberapa atlet adalah sarjana. ?
+            </div>
+        </div>
+
+        <div class="section" id="deduktif">
+            <h2>🔹 3. Penalaran Deduktif</h2>
+            <p>Penalaran dari <strong>umum ke khusus</strong>. Jika premis benar dan bentuk logikanya valid, maka
+                kesimpulan pasti benar.</p>
+            <h3>Pola Penalaran Deduktif</h3>
+            <ul>
+                <li><strong>Modus Ponens:</strong> Jika p maka q. p benar. Maka q benar.</li>
+                <li><strong>Modus Tollens:</strong> Jika p maka q. q salah. Maka p salah.</li>
+                <li><strong>Silogisme Hipotetis:</strong> Jika p?q dan q?r, maka p?r.</li>
+                <li><strong>Silogisme Disjungtif:</strong> p atau q. Bukan p. Maka q.</li>
+            </ul>
+            <div class="tip">
+                <strong>🔹 Tips:</strong> Di SNBT, soal deduktif sering muncul dalam bentuk "Jika... maka..."
+                bertingkat. Identifikasi dahulu premis-premisnya, lalu gunakan pola yang sesuai.
+            </div>
+        </div>
+
+        <div class="section" id="induktif">
+            <h2>🔹 4. Penalaran Induktif</h2>
+            <p>Penalaran dari <strong>khusus ke umum</strong>. Kesimpulan bersifat probabilistik (kemungkinan besar
+                benar, tapi tidak pasti).</p>
+            <h3>Jenis Penalaran Induktif</h3>
+            <ul>
+                <li><strong>Generalisasi:</strong> Mengambil kesimpulan umum dari beberapa kasus khusus.</li>
+                <li><strong>Analogi:</strong> Menarik kesimpulan berdasarkan kesamaan dua hal.</li>
+                <li><strong>Kausal:</strong> Menyimpulkan hubungan sebab-akibat dari pengamatan.</li>
+            </ul>
+            <div class="example">
+                <strong>Contoh Generalisasi:</strong><br>
+                Siswa A mendapat nilai tinggi karena rajin belajar.<br>
+                Siswa B mendapat nilai tinggi karena rajin belajar.<br>
+                Kesimpulan: Siswa yang rajin belajar cenderung mendapat nilai tinggi.
+            </div>
+        </div>
+
+        <div class="section" id="kesalahan">
+            <h2>🔹 5. Kesalahan Logika (Logical Fallacy)</h2>
+            <p>Kesalahan penalaran yang membuat argumen terlihat valid padahal sebenarnya tidak.</p>
+            <ul>
+                <li><strong>Ad Hominem:</strong> Menyerang karakter pembicara, bukan argumennya.</li>
+                <li><strong>Straw Man:</strong> Memutarbalikkan argumen lawan agar mudah diserang.</li>
+                <li><strong>Appeal to Authority:</strong> Menggunakan otoritas yang tidak relevan sebagai bukti.</li>
+                <li><strong>Circular Reasoning:</strong> Kesimpulan sama dengan premisnya.</li>
+                <li><strong>False Dilemma:</strong> Menyajikan hanya dua pilihan padahal ada lebih banyak.</li>
+                <li><strong>Hasty Generalization:</strong> Menyimpulkan dari sampel yang terlalu kecil.</li>
+                <li><strong>Post Hoc:</strong> Menganggap korelasi waktu sebagai kausalitas.</li>
+            </ul>
+            <div class="warning">
+                <strong>🔹 Perhatian:</strong> Soal SNBT sering meminta kamu mengidentifikasi kesalahan logika dalam
+                sebuah argumen. Hafalkan pola-pola ini!
+            </div>
+        </div>
+
+        <div class="section" id="tips">
+            <h2>🔹 6. Tips & Strategi Menjawab Soal</h2>
+            <ol>
+                <li><strong>Identifikasi premis dan kesimpulan</strong> terlebih dahulu.</li>
+                <li><strong>Tentukan jenis penalaran</strong> - deduktif atau induktif.</li>
+                <li><strong>Gambarkan diagram Venn</strong> untuk soal silogisme.</li>
+                <li><strong>Gunakan tabel kebenaran</strong> untuk soal proposisi majemuk.</li>
+                <li><strong>Waspadai distractor</strong> - pilihan jawaban yang mirip tapi salah secara logis.</li>
+                <li><strong>Perhatikan kata kunci:</strong> "semua", "beberapa", "tidak ada", "pasti", "mungkin".</li>
+                <li><strong>Latihan rutin</strong> - minimal 10 soal/hari untuk membangun intuisi logika.</li>
+            </ol>
+            <div class="tip">
+                <strong>🔹 Strategi Waktu:</strong> Alokasikan 1-2 menit per soal. Jika dalam 30 detik belum menemukan
+                pola, tandai dan lanjut ke soal berikutnya.
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="library.html" class="nav-btn">
+                <div>
+                    <div class="nav-btn-label">? Kembali</div>Library SNBT
+                </div>
+            </a>
+            <a href="lib-penalaran-analitis.html" class="nav-btn primary">
+                <div>
+                    <div class="nav-btn-label">Materi Selanjutnya ?</div>Penalaran Analitis
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>- 2025 QuizNation - Library SNBT 2025</footer>
+    <script>if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark')</script>
+</body>
+
+</html>

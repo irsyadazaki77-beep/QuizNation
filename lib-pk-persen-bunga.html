@@ -1,0 +1,609 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Persentase, Diskon & Bunga - Library SNBT 2026</title>
+    <meta name="description"
+        content="Materi lengkap Pengetahuan Kuantitatif: persentase, diskon, untung-rugi, bruto-netto-tara, bunga tunggal, bunga majemuk, dan latihan SNBT 2026." />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --accent: #2563eb;
+            --accent2: #06b6d4;
+            --bg: #f0f2f8;
+            --surface: rgba(255, 255, 255, 0.72);
+            --surface2: rgba(255, 255, 255, 0.5);
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #1a1a2e;
+            --text2: #4b5563;
+            --text3: #9ca3af;
+            --glow: rgba(124, 58, 237, 0.18);
+            --radius: 20px
+        }
+
+        body.dark {
+            --bg: #050a15;
+            --surface: rgba(255, 255, 255, 0.055);
+            --surface2: rgba(255, 255, 255, 0.035);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #f0edff;
+            --text2: rgba(240, 237, 255, 0.7);
+            --text3: rgba(240, 237, 255, 0.4);
+            --glow: rgba(124, 58, 237, 0.28)
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: .35
+        }
+
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .topnav a {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .2s
+        }
+
+        .topnav a:hover {
+            gap: 10px
+        }
+
+        .topnav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.03rem;
+            color: var(--text);
+            margin-left: auto
+        }
+
+        .theme-btn {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: grid;
+            place-items: center;
+            color: var(--text);
+            transition: all .2s
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent)
+        }
+
+        .wrapper {
+            max-width: 940px;
+            margin: 0 auto;
+            padding: 36px 20px 80px;
+            position: relative;
+            z-index: 1
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(37, 99, 235, .12);
+            color: #1d4ed8;
+            border: 1px solid rgba(37, 99, 235, .25);
+            border-radius: 30px;
+            padding: 5px 14px;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.15;
+            margin-bottom: 14px
+        }
+
+        .page-title .grad {
+            background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .page-desc {
+            font-size: 1.03rem;
+            color: var(--text2);
+            line-height: 1.8;
+            margin-bottom: 28px;
+            max-width: 760px
+        }
+
+        .quick-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 10px;
+            margin-bottom: 28px
+        }
+
+        .meta {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 14px
+        }
+
+        .meta-k {
+            font-size: .72rem;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: .8px;
+            margin-bottom: 3px
+        }
+
+        .meta-v {
+            font-size: .9rem;
+            color: var(--text2);
+            font-weight: 700
+        }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 24px
+        }
+
+        .toc-title {
+            font-weight: 800;
+            font-size: .95rem;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .toc ol {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .toc li {
+            color: var(--text2);
+            font-size: .88rem
+        }
+
+        .toc a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600
+        }
+
+        .toc a:hover {
+            color: var(--accent2)
+        }
+
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            margin-bottom: 18px;
+            transition: all .25s
+        }
+
+        .section:hover {
+            box-shadow: 0 10px 38px var(--glow);
+            border-color: rgba(124, 58, 237, .25)
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.42rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 14px
+        }
+
+        .section h3 {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 16px 0 8px
+        }
+
+        .section p,
+        .section li {
+            color: var(--text2);
+            font-size: .94rem;
+            line-height: 1.75
+        }
+
+        .section ul,
+        .section ol {
+            padding-left: 20px;
+            margin-top: 8px
+        }
+
+        .formula {
+            background: rgba(255, 255, 255, .6);
+            border: 1px dashed rgba(124, 58, 237, .35);
+            border-radius: 12px;
+            padding: 12px;
+            margin: 10px 0;
+            font-family: 'DM Mono', monospace;
+            font-size: .86rem;
+            color: var(--text);
+            overflow-x: auto
+        }
+
+        body.dark .formula {
+            background: rgba(255, 255, 255, .03)
+        }
+
+        .tip {
+            margin-top: 12px;
+            background: rgba(6, 182, 212, .12);
+            border: 1px solid rgba(6, 182, 212, .26);
+            border-radius: 12px;
+            padding: 10px 12px;
+            color: #0e7490;
+            font-size: .86rem;
+            font-weight: 600
+        }
+
+        .warn {
+            margin-top: 12px;
+            background: rgba(244, 114, 182, .12);
+            border: 1px solid rgba(244, 114, 182, .26);
+            border-radius: 12px;
+            padding: 10px 12px;
+            color: #0369a1;
+            font-size: .86rem;
+            font-weight: 600
+        }
+
+        .qa {
+            display: grid;
+            gap: 12px;
+            margin-top: 12px
+        }
+
+        .qitem {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px
+        }
+
+        .q {
+            color: var(--text);
+            font-weight: 700;
+            margin-bottom: 8px
+        }
+
+        .a {
+            color: #0f766e;
+            font-weight: 700;
+            font-size: .9rem
+        }
+
+        .next-nav {
+            margin-top: 24px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        .nav-btn {
+            text-decoration: none;
+            color: white;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: .86rem;
+            font-weight: 700
+        }
+
+        @media (max-width: 680px) {
+            .topnav {
+                padding: 14px 14px
+            }
+
+            .topnav-title {
+                display: none
+            }
+
+            .wrapper {
+                padding: 30px 14px 70px
+            }
+
+            .section,
+            .toc {
+                padding: 18px
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+
+    <nav class="topnav">
+        <a href="library.html">? Kembali ke Library</a>
+        <div class="topnav-title">Materi PK - Persentase, Diskon & Bunga</div>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <main class="wrapper">
+        <div class="hero-badge">PK - Menengah</div>
+        <h1 class="page-title">Persentase, <span class="grad">Diskon & Bunga</span></h1>
+        <p class="page-desc">
+            Topik ini sangat sering muncul dalam bentuk soal konteks belanja, usaha, tabungan, kredit, dan investasi.
+            Kuncinya adalah mengenali <strong>nilai acuan</strong> (basis persen), lalu memilih rumus yang sesuai.
+        </p>
+
+        <div class="quick-meta">
+            <div class="meta">
+                <div class="meta-k">Estimasi Belajar</div>
+                <div class="meta-v">2.5 - 3 Jam</div>
+            </div>
+            <div class="meta">
+                <div class="meta-k">Jumlah Topik</div>
+                <div class="meta-v">9 Topik Inti</div>
+            </div>
+            <div class="meta">
+                <div class="meta-k">Fokus Ujian</div>
+                <div class="meta-v">Aplikasi Kontekstual</div>
+            </div>
+            <div class="meta">
+                <div class="meta-k">Tingkat</div>
+                <div class="meta-v">Menengah</div>
+            </div>
+        </div>
+
+        <section class="toc">
+            <div class="toc-title">Daftar Isi Cepat</div>
+            <ol>
+                <li><a href="#konsep-dasar">Konsep Dasar Persentase</a></li>
+                <li><a href="#diskon-pajak">Diskon, Pajak, dan Harga Bersih</a></li>
+                <li><a href="#untung-rugi">Untung-Rugi dan Markup</a></li>
+                <li><a href="#bruto-netto-tara">Bruto, Netto, Tara</a></li>
+                <li><a href="#bunga">Bunga Tunggal dan Majemuk</a></li>
+                <li><a href="#strategi">Strategi Hitung Cepat SNBT</a></li>
+                <li><a href="#contoh">Contoh Soal dan Pembahasan</a></li>
+                <li><a href="#latihan">Latihan Campuran</a></li>
+                <li><a href="#ringkasan">Ringkasan dan Checklist</a></li>
+            </ol>
+        </section>
+
+        <section class="section" id="konsep-dasar">
+            <h2>1) Konsep Dasar Persentase</h2>
+            <p>Persentase menyatakan bagian dari 100. Tiga bentuk yang selalu dipakai:</p>
+            <div class="formula">persentase = (bagian / total) x 100%</div>
+            <div class="formula">bagian = persentase x total</div>
+            <div class="formula">total = bagian / persentase</div>
+            <h3>Kenaikan dan penurunan</h3>
+            <ul>
+                <li>Naik p%: nilai baru = nilai awal x (1 + p/100)</li>
+                <li>Turun p%: nilai baru = nilai awal x (1 - p/100)</li>
+                <li>Naik p% lalu turun p% tidak kembali ke nilai awal.</li>
+            </ul>
+            <div class="warn">Kesalahan umum: siswa sering memakai persen dari nilai akhir, padahal soal meminta persen dari nilai awal.</div>
+        </section>
+
+        <section class="section" id="diskon-pajak">
+            <h2>2) Diskon, Pajak, dan Harga Bersih</h2>
+            <h3>Diskon tunggal</h3>
+            <div class="formula">harga setelah diskon p% = harga awal x (1 - p/100)</div>
+            <h3>Diskon bertingkat</h3>
+            <p>Jika diskon 20% lalu 10%, maka:</p>
+            <div class="formula">harga akhir = harga awal x 0.8 x 0.9 = harga awal x 0.72</div>
+            <p>Artinya diskon total efektif 28%.</p>
+            <h3>Pajak setelah diskon</h3>
+            <p>Urutan operasi penting. Terapkan diskon dulu, baru pajak (jika soal demikian).</p>
+            <div class="tip">Tip SNBT: ubah semua persentase jadi faktor pengali agar perhitungan lebih cepat.</div>
+        </section>
+
+        <section class="section" id="untung-rugi">
+            <h2>3) Untung-Rugi dan Markup</h2>
+            <div class="formula">untung = harga jual - harga beli</div>
+            <div class="formula">rugi = harga beli - harga jual</div>
+            <div class="formula">% untung/rugi = (untung atau rugi / harga beli) x 100%</div>
+            <h3>Markup (kenaikan dari modal)</h3>
+            <div class="formula">harga jual = harga beli x (1 + markup)</div>
+            <p>Jika markup 25% dan ada diskon 10%, maka tetap hitung berurutan berdasarkan harga saat itu.</p>
+        </section>
+
+        <section class="section" id="bruto-netto-tara">
+            <h2>4) Bruto, Netto, Tara</h2>
+            <p>Konsep ini sering muncul pada soal paket barang dan kemasan.</p>
+            <div class="formula">bruto = netto + tara</div>
+            <div class="formula">netto = bruto - tara</div>
+            <div class="formula">tara(%) = (tara / bruto) x 100%</div>
+            <p>Perhatikan basis persen untuk tara biasanya terhadap bruto, kecuali soal memberi ketentuan khusus.</p>
+        </section>
+
+        <section class="section" id="bunga">
+            <h2>5) Bunga Tunggal dan Bunga Majemuk</h2>
+            <h3>Bunga tunggal</h3>
+            <div class="formula">A = P (1 + r x t)</div>
+            <p>Bunga dihitung dari pokok awal saja.</p>
+            <h3>Bunga majemuk</h3>
+            <div class="formula">A = P (1 + r)^t</div>
+            <p>Bunga periode berikutnya ikut menghitung bunga sebelumnya.</p>
+            <h3>Jika periode tidak tahunan</h3>
+            <p>Pastikan r dan t konsisten, misalnya r per bulan dengan t bulan.</p>
+            <div class="warn">Kesalahan umum: memakai rumus tunggal untuk soal yang jelas majemuk.</div>
+        </section>
+
+        <section class="section" id="strategi">
+            <h2>6) Strategi Hitung Cepat SNBT</h2>
+            <ul>
+                <li>Ubah persen ke faktor: 15% = 0.15, 125% = 1.25.</li>
+                <li>Gunakan bentuk pecahan yang mudah: 25% = 1/4, 12.5% = 1/8.</li>
+                <li>Jangan buru-buru: tentukan nilai acuan dulu.</li>
+                <li>Jika berantai, simpan dalam bentuk faktor berurutan lalu kalikan sekali.</li>
+                <li>Periksa hasil akhir masuk akal terhadap konteks (harga setelah diskon tidak mungkin naik jika tidak ada pajak/biaya tambahan).</li>
+            </ul>
+        </section>
+
+        <section class="section" id="contoh">
+            <h2>7) Contoh Soal dan Pembahasan</h2>
+            <div class="qa">
+                <div class="qitem">
+                    <div class="q">Soal 1: Harga jaket Rp500.000 didiskon 20% lalu dikenai pajak 11%. Berapa harga akhir?</div>
+                    <div class="formula">setelah diskon = 500000 x 0.8 = 400000
+setelah pajak = 400000 x 1.11 = 444000</div>
+                    <div class="a">Jawaban: Rp444.000</div>
+                </div>
+
+                <div class="qitem">
+                    <div class="q">Soal 2: Sebuah barang dibeli Rp240.000 dan dijual untung 15%. Berapa harga jual?</div>
+                    <div class="formula">harga jual = 240000 x 1.15 = 276000</div>
+                    <div class="a">Jawaban: Rp276.000</div>
+                </div>
+
+                <div class="qitem">
+                    <div class="q">Soal 3: Tabungan Rp3.000.000 berbunga tunggal 8% per tahun selama 2 tahun. Nilai akhir?</div>
+                    <div class="formula">A = 3000000 (1 + 0.08 x 2) = 3000000 x 1.16 = 3480000</div>
+                    <div class="a">Jawaban: Rp3.480.000</div>
+                </div>
+
+                <div class="qitem">
+                    <div class="q">Soal 4: Modal naik dari Rp1.600.000 menjadi Rp2.000.000. Berapa persen kenaikan?</div>
+                    <div class="formula">kenaikan = 400000
+% kenaikan = 400000 / 1600000 x 100% = 25%</div>
+                    <div class="a">Jawaban: 25%</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="latihan">
+            <h2>8) Latihan Campuran</h2>
+            <div class="qa">
+                <div class="qitem">
+                    <div class="q">A. Harga laptop Rp8.000.000 didiskon 15% lalu 5%. Berapa harga akhir?</div>
+                    <div class="a">Kunci: Rp6.460.000</div>
+                </div>
+                <div class="qitem">
+                    <div class="q">B. Barang dijual Rp345.000 dengan rugi 8%. Berapa harga belinya?</div>
+                    <div class="a">Kunci: Rp375.000</div>
+                </div>
+                <div class="qitem">
+                    <div class="q">C. Uang Rp2.500.000 dibungakan majemuk 10% per tahun selama 2 tahun. Nilai akhir?</div>
+                    <div class="a">Kunci: Rp3.025.000</div>
+                </div>
+                <div class="qitem">
+                    <div class="q">D. Bruto 50 kg dan tara 4%. Berapa netto?</div>
+                    <div class="a">Kunci: 48 kg</div>
+                </div>
+                <div class="qitem">
+                    <div class="q">E. Sebuah nilai naik 30% lalu turun 20%. Jika awal 500, nilai akhir berapa?</div>
+                    <div class="a">Kunci: 520</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="ringkasan">
+            <h2>9) Ringkasan dan Checklist</h2>
+            <ul>
+                <li>Saya bisa menentukan nilai acuan persen dengan benar.</li>
+                <li>Saya paham perbedaan diskon tunggal dan diskon bertingkat.</li>
+                <li>Saya bisa hitung untung-rugi dan markup tanpa tertukar basis.</li>
+                <li>Saya bisa bedakan kapan memakai bunga tunggal dan majemuk.</li>
+                <li>Saya bisa mengecek kewajaran jawaban akhir.</li>
+            </ul>
+            <div class="tip">Target latihan: kerjakan minimal 15 soal campuran topik ini sebelum simulasi tryout berikutnya.</div>
+        </section>
+
+        <div class="next-nav">
+            <a class="nav-btn" href="lib-pk-numerik.html">? Materi Sebelumnya</a>
+            <a class="nav-btn" href="lib-pk-kombinatorika-peluang.html">Lanjut Materi Berikutnya ?</a>
+        </div>
+    </main>
+
+    <script>
+        const themeBtn = document.getElementById('themeBtn');
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') {
+            document.body.classList.add('dark');
+            themeBtn.textContent = '🔹';
+        }
+
+        themeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark');
+            const dark = document.body.classList.contains('dark');
+            localStorage.setItem('theme', dark ? 'dark' : 'light');
+            themeBtn.textContent = dark ? '🌙' : '☀️';
+        });
+    </script>
+</body>
+
+</html>
+

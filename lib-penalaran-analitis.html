@@ -1,0 +1,479 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Penalaran Analitis - Library SNBT 2025</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Mobile Optimization */
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --accent: #2563eb;
+            --accent2: #06b6d4;
+            --bg: #f0f2f8;
+            --surface: rgba(255, 255, 255, 0.72);
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #1a1a2e;
+            --text2: #4b5563;
+            --text3: #9ca3af;
+            --glow: rgba(124, 58, 237, 0.18);
+            --radius: 20px
+        }
+
+        body.dark {
+            --bg: #050a15;
+            --surface: rgba(255, 255, 255, 0.055);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #f0edff;
+            --text2: rgba(240, 237, 255, 0.65);
+            --text3: rgba(240, 237, 255, 0.35);
+            --glow: rgba(124, 58, 237, 0.28)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: .35
+        }
+
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            gap: 16px
+        }
+
+        .topnav a {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .2s
+        }
+
+        .topnav a:hover {
+            gap: 10px
+        }
+
+        .topnav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-left: auto
+        }
+
+        .theme-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: grid;
+            place-items: center;
+            transition: all .2s;
+            margin-left: 8px
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent)
+        }
+
+        .wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px 80px;
+            position: relative;
+            z-index: 1
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(251, 146, 60, .12);
+            color: #f59e0b;
+            border: 1px solid rgba(251, 146, 60, .25);
+            border-radius: 30px;
+            padding: 5px 14px;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.15;
+            margin-bottom: 14px
+        }
+
+        .page-title .grad {
+            background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .page-desc {
+            font-size: 1.05rem;
+            color: var(--text2);
+            line-height: 1.8;
+            margin-bottom: 40px;
+            max-width: 700px
+        }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 40px
+        }
+
+        .toc-title {
+            font-weight: 800;
+            font-size: .9rem;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .toc ol {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .toc li {
+            color: var(--text2);
+            font-size: .88rem
+        }
+
+        .toc a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600
+        }
+
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: all .3s
+        }
+
+        .section:hover {
+            box-shadow: 0 10px 40px var(--glow);
+            border-color: rgba(124, 58, 237, .2)
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 16px
+        }
+
+        .section h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 20px 0 10px
+        }
+
+        .section p,
+        .section li {
+            font-size: .92rem;
+            color: var(--text2);
+            line-height: 1.85
+        }
+
+        .section ul,
+        .section ol {
+            padding-left: 20px;
+            margin: 10px 0
+        }
+
+        .section li {
+            margin-bottom: 6px
+        }
+
+        .example {
+            background: rgba(124, 58, 237, .06);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .example strong {
+            color: var(--text)
+        }
+
+        .tip {
+            background: rgba(6, 182, 212, .08);
+            border-left: 3px solid var(--accent2);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .tip strong {
+            color: var(--accent2)
+        }
+
+        .warning {
+            background: rgba(244, 63, 94, .08);
+            border-left: 3px solid #f43f5e;
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 14px;
+            margin-top: 40px;
+            flex-wrap: wrap
+        }
+
+        .nav-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all .3s
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px var(--glow);
+            transform: translateY(-2px)
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, .4)
+        }
+
+        .nav-btn.primary:hover {
+            box-shadow: 0 8px 28px rgba(124, 58, 237, .5);
+            transform: translateY(-3px)
+        }
+
+        .nav-btn-label {
+            font-size: .7rem;
+            color: var(--text3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .nav-btn.primary .nav-btn-label {
+            color: rgba(255, 255, 255, .7)
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text3);
+            font-size: .8rem;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px
+        }
+
+        @media(max-width:768px) {
+            .topnav {
+                padding: 14px 16px
+            }
+
+            .wrapper {
+                padding: 24px 16px 60px
+            }
+
+            .section {
+                padding: 20px
+            }
+
+            .nav-buttons {
+                flex-direction: column
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav"><a href="library.html">? Kembali ke Library</a><span class="topnav-title">Penalaran
+            Analitis</span><button class="theme-btn" onclick="toggleTheme()">🌙</button></nav>
+    <div class="wrapper">
+        <div class="hero-badge">🔹 Penalaran Umum</div>
+        <h1 class="page-title">Penalaran <span class="grad">Analitis</span></h1>
+        <p class="page-desc">Kuasai teknik menganalisis data dari tabel, grafik, dan diagram untuk menarik kesimpulan
+            akurat dalam soal SNBT 2025.</p>
+        <div class="toc">
+            <div class="toc-title">📑 Daftar Isi</div>
+            <ol>
+                <li><a href="#tabel">Membaca Data Tabel</a></li>
+                <li><a href="#grafik">Interpretasi Grafik</a></li>
+                <li><a href="#diagram">Analisis Diagram</a></li>
+                <li><a href="#kesimpulan">Menarik Kesimpulan</a></li>
+                <li><a href="#tips">Tips Menjawab</a></li>
+            </ol>
+        </div>
+        <div class="section" id="tabel">
+            <h2>🔹 1. Membaca Data Tabel</h2>
+            <p>Kemampuan membaca tabel adalah fondasi penalaran analitis. Identifikasi <strong>variabel</strong>,
+                <strong>satuan</strong>, dan <strong>hubungan antar data</strong>.
+            </p>
+            <h3>Langkah Membaca Tabel</h3>
+            <ul>
+                <li><strong>Baca judul tabel</strong> untuk memahami konteks.</li>
+                <li><strong>Identifikasi kolom dan baris</strong> - apa yang diukur?</li>
+                <li><strong>Perhatikan satuan</strong> - persen, rupiah, jumlah.</li>
+                <li><strong>Cari pola</strong> - naik, turun, fluktuasi, konstan.</li>
+            </ul>
+            <div class="example"><strong>Contoh:</strong> Tabel penjualan 5 produk selama 4 kuartal. Pertanyaan: Produk
+                mana yang naik konsisten? ? Cari baris dengan nilai terus meningkat.</div>
+        </div>
+        <div class="section" id="grafik">
+            <h2>🔹 2. Interpretasi Grafik</h2>
+            <p>Jenis grafik yang sering muncul di SNBT:</p>
+            <ul>
+                <li><strong>Grafik Garis:</strong> Tren perubahan sepanjang waktu.</li>
+                <li><strong>Grafik Batang:</strong> Perbandingan antar kategori.</li>
+                <li><strong>Grafik Lingkaran:</strong> Proporsi dari keseluruhan.</li>
+                <li><strong>Scatter Plot:</strong> Korelasi dua variabel.</li>
+            </ul>
+            <div class="tip"><strong>🔹 Tips:</strong> Untuk grafik garis, perhatikan slope - semakin curam, semakin
+                cepat perubahannya.</div>
+        </div>
+        <div class="section" id="diagram">
+            <h2>🔹 3. Analisis Diagram</h2>
+            <p>Jenis diagram yang sering muncul:</p>
+            <ul>
+                <li><strong>Diagram Venn:</strong> Irisan, gabungan, komplemen himpunan.</li>
+                <li><strong>Flowchart:</strong> Alur proses dan pengambilan keputusan.</li>
+                <li><strong>Diagram Pohon:</strong> Hirarki atau percabangan.</li>
+            </ul>
+            <div class="example"><strong>Contoh Venn:</strong> 100 siswa: 60 suka Mat, 45 suka Fis, 20 suka keduanya.
+                Tidak suka keduanya = 100-(60+45-20) = 15 siswa.</div>
+        </div>
+        <div class="section" id="kesimpulan">
+            <h2>🔹 4. Menarik Kesimpulan</h2>
+            <ol>
+                <li><strong>Identifikasi informasi</strong> lengkap dari data.</li>
+                <li><strong>Cari hubungan</strong> - korelasi, proporsi, tren.</li>
+                <li><strong>Eliminasi jawaban</strong> yang bertentangan dengan data.</li>
+                <li><strong>Pilih kesimpulan</strong> yang didukung 100% oleh data.</li>
+            </ol>
+            <div class="warning"><strong>🔹</strong> Jangan berasumsi di luar data yang diberikan!</div>
+        </div>
+        <div class="section" id="tips">
+            <h2>🔹 5. Tips & Strategi</h2>
+            <ol>
+                <li><strong>Baca soal dulu</strong> sebelum menganalisis data.</li>
+                <li>Tandai <strong>kata kunci</strong>: tertinggi, terendah, selisih, rata-rata.</li>
+                <li>Gunakan <strong>eliminasi</strong> untuk mempercepat jawaban.</li>
+                <li>Hitung dengan <strong>estimasi</strong> untuk hemat waktu.</li>
+            </ol>
+        </div>
+        <div class="nav-buttons"><a href="lib-penalaran-logis.html" class="nav-btn">
+                <div>
+                    <div class="nav-btn-label">? Sebelumnya</div>Penalaran Logis
+                </div>
+            </a><a href="lib-penalaran-keruangan.html" class="nav-btn primary">
+                <div>
+                    <div class="nav-btn-label">Selanjutnya ?</div>Penalaran Keruangan
+                </div>
+            </a></div>
+    </div>
+    <footer>- 2025 QuizNation - Library SNBT 2025</footer>
+    <script>if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark')</script>
+</body>
+
+</html>

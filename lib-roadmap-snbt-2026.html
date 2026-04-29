@@ -1,0 +1,175 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Roadmap Fokus SNBT 2026 - QuizNation</title>
+    <meta name="description" content="Peta fokus SNBT 2026 berdasarkan tren materi 2025: prioritas belajar, jebakan soal, dan urutan menu yang disarankan.">
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        html, body { max-width: 100%; overflow-x: hidden; }
+        * { -webkit-tap-highlight-color: transparent !important; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --accent:#2563eb; --accent2:#06b6d4; --bg:#f0f2f8; --surface:rgba(255,255,255,.72); --border:rgba(0,0,0,.08); --text:#1a1a2e; --text2:#4b5563; --text3:#9ca3af; --radius:20px; }
+        body.dark { --bg:#050a15; --surface:rgba(255,255,255,.055); --border:rgba(255,255,255,.09); --text:#f0edff; --text2:rgba(240,237,255,.68); --text3:rgba(240,237,255,.36); }
+        body { font-family:'Bricolage Grotesque',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; transition:background .3s,color .3s; }
+        .noise-overlay { position:fixed; inset:0; z-index:0; opacity:.35; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); }
+        .topnav { position:sticky; top:0; z-index:10; display:flex; align-items:center; gap:14px; padding:16px 20px; background:var(--surface); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); }
+        .topnav a { text-decoration:none; color:var(--accent); font-weight:800; }
+        .topnav-title { margin-left:auto; font-family:'Playfair Display',serif; font-weight:700; }
+        .theme-btn { width:36px; height:36px; border-radius:10px; border:1px solid var(--border); background:var(--surface); cursor:pointer; }
+        .wrapper { max-width:1040px; margin:0 auto; padding:34px 18px 70px; position:relative; z-index:1; }
+        .hero-badge { display:inline-flex; padding:6px 14px; border-radius:999px; background:rgba(124,58,237,.12); color:#2563eb; border:1px solid rgba(124,58,237,.22); font-size:.74rem; font-weight:800; margin-bottom:14px; }
+        .page-title { font-family:'Playfair Display',serif; font-size:clamp(2.1rem,4vw,3.2rem); line-height:1.15; margin-bottom:12px; }
+        .page-title .grad { background:linear-gradient(135deg,var(--accent),#60a5fa,var(--accent2)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+        .page-desc { color:var(--text2); line-height:1.85; margin-bottom:22px; }
+        .notice, .section, .focus-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); }
+        .notice { padding:16px 18px; margin-bottom:22px; color:var(--text2); line-height:1.75; }
+        .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; margin-bottom:22px; }
+        .focus-card { padding:18px; }
+        .focus-card h3 { margin-bottom:8px; font-size:1rem; }
+        .focus-card p { color:var(--text2); line-height:1.75; font-size:.92rem; margin-bottom:10px; }
+        .chip-row { display:flex; flex-wrap:wrap; gap:8px; }
+        .chip { display:inline-flex; padding:6px 10px; border-radius:999px; font-size:.72rem; font-weight:800; background:rgba(124,58,237,.10); color:var(--accent); border:1px solid rgba(124,58,237,.14); }
+        .section { padding:22px 24px; margin-bottom:18px; }
+        .section h2 { font-family:'Playfair Display',serif; margin-bottom:10px; font-size:1.45rem; }
+        .section h3 { color:var(--accent); margin:16px 0 8px; font-size:1.02rem; }
+        .section p, .section li { color:var(--text2); line-height:1.85; font-size:.95rem; }
+        .section ul, .section ol { padding-left:20px; margin:10px 0; }
+        .example, .tip { padding:14px 16px; border-radius:12px; margin:14px 0; line-height:1.75; font-size:.9rem; }
+        .example { background:rgba(124,58,237,.07); border-left:3px solid var(--accent); }
+        .tip { background:rgba(6,182,212,.08); border-left:3px solid var(--accent2); }
+        .nav-buttons { display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; }
+        .nav-btn { flex:1 1 220px; padding:14px 16px; border-radius:14px; text-decoration:none; border:1px solid var(--border); background:var(--surface); color:var(--text); font-weight:800; }
+        .nav-btn.primary { color:#fff; border:none; background:linear-gradient(135deg,var(--accent),var(--accent2)); }
+        footer { text-align:center; color:var(--text3); padding:18px; margin-top:22px; border-top:1px solid var(--border); }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">? Kembali ke Library</a>
+        <span class="topnav-title">Roadmap Fokus SNBT 2026</span>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">Peta Belajar 2026</div>
+        <h1 class="page-title">Roadmap <span class="grad">Fokus SNBT 2026</span></h1>
+        <p class="page-desc">Halaman ini merangkum area materi yang paling penting untuk diprioritaskan berdasarkan <strong>tren soal dan pola pembahasan 2025</strong> yang masih sangat relevan untuk 2026. Ini <strong>bukan bocoran resmi</strong>, melainkan peta fokus belajar yang lebih realistis dan aman dipakai untuk menyusun strategi.</p>
+
+        <div class="notice">
+            <strong>Gunakan roadmap ini seperti apa?</strong><br>
+            Mulailah dari topik berfrekuensi tinggi, lalu lanjut ke topik yang sering menjadi jebakan. Untuk tiap menu di `library.html`, saya sarankan belajar dengan urutan: <em>konsep inti ? contoh kontekstual ? jebakan umum ? latihan bertahap</em>.
+        </div>
+
+        <div class="grid">
+            <div class="focus-card">
+                <h3>🔹 Penalaran Umum</h3>
+                <p>Fokus utama tetap pada evaluasi argumen, asumsi, validitas data, inferensi, sebab-akibat, dan penalaran berbasis informasi.</p>
+                <div class="chip-row"><span class="chip">Asumsi</span><span class="chip">Inferensi</span><span class="chip">Validitas Data</span></div>
+            </div>
+            <div class="focus-card">
+                <h3>🔹 Penalaran Matematika</h3>
+                <p>Model soal banyak menguji penerapan aljabar, fungsi, optimasi, eksponen-logaritma, serta pembacaan masalah kontekstual secara efisien.</p>
+                <div class="chip-row"><span class="chip">Fungsi</span><span class="chip">Eksponen</span><span class="chip">Optimasi</span></div>
+            </div>
+            <div class="focus-card">
+                <h3>🔹 Pengetahuan Kuantitatif</h3>
+                <p>Topik rasio-proporsi, persen-bunga, tabel-grafik, laju kerja, debit, dan logika kuantitatif sangat layak diprioritaskan.</p>
+                <div class="chip-row"><span class="chip">Rasio</span><span class="chip">Tabel Grafik</span><span class="chip">Laju Kerja</span></div>
+            </div>
+            <div class="focus-card">
+                <h3>📖 Literasi Indonesia</h3>
+                <p>Penekanan ada pada ide pokok, inferensi, makna tersirat, ringkasan, sintesis, dan analisis argumen berbasis teks.</p>
+                <div class="chip-row"><span class="chip">Ide Pokok</span><span class="chip">Inferensi</span><span class="chip">Parafrase</span></div>
+            </div>
+            <div class="focus-card">
+                <h3>📖 Literasi Inggris</h3>
+                <p>Reading masih dominan: main idea, reference, text structure, vocabulary in context, author-s tone, dan paraphrase.</p>
+                <div class="chip-row"><span class="chip">Main Idea</span><span class="chip">Reference</span><span class="chip">Tone</span></div>
+            </div>
+        </div>
+
+        <section class="section">
+            <h2>1. Prioritas per menu</h2>
+            <h3>Penalaran Umum</h3>
+            <ul>
+                <li>Latih identifikasi premis, kesimpulan, dan asumsi tersembunyi.</li>
+                <li>Biasakan menguji apakah data cukup kuat untuk mendukung klaim.</li>
+                <li>Waspadai generalisasi berlebihan dan sebab-akibat palsu.</li>
+            </ul>
+            <h3>Penalaran Matematika</h3>
+            <ul>
+                <li>Jangan hanya hafal rumus; pahami pemodelan masalah.</li>
+                <li>Fungsi kuadrat, persamaan, eksponen, dan statistika tetap penting.</li>
+                <li>Sering muncul konteks optimasi, pertumbuhan, dan interpretasi hasil.</li>
+            </ul>
+            <h3>Pengetahuan Kuantitatif</h3>
+            <ul>
+                <li>Latih perbandingan, persen, data tabel/grafik, dan kecepatan hitung.</li>
+                <li>Periksa satuan secara ketat pada soal debit, skala, dan laju kerja.</li>
+            </ul>
+        </section>
+
+        <section class="section">
+            <h2>2. Jebakan yang sering berulang dari pola 2025</h2>
+            <ul>
+                <li><strong>Opsi terlalu absolut</strong>: memakai kata -selalu-, -pasti-, atau -semua-.</li>
+                <li><strong>Data tidak representatif</strong>: sampel kecil tapi dijadikan simpulan besar.</li>
+                <li><strong>Salah satuan</strong>: menit belum diubah ke jam, cm belum ke meter, dan sebagainya.</li>
+                <li><strong>Parafrase semu</strong>: kalimat mirip, tetapi maknanya berubah.</li>
+                <li><strong>Soal konteks</strong>: sebenarnya konsepnya sederhana, tapi dibungkus narasi panjang.</li>
+            </ul>
+            <div class="tip"><strong>Saran:</strong> saat belajar, biasakan bukan hanya mencari jawaban benar, tetapi juga menjelaskan kenapa opsi lain salah. Ini sangat efektif untuk menghadapi model soal SNBT.</div>
+        </section>
+
+        <section class="section">
+            <h2>3. Urutan belajar yang disarankan</h2>
+            <ol>
+                <li>Mulai dari menu dengan fondasi tinggi: `Penalaran Umum`, `PK`, dan `Literasi Indonesia`.</li>
+                <li>Lanjutkan ke `Penalaran Matematika` dan `Literasi Inggris` untuk memperkuat variasi pola soal.</li>
+                <li>Setelah 1 putaran materi, ulangi topik yang paling sering salah pada latihan.</li>
+                <li>Gunakan `library.html` untuk pilih materi berdasarkan fokus, lalu lanjut ke `snbt.html` untuk latihan kecepatan.</li>
+            </ol>
+            <div class="example"><strong>Pola mingguan:</strong> Senin-Selasa fokus PU/PK, Rabu-Kamis Literasi, Jumat-Sabtu PM, Minggu review dan tryout mini.</div>
+        </section>
+
+        <section class="section">
+            <h2>4. Checklist siap SNBT 2026</h2>
+            <ul>
+                <li>Sudah paham ide pokok, inferensi, dan analisis argumen.</li>
+                <li>Sudah lancar persen, rasio, grafik, dan konversi satuan.</li>
+                <li>Sudah terbiasa dengan fungsi, optimasi, eksponen, dan statistika dasar.</li>
+                <li>Sudah mampu membaca tone, purpose, dan reference pada reading English.</li>
+                <li>Sudah berlatih memilih jawaban yang paling didukung data, bukan paling -menarik-.</li>
+            </ul>
+        </section>
+
+        <div class="nav-buttons">
+            <a class="nav-btn" href="library.html">? Kembali ke Library</a>
+            <a class="nav-btn primary" href="snbt.html">Mulai Evaluasi SNBT ?</a>
+        </div>
+
+        <footer>- 2026 QuizNation - Roadmap Fokus SNBT 2026.</footer>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            if (typeof window.__quizNationApplyGlobalPreferences === 'function') { window.__quizNationApplyGlobalPreferences(); }
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        }
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+    </script>
+</body>
+
+</html>
+

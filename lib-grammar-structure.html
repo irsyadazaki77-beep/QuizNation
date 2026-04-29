@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Grammar &amp; Structure - Library SNBT 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        html, body { max-width: 100%; overflow-x: hidden; }
+        * { -webkit-tap-highlight-color: transparent !important; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+        :root { --accent: #2563eb; --accent2: #06b6d4; --bg: #f0f2f8; --surface: rgba(255,255,255,0.72); --border: rgba(0,0,0,0.08); --text: #1a1a2e; --text2: #4b5563; --text3: #9ca3af; --glow: rgba(124,58,237,0.18); --radius: 20px }
+        body.dark { --bg: #050a15; --surface: rgba(255,255,255,0.055); --border: rgba(255,255,255,0.09); --text: #f0edff; --text2: rgba(240,237,255,0.65); --text3: rgba(240,237,255,0.35); --glow: rgba(124,58,237,0.28) }
+        html { scroll-behavior: smooth }
+        body { font-family: 'Bricolage Grotesque', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background .4s, color .4s; overflow-x: hidden }
+        .noise-overlay { position: fixed; inset: 0; z-index: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; opacity: .35 }
+        .topnav { position: sticky; top: 0; z-index: 100; background: var(--surface); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 16px 40px; display: flex; align-items: center; gap: 16px }
+        .topnav a { text-decoration: none; color: var(--accent); font-weight: 700; font-size: .9rem; display: flex; align-items: center; gap: 6px; transition: all .2s }
+        .topnav a:hover { gap: 10px }
+        .topnav-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--text); margin-left: auto }
+        .theme-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; width: 36px; height: 36px; cursor: pointer; font-size: 1rem; display: grid; place-items: center; transition: all .2s; margin-left: 8px }
+        .theme-btn:hover { border-color: var(--accent) }
+        .wrapper { max-width: 900px; margin: 0 auto; padding: 40px 30px 80px; position: relative; z-index: 1 }
+        .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(251,146,60,.12); color: #f59e0b; border: 1px solid rgba(251,146,60,.25); border-radius: 30px; padding: 5px 14px; font-size: .72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px }
+        .page-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: var(--text); line-height: 1.15; margin-bottom: 14px }
+        .page-title .grad { background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent }
+        .page-desc { font-size: 1.05rem; color: var(--text2); line-height: 1.8; margin-bottom: 40px; max-width: 700px }
+        .toc { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 40px }
+        .toc-title { font-weight: 800; font-size: .9rem; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px }
+        .toc ol { padding-left: 20px; display: flex; flex-direction: column; gap: 6px }
+        .toc li { color: var(--text2); font-size: .88rem }
+        .toc a { color: var(--accent); text-decoration: none; font-weight: 600; transition: color .2s }
+        .toc a:hover { color: var(--accent2) }
+        .section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 24px; transition: all .3s }
+        .section:hover { box-shadow: 0 10px 40px var(--glow); border-color: rgba(124,58,237,.2) }
+        .section h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 10px }
+        .section h3 { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin: 20px 0 10px }
+        .section p, .section li { font-size: .92rem; color: var(--text2); line-height: 1.85 }
+        .section ul, .section ol { padding-left: 20px; margin: 10px 0 }
+        .section li { margin-bottom: 6px }
+        .example { background: rgba(124,58,237,.06); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 16px 0; font-size: .88rem; color: var(--text2); line-height: 1.75 }
+        .example strong { color: var(--text) }
+        .tip { background: rgba(6,182,212,.08); border-left: 3px solid var(--accent2); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 16px 0; font-size: .88rem; color: var(--text2); line-height: 1.75 }
+        .tip strong { color: var(--accent2) }
+        .warning { background: rgba(244,63,94,.08); border-left: 3px solid #f43f5e; border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 16px 0; font-size: .88rem; color: var(--text2); line-height: 1.75 }
+        .warning strong { color: #f43f5e }
+        .nav-buttons { display: flex; gap: 14px; margin-top: 40px; flex-wrap: wrap }
+        .nav-btn { flex: 1; min-width: 200px; padding: 16px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; text-decoration: none; color: var(--text); font-weight: 700; font-size: .9rem; display: flex; align-items: center; gap: 10px; transition: all .3s }
+        .nav-btn:hover { border-color: var(--accent); box-shadow: 0 8px 24px var(--glow); transform: translateY(-2px) }
+        .nav-btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; border: none; box-shadow: 0 4px 16px rgba(124,58,237,.4) }
+        .nav-btn.primary:hover { box-shadow: 0 8px 28px rgba(124,58,237,.5); transform: translateY(-3px) }
+        .nav-btn-label { font-size: .7rem; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: .5px }
+        .nav-btn.primary .nav-btn-label { color: rgba(255,255,255,.7) }
+        footer { text-align: center; color: var(--text3); font-size: .8rem; padding: 20px; border-top: 1px solid var(--border); margin-top: 40px }
+        @media(max-width:768px) { .topnav { padding: 14px 16px } .wrapper { padding: 24px 16px 60px } .section { padding: 20px } .nav-buttons { flex-direction: column } }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">&#8592; Kembali ke Library</a>
+        <span class="topnav-title">Grammar &amp; Structure</span>
+        <button class="theme-btn" onclick="document.body.classList.toggle('dark')">&#127769;</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">Literasi Bahasa Inggris</div>
+        <h1 class="page-title">Grammar &amp; <span class="grad">Structure</span></h1>
+        <p class="page-desc">Tenses, subject-verb agreement, conditionals, passive voice, relative clauses, dan structure error analysis untuk SNBT 2025.</p>
+
+        <div class="toc">
+            <div class="toc-title">&#128203; Daftar Isi</div>
+            <ol>
+                <li><a href="#tenses">Vital Verb Tenses</a></li>
+                <li><a href="#agreement">Subject-Verb Agreement</a></li>
+                <li><a href="#passive">Passive Voice vs Active</a></li>
+                <li><a href="#conditional">Conditional Sentences (If Clause)</a></li>
+                <li><a href="#relative">Relative Clauses &amp; Connectors</a></li>
+                <li><a href="#gerund">Gerund vs Infinitive</a></li>
+                <li><a href="#tips">Strategi Menjawab SNBT</a></li>
+            </ol>
+        </div>
+
+        <div class="section" id="tenses">
+            <h2>&#128161; 1. Vital Verb Tenses</h2>
+            <p>Although pure grammar questions are rare in SNBT, understanding tenses is crucial for reading comprehension. Embedded grammar errors are common in English Reading texts.</p>
+            
+            <h3>A. Simple Tenses</h3>
+            <ul>
+                <li><strong>Present Simple:</strong> Habits, facts, general truths. <em>"Water boils at 100&deg;C." "They play tennis every Sunday."</em></li>
+                <li><strong>Past Simple:</strong> Completed action at a specific time. <em>"He arrived <u>yesterday</u>." "The war ended in 1945."</em></li>
+                <li><strong>Future Simple:</strong> Predictions, decisions. <em>"It will rain tomorrow." "I will help you."</em></li>
+            </ul>
+            
+            <h3>B. Perfect Tenses (The SNBT Favorites)</h3>
+            <ul>
+                <li><strong>Present Perfect (has/have + V3):</strong> Past action connected to present, or unspecified time. <em>"She <b>has finished</b> her task." "I <b>have lived</b> here since 2010."</em></li>
+                <li><strong>Past Perfect (had + V3):</strong> Action completed before another past action. <em>"By the time he arrived, she <b>had already left</b>."</em></li>
+                <li><strong>Future Perfect (will have + V3):</strong> Action that will be completed before a future time. <em>"By 2030, we <b>will have finished</b> the project."</em></li>
+            </ul>
+
+            <div class="tip">
+                <strong>&#128161; Key Signal Words:</strong><br>
+                &#8226; Present Perfect: <em>since, for, already, yet, ever, never, so far, recently</em><br>
+                &#8226; Past Simple: <em>yesterday, ago, last year, in 2020, when</em><br>
+                &#8226; Past Perfect: <em>by the time, before, after, already (with past context)</em>
+            </div>
+
+            <h3>C. Continuous Tenses</h3>
+            <ul>
+                <li><strong>Present Continuous (is/am/are + V-ing):</strong> Action happening now or temporary situations. <em>"She is studying for SNBT."</em></li>
+                <li><strong>Past Continuous (was/were + V-ing):</strong> Action in progress at a specific past time. <em>"I was reading when the phone rang."</em></li>
+            </ul>
+
+            <div class="warning">
+                <strong>&#128721; Stative Verbs Cannot Use Continuous:</strong> Some verbs never use -ing form: <em>know, believe, understand, want, need, prefer, like, love, hate, own, belong, seem, appear, mean</em>.<br>
+                &#10060; "I am knowing the answer." &#8594; &#9989; "I know the answer."
+            </div>
+        </div>
+
+        <div class="section" id="agreement">
+            <h2>&#129513; 2. Subject-Verb Agreement</h2>
+            <p>The verb must align with the subject's number (singular/plural). This is one of the <strong>most frequently tested</strong> grammar points in SNBT.</p>
+            
+            <h3>A. Basic Rules</h3>
+            <ul>
+                <li>Singular subject &#8594; singular verb (adds -s): <em>"The student <b>studies</b> hard."</em></li>
+                <li>Plural subject &#8594; plural verb (no -s): <em>"The students <b>study</b> hard."</em></li>
+            </ul>
+
+            <h3>B. Tricky Cases</h3>
+            <ul>
+                <li><strong>Prepositional phrases between S and V:</strong> Ignore them! <em>"The list <u>of new applications</u> <b>is</b> confusing."</em> (Subject = "The list", not "applications")</li>
+                <li><strong>Each, every, everyone, everybody:</strong> Always singular. <em>"Each student <b>has</b> a book."</em></li>
+                <li><strong>Neither...nor / Either...or:</strong> Verb agrees with the CLOSER subject. <em>"Neither the teacher nor the students <b>were</b> present."</em></li>
+                <li><strong>Uncountable nouns:</strong> Always singular. <em>"The information <b>is</b> accurate." "Research <b>shows</b> that..."</em></li>
+                <li><strong>Collective nouns:</strong> Usually singular in American English. <em>"The team <b>is</b> winning."</em></li>
+            </ul>
+
+            <div class="warning">
+                <strong>&#128721; SNBT Trap:</strong> Test makers will separate the subject and verb with LONG modifying phrases to confuse you!<br>
+                <em>"The list of new software applications developed by the research team at the university <b>are</b> confusing."</em> &#8594; <strong>WRONG!</strong><br>
+                Subject = "The list" (Singular) &#8594; Should be: "The list [...] <b>is</b> confusing."
+            </div>
+
+            <div class="example">
+                <strong>Practice:</strong> Identify the correct verb:<br>
+                "The news about the economic reforms _____ encouraging."<br>
+                A. are &nbsp; B. is &nbsp; C. were &nbsp; D. have been<br>
+                <strong>Answer: B. is</strong> ("news" is uncountable/singular)
+            </div>
+        </div>
+
+        <div class="section" id="passive">
+            <h2>&#128300; 3. Passive Voice vs Active</h2>
+            <p>Passive voice is used heavily in scientific, formal, and academic texts &mdash; exactly the type of texts in SNBT.</p>
+            
+            <h3>Structure</h3>
+            <p><strong>Subject + Be + Past Participle (V3) + (by agent)</strong></p>
+            <ul>
+                <li>Active: "Alexander Fleming <strong>discovered</strong> penicillin in 1928."</li>
+                <li>Passive: "Penicillin <strong>was discovered</strong> (by Alexander Fleming) in 1928."</li>
+            </ul>
+
+            <h3>Passive in Different Tenses</h3>
+            <ul>
+                <li><strong>Simple Present:</strong> is/am/are + V3. <em>"English <b>is spoken</b> worldwide."</em></li>
+                <li><strong>Simple Past:</strong> was/were + V3. <em>"The building <b>was constructed</b> in 1999."</em></li>
+                <li><strong>Present Perfect:</strong> has/have been + V3. <em>"The report <b>has been submitted</b>."</em></li>
+                <li><strong>Modal:</strong> modal + be + V3. <em>"The data <b>can be analyzed</b>."</em></li>
+                <li><strong>Continuous:</strong> is/was being + V3. <em>"The bridge <b>is being repaired</b>."</em></li>
+            </ul>
+
+            <div class="tip">
+                <strong>&#128161; When is Passive Used?</strong><br>
+                &#8226; When the <strong>doer is unknown</strong>: "The window was broken."<br>
+                &#8226; When the <strong>action is more important</strong> than who did it: "The experiment was conducted in 2022."<br>
+                &#8226; In <strong>formal/academic writing</strong>: "It is believed that...", "It has been shown that..."
+            </div>
+        </div>
+
+        <div class="section" id="conditional">
+            <h2>&#128301; 4. Conditional Sentences (If Clause)</h2>
+            <p>Hypothetical situations and their conditions. Conditionals are heavily tested in SNBT because they require precise tense knowledge.</p>
+            
+            <h3>The Four Types</h3>
+            <ul>
+                <li><strong>Type 0 (General Truth):</strong> If + Present, Present. <em>"If you heat water to 100&deg;C, it boils."</em></li>
+                <li><strong>Type 1 (Real Future):</strong> If + Present, will + V1. <em>"If it rains, I will stay home."</em></li>
+                <li><strong>Type 2 (Unreal Present):</strong> If + Past, would + V1. <em>"If I were rich, I would buy a house."</em></li>
+                <li><strong>Type 3 (Unreal Past):</strong> If + Past Perfect, would have + V3. <em>"If I had studied harder, I would have passed."</em></li>
+            </ul>
+
+            <div class="warning">
+                <strong>&#128721; Critical Note:</strong> In Type 2, always use "were" (not "was") for all subjects, especially in formal writing:<br>
+                &#9989; "If I <b>were</b> you, I would accept the offer."<br>
+                &#10060; "If I <b>was</b> you..." (incorrect in formal writing)
+            </div>
+
+            <h3>Mixed Conditionals</h3>
+            <p>Sometimes SNBT mixes Type 2 and Type 3 conditions:</p>
+            <div class="example">
+                <strong>Past condition, present result:</strong><br>
+                "If I <b>had taken</b> (Type 3) the medicine, I <b>would be</b> (Type 2) healthy now."<br><br>
+                <strong>Present condition, past result:</strong><br>
+                "If she <b>were</b> (Type 2) more careful, she <b>would not have made</b> (Type 3) that mistake."
+            </div>
+
+            <h3>Wish Clauses (Related Pattern)</h3>
+            <ul>
+                <li><strong>Present wish:</strong> I wish + Past Simple. <em>"I wish I <b>knew</b> the answer."</em> (but I don't know)</li>
+                <li><strong>Past wish:</strong> I wish + Past Perfect. <em>"I wish I <b>had studied</b> harder."</em> (but I didn't)</li>
+                <li><strong>Future wish:</strong> I wish + would + V1. <em>"I wish it <b>would stop</b> raining."</em></li>
+            </ul>
+        </div>
+
+        <div class="section" id="relative">
+            <h2>&#128279; 5. Relative Clauses &amp; Connectors</h2>
+            <p>Relative clauses add extra information about a noun. Understanding them is crucial for parsing complex SNBT sentences.</p>
+
+            <h3>Relative Pronouns</h3>
+            <ul>
+                <li><strong>who/whom:</strong> for people. <em>"The scientist <b>who</b> discovered DNA..."</em></li>
+                <li><strong>which:</strong> for things/animals. <em>"The book <b>which</b> I read..."</em></li>
+                <li><strong>that:</strong> for people or things (restrictive clauses only). <em>"The car <b>that</b> was stolen..."</em></li>
+                <li><strong>whose:</strong> for possession. <em>"The student <b>whose</b> project won..."</em></li>
+                <li><strong>where:</strong> for places. <em>"The city <b>where</b> I grew up..."</em></li>
+                <li><strong>when:</strong> for times. <em>"The year <b>when</b> we graduated..."</em></li>
+            </ul>
+
+            <div class="example">
+                <strong>Defining (Restrictive):</strong> Essential information, no commas.<br>
+                "Students <b>who study hard</b> will succeed." (Only those who study hard)<br><br>
+                <strong>Non-defining (Non-restrictive):</strong> Extra information, with commas.<br>
+                "My brother<b>, who lives in Jakarta,</b> is a doctor." (Extra info about my only brother)
+            </div>
+
+            <h3>Common Academic Connectors</h3>
+            <ul>
+                <li><strong>Addition:</strong> moreover, furthermore, in addition, besides</li>
+                <li><strong>Contrast:</strong> however, nevertheless, on the other hand, whereas, although</li>
+                <li><strong>Cause/Effect:</strong> therefore, consequently, as a result, thus, hence</li>
+                <li><strong>Example:</strong> for instance, for example, such as, namely</li>
+                <li><strong>Concession:</strong> despite, in spite of, even though, although</li>
+            </ul>
+        </div>
+
+        <div class="section" id="gerund">
+            <h2>&#128302; 6. Gerund vs Infinitive</h2>
+            <p>Some verbs are followed by gerunds (-ing), some by infinitives (to + verb), and some by both with different meanings.</p>
+
+            <h3>Verbs + Gerund Only</h3>
+            <p><em>enjoy, avoid, consider, deny, finish, imagine, keep, mind, practice, suggest, risk, admit, delay, quit</em></p>
+            <div class="example">
+                &#9989; "I enjoy <b>reading</b> books."<br>
+                &#10060; "I enjoy <b>to read</b> books."
+            </div>
+
+            <h3>Verbs + Infinitive Only</h3>
+            <p><em>want, need, decide, hope, plan, agree, refuse, promise, offer, learn, expect, afford, manage, pretend</em></p>
+            <div class="example">
+                &#9989; "She decided <b>to study</b> abroad."<br>
+                &#10060; "She decided <b>studying</b> abroad."
+            </div>
+
+            <h3>Verbs + Both (Different Meaning!)</h3>
+            <ul>
+                <li><strong>remember + gerund</strong> = remember a past action. <em>"I remember <b>locking</b> the door."</em> (I locked it and I remember doing it)</li>
+                <li><strong>remember + infinitive</strong> = remember to do a future action. <em>"Remember <b>to lock</b> the door."</em> (Don't forget to lock it)</li>
+                <li><strong>stop + gerund</strong> = stop the activity. <em>"He stopped <b>smoking</b>."</em> (He quit smoking)</li>
+                <li><strong>stop + infinitive</strong> = stop in order to do something. <em>"He stopped <b>to smoke</b>."</em> (He paused to have a cigarette)</li>
+                <li><strong>try + gerund</strong> = experiment. <em>"Try <b>using</b> a different method."</em></li>
+                <li><strong>try + infinitive</strong> = attempt. <em>"I tried <b>to open</b> the door."</em></li>
+            </ul>
+        </div>
+        
+        <div class="section" id="tips">
+            <h2>&#127919; 7. Strategi Menjawab SNBT</h2>
+            <ol>
+                <li><strong>Watch out for Inversion.</strong> When negative adverbs begin a sentence, the verb precedes the subject! <em>"Hardly <b>had she left</b> when it rained." "Never <b>have I seen</b> such beauty."</em></li>
+                <li><strong>Identify the Subject First.</strong> In complex sentences, always find the TRUE subject before checking the verb. Cross out prepositional phrases and relative clauses mentally.</li>
+                <li><strong>Check Tense Consistency.</strong> In SNBT reading passages, pay attention to tense shifts. If a paragraph is in past tense, a sudden shift to present tense should alert you.</li>
+                <li><strong>Look for Parallel Structure.</strong> Items in a list must be in the same grammatical form: "She likes <em>swimming, hiking, and cycling</em>" (all gerunds).</li>
+                <li><strong>Master "It" Constructions.</strong> Academic English frequently uses: "It is believed that...", "It has been suggested that...", "It is worth noting that..."</li>
+                <li><strong>Recognize Reduced Clauses.</strong> "The man (who was) sitting next to me..." &mdash; relative pronouns can be omitted, making sentences harder to parse.</li>
+            </ol>
+            <div class="tip">
+                <strong>&#128161; Quick Test:</strong> If you're unsure about a grammar point, try reading the sentence out loud. Your ear will often catch errors that your eyes miss!
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="library.html" class="nav-btn">
+                <div>
+                    <div class="nav-btn-label">&#8592; Kembali</div>Library SNBT
+                </div>
+            </a>
+            <a href="lib-inference-main-idea.html" class="nav-btn primary">
+                <div>
+                    <div class="nav-btn-label">Materi Selanjutnya &rarr;</div>Inference &amp; Main Idea
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>&copy; 2025 QuizNation &mdash; Library SNBT 2025</footer>
+    <script>if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark')</script>
+</body>
+
+</html>

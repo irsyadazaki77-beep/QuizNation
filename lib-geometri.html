@@ -1,0 +1,659 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Geometri & Pengukuran - Library SNBT 2026</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Mobile Optimization */
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --accent: #2563eb;
+            --accent2: #06b6d4;
+            --bg: #f0f2f8;
+            --surface: rgba(255, 255, 255, 0.72);
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #1a1a2e;
+            --text2: #4b5563;
+            --text3: #9ca3af;
+            --glow: rgba(124, 58, 237, 0.18);
+            --radius: 20px
+        }
+
+        body.dark {
+            --bg: #050a15;
+            --surface: rgba(255, 255, 255, 0.055);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #f0edff;
+            --text2: rgba(240, 237, 255, 0.65);
+            --text3: rgba(240, 237, 255, 0.35);
+            --glow: rgba(124, 58, 237, 0.28)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: .35
+        }
+
+        /* Top Nav */
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            gap: 16px
+        }
+
+        .topnav a {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .2s
+        }
+
+        .topnav a:hover {
+            gap: 10px
+        }
+
+        .topnav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-left: auto
+        }
+
+        .theme-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: grid;
+            place-items: center;
+            transition: all .2s;
+            margin-left: 8px
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent)
+        }
+
+        /* Content */
+        .wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px 80px;
+            position: relative;
+            z-index: 1
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(251, 146, 60, .12);
+            color: #f59e0b;
+            border: 1px solid rgba(251, 146, 60, .25);
+            border-radius: 30px;
+            padding: 5px 14px;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.15;
+            margin-bottom: 14px
+        }
+
+        .page-title .grad {
+            background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .page-desc {
+            font-size: 1.05rem;
+            color: var(--text2);
+            line-height: 1.8;
+            margin-bottom: 40px;
+            max-width: 700px
+        }
+
+        /* TOC */
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 40px
+        }
+
+        .toc-title {
+            font-weight: 800;
+            font-size: .9rem;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .toc ol {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px
+        }
+
+        .toc li {
+            color: var(--text2);
+            font-size: .95rem;
+            font-weight: 500;
+        }
+
+        .toc a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color .2s
+        }
+
+        .toc a:hover {
+            color: var(--accent2);
+            text-decoration: underline;
+        }
+
+        /* Sections */
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: all .3s
+        }
+
+        .section:hover {
+            box-shadow: 0 10px 40px var(--glow);
+            border-color: rgba(124, 58, 237, .2)
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 24px 0 10px
+        }
+
+        .section p,
+        .section li {
+            font-size: .95rem;
+            color: var(--text2);
+            line-height: 1.85
+        }
+
+        .section ul,
+        .section ol {
+            padding-left: 24px;
+            margin: 12px 0
+        }
+
+        .section li {
+            margin-bottom: 8px
+        }
+
+        /* Formula Box */
+        .formula {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+            text-align: center;
+            font-family: 'DM Mono', monospace;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--accent);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.02);
+            line-height: 1.6;
+        }
+
+        /* Example Box */
+        .example {
+            background: rgba(124, 58, 237, .06);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 20px 0;
+            font-size: .9rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .example strong {
+            color: var(--accent);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* Tip Box */
+        .tip {
+            background: rgba(6, 182, 212, .08);
+            border-left: 4px solid var(--accent2);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 20px 0;
+            font-size: .9rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .tip strong {
+            color: var(--accent2);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* Warning */
+        .warning {
+            background: rgba(244, 63, 94, .08);
+            border-left: 4px solid #f43f5e;
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 20px 0;
+            font-size: .9rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .warning strong {
+            color: #f43f5e;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* Nav buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 14px;
+            margin-top: 40px;
+            flex-wrap: wrap
+        }
+
+        .nav-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all .3s
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px var(--glow);
+            transform: translateY(-2px)
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, .4)
+        }
+
+        .nav-btn.primary:hover {
+            box-shadow: 0 8px 28px rgba(124, 58, 237, .5);
+            transform: translateY(-3px)
+        }
+
+        .nav-btn-label {
+            font-size: .7rem;
+            color: var(--text3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .nav-btn.primary .nav-btn-label {
+            color: rgba(255, 255, 255, .7)
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text3);
+            font-size: .8rem;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px
+        }
+
+        @media(max-width:768px) {
+            .topnav {
+                padding: 14px 16px
+            }
+
+            .wrapper {
+                padding: 24px 16px 60px
+            }
+
+            .section {
+                padding: 20px
+            }
+
+            .nav-buttons {
+                flex-direction: column
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">? Kembali</a>
+        <span class="topnav-title">Geometri & Pengukuran</span>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">Penalaran Matematika SNBT</div>
+        <h1 class="page-title">Geometri & <span class="grad">Pengukuran</span></h1>
+        <p class="page-desc">
+            Geometri SNBT tidak sekadar menguji hafalan rumus, tetapi <strong>logika ruang</strong> dan pemecahan
+            masalah kontekstual. Mari kupas tuntas bangun datar, dimensi tiga, hingga geometri analitik di modul ini.
+        </p>
+
+        <div class="toc">
+            <div class="toc-title">📑 Daftar Isi 10 Materi Esensial</div>
+            <ol>
+                <li><a href="#segitiga">Sudut dan Teorema Pythagoras (Segitiga)</a></li>
+                <li><a href="#segiempat">Sifat & Luas Segiempat Beraturan</a></li>
+                <li><a href="#lingkaran">Unsur, Keliling, & Luas Lingkaran</a></li>
+                <li><a href="#gabungan">Luas Daerah Gabungan / Diarsir (HOTS)</a></li>
+                <li><a href="#prismalimas">Bangun Ruang Sisi Datar (Prisma & Limas)</a></li>
+                <li><a href="#lengkung">Bangun Ruang Sisi Lengkung (Tabung, Kerucut, Bola)</a></li>
+                <li><a href="#jarak3d">Jarak dalam Dimensi Tiga (3D)</a></li>
+                <li><a href="#kesebangunan">Kongruensi & Kesebangunan</a></li>
+                <li><a href="#koordinat">Geometri Analitik (Koordinat & Garis)</a></li>
+                <li><a href="#transformasi">Transformasi Geometri (Translasi, Rotasi, Refleksi, Dilatasi)</a></li>
+            </ol>
+        </div>
+
+        <div class="section" id="segitiga">
+            <h2>🔹 1. Sudut dan Teorema Pythagoras (Segitiga)</h2>
+            <p>Segitiga adalah fondasi dari seluruh ilmu geometri. Memahami segitiga berarti menguasai hampir 50% soal
+                geometri yang ada.</p>
+            <h3>Konsep Utama:</h3>
+            <ul>
+                <li>Total sudut dalam segitiga selalu <strong>180&deg;</strong>.</li>
+                <li>Luas Segitiga = <code>&frac12; &times; alas &times; tinggi</code>. Tinggi harus selalu <strong>tegak
+                        lurus</strong> dengan alas.</li>
+                <li><strong>Teorema Pythagoras:</strong> Pada segitiga siku-siku, kuadrat sisi miring (hipotenusa) sama
+                    dengan jumlah kuadrat sisi tegak lainnya. <code>c- = a- + b-</code>.</li>
+            </ul>
+            <div class="tip">
+                <strong>🔹 Tip Ujian (Hafalkan Tripel Pythagoras):</strong><br>
+                Daripada menghitung manual, hafalkan rasio angka berikut (termasuk kelipatannya):<br>
+                - <strong>3, 4, 5</strong> (kelipatan: 6, 8, 10)<br>
+                - <strong>5, 12, 13</strong><br>
+                - <strong>7, 24, 25</strong><br>
+                - <strong>8, 15, 17</strong>
+            </div>
+
+
+            [Image of right angled triangle with pythagorean theorem]
+
+        </div>
+
+        <div class="section" id="segiempat">
+            <h2>🔹 2. Sifat & Luas Segiempat Beraturan</h2>
+            <p>SNBT sering menguji pemahamanmu akan sifat diagonal, sudut, dan simetri lipat/putar dari berbagai jenis
+                segiempat, bukan hanya menghitung luasnya.</p>
+            <h3>Rumus Penting:</h3>
+            <div class="formula">
+                Persegi Panjang: L = p &times; l<br>
+                Jajar Genjang: L = a &times; t<br>
+                Trapesium: L = &frac12; &times; (a + b) &times; t<br>
+                Layang-layang / Belah Ketupat: L = &frac12; &times; d1 &times; d2
+            </div>
+            <div class="example">
+                <strong>Hati-hati:</strong><br>
+                Pada belah ketupat, semua sisinya sama panjang, dan kedua diagonalnya saling berpotongan tegak lurus
+                membagi dua sama panjang. Ini sering diujikan dengan menggabungkannya bersama rumus Pythagoras.
+            </div>
+        </div>
+
+        <div class="section" id="lingkaran">
+            <h2>? 3. Unsur, Keliling, & Luas Lingkaran</h2>
+            <p>Lingkaran sangat krusial. Selain utuh, kamu akan sering bertemu irisan lingkaran (juring dan tembereng).
+            </p>
+            <ul>
+                <li><strong>Keliling (K):</strong> <code>2 &times; &pi; &times; r</code> atau
+                    <code>&pi; &times; d</code>
+                </li>
+                <li><strong>Luas (L):</strong> <code>&pi; &times; r-</code></li>
+                <li><strong>Panjang Busur:</strong> <code>(Sudut Pusat / 360&deg;) &times; Keliling</code></li>
+                <li><strong>Luas Juring:</strong> <code>(Sudut Pusat / 360&deg;) &times; Luas Lingkaran</code></li>
+            </ul>
+            <div class="warning">
+                <strong>🔹 Ingat Nilai &pi;:</strong><br>
+                Gunakan &pi; = 22/7 jika jari-jari (r) atau diameter (d) merupakan kelipatan 7. Jika bukan, gunakan &pi;
+                = 3,14 atau biarkan dalam bentuk simbol &pi; (tergantung opsi jawaban).
+            </div>
+
+        </div>
+
+        <div class="section" id="gabungan">
+            <h2>🔹 4. Luas Daerah Gabungan / Diarsir (HOTS)</h2>
+            <p>Ini adalah primadona soal Penalaran Matematika! Kamu akan diberi gambar aneh yang diarsir sebagian, dan
+                diminta mencari luas arsirannya.</p>
+            <h3>Logika Pengerjaan:</h3>
+            <p>Luas Diarsir = <strong>Luas Bangun Total (Besar) - Luas Bangun yang Tidak Diarsir (Pemotong)</strong></p>
+            <div class="example">
+                <strong>Contoh Soal:</strong><br>
+                Terdapat lingkaran di dalam sebuah persegi yang menyinggung keempat sisinya. Jika sisi persegi adalah 14
+                cm, berapa luas daerah persegi di luar lingkaran?<br><br>
+                <strong>Penyelesaian:</strong><br>
+                1. Luas Persegi = s &times; s = 14 &times; 14 = 196 cm-<br>
+                2. Jari-jari lingkaran (r) = &frac12; dari sisi = 7 cm.<br>
+                3. Luas Lingkaran = (22/7) &times; 7 &times; 7 = 154 cm-<br>
+                4. Luas Sisa = 196 - 154 = <strong>42 cm-</strong>
+            </div>
+        </div>
+
+        <div class="section" id="prismalimas">
+            <h2>🔹 5. Bangun Ruang Sisi Datar (Prisma & Limas)</h2>
+            <p>Bergeser ke geometri 3D, kubus dan balok adalah bentuk khusus dari prisma. Pahami perbedaan mendasar cara
+                menghitung volumenya.</p>
+            <div class="formula">
+                Volume Prisma = Luas Alas &times; Tinggi Prisma<br>
+                Volume Limas = 1/3 &times; Luas Alas &times; Tinggi Limas
+            </div>
+            <p><strong>Catatan:</strong> Tinggi limas adalah jarak tegak lurus dari puncak ke titik tengah alasnya,
+                bukan panjang sisi miring/rusuk tegaknya!</p>
+        </div>
+
+        <div class="section" id="lengkung">
+            <h2>🔹 6. Bangun Ruang Sisi Lengkung (Tabung, Kerucut, Bola)</h2>
+            <p>Identik dengan Prisma dan Limas, namun alasnya berbentuk lingkaran. Materi ini sering dijadikan soal
+                cerita seperti volume air, tandon, topi ulang tahun, atau es krim.</p>
+            <ul>
+                <li><strong>Tabung (Silinder):</strong> <code>V = &pi; &times; r- &times; t</code></li>
+                <li><strong>Kerucut:</strong> <code>V = 1/3 &times; &pi; &times; r- &times; t</code></li>
+                <li><strong>Bola:</strong> <code>V = 4/3 &times; &pi; &times; r-</code></li>
+            </ul>
+            <div class="tip">
+                <strong>🔹 Tip Volume:</strong><br>
+                Jika tabung, kerucut, dan bola memiliki tinggi dan jari-jari yang persis sama, maka perbandingan volume
+                mereka (Kerucut : Bola : Tabung) adalah <strong>1 : 2 : 3</strong>.
+            </div>
+            [Image comparing volumes of cone, sphere, and cylinder with same radius and height]
+        </div>
+
+        <div class="section" id="jarak3d">
+            <h2>🔹 7. Jarak dalam Dimensi Tiga (3D)</h2>
+            <p>Materi ini membutuhkan daya imajinasi spasial. Sering keluar pertanyaan mencari jarak dari sebuah titik
+                ke garis atau titik ke bidang dalam sebuah kubus.</p>
+            <h3>Trik Cepat pada Kubus (sisi = s):</h3>
+            <ul>
+                <li>Diagonal Sisi (misal garis AC) = <strong>s&radic;2</strong></li>
+                <li>Diagonal Ruang (misal garis AG menembus ruang) = <strong>s&radic;3</strong></li>
+            </ul>
+            <p>Kunci menyelesaikan jarak 3D adalah dengan "menarik" keluar segitiga imajiner yang terbentuk di dalam
+                bangun ruang, lalu menghitungnya dengan rumus Pythagoras di kertas 2D biasa.</p>
+
+        </div>
+
+        <div class="section" id="kesebangunan">
+            <h2>🔹 8. Kongruensi & Kesebangunan</h2>
+            <p>Dua bangun dikatakan <strong>kongruen</strong> jika bentuk dan ukurannya sama persis (kembar identik).
+                Sedangkan <strong>sebangun</strong> berarti bentuknya sama namun ukurannya merupakan hasil
+                perbesaran/pengecilan dengan rasio (skala) yang konstan.</p>
+            <div class="warning">
+                <strong>🔹 Aturan Skala (k):</strong><br>
+                Jika sebuah foto diperbesar dengan skala <strong>k = 3</strong> (panjang sisinya menjadi 3x lipat),
+                maka:<br>
+                - Kelilingnya menjadi <strong>3x lipat</strong> (k)<br>
+                - Luasnya menjadi <strong>9x lipat</strong> (k-)<br>
+                - Volumenya (jika 3D) menjadi <strong>27x lipat</strong> (k-)
+            </div>
+        </div>
+
+        <div class="section" id="koordinat">
+            <h2>🔹 9. Geometri Analitik (Koordinat & Garis)</h2>
+            <p>Geometri analitik menggabungkan aljabar dan geometri menggunakan sistem koordinat Kartesius (X, Y).</p>
+            <h3>Mencari Gradien (Kemiringan Garis 'm'):</h3>
+            <p>Jika diketahui persamaan garis <code>y = mx + c</code>, m adalah gradiennya.<br>
+                Jika diketahui dua titik (x1, y1) dan (x2, y2), maka <code>m = (y2 - y1) / (x2 - x1)</code>.</p>
+            <h3>Hubungan Dua Garis:</h3>
+            <ul>
+                <li><strong>Sejajar:</strong> m1 = m2 (Kemiringan sama persis)</li>
+                <li><strong>Tegak Lurus:</strong> m1 &times; m2 = -1 (Terbalik dan dikali minus)</li>
+            </ul>
+
+        </div>
+
+        <div class="section" id="transformasi">
+            <h2>🔹 10. Transformasi Geometri</h2>
+            <p>Proses pemindahan/perubahan suatu titik atau bangun pada koordinat kartesius. Terdapat 4 jenis
+                transformasi utama:</p>
+            <ol>
+                <li><strong>Translasi (Pergeseran):</strong> Menggeser titik (x, y) sejauh jarak tertentu (a, b) menjadi
+                    (x+a, y+b).</li>
+                <li><strong>Refleksi (Pencerminan):</strong> Mencerminkan titik. Jika dicerminkan terhadap sumbu-X, maka
+                    titik (x,y) menjadi (x, -y). Jika terhadap sumbu-Y, menjadi (-x, y).</li>
+                <li><strong>Rotasi (Perputaran):</strong> Memutar titik dengan pusat (0,0) sejauh derajat tertentu.</li>
+                <li><strong>Dilatasi (Perkalian Ukuran):</strong> Memperbesar atau memperkecil bangun dari pusat
+                    dilatasi menggunakan suatu faktor skala (k).</li>
+            </ol>
+            <div class="example">
+                <strong>Catatan Penting:</strong> Hanya Dilatasi yang dapat merubah ukuran luas suatu bangun, sementara
+                Translasi, Refleksi, dan Rotasi hanya memindahkan posisinya saja tanpa merubah ukuran aslinya
+                (Isometri).
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="library.html" class="nav-btn">
+                <div>
+                    <div class="nav-btn-label">? Kembali</div>Library SNBT
+                </div>
+            </a>
+            <a href="lib-statistika.html" class="nav-btn primary">
+                <div>
+                    <div class="nav-btn-label">Materi Selanjutnya &rarr;</div>Statistika & Peluang
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>- 2026 QuizNation - Library SNBT 2026</footer>
+    <script>if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark')</script>
+</body>
+
+</html>

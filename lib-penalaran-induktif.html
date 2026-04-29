@@ -1,0 +1,637 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Penalaran Induktif & Deduktif - Library SNBT 2025</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Mobile Optimization */
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --accent: #2563eb;
+            --accent2: #06b6d4;
+            --bg: #f0f2f8;
+            --surface: rgba(255, 255, 255, 0.72);
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #1a1a2e;
+            --text2: #4b5563;
+            --text3: #9ca3af;
+            --glow: rgba(124, 58, 237, 0.18);
+            --radius: 20px
+        }
+
+        body.dark {
+            --bg: #050a15;
+            --surface: rgba(255, 255, 255, 0.055);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #f0edff;
+            --text2: rgba(240, 237, 255, 0.65);
+            --text3: rgba(240, 237, 255, 0.35);
+            --glow: rgba(124, 58, 237, 0.28)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: .35
+        }
+
+        /* Top Nav */
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            gap: 16px
+        }
+
+        .topnav a {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .2s
+        }
+
+        .topnav a:hover {
+            gap: 10px
+        }
+
+        .topnav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-left: auto
+        }
+
+        .theme-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: grid;
+            place-items: center;
+            transition: all .2s;
+            margin-left: 8px
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent)
+        }
+
+        /* Content */
+        .wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px 80px;
+            position: relative;
+            z-index: 1
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(251, 146, 60, .12);
+            color: #f59e0b;
+            border: 1px solid rgba(251, 146, 60, .25);
+            border-radius: 30px;
+            padding: 5px 14px;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.15;
+            margin-bottom: 14px
+        }
+
+        .page-title .grad {
+            background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .page-desc {
+            font-size: 1.05rem;
+            color: var(--text2);
+            line-height: 1.8;
+            margin-bottom: 40px;
+            max-width: 700px
+        }
+
+        /* TOC */
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 40px
+        }
+
+        .toc-title {
+            font-weight: 800;
+            font-size: .9rem;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .toc ol {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .toc li {
+            color: var(--text2);
+            font-size: .88rem
+        }
+
+        .toc a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color .2s
+        }
+
+        .toc a:hover {
+            color: var(--accent2)
+        }
+
+        /* Sections */
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: all .3s
+        }
+
+        .section:hover {
+            box-shadow: 0 10px 40px var(--glow);
+            border-color: rgba(124, 58, 237, .2)
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .section h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 20px 0 10px
+        }
+
+        .section p,
+        .section li {
+            font-size: .92rem;
+            color: var(--text2);
+            line-height: 1.85
+        }
+
+        .section ul,
+        .section ol {
+            padding-left: 20px;
+            margin: 10px 0
+        }
+
+        .section li {
+            margin-bottom: 6px
+        }
+
+        /* Example Box */
+        .example {
+            background: rgba(124, 58, 237, .06);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .example strong {
+            color: var(--text)
+        }
+
+        /* Tip Box */
+        .tip {
+            background: rgba(6, 182, 212, .08);
+            border-left: 3px solid var(--accent2);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .tip strong {
+            color: var(--accent2)
+        }
+
+        /* Warning */
+        .warning {
+            background: rgba(244, 63, 94, .08);
+            border-left: 3px solid #f43f5e;
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        /* Nav buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 14px;
+            margin-top: 40px;
+            flex-wrap: wrap
+        }
+
+        .nav-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all .3s
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px var(--glow);
+            transform: translateY(-2px)
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, .4)
+        }
+
+        .nav-btn.primary:hover {
+            box-shadow: 0 8px 28px rgba(124, 58, 237, .5);
+            transform: translateY(-3px)
+        }
+
+        .nav-btn-label {
+            font-size: .7rem;
+            color: var(--text3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .nav-btn.primary .nav-btn-label {
+            color: rgba(255, 255, 255, .7)
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text3);
+            font-size: .8rem;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px
+        }
+
+        @media(max-width:768px) {
+            .topnav {
+                padding: 14px 16px
+            }
+
+            .wrapper {
+                padding: 24px 16px 60px
+            }
+
+            .section {
+                padding: 20px
+            }
+
+            .nav-buttons {
+                flex-direction: column
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">? Kembali ke Library</a>
+        <span class="topnav-title">Penalaran Induktif &amp; Deduktif</span>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">🔹 Penalaran Umum</div>
+        <h1 class="page-title">Penalaran <span class="grad">Induktif &amp; Deduktif</span></h1>
+        <p class="page-desc">Pahami secara mendalam perbedaan, karakteristik, serta penerapan penalaran induktif dan
+            deduktif. Materi ini sangat krusial untuk menaklukkan berbagai variasi soal Penalaran Umum dalam SNBT 2025.
+        </p>
+
+        <div class="toc">
+            <div class="toc-title">📑 Daftar Isi</div>
+            <ol>
+                <li><a href="#konsep-dasar">1. Konsep Dasar Penalaran</a></li>
+                <li><a href="#penalaran-deduktif">2. Penalaran Deduktif (Logika Formal)</a></li>
+                <li><a href="#penalaran-induktif">3. Penalaran Induktif (Logika Material)</a></li>
+                <li><a href="#perbedaan-utama">4. Perbedaan Utama (Tabel Ringkasan)</a></li>
+                <li><a href="#snbt-aplikasi">5. Penerapan di Soal SNBT</a></li>
+                <li><a href="#tips">6. Tips &amp; Strategi Penguasaan</a></li>
+            </ol>
+        </div>
+
+        <div class="section" id="konsep-dasar">
+            <h2>🔹 1. Konsep Dasar Penalaran</h2>
+            <p>Penalaran adalah proses berpikir logis untuk menarik <strong>kesimpulan</strong> berdasarkan informasi
+                atau pangkalan data (premis) yang tersedia. Secara umum, penalaran dibagi menjadi dua aliran utama:
+                <strong>Deduktif</strong> dan <strong>Induktif</strong>.
+            </p>
+            <ul>
+                <li><strong>Deduktif:</strong> Berangkat dari kebenaran universal/umum ke spesifik (Top-Down).</li>
+                <li><strong>Induktif:</strong> Berangkat dari pengamatan spesifik/bukti nyata untuk menyusun kesimpulan
+                    umum (Bottom-Up).</li>
+            </ul>
+        </div>
+
+        <div class="section" id="penalaran-deduktif">
+            <h2>🔹 2. Penalaran Deduktif (Logika Formal)</h2>
+            <p>Penalaran deduktif menarik kesimpulan dari premis-premis yang dianggap <strong>pasti benar</strong>. Ciri
+                utamanya adalah <strong>kesimpulan pasti mutlak</strong> (valid) asalkan premis-premisnya benar dan
+                struktur logikanya tidak cacat.</p>
+
+            <h3>A. Silogisme Kategorial</h3>
+            <p>Silogisme yang terdiri dari kuantor seperti "Semua", "Ada", "Sebagian", atau "Tidak ada".</p>
+            <ul>
+                <li><strong>Aturan 1:</strong> Jika kedua premis "Semua", kesimpulan harus "Semua".</li>
+                <li><strong>Aturan 2:</strong> Jika ada satu premis "Sebagian/Beberapa", kesimpulan biasanya
+                    "Sebagian/Beberapa".</li>
+                <li><strong>Aturan 3:</strong> Jika ada premis negatif ("Tidak"), kesimpulan harus negatif.</li>
+            </ul>
+            <div class="example">
+                <strong>Contoh:</strong><br>
+                Premis 1: <em>Semua</em> peserta SNBT harus membawa kartu ujian.<br>
+                Premis 2: Budi adalah peserta SNBT.<br>
+                <strong>Kesimpulan:</strong> Budi harus membawa kartu ujian. (Pasti Benar)
+            </div>
+
+            <h3>B. Silogisme Hipotesis (Kondisional)</h3>
+            <p>Menggunakan hubungan Jika-Maka (Implikasi).</p>
+            <ul>
+                <li><strong>Modus Ponens:</strong> Jika P maka Q. P terjadi. Maka Q terjadi.<br>
+                    <em>(Jika hujan, tanah basah. Sekarang hujan. Maka tanah basah).</em>
+                </li>
+                <li><strong>Modus Tollens:</strong> Jika P maka Q. Q <strong>tidak</strong> terjadi. Maka P
+                    <strong>tidak</strong> terjadi.<br>
+                    <em>(Jika hujan, tanah basah. Tanah tidak basah. Maka tidak hujan).</em>
+                </li>
+                <li><strong>Silogisme:</strong> Jika P maka Q. Jika Q maka R. Maka, <strong>Jika P maka R</strong>.<br>
+                    <em>(Jika rajin, maka pintar. Jika pintar, maka lulus. Maka: Jika rajin, maka lulus).</em>
+                </li>
+            </ul>
+            <div class="warning">
+                <strong>🔹 Awas Jebakan! (Kesalahan Modus Gagal)</strong><br>
+                1. <em>Menegaskan Akibat:</em> Jika P maka Q. Q terjadi. (Kesimpulannya: BUKAN berarti P terjadi).<br>
+                2. <em>Menyangkal Sebab:</em> Jika P maka Q. P tidak terjadi. (Kesimpulannya: BUKAN berarti Q tidak
+                terjadi).
+            </div>
+        </div>
+
+        <div class="section" id="penalaran-induktif">
+            <h2>? 3. Penalaran Induktif (Logika Material)</h2>
+            <p>Penalaran induktif bertumpu pada probabilitas logis berdasarkan pola atau kejadian sebelumnya.
+                Kesimpulannya bersifat <strong>Mungkin Benar</strong> (Tingkat Kepastian Probabilistik), serta
+                <strong>menambah informasi baru</strong> di luar premis.
+            </p>
+
+            <h3>A. Generalisasi Induktif</h3>
+            <p>Mengambil kesimpulan umum dari serangkaian kasus atau sampel spesifik.</p>
+            <div class="example">
+                <strong>Contoh:</strong><br>
+                Senin jalan Sudirman macet. Selasa jalan Sudirman macet. Rabu jalan Sudirman macet.<br>
+                <strong>Kesimpulan Generalisasi:</strong> Jalan Sudirman selalu macet setiap hari kerja. (Mungkin Benar,
+                tapi bisa saja besok libur nasional sehingga tidak macet).
+            </div>
+
+            <h3>B. Analogi</h3>
+            <p>Menarik kesimpulan dengan membandingkan dua hal yang memiliki banyak kesamaan atribut.</p>
+            <div class="example">
+                <strong>Contoh:</strong><br>
+                Obat X dapat menyembuhkan penyakit flu pada tikus putih dengan efek samping minimal. Tubuh manusia
+                merespons genetik serupa terhadap penyakit flu seperti tikus putih.<br>
+                <strong>Kesimpulan:</strong> Obat X kemungkinan juga efektif menyembuhkan flu pada manusia.
+            </div>
+
+            <h3>C. Hubungan Kausalitas (Sebab-Akibat)</h3>
+            <p>Menyimpulkan bahwa satu hal menyebabkan kejadian lain karena mereka sering terjadi beriringan.</p>
+            <ul>
+                <li><strong>Sebab -&gt; Akibat:</strong> Angin topan bertiup kencang, atap rumah banyak yang terbang.
+                </li>
+                <li><strong>Banyak Sebab -&gt; 1 Akibat:</strong> Banjir disebabkan oleh curah hujan tinggi, saluran air
+                    mampet, dan berkurangnya area resapan.</li>
+            </ul>
+        </div>
+
+        <div class="section" id="perbedaan-utama">
+            <h2>🔹 4. Perbedaan Utama (Induktif vs Deduktif)</h2>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; margin-top: 15px; margin-bottom: 20px;">
+                    <thead>
+                        <tr style="background: var(--accent); color: white;">
+                            <th style="padding: 12px; text-align: left; border: 1px solid rgba(0,0,0,0.1);">Aspek</th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid rgba(0,0,0,0.1);">Deduktif
+                            </th>
+                            <th style="padding: 12px; text-align: left; border: 1px solid rgba(0,0,0,0.1);">Induktif
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody style="font-size: 0.9rem; line-height: 1.6; background: var(--surface);">
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid var(--border);"><strong>Arah Alur</strong></td>
+                            <td style="padding: 12px; border: 1px solid var(--border);">Umum ? Khusus</td>
+                            <td style="padding: 12px; border: 1px solid var(--border);">Khusus 💬 Umum</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid var(--border);"><strong>Sifat
+                                    Kesimpulan</strong></td>
+                            <td style="padding: 12px; border: 1px solid var(--border);">Pasti / Mutlak (Valid)</td>
+                            <td style="padding: 12px; border: 1px solid var(--border);">Probabilitas (Mungkin) /
+                                Hipotesis</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid var(--border);"><strong>Bukti Baru</strong></td>
+                            <td style="padding: 12px; border: 1px solid var(--border);">Data baru tidak mengubah nilai
+                                kebenaran kesimpulan.</td>
+                            <td style="padding: 12px; border: 1px solid var(--border);">Data/fakta baru bisa
+                                <em>memperkuat</em> atau <em>memperlemah</em> kesimpulan.
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 12px; border: 1px solid var(--border);"><strong>Penggunaan</strong></td>
+                            <td style="padding: 12px; border: 1px solid var(--border);">Matematika, silogisme formal.
+                            </td>
+                            <td style="padding: 12px; border: 1px solid var(--border);">Sains, prediksi, riset
+                                statistik.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section" id="snbt-aplikasi">
+            <h2>? 5. Penerapan di Soal SNBT (Penalaran Umum)</h2>
+            <p>Pada UTBK SNBT bagian Penalaran Umum, perbedaan kedua alat pikir ini sangat menentukan cara Anda menjawab
+                soal.</p>
+
+            <h3>A. Soal Tipe Deduktif</h3>
+            <p>Biasanya berbunyi: <em>"Berdasarkan informasi di atas, simpulan yang <strong>pasti benar</strong>
+                    adalah..."</em></p>
+            <ul>
+                <li><strong>Cara Jawab:</strong> Cari kesimpulan yang TIDAK menambahkan asumsi di luar teks. Fokus 100%
+                    pada struktur logika premis. Jika di teks tidak disebut cuaca hari ini, jangan pilih opsi tentang
+                    cuaca.</li>
+            </ul>
+
+            <h3>B. Soal Tipe Induktif</h3>
+            <p>Biasanya berbunyi: <em>"Manakah pernyataan yang <strong>Paling Mungkin Benar</strong>?"</em>,
+                <em>"Manakah yang <strong>Memperkuat / Memperlemah</strong> Argumen?"</em>
+            </p>
+            <ul>
+                <li><strong>Cara Jawab Memperkuat Argumen:</strong> Pilih data faktual tambahan yang searah dengan
+                    kesimpulan logis teks. Misalnya teks berkata "Vitamin C meningkatkan imun", maka kalimat yang
+                    memperkuat adalah "Sebuah penelitian membuktikan orang yang rutin makan jeruk lebih jarang terkena
+                    virus."</li>
+                <li><strong>Cara Jawab Memperlemah Argumen:</strong> Cari antitesis (fakta tandingan) dari argumen
+                    kausalitas teks. Fakta ini seringkali mematahkan korelasi sebab-akibat yang diangkat oleh paragraf.
+                </li>
+            </ul>
+        </div>
+
+        <div class="section" id="tips">
+            <h2>🔹 6. Tips &amp; Strategi Cepat</h2>
+            <ol>
+                <li><strong>Pindai Pertanyaan Lebih Dulu:</strong> Identifikasi apakah soal meminta simpulan "Pasti
+                    benar" (Deduktif) atau "Paling mungkin" (Induktif) sebelum membaca paragraf.</li>
+                <li><strong>Abaikan Pendapat Pribadi (Deduktif):</strong> Dalam penalaran deduktif, kebenaran dunia
+                    nyata tidak berlaku. Jika premis bilang <em>"Semua manusia bisa terbang"</em>, anggap itu benar
+                    100%.</li>
+                <li><strong>Evaluasi Sampel (Induktif):</strong> Jika soal induktif mengandalkan survei/sampel, cek
+                    apakah sampelnya representatif. Hal yang mengubah kepastian sampel akan memperlemah argumen.</li>
+                <li><strong>Gunakan Diagram Venn:</strong> Sangat membantu untuk memetakan irisan antara kalimat
+                    "Sebagian" dan "Semua" di soal Penarikan Kesimpulan kompleks.</li>
+            </ol>
+            <div class="tip">
+                <strong>🔹 Formula Pemungkas (Quick Check):</strong><br>
+                Jika soal Deduktif ? Hanya gunakan fakta yang tertera.<br>
+                Jika soal Induktif ? Cari tren, pola, atau hubungan sebab-akibat eksternal yang relevan.
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="library.html" class="nav-btn">
+                <div>
+                    <div class="nav-btn-label">? Kembali</div>Library SNBT
+                </div>
+            </a>
+            <a href="lib-aljabar.html" class="nav-btn primary">
+                <div>
+                    <div class="nav-btn-label">Materi Selanjutnya ?</div>Aljabar
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>- 2025 QuizNation - Library SNBT 2025</footer>
+    <script>if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark')</script>
+</body>
+
+</html>

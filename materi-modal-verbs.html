@@ -1,0 +1,2081 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Modal Verbs & Conditionals — QuizNation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Mobile Optimization */
+        html, body { max-width: 100%; overflow-x: hidden; }
+        * { -webkit-tap-highlight-color: transparent !important; }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #f8f7f4;
+            --surface: #ffffff;
+            --surface2: #f1f0ea;
+            --border: #e8e6dd;
+            --text: #1c1a17;
+            --text2: #5c5848;
+            --text3: #9c9880;
+            --ink: #1c1a17;
+
+            --accent: #b45309;
+            --accent-mid: #d97706;
+            --accent-light: #fef3c7;
+            --accent-glow: rgba(180, 83, 9, 0.1);
+
+            --rose: #9f1239;
+            --rose-light: #ffe4e6;
+            --teal: #0f766e;
+            --teal-light: #ccfbf1;
+            --indigo: #3730a3;
+            --indigo-light: #e0e7ff;
+            --slate: #334155;
+            --slate-light: #f1f5f9;
+            --orange: #c2410c;
+            --orange-light: #ffedd5;
+            --emerald: #065f46;
+            --emerald-light: #d1fae5;
+
+            --sidebar-w: 260px;
+            --r: 20px;
+            --r-sm: 12px;
+            --shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.09);
+        }
+
+        body.dark {
+            --bg: #100f0c;
+            --surface: #18170e;
+            --surface2: #211f14;
+            --border: #2c2a1e;
+            --text: #f2f0e8;
+            --text2: #a8a488;
+            --text3: #6a6650;
+            --ink: #f2f0e8;
+            --accent-light: rgba(180, 83, 9, 0.18);
+            --rose-light: rgba(159, 18, 57, 0.18);
+            --teal-light: rgba(15, 118, 110, 0.18);
+            --indigo-light: rgba(30, 58, 138, 0.18);
+            --slate-light: rgba(51, 65, 85, 0.25);
+            --orange-light: rgba(194, 65, 12, 0.18);
+            --emerald-light: rgba(6, 95, 70, 0.18);
+            --shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.55);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            transition: background 0.4s, color 0.4s;
+            overflow-x: hidden;
+        }
+
+        /* -- Sidebar -- */
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 90;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+        }
+
+        .backdrop.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-w);
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            z-index: 100;
+            padding: 28px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media(min-width:1024px) {
+            .sidebar {
+                transform: translateX(0);
+            }
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 28px;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-close {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text2);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 8px;
+            line-height: 1;
+        }
+
+        @media(max-width:1023px) {
+            .logo-close {
+                display: block;
+            }
+        }
+
+        .nav-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text3);
+            padding: 16px 12px 6px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--r-sm);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text2);
+            transition: 0.15s;
+        }
+
+        .nav-link:hover {
+            background: var(--surface2);
+            color: var(--text);
+        }
+
+        .nav-link.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .hamburger {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--text);
+            box-shadow: var(--shadow);
+        }
+
+        @media(max-width:1023px) {
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+        }
+
+        .main {
+            flex: 1;
+            margin-left: 0;
+            transition: margin 0.4s;
+            min-width: 0;
+        }
+
+        @media(min-width:1024px) {
+            .main {
+                margin-left: var(--sidebar-w);
+            }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--rose));
+            z-index: 200;
+            transition: width 0.15s;
+            border-radius: 0 2px 2px 0;
+        }
+
+        /* -- Hero -- */
+        .hero {
+            padding: 80px 48px 56px;
+            max-width: 840px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: rise 0.7s 0.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @media(max-width:768px) {
+            .hero {
+                padding: 72px 24px 40px;
+            }
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text3);
+            margin-bottom: 28px;
+            font-weight: 500;
+        }
+
+        .breadcrumb span {
+            color: var(--text2);
+        }
+
+        .module-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 100px;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border: 1px solid rgba(180, 83, 9, 0.18);
+        }
+
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--text);
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text2);
+            max-width: 560px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 36px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text2);
+            font-weight: 500;
+        }
+
+        .stat-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        /* -- Content -- */
+        .content {
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 0 48px 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        @media(max-width:768px) {
+            .content {
+                padding: 0 20px 80px;
+            }
+        }
+
+        /* -- Cards -- */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 36px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(24px);
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        @media(max-width:768px) {
+            .card {
+                padding: 24px;
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: var(--accent-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .card-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+
+        .card-subtitle {
+            font-size: 0.82rem;
+            color: var(--text3);
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        .body-text {
+            font-size: 0.97rem;
+            line-height: 1.8;
+            color: var(--text2);
+            margin-bottom: 24px;
+        }
+
+        .body-text strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        /* -- Modal Grid -- */
+        .modal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .modal-item {
+            border-radius: 16px;
+            padding: 20px;
+            border: 1.5px solid transparent;
+            cursor: default;
+            transition: 0.25s;
+        }
+
+        .modal-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .mi-word {
+            font-family: 'Fraunces', serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .mi-function {
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-bottom: 10px;
+        }
+
+        .mi-desc {
+            font-size: 0.83rem;
+            line-height: 1.55;
+            color: var(--text2);
+            margin-bottom: 10px;
+        }
+
+        .mi-ex {
+            font-size: 0.8rem;
+            font-style: italic;
+        }
+
+        .mi-ability {
+            background: var(--teal-light);
+            border-color: rgba(15, 118, 110, 0.2);
+        }
+
+        .mi-ability .mi-word,
+        .mi-ability .mi-function {
+            color: var(--teal);
+        }
+
+        .mi-ability .mi-ex {
+            color: var(--teal);
+        }
+
+        .mi-permission {
+            background: var(--indigo-light);
+            border-color: rgba(30, 58, 138, 0.2);
+        }
+
+        .mi-permission .mi-word,
+        .mi-permission .mi-function {
+            color: var(--indigo);
+        }
+
+        .mi-permission .mi-ex {
+            color: var(--indigo);
+        }
+
+        .mi-obligation {
+            background: var(--rose-light);
+            border-color: rgba(159, 18, 57, 0.2);
+        }
+
+        .mi-obligation .mi-word,
+        .mi-obligation .mi-function {
+            color: var(--rose);
+        }
+
+        .mi-obligation .mi-ex {
+            color: var(--rose);
+        }
+
+        .mi-possibility {
+            background: var(--orange-light);
+            border-color: rgba(194, 65, 12, 0.2);
+        }
+
+        .mi-possibility .mi-word,
+        .mi-possibility .mi-function {
+            color: var(--orange);
+        }
+
+        .mi-possibility .mi-ex {
+            color: var(--orange);
+        }
+
+        .mi-advice {
+            background: var(--emerald-light);
+            border-color: rgba(6, 95, 70, 0.2);
+        }
+
+        .mi-advice .mi-word,
+        .mi-advice .mi-function {
+            color: var(--emerald);
+        }
+
+        .mi-advice .mi-ex {
+            color: var(--emerald);
+        }
+
+        .mi-request {
+            background: var(--accent-light);
+            border-color: rgba(180, 83, 9, 0.2);
+        }
+
+        .mi-request .mi-word,
+        .mi-request .mi-function {
+            color: var(--accent);
+        }
+
+        .mi-request .mi-ex {
+            color: var(--accent);
+        }
+
+        /* -- Formula Strip -- */
+        .formula-strip {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 16px;
+        }
+
+        .formula-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text3);
+            margin-bottom: 12px;
+        }
+
+        .formula-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .f-chip {
+            padding: 8px 16px;
+            border-radius: 9px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: 1.5px solid transparent;
+            cursor: default;
+            transition: transform 0.2s;
+            font-family: monospace;
+        }
+
+        .f-chip:hover {
+            transform: translateY(-2px);
+        }
+
+        .f-chip.mod {
+            background: var(--accent-light);
+            color: var(--accent);
+            border-color: rgba(180, 83, 9, 0.2);
+        }
+
+        .f-chip.sub {
+            background: var(--teal-light);
+            color: var(--teal);
+            border-color: rgba(15, 118, 110, 0.2);
+        }
+
+        .f-chip.vrb {
+            background: var(--rose-light);
+            color: var(--rose);
+            border-color: rgba(159, 18, 57, 0.2);
+        }
+
+        .f-chip.obj {
+            background: var(--emerald-light);
+            color: var(--emerald);
+            border-color: rgba(6, 95, 70, 0.2);
+        }
+
+        .f-chip.cnd {
+            background: var(--indigo-light);
+            color: var(--indigo);
+            border-color: rgba(30, 58, 138, 0.2);
+        }
+
+        .f-chip.neu {
+            background: var(--surface);
+            color: var(--text2);
+            border-color: var(--border);
+        }
+
+        .plus-sign {
+            color: var(--text3);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .formula-note {
+            font-size: 0.82rem;
+            color: var(--text3);
+            margin-top: 4px;
+        }
+
+        .formula-note strong {
+            color: var(--text2);
+        }
+
+        /* -- Section Heading -- */
+        .section-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            margin-top: 6px;
+        }
+
+        .sh-badge {
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .sh-badge.amber {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+
+        .sh-badge.teal {
+            background: var(--teal-light);
+            color: var(--teal);
+        }
+
+        .sh-badge.rose {
+            background: var(--rose-light);
+            color: var(--rose);
+        }
+
+        .sh-badge.indigo {
+            background: var(--indigo-light);
+            color: var(--indigo);
+        }
+
+        .sh-badge.emerald {
+            background: var(--emerald-light);
+            color: var(--emerald);
+        }
+
+        .sh-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* -- Example Block -- */
+        .example-block {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 12px;
+        }
+
+        .ex-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text3);
+            margin-bottom: 10px;
+        }
+
+        .sentence {
+            font-family: 'Fraunces', serif;
+            font-size: 1.2rem;
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--text);
+            margin-bottom: 10px;
+            letter-spacing: 0.01em;
+        }
+
+        .word {
+            display: inline-block;
+            padding: 2px 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.15s;
+            position: relative;
+        }
+
+        .word.s {
+            color: var(--teal);
+        }
+
+        .word.m {
+            color: var(--accent);
+        }
+
+        .word.v {
+            color: var(--rose);
+        }
+
+        .word.o {
+            color: var(--emerald);
+        }
+
+        .word.c {
+            color: var(--indigo);
+        }
+
+        .word:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .word::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: calc(100%+6px);
+            left: 50%;
+            transform: translateX(-50%) scale(0.85);
+            background: var(--ink);
+            color: var(--bg);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            white-space: nowrap;
+            letter-spacing: 0.04em;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.18s;
+            z-index: 10;
+        }
+
+        .word:hover::after {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+
+        .ex-translation {
+            font-size: 0.83rem;
+            color: var(--text3);
+            font-style: italic;
+        }
+
+        /* -- Conditional Table -- */
+        .cond-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .cond-card {
+            border-radius: 16px;
+            padding: 22px;
+            border: 1.5px solid transparent;
+        }
+
+        .cond-card.zero {
+            background: var(--teal-light);
+            border-color: rgba(15, 118, 110, 0.2);
+        }
+
+        .cond-card.first {
+            background: var(--emerald-light);
+            border-color: rgba(6, 95, 70, 0.2);
+        }
+
+        .cond-card.second {
+            background: var(--indigo-light);
+            border-color: rgba(30, 58, 138, 0.2);
+        }
+
+        .cond-card.third {
+            background: var(--rose-light);
+            border-color: rgba(159, 18, 57, 0.2);
+        }
+
+        .cond-type {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 4px;
+        }
+
+        .cond-card.zero .cond-type {
+            color: var(--teal);
+        }
+
+        .cond-card.first .cond-type {
+            color: var(--emerald);
+        }
+
+        .cond-card.second .cond-type {
+            color: var(--indigo);
+        }
+
+        .cond-card.third .cond-type {
+            color: var(--rose);
+        }
+
+        .cond-name {
+            font-family: 'Fraunces', serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 8px;
+        }
+
+        .cond-formula {
+            font-family: monospace;
+            font-size: 0.82rem;
+            background: rgba(0, 0, 0, 0.05);
+            padding: 5px 10px;
+            border-radius: 7px;
+            display: inline-block;
+            margin-bottom: 10px;
+            color: var(--text2);
+            font-weight: 600;
+        }
+
+        .cond-meaning {
+            font-size: 0.84rem;
+            color: var(--text2);
+            line-height: 1.55;
+            margin-bottom: 10px;
+        }
+
+        .cond-examples {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .cond-ex {
+            font-size: 0.84rem;
+            font-style: italic;
+            color: var(--text2);
+            padding-left: 10px;
+            border-left: 2px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .cond-ex strong {
+            font-style: normal;
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        /* -- Modal Strength Scale -- */
+        .strength-scale {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .scale-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 12px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+        }
+
+        .scale-bar-wrap {
+            width: 80px;
+            flex-shrink: 0;
+        }
+
+        .scale-bar {
+            height: 6px;
+            border-radius: 3px;
+        }
+
+        .scale-label {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text);
+            min-width: 120px;
+            flex-shrink: 0;
+        }
+
+        .scale-meaning {
+            font-size: 0.82rem;
+            color: var(--text2);
+        }
+
+        .scale-ex {
+            font-size: 0.78rem;
+            color: var(--text3);
+            font-style: italic;
+            margin-left: auto;
+        }
+
+        /* -- Grid -- */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+        }
+
+        .mini-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            transition: 0.25s;
+            cursor: default;
+        }
+
+        .mini-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 20px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        .mini-icon {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+        }
+
+        .mini-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text);
+            margin-bottom: 7px;
+        }
+
+        .mini-text {
+            font-size: 0.82rem;
+            line-height: 1.6;
+            color: var(--text2);
+        }
+
+        .mini-text em {
+            font-style: normal;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* -- Highlight & Warn -- */
+        .highlight-box {
+            background: var(--accent-light);
+            border: 1px solid rgba(180, 83, 9, 0.18);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .hl-icon {
+            font-size: 1.05rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .hl-text {
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .hl-text strong {
+            font-weight: 700;
+        }
+
+        .warn-box {
+            background: var(--rose-light);
+            border: 1px solid rgba(159, 18, 57, 0.18);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .warn-text {
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: var(--rose);
+            font-weight: 500;
+        }
+
+        .warn-text strong {
+            font-weight: 700;
+        }
+
+        /* -- Context Comparison -- */
+        .context-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .ctx-item {
+            padding: 16px;
+            border-radius: 13px;
+            border: 1px solid transparent;
+        }
+
+        .ctx-item .ctx-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            margin-bottom: 8px;
+        }
+
+        .ctx-item .ctx-sentence {
+            font-family: 'Fraunces', serif;
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .ctx-item .ctx-meaning {
+            font-size: 0.78rem;
+            color: var(--text2);
+        }
+
+        .ctx-item.teal {
+            background: var(--teal-light);
+            border-color: rgba(15, 118, 110, 0.2);
+        }
+
+        .ctx-item.teal .ctx-label {
+            color: var(--teal);
+        }
+
+        .ctx-item.indigo {
+            background: var(--indigo-light);
+            border-color: rgba(30, 58, 138, 0.2);
+        }
+
+        .ctx-item.indigo .ctx-label {
+            color: var(--indigo);
+        }
+
+        .ctx-item.amber {
+            background: var(--accent-light);
+            border-color: rgba(180, 83, 9, 0.2);
+        }
+
+        .ctx-item.amber .ctx-label {
+            color: var(--accent);
+        }
+
+        .ctx-item.rose {
+            background: var(--rose-light);
+            border-color: rgba(159, 18, 57, 0.2);
+        }
+
+        .ctx-item.rose .ctx-label {
+            color: var(--rose);
+        }
+
+        /* -- Tips -- */
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tip-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 14px 16px;
+            background: var(--surface2);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .tip-num {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--accent-light);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 0.88rem;
+            line-height: 1.65;
+            color: var(--text2);
+        }
+
+        .tip-text strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        /* -- Tab -- */
+        .tab-bar {
+            display: flex;
+            gap: 4px;
+            background: var(--surface2);
+            border-radius: 12px;
+            padding: 4px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 9px;
+            border: none;
+            background: none;
+            border-radius: 9px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text2);
+            transition: 0.2s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .tab-btn.active {
+            background: var(--surface);
+            color: var(--accent);
+            box-shadow: var(--shadow);
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* -- Quiz -- */
+        .quiz-card {
+            background: linear-gradient(135deg, #92400e, #9f1239);
+            border-radius: 20px;
+            padding: 36px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-card::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .quiz-card::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -5%;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .quiz-prompt {
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.65;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-q {
+            font-family: 'Fraunces', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .q-option {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1.5px solid rgba(255, 255, 255, 0.22);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .q-option:hover {
+            background: rgba(255, 255, 255, 0.22);
+            transform: translateY(-1px);
+        }
+
+        .q-option.correct {
+            background: rgba(255, 255, 255, 0.28);
+            border-color: white;
+        }
+
+        .q-option.wrong {
+            background: rgba(0, 0, 0, 0.25);
+            border-color: rgba(255, 100, 100, 0.5);
+        }
+
+        .quiz-feedback {
+            margin-top: 14px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: 0.3s;
+            position: relative;
+            z-index: 1;
+            line-height: 1.5;
+        }
+
+        .quiz-feedback.show {
+            opacity: 1;
+        }
+
+        .quiz-next {
+            margin-top: 16px;
+            background: white;
+            color: #92400e;
+            border: none;
+            padding: 11px 26px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: none;
+            transition: 0.2s;
+            position: relative;
+            z-index: 1;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .quiz-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* -- CTA -- */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--text3);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.25s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.25s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="backdrop" id="backdrop" onclick="closeSidebar()"></div>
+
+        <nav class="sidebar" id="sidebar">
+        <div class="logo">QuizNation <button class="logo-close" onclick="closeSidebar()">✕</button></div>
+        <div class="nav-label">Menu Utama</div>
+        <a href="index.html" class="nav-link">🏠 Beranda</a>
+        <a href="statistik.html" class="nav-link">📊 Statistik</a>
+        <a href="evaluasi.html" class="nav-link">🎓 Evaluasi SNBT</a>
+        <a href="pencapaian.html" class="nav-link">🏆 Pencapaian</a>
+        <a href="materi.html" class="nav-link active">📚 Materi</a>
+        <a href="library.html" class="nav-link">📖 Library</a>
+        <div class="nav-label" style="margin-top:10px">Bantuan</div>
+        <a href="pengaturan.html" class="nav-link">⚙️ Pengaturan</a>
+        <a href="panduan.html" class="nav-link">📋 Panduan</a>
+        <a href="feedback.html" class="nav-link">💬 Feedback</a>
+    </nav>
+
+    <button class="hamburger" onclick="openSidebar()">☰</button>
+    <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</div>
+
+    <main class="main">
+        <section class="hero">
+            <div class="breadcrumb"><span>📚 Materi</span> › <span>Grammar Lanjutan</span> › Modul 3</div>
+            <div class="module-tag">📚 Grammar Lanjutan — Modul 3</div>
+            <h1>Modal Verbs &<br><em>Conditionals</em></h1>
+            <p>Pahami penggunaan modal verbs dan conditional sentences dalam berbagai konteks nyata — dari percakapan
+                sehari-hari hingga soal SNBT.</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-dot"></div> 2 Topik Utama
+                </div>
+                <div class="stat">
+                    <div class="stat-dot" style="background:var(--rose)"></div> Latihan Mini Quiz
+                </div>
+                <div class="stat">
+                    <div class="stat-dot" style="background:var(--indigo)"></div> ±20 menit baca
+                </div>
+            </div>
+        </section>
+
+        <div class="content">
+
+            <!-- 1. Apa itu Modal Verbs -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">📚</div>
+                    <div>
+                        <div class="card-title">Apa itu Modal Verbs?</div>
+                        <div class="card-subtitle">Kata kerja bantu yang mengubah "nuansa" kalimat</div>
+                    </div>
+                </div>
+                <p class="body-text">Modal verbs adalah kata kerja bantu (auxiliary verbs) yang <strong>tidak
+                        menunjukkan tindakan</strong>, melainkan mengubah <strong>makna atau nuansa</strong> dari kata
+                    kerja utama — seperti kemampuan, izin, kewajiban, kemungkinan, atau saran.</p>
+
+                <div class="formula-strip">
+                    <div class="formula-label">Rumus Dasar</div>
+                    <div class="formula-row">
+                        <span class="f-chip sub">Subject</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip mod">Modal Verb</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip vrb">V1 (bare infinitive)</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip obj">Object / Complement</span>
+                    </div>
+                    <div class="formula-note"><strong>Penting:</strong> Setelah modal verb, kata kerja selalu dalam
+                        bentuk V1 tanpa -s/-es/-ing. Tidak ada "She <s>cans</s> swim" — yang benar adalah "She
+                        <strong>can</strong> swim".</div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="hl-icon">📚</div>
+                    <div class="hl-text"><strong>Sifat Modal Verbs:</strong> Tidak berubah bentuk untuk He/She/It.
+                        Selalu diikuti V1 tanpa "to". Tidak bisa berdiri sendiri tanpa kata kerja utama (kecuali dalam
+                        jawaban pendek).</div>
+                </div>
+            </div>
+
+            <!-- 2. Daftar Modal Verbs -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">📚</div>
+                    <div>
+                        <div class="card-title">Daftar Modal Verbs & Fungsinya</div>
+                        <div class="card-subtitle">Hover kartu untuk info lebih lanjut</div>
+                    </div>
+                </div>
+                <p class="body-text">Setiap modal verb memiliki fungsi utama yang berbeda. Memahami perbedaannya adalah
+                    kunci untuk menggunakan mereka dengan tepat dalam konteks.</p>
+
+                <div class="modal-grid">
+                    <div class="modal-item mi-ability">
+                        <div class="mi-word">can / could</div>
+                        <div class="mi-function">Kemampuan</div>
+                        <div class="mi-desc">Menyatakan kemampuan seseorang melakukan sesuatu. <em>Could</em> untuk masa
+                            lalu atau lebih sopan.</div>
+                        <div class="mi-ex">"She can speak French." / "Could you help me?"</div>
+                    </div>
+                    <div class="modal-item mi-permission">
+                        <div class="mi-word">may / might</div>
+                        <div class="mi-function">Kemungkinan & Izin</div>
+                        <div class="mi-desc">Kemungkinan yang terjadi atau meminta/memberi izin formal. <em>Might</em>
+                            lebih kecil kemungkinannya.</div>
+                        <div class="mi-ex">"It may rain today." / "Might I ask a question?"</div>
+                    </div>
+                    <div class="modal-item mi-obligation">
+                        <div class="mi-word">must / have to</div>
+                        <div class="mi-function">Kewajiban</div>
+                        <div class="mi-desc"><em>Must</em> = kewajiban internal (dari diri sendiri). <em>Have to</em> =
+                            kewajiban eksternal (aturan/orang lain).</div>
+                        <div class="mi-ex">"I must study harder." / "You have to wear a mask."</div>
+                    </div>
+                    <div class="modal-item mi-possibility">
+                        <div class="mi-word">will / would</div>
+                        <div class="mi-function">Masa Depan & Permintaan</div>
+                        <div class="mi-desc"><em>Will</em> untuk keputusan spontan atau prediksi. <em>Would</em> untuk
+                            permintaan sopan atau situasi hipotetis.</div>
+                        <div class="mi-ex">"I will call you." / "Would you mind closing the door?"</div>
+                    </div>
+                    <div class="modal-item mi-advice">
+                        <div class="mi-word">should / ought to</div>
+                        <div class="mi-function">Saran & Anjuran</div>
+                        <div class="mi-desc">Memberikan saran, rekomendasi, atau ekspektasi moral. <em>Ought to</em>
+                            sedikit lebih formal.</div>
+                        <div class="mi-ex">"You should see a doctor." / "We ought to respect others."</div>
+                    </div>
+                    <div class="modal-item mi-request">
+                        <div class="mi-word">shall / need / dare</div>
+                        <div class="mi-function">Khusus & Formal</div>
+                        <div class="mi-desc"><em>Shall</em> untuk tawaran/saran formal. <em>Need</em> = perlu (dalam
+                            negatif). <em>Dare</em> = berani.</div>
+                        <div class="mi-ex">"Shall we dance?" / "You needn't worry."</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Modal dalam Konteks -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">📚</div>
+                    <div>
+                        <div class="card-title">Satu Konteks, Beda Modal</div>
+                        <div class="card-subtitle">Bagaimana nuansa berubah tergantung modal yang dipilih</div>
+                    </div>
+                </div>
+                <p class="body-text">Pemilihan modal verb yang tepat sangat penting karena kata yang berbeda membawa
+                    <strong>nuansa kekuatan yang berbeda</strong>. Perhatikan bagaimana kalimat yang hampir sama berubah
+                    maknanya.</p>
+
+                <div class="tab-bar">
+                    <button class="tab-btn active" onclick="switchTab(this,'ctx-obligation')">Kewajiban</button>
+                    <button class="tab-btn" onclick="switchTab(this,'ctx-possibility')">Kemungkinan</button>
+                    <button class="tab-btn" onclick="switchTab(this,'ctx-advice')">Saran</button>
+                </div>
+
+                <div class="tab-panel active" id="tab-ctx-obligation">
+                    <p style="font-size:0.88rem; color:var(--text2); margin-bottom:14px">Dari yang paling kuat ke paling
+                        lemah:</p>
+                    <div class="context-row">
+                        <div class="ctx-item rose">
+                            <div class="ctx-label">Kewajiban Mutlak</div>
+                            <div class="ctx-sentence">You <strong>must</strong> stop here.</div>
+                            <div class="ctx-meaning">Tidak ada pilihan. Wajib berhenti. (Aturan keras / internal)</div>
+                        </div>
+                        <div class="ctx-item amber">
+                            <div class="ctx-label">Kewajiban Eksternal</div>
+                            <div class="ctx-sentence">You <strong>have to</strong> stop here.</div>
+                            <div class="ctx-meaning">Ada aturan yang mengharuskan. (Tekanan luar)</div>
+                        </div>
+                        <div class="ctx-item teal">
+                            <div class="ctx-label">Saran Kuat</div>
+                            <div class="ctx-sentence">You <strong>should</strong> stop here.</div>
+                            <div class="ctx-meaning">Disarankan, tapi bukan kewajiban mutlak.</div>
+                        </div>
+                        <div class="ctx-item indigo">
+                            <div class="ctx-label">Tidak Perlu</div>
+                            <div class="ctx-sentence">You <strong>don't have to</strong> stop.</div>
+                            <div class="ctx-meaning">Tidak diwajibkan, bebas memilih.</div>
+                        </div>
+                    </div>
+                    <div class="warn-box">
+                        <div class="hl-icon">📚</div>
+                        <div class="warn-text"><strong>Hati-hati!</strong> "Must not" ? "Don't have to". <em>Must
+                                not</em> berarti <strong>dilarang keras</strong>, sedangkan <em>don't have to</em>
+                            berarti <strong>tidak diwajibkan</strong> (boleh tidak dilakukan). Ini sering jadi soal
+                            jebakan!</div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="tab-ctx-possibility">
+                    <div class="context-row">
+                        <div class="ctx-item rose">
+                            <div class="ctx-label">Hampir Pasti</div>
+                            <div class="ctx-sentence">It <strong>will</strong> rain.</div>
+                            <div class="ctx-meaning">Prediksi atau kepastian yang tinggi tentang masa depan.</div>
+                        </div>
+                        <div class="ctx-item amber">
+                            <div class="ctx-label">Kemungkinan Sedang</div>
+                            <div class="ctx-sentence">It <strong>may</strong> rain.</div>
+                            <div class="ctx-meaning">Ada kemungkinan, tapi tidak pasti. (~50%)</div>
+                        </div>
+                        <div class="ctx-item teal">
+                            <div class="ctx-label">Kemungkinan Kecil</div>
+                            <div class="ctx-sentence">It <strong>might</strong> rain.</div>
+                            <div class="ctx-meaning">Kemungkinan lebih kecil dari may. (~30%)</div>
+                        </div>
+                        <div class="ctx-item indigo">
+                            <div class="ctx-label">Kesimpulan Logis</div>
+                            <div class="ctx-sentence">He <strong>must</strong> be tired.</div>
+                            <div class="ctx-meaning">Must untuk deduction — hampir yakin berdasarkan bukti.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-panel" id="tab-ctx-advice">
+                    <div class="section-head">
+                        <div class="sh-badge amber">Contoh Saran dalam Kalimat</div>
+                        <div class="sh-line"></div>
+                    </div>
+                    <div class="example-block">
+                        <div class="ex-label">Should — Saran umum</div>
+                        <div class="sentence">
+                            <span class="word s" data-label="Subject">You</span>
+                            <span> </span><span class="word m" data-label="Modal: Saran">should</span>
+                            <span> </span><span class="word v" data-label="Verb (V1)">drink</span>
+                            <span> </span><span class="word o" data-label="Object">more water.</span>
+                        </div>
+                        <div class="ex-translation">? Kamu sebaiknya minum lebih banyak air. (saran umum)</div>
+                    </div>
+                    <div class="example-block">
+                        <div class="ex-label">Had better — Saran dengan peringatan</div>
+                        <div class="sentence">
+                            <span class="word s" data-label="Subject">You</span>
+                            <span> </span><span class="word m"
+                                data-label="Modal: Peringatan (lebih kuat dari 'should')">had better</span>
+                            <span> </span><span class="word v" data-label="Verb (V1)">leave</span>
+                            <span> </span><span class="word o" data-label="Object">now</span>
+                            <span> </span><span class="word c" data-label="Complement: konsekuensi tersirat">or you'll
+                                miss the train.</span>
+                        </div>
+                        <div class="ex-translation">? Kamu lebih baik pergi sekarang, atau kamu akan ketinggalan kereta.
+                            (ada konsekuensi buruk jika tidak dilakukan)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Modal Perfect -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">?</div>
+                    <div>
+                        <div class="card-title">Modal Perfect</div>
+                        <div class="card-subtitle">Modal + have + V3 — berbicara tentang masa lalu</div>
+                    </div>
+                </div>
+                <p class="body-text">Modal perfect digunakan untuk mengekspresikan kemungkinan, penyesalan, atau
+                    kritikan tentang sesuatu yang <strong>sudah terjadi di masa lalu</strong>. Ini adalah pola yang
+                    sangat sering muncul di soal SNBT.</p>
+
+                <div class="formula-strip" style="margin-bottom:14px">
+                    <div class="formula-label">Rumus Modal Perfect</div>
+                    <div class="formula-row">
+                        <span class="f-chip sub">Subject</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip mod">Modal</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip neu">have</span>
+                        <span class="plus-sign">+</span>
+                        <span class="f-chip vrb">V3 (past participle)</span>
+                    </div>
+                </div>
+
+                <div class="section-head">
+                    <div class="sh-badge amber">Contoh & Maknanya</div>
+                    <div class="sh-line"></div>
+                </div>
+
+                <div class="example-block">
+                    <div class="ex-label">Should have — Penyesalan / Seharusnya dilakukan</div>
+                    <div class="sentence">
+                        <span class="word s" data-label="Subject">I</span>
+                        <span> </span><span class="word m" data-label="Modal Perfect: penyesalan">should have</span>
+                        <span> </span><span class="word v" data-label="V3">studied</span>
+                        <span> </span><span class="word c" data-label="Complement">harder.</span>
+                    </div>
+                    <div class="ex-translation">? Saya seharusnya belajar lebih keras. (tapi tidak, dan menyesal)</div>
+                </div>
+                <div class="example-block">
+                    <div class="ex-label">Must have — Kesimpulan tentang masa lalu</div>
+                    <div class="sentence">
+                        <span class="word s" data-label="Subject">She</span>
+                        <span> </span><span class="word m" data-label="Modal Perfect: deduction (masa lalu)">must
+                            have</span>
+                        <span> </span><span class="word v" data-label="V3">forgotten</span>
+                        <span> </span><span class="word o" data-label="Object">her keys.</span>
+                    </div>
+                    <div class="ex-translation">? Dia pasti sudah lupa kuncinya. (kesimpulan logis berdasarkan bukti)
+                    </div>
+                </div>
+                <div class="example-block">
+                    <div class="ex-label">Could have — Kemungkinan yang tidak terwujud</div>
+                    <div class="sentence">
+                        <span class="word s" data-label="Subject">He</span>
+                        <span> </span><span class="word m"
+                            data-label="Modal Perfect: kemungkinan yang tidak terwujud">could have</span>
+                        <span> </span><span class="word v" data-label="V3">won</span>
+                        <span> </span><span class="word c" data-label="Complement">the race.</span>
+                    </div>
+                    <div class="ex-translation">? Dia seharusnya bisa menang lomba itu. (tapi tidak menang karena alasan
+                        tertentu)</div>
+                </div>
+                <div class="example-block">
+                    <div class="ex-label">Might have — Kemungkinan di masa lalu</div>
+                    <div class="sentence">
+                        <span class="word s" data-label="Subject">They</span>
+                        <span> </span><span class="word m" data-label="Modal Perfect: kemungkinan masa lalu">might
+                            have</span>
+                        <span> </span><span class="word v" data-label="V3">left</span>
+                        <span> </span><span class="word c" data-label="Complement">already.</span>
+                    </div>
+                    <div class="ex-translation">? Mereka mungkin sudah pergi. (kita tidak tahu pasti)</div>
+                </div>
+            </div>
+
+            <!-- 5. Conditional Sentences -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">📚</div>
+                    <div>
+                        <div class="card-title">Conditional Sentences</div>
+                        <div class="card-subtitle">Kalimat pengandaian — 4 tipe</div>
+                    </div>
+                </div>
+                <p class="body-text">Conditional sentences adalah kalimat yang menyatakan <strong>syarat dan
+                        akibat</strong>. Bahasa Inggris memiliki 4 tipe conditional yang masing-masing menggambarkan
+                    situasi berbeda — dari yang nyata hingga yang mustahil.</p>
+
+                <div class="cond-cards">
+                    <div class="cond-card zero">
+                        <div class="cond-type">Zero Conditional</div>
+                        <div class="cond-name">Fakta & Kebenaran Umum</div>
+                        <div class="cond-formula">If + Present Simple ? Present Simple</div>
+                        <div class="cond-meaning">Digunakan untuk fakta ilmiah, kebiasaan, atau kondisi yang selalu
+                            benar. Bisa diganti dengan "when".</div>
+                        <div class="cond-examples">
+                            <div class="cond-ex"><strong>If</strong> you heat water to 100°C, <strong>it boils.</strong>
+                            </div>
+                            <div class="cond-ex"><strong>If</strong> I don't sleep well, <strong>I feel tired.</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cond-card first">
+                        <div class="cond-type">First Conditional</div>
+                        <div class="cond-name">Kondisi Nyata di Masa Depan</div>
+                        <div class="cond-formula">If + Present Simple ? will + V1</div>
+                        <div class="cond-meaning">Situasi yang realistis dan mungkin terjadi di masa depan. Ada
+                            kemungkinan nyata syarat tersebut terpenuhi.</div>
+                        <div class="cond-examples">
+                            <div class="cond-ex"><strong>If</strong> it rains tomorrow, <strong>I will stay</strong> at
+                                home.</div>
+                            <div class="cond-ex"><strong>If</strong> you study hard, <strong>you will pass</strong> the
+                                exam.</div>
+                        </div>
+                    </div>
+
+                    <div class="cond-card second">
+                        <div class="cond-type">Second Conditional</div>
+                        <div class="cond-name">Situasi Hipotetis / Tidak Nyata Kini</div>
+                        <div class="cond-formula">If + Past Simple ? would + V1</div>
+                        <div class="cond-meaning">Situasi yang tidak nyata atau sangat tidak mungkin saat ini. Sering
+                            dipakai untuk imajinasi atau saran tidak langsung.</div>
+                        <div class="cond-examples">
+                            <div class="cond-ex"><strong>If</strong> I had a million dollars, <strong>I would
+                                    travel</strong> the world.</div>
+                            <div class="cond-ex"><strong>If</strong> I were you, <strong>I would apologize.</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cond-card third">
+                        <div class="cond-type">Third Conditional</div>
+                        <div class="cond-name">Penyesalan tentang Masa Lalu</div>
+                        <div class="cond-formula">If + Past Perfect ? would have + V3</div>
+                        <div class="cond-meaning">Membayangkan ulang masa lalu yang sudah tidak bisa diubah. Selalu
+                            merujuk pada situasi yang tidak terjadi.</div>
+                        <div class="cond-examples">
+                            <div class="cond-ex"><strong>If</strong> I had studied harder, <strong>I would have
+                                    passed</strong> the exam.</div>
+                            <div class="cond-ex"><strong>If</strong> she had left earlier, <strong>she wouldn't have
+                                    missed</strong> the bus.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Kalimat Conditional Interaktif -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">📚</div>
+                    <div>
+                        <div class="card-title">Bedah Kalimat Conditional</div>
+                        <div class="card-subtitle">Hover kata untuk melihat fungsinya</div>
+                    </div>
+                </div>
+                <p class="body-text">Perhatikan struktur setiap tipe conditional dengan seksama. Warna menunjukkan peran
+                    masing-masing bagian kalimat.</p>
+
+                <div class="example-block">
+                    <div class="ex-label">First Conditional — Nyata & Mungkin Terjadi</div>
+                    <div class="sentence">
+                        <span class="word c" data-label="If-clause (syarat)">If</span>
+                        <span> </span><span class="word s" data-label="Subject">you</span>
+                        <span> </span><span class="word v" data-label="Present Simple (syarat)">leave</span>
+                        <span> </span><span class="word o" data-label="Object">now</span>,
+                        <span> </span><span class="word s" data-label="Subject (main clause)">you</span>
+                        <span> </span><span class="word m" data-label="Modal: will">will</span>
+                        <span> </span><span class="word v" data-label="V1 (hasil)">catch</span>
+                        <span> </span><span class="word o" data-label="Object">the train.</span>
+                    </div>
+                    <div class="ex-translation">? Jika kamu pergi sekarang, kamu akan mengejar kereta. (kemungkinan
+                        nyata)</div>
+                </div>
+
+                <div class="example-block">
+                    <div class="ex-label">Second Conditional — Hipotetis / Tidak Nyata</div>
+                    <div class="sentence">
+                        <span class="word c" data-label="If-clause (syarat hipotetis)">If</span>
+                        <span> </span><span class="word s" data-label="Subject">I</span>
+                        <span> </span><span class="word v"
+                            data-label="Past Simple (syarat — bukan masa lalu, tapi hipotetis)">were</span>
+                        <span> </span><span class="word o" data-label="Complement">the president</span>,
+                        <span> </span><span class="word s" data-label="Subject">I</span>
+                        <span> </span><span class="word m" data-label="Modal: would">would</span>
+                        <span> </span><span class="word v" data-label="V1 (hasil hipotetis)">change</span>
+                        <span> </span><span class="word o" data-label="Object">many laws.</span>
+                    </div>
+                    <div class="ex-translation">? Jika saya adalah presiden (padahal tidak), saya akan mengubah banyak
+                        undang-undang.</div>
+                </div>
+
+                <div class="example-block">
+                    <div class="ex-label">Third Conditional — Penyesalan Masa Lalu</div>
+                    <div class="sentence">
+                        <span class="word c" data-label="If-clause (masa lalu yang tidak terjadi)">If</span>
+                        <span> </span><span class="word s" data-label="Subject">they</span>
+                        <span> </span><span class="word m" data-label="Past Perfect: had">had</span>
+                        <span> </span><span class="word v" data-label="V3 (syarat masa lalu)">planned</span>
+                        <span> </span><span class="word o" data-label="Object">better</span>,
+                        <span> </span><span class="word s" data-label="Subject">they</span>
+                        <span> </span><span class="word m" data-label="Modal Perfect: would have">would have</span>
+                        <span> </span><span class="word v" data-label="V3 (hasil yang tidak terjadi)">succeeded.</span>
+                    </div>
+                    <div class="ex-translation">? Jika mereka telah merencanakan lebih baik (padahal tidak), mereka
+                        pasti sudah berhasil.</div>
+                </div>
+
+                <div class="warn-box">
+                    <div class="hl-icon">📚</div>
+                    <div class="warn-text"><strong>"Were" untuk semua subjek di Second Conditional!</strong> Dalam
+                        kalimat hipotetis, gunakan <em>were</em> (bukan was) untuk semua subjek termasuk I, he, she. "If
+                        I <strong>were</strong> you..." bukan ~~"If I was you..."~~ — meskipun "was" juga semakin umum
+                        dalam percakapan informal.</div>
+                </div>
+            </div>
+
+            <!-- 7. Tips -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">📚</div>
+                    <div>
+                        <div class="card-title">Tips & Jebakan Soal SNBT</div>
+                        <div class="card-subtitle">Strategi menjawab soal modal & conditional</div>
+                    </div>
+                </div>
+                <div class="tips-list">
+                    <div class="tip-item">
+                        <div class="tip-num">1</div>
+                        <div class="tip-text"><strong>Must not ? Don't have to.</strong> Ini adalah jebakan klasik.
+                            <em>Must not</em> = dilarang keras (forbidden). <em>Don't have to</em> = tidak diwajibkan
+                            (not necessary). Beda maknanya 180 derajat.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">2</div>
+                        <div class="tip-text"><strong>Identifikasi tipe conditional dari tensis yang dipakai.</strong>
+                            Lihat kata kerja di if-clause: Present Simple ? First, Past Simple ? Second, Past Perfect ?
+                            Third. Ini cara tercepat mengenali tipe conditional.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">3</div>
+                        <div class="tip-text"><strong>Modal + have + V3 = bicara soal masa lalu.</strong> Setiap kali
+                            melihat pola ini, berarti kalimat membahas sesuatu yang sudah terjadi (atau tidak terjadi)
+                            di masa lalu. Ini sering jadi soal parafrase di SNBT.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">4</div>
+                        <div class="tip-text"><strong>If-clause bisa di depan atau di belakang.</strong> "If it rains, I
+                            will stay." sama dengan "I will stay if it rains." Jika if-clause di depan, gunakan koma.
+                            Jika di belakang, tidak perlu koma.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">5</div>
+                        <div class="tip-text"><strong>"Should" bisa menggantikan "if" dalam gaya
+                                formal/tulisan.</strong> "Should you need help, call me." = "If you need help, call me."
+                            Ini sering muncul di teks akademik dan soal reading comprehension.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. Mini Quiz -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">📚</div>
+                    <div>
+                        <div class="card-title">Mini Quiz</div>
+                        <div class="card-subtitle">8 soal — modal verbs & conditionals</div>
+                    </div>
+                </div>
+                <p class="body-text" style="margin-bottom:20px">Perhatikan konteks kalimat sebelum memilih jawaban.
+                    Nuansa sangat penting!</p>
+                <div class="quiz-card" id="quizCard">
+                    <div class="quiz-prompt">Pertanyaan <span id="qNum">1</span> dari <span id="qTotal">8</span></div>
+                    <div class="quiz-q" id="qText">Loading...</div>
+                    <div class="quiz-options" id="qOptions"></div>
+                    <div class="quiz-feedback" id="qFeedback"></div>
+                    <button class="quiz-next" id="qNext" onclick="nextQuestion()">Pertanyaan Berikutnya ?</button>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="section-divider">Selesai Membaca</div>
+            <div class="card" data-card style="text-align:center; padding:40px">
+                <div style="font-size:2rem; margin-bottom:14px">📚</div>
+                <div class="card-title" style="margin-bottom:10px">Modul 3 selesai!</div>
+                <p class="body-text" style="margin-bottom:0; max-width:480px; margin-left:auto; margin-right:auto">Kamu
+                    sudah menguasai modal verbs dan conditionals. Lanjutkan pembelajaran dari halaman materi utama.</p>
+                <div class="cta-row" style="justify-content:center; margin-top:24px">
+                    <a href="tenses.html" class="btn-secondary">? Modul 2: Tenses</a>
+                    <a href="materi.html" class="btn-primary">Modul Lainnya ?</a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') { document.body.classList.add('dark'); document.getElementById('themeBtn').textContent = '📚'; }
+        function toggleTheme() {
+            const d = document.body.classList.toggle('dark');
+            localStorage.setItem('theme', d ? 'dark' : 'light');
+            document.getElementById('themeBtn').textContent = d ? '📚' : '📚';
+        }
+        function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('backdrop').classList.add('open'); }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('backdrop').classList.remove('open'); }
+        window.addEventListener('scroll', () => {
+            const el = document.documentElement;
+            document.getElementById('progressBar').style.width = (el.scrollTop / (el.scrollHeight - el.clientHeight) * 100) + '%';
+        });
+        const obs = new IntersectionObserver(entries => {
+            entries.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 55); obs.unobserve(e.target); } });
+        }, { threshold: 0.07 });
+        document.querySelectorAll('[data-card]').forEach(c => obs.observe(c));
+        function switchTab(btn, id) {
+            btn.closest('.card').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            btn.closest('.card').querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.getElementById('tab-' + id).classList.add('active');
+        }
+
+        const questions = [
+            { q: "She _____ swim very well when she was young.", opts: ["can", "could", "would", "should"], ans: 1, exp: "? 'could' — Kemampuan di masa lalu. 'Can' untuk sekarang, 'could' untuk masa lalu." },
+            { q: "You _____ smoke in this hospital. It's strictly forbidden.", opts: ["don't have to", "might not", "must not", "should not"], ans: 2, exp: "? 'must not' — Larangan keras (forbidden). 'Don't have to' berarti tidak diwajibkan, bukan dilarang." },
+            { q: "I _____ called you earlier. I'm sorry you waited so long.", opts: ["should have", "must have", "could", "would"], ans: 0, exp: "? 'should have' — Penyesalan tentang masa lalu. Seharusnya dilakukan tapi tidak dilakukan." },
+            { q: "If it _____ tomorrow, we will cancel the picnic.", opts: ["rained", "rains", "will rain", "had rained"], ans: 1, exp: "? 'rains' — First Conditional: If + Present Simple ? will + V1. Situasi nyata di masa depan." },
+            { q: "If I _____ a bird, I would fly to you right away.", opts: ["am", "was", "were", "had been"], ans: 2, exp: "? 'were' — Second Conditional: If + Past Simple (were untuk semua subjek dalam situasi hipotetis)." },
+            { q: "If she had arrived on time, she _____ the opening ceremony.", opts: ["would see", "would have seen", "had seen", "will see"], ans: 1, exp: "? 'would have seen' — Third Conditional: If + Past Perfect ? would have + V3. Menyesali masa lalu." },
+            { q: "He looks exhausted. He _____ worked all night.", opts: ["should have", "must have", "might", "could"], ans: 1, exp: "? 'must have' — Deduction tentang masa lalu. 'Must have + V3' = hampir yakin berdasarkan bukti." },
+            { q: "You _____ wear a seatbelt in Indonesia. It's the law.", opts: ["should", "might", "have to", "could"], ans: 2, exp: "? 'have to' — Kewajiban eksternal (aturan dari luar/hukum). 'Must' juga bisa, tapi 'have to' lebih tepat untuk aturan resmi." }
+        ];
+
+        let current = 0, score = 0, answered = false;
+        function renderQuestion() {
+            const q = questions[current];
+            document.getElementById('qNum').textContent = current + 1;
+            document.getElementById('qTotal').textContent = questions.length;
+            document.getElementById('qText').textContent = q.q;
+            document.getElementById('qFeedback').textContent = '';
+            document.getElementById('qFeedback').classList.remove('show');
+            document.getElementById('qNext').style.display = 'none';
+            answered = false;
+            const optDiv = document.getElementById('qOptions');
+            optDiv.innerHTML = '';
+            q.opts.forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'q-option'; btn.textContent = opt;
+                btn.onclick = () => selectAnswer(i);
+                optDiv.appendChild(btn);
+            });
+        }
+        function selectAnswer(i) {
+            if (answered) return;
+            answered = true;
+            const q = questions[current];
+            const opts = document.querySelectorAll('.q-option');
+            opts[i].classList.add(i === q.ans ? 'correct' : 'wrong');
+            if (i !== q.ans) opts[q.ans].classList.add('correct'); else score++;
+            const fb = document.getElementById('qFeedback');
+            fb.textContent = i === q.ans ? q.exp : '? Kurang tepat. ' + q.exp;
+            fb.classList.add('show');
+            const nxt = document.getElementById('qNext');
+            nxt.style.display = 'inline-block';
+            if (current === questions.length - 1) nxt.textContent = `Lihat Hasil ?`;
+        }
+        function nextQuestion() {
+            current++;
+            if (current < questions.length) { renderQuestion(); return; }
+            const s = score; const total = questions.length;
+            const grade = s >= 7 ? '📚' : s >= 5 ? '📚' : '📚';
+            const msg = s === total ? 'Sempurna! Kamu menguasai Modul 3.' : s >= 6 ? 'Bagus sekali! Hampir sempurna.' : s >= 4 ? 'Lumayan! Baca ulang bagian modal perfect & conditional.' : 'Ayo ulangi materi ini, terutama bagian must not vs don\'t have to.';
+            document.getElementById('quizCard').innerHTML = `
+    <div class="quiz-prompt" style="position:relative;z-index:1">Hasil Akhir</div>
+    <div class="quiz-q" style="position:relative;z-index:1;font-size:2.8rem">${grade}</div>
+    <div class="quiz-q" style="position:relative;z-index:1">Skor: ${s} / ${total}</div>
+    <p style="position:relative;z-index:1;opacity:0.82;font-size:0.88rem;margin-top:6px">${msg}</p>
+    <button class="quiz-next" style="display:inline-block;margin-top:16px" onclick="restartQuiz()">Ulangi Quiz</button>`;
+        }
+        function restartQuiz() {
+            current = 0; score = 0;
+            document.getElementById('quizCard').innerHTML = `
+    <div class="quiz-prompt">Pertanyaan <span id="qNum">1</span> dari <span id="qTotal">8</span></div>
+    <div class="quiz-q" id="qText"></div>
+    <div class="quiz-options" id="qOptions"></div>
+    <div class="quiz-feedback" id="qFeedback"></div>
+    <button class="quiz-next" id="qNext" onclick="nextQuestion()">Pertanyaan Berikutnya ?</button>`;
+            renderQuestion();
+        }
+        renderQuestion();
+    </script>
+</body>
+
+</html>
+
+

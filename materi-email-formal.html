@@ -1,0 +1,1114 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+    <title>Menulis Email &amp; Surat Formal - QuizNation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&display=swap"
+        rel="stylesheet">
+    <style>
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --bg: #f0f4f8;
+            --surface: #fff;
+            --surface2: #e4eaf2;
+            --border: #d0d8e4;
+            --text: #141c28;
+            --text2: #3e5068;
+            --text3: #7888a0;
+            --ink: #141c28;
+            --accent: #1e40af;
+            --accent-mid: #2563eb;
+            --accent-light: #dbeafe;
+            --accent-glow: rgba(30, 64, 175, .12);
+            --teal: #0f766e;
+            --teal-light: #ccfbf1;
+            --rose: #9f1239;
+            --rose-light: #ffe4e6;
+            --green: #166534;
+            --green-light: #dcfce7;
+            --sidebar-w: 260px;
+            --r: 20px;
+            --r-sm: 12px;
+            --shadow: 0 2px 20px rgba(0, 0, 0, .06);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, .09)
+        }
+
+        body.dark {
+            --bg: #0a0e14;
+            --surface: #111822;
+            --surface2: #1a222e;
+            --border: #243040;
+            --text: #e0e8f4;
+            --text2: #8098b8;
+            --text3: #4c6080;
+            --ink: #e0e8f4;
+            --accent-light: rgba(30, 64, 175, .2);
+            --teal-light: rgba(15, 118, 110, .15);
+            --rose-light: rgba(159, 18, 57, .2);
+            --green-light: rgba(22, 101, 52, .2);
+            --shadow: 0 2px 20px rgba(0, 0, 0, .35);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, .5)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .45);
+            backdrop-filter: blur(4px);
+            z-index: 90;
+            opacity: 0;
+            visibility: hidden;
+            transition: .3s
+        }
+
+        .backdrop.open {
+            opacity: 1;
+            visibility: visible
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-w);
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            z-index: 100;
+            padding: 28px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform .4s cubic-bezier(.4, 0, .2, 1)
+        }
+
+        @media(min-width:1024px) {
+            .sidebar {
+                transform: translateX(0)
+            }
+        }
+
+        .sidebar.open {
+            transform: translateX(0)
+        }
+
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 28px;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+        .logo-close {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text2);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 8px;
+            line-height: 1
+        }
+
+        @media(max-width:1023px) {
+            .logo-close {
+                display: block
+            }
+        }
+
+        .nav-label {
+            font-size: .68rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--text3);
+            padding: 16px 12px 6px
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--r-sm);
+            text-decoration: none;
+            font-size: .88rem;
+            font-weight: 500;
+            color: var(--text2);
+            transition: .15s
+        }
+
+        .nav-link:hover {
+            background: var(--surface2);
+            color: var(--text)
+        }
+
+        .nav-link.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700
+        }
+
+        .hamburger {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--text);
+            box-shadow: var(--shadow)
+        }
+
+        @media(max-width:1023px) {
+            .hamburger {
+                display: flex
+            }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            transition: .3s
+        }
+
+        .main {
+            flex: 1;
+            margin-left: 0;
+            transition: margin .4s;
+            min-width: 0
+        }
+
+        @media(min-width:1024px) {
+            .main {
+                margin-left: var(--sidebar-w)
+            }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--teal));
+            z-index: 200;
+            transition: width .15s;
+            border-radius: 0 2px 2px 0
+        }
+
+        .hero {
+            padding: 80px 48px 56px;
+            max-width: 840px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: rise .7s .1s cubic-bezier(.16, 1, .3, 1) forwards
+        }
+
+        @media(max-width:768px) {
+            .hero {
+                padding: 72px 24px 40px
+            }
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .8rem;
+            color: var(--text3);
+            margin-bottom: 28px;
+            font-weight: 500
+        }
+
+        .breadcrumb span {
+            color: var(--text2)
+        }
+
+        .module-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 100px;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: .75rem;
+            font-weight: 700;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border: 1px solid rgba(30, 64, 175, .15)
+        }
+
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--text);
+            margin-bottom: 20px;
+            letter-spacing: -.02em
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--accent)
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text2);
+            max-width: 560px
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 36px;
+            flex-wrap: wrap
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: .85rem;
+            color: var(--text2);
+            font-weight: 500
+        }
+
+        .stat-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent)
+        }
+
+        .content {
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 0 48px 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px
+        }
+
+        @media(max-width:768px) {
+            .content {
+                padding: 0 20px 80px
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 36px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(24px);
+            transition: box-shadow .3s, transform .3s
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity .6s cubic-bezier(.16, 1, .3, 1), transform .6s cubic-bezier(.16, 1, .3, 1), box-shadow .3s
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md)
+        }
+
+        @media(max-width:768px) {
+            .card {
+                padding: 24px
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: var(--accent-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0
+        }
+
+        .card-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -.01em
+        }
+
+        .card-subtitle {
+            font-size: .82rem;
+            color: var(--text3);
+            margin-top: 2px;
+            font-weight: 500
+        }
+
+        .body-text {
+            font-size: .97rem;
+            line-height: 1.8;
+            color: var(--text2);
+            margin-bottom: 24px
+        }
+
+        .body-text strong {
+            color: var(--text);
+            font-weight: 700
+        }
+
+        .email-template {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            font-family: 'Fraunces', serif
+        }
+
+        .email-header {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: .85rem;
+            color: var(--text2)
+        }
+
+        .email-field {
+            display: flex;
+            gap: 8px
+        }
+
+        .email-field strong {
+            color: var(--text);
+            min-width: 50px
+        }
+
+        .email-body {
+            font-size: .95rem;
+            line-height: 1.85;
+            color: var(--text2)
+        }
+
+        .email-body p {
+            margin-bottom: 12px
+        }
+
+        .email-body .greeting {
+            color: var(--accent);
+            font-weight: 600
+        }
+
+        .email-body .closing {
+            color: var(--teal);
+            font-weight: 600;
+            font-style: italic
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px
+        }
+
+        .mini-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            transition: .25s;
+            cursor: default
+        }
+
+        .mini-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 20px var(--accent-glow);
+            transform: translateY(-2px)
+        }
+
+        .mini-icon {
+            font-size: 1.4rem;
+            margin-bottom: 12px
+        }
+
+        .mini-title {
+            font-weight: 700;
+            font-size: .9rem;
+            color: var(--text);
+            margin-bottom: 7px
+        }
+
+        .mini-text {
+            font-size: .82rem;
+            line-height: 1.6;
+            color: var(--text2)
+        }
+
+        .mini-text em {
+            font-style: normal;
+            font-weight: 600;
+            color: var(--accent)
+        }
+
+        .highlight-box {
+            background: var(--accent-light);
+            border: 1px solid rgba(30, 64, 175, .18);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px
+        }
+
+        .hl-icon {
+            font-size: 1.05rem;
+            flex-shrink: 0;
+            margin-top: 1px
+        }
+
+        .hl-text {
+            font-size: .87rem;
+            line-height: 1.65;
+            color: var(--accent);
+            font-weight: 500
+        }
+
+        .hl-text strong {
+            font-weight: 700
+        }
+
+        .warn-box {
+            background: var(--rose-light);
+            border: 1px solid rgba(159, 18, 57, .18);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px
+        }
+
+        .warn-text {
+            font-size: .87rem;
+            line-height: 1.65;
+            color: var(--rose);
+            font-weight: 500
+        }
+
+        .warn-text strong {
+            font-weight: 700
+        }
+
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px
+        }
+
+        .tip-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 14px 16px;
+            background: var(--surface2);
+            border-radius: 12px;
+            border: 1px solid var(--border)
+        }
+
+        .tip-num {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--accent-light);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: .78rem;
+            font-weight: 800;
+            flex-shrink: 0
+        }
+
+        .tip-text {
+            font-size: .88rem;
+            line-height: 1.65;
+            color: var(--text2)
+        }
+
+        .tip-text strong {
+            color: var(--text);
+            font-weight: 700
+        }
+
+        .quiz-card {
+            background: linear-gradient(135deg, #1e40af, #0f766e);
+            border-radius: 20px;
+            padding: 36px;
+            text-align: center;
+            color: #fff;
+            position: relative;
+            overflow: hidden
+        }
+
+        .quiz-card::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .05)
+        }
+
+        .quiz-card::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -5%;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .04)
+        }
+
+        .quiz-prompt {
+            font-size: .78rem;
+            font-weight: 700;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            opacity: .65;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1
+        }
+
+        .quiz-q {
+            font-family: 'Fraunces', serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            position: relative;
+            z-index: 1
+        }
+
+        .q-option {
+            background: rgba(255, 255, 255, .12);
+            border: 1.5px solid rgba(255, 255, 255, .22);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: .85rem;
+            font-weight: 600;
+            color: #fff;
+            cursor: pointer;
+            transition: .2s;
+            text-align: center;
+            font-family: 'Plus Jakarta Sans', sans-serif
+        }
+
+        .q-option:hover {
+            background: rgba(255, 255, 255, .22);
+            transform: translateY(-1px)
+        }
+
+        .q-option.correct {
+            background: rgba(255, 255, 255, .28);
+            border-color: #fff
+        }
+
+        .q-option.wrong {
+            background: rgba(0, 0, 0, .25);
+            border-color: rgba(255, 100, 100, .5)
+        }
+
+        .quiz-feedback {
+            margin-top: 14px;
+            font-size: .85rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: .3s;
+            position: relative;
+            z-index: 1;
+            line-height: 1.5
+        }
+
+        .quiz-feedback.show {
+            opacity: 1
+        }
+
+        .quiz-next {
+            margin-top: 16px;
+            background: #fff;
+            color: #1e40af;
+            border: none;
+            padding: 11px 26px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: .88rem;
+            cursor: pointer;
+            display: none;
+            transition: .2s;
+            position: relative;
+            z-index: 1;
+            font-family: 'Plus Jakarta Sans', sans-serif
+        }
+
+        .quiz-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, .2)
+        }
+
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--text3);
+            font-size: .75rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border)
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 16px
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--accent);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: .93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: .25s;
+            font-family: 'Plus Jakarta Sans', sans-serif
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-glow)
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: .93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: .25s;
+            font-family: 'Plus Jakarta Sans', sans-serif
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px)
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(20px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="backdrop" id="backdrop" onclick="closeSidebar()"></div>
+        <nav class="sidebar" id="sidebar">
+        <div class="logo">QuizNation <button class="logo-close" onclick="closeSidebar()">✕</button></div>
+        <div class="nav-label">Menu Utama</div>
+        <a href="index.html" class="nav-link">🏠 Beranda</a>
+        <a href="statistik.html" class="nav-link">📊 Statistik</a>
+        <a href="evaluasi.html" class="nav-link">🎓 Evaluasi SNBT</a>
+        <a href="pencapaian.html" class="nav-link">🏆 Pencapaian</a>
+        <a href="materi.html" class="nav-link active">📚 Materi</a>
+        <a href="library.html" class="nav-link">📖 Library</a>
+        <div class="nav-label" style="margin-top:10px">Bantuan</div>
+        <a href="pengaturan.html" class="nav-link">⚙️ Pengaturan</a>
+        <a href="panduan.html" class="nav-link">📋 Panduan</a>
+        <a href="feedback.html" class="nav-link">💬 Feedback</a>
+    </nav>
+    <button class="hamburger" onclick="openSidebar()">☰</button>
+    <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</div>
+    <main class="main">
+        <section class="hero">
+            <div class="breadcrumb"><span>📚 Materi</span> - <span>Writing</span> - Email &amp; Surat</div>
+            <div class="module-tag">✍️ Writing Menengah</div>
+            <h1>Menulis Email<br>&amp; <em>Surat Formal</em></h1>
+            <p>Kuasai format dan etika menulis email profesional serta surat bisnis yang efektif dan berkesan -
+                keterampilan penting di dunia kerja.</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-dot"></div> Template Email
+                </div>
+                <div class="stat">
+                    <div class="stat-dot" style="background:var(--teal)"></div> Formal vs Informal
+                </div>
+                <div class="stat">
+                    <div class="stat-dot" style="background:var(--rose)"></div> -15 menit baca
+                </div>
+            </div>
+        </section>
+        <div class="content">
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Struktur Email Formal</div>
+                        <div class="card-subtitle">Komponen wajib email profesional</div>
+                    </div>
+                </div>
+                <p class="body-text">Email formal memiliki <strong>5 komponen utama</strong> yang harus ada. Setiap
+                    bagian harus profesional, jelas, dan langsung ke inti.</p>
+                <div class="grid-2">
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Subject Line</div>
+                        <div class="mini-text">Jelas dan spesifik. <em>"Meeting Reschedule - March 10"</em> ? bukan
+                            <em>"Hi"</em> ?</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Greeting / Salutation</div>
+                        <div class="mini-text">Formal: <em>Dear Mr./Ms. [Name]</em> atau <em>Dear Sir/Madam</em> jika
+                            tidak tahu nama.</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Body</div>
+                        <div class="mini-text">Paragraf 1: tujuan. Paragraf 2: detail. Paragraf 3: <em>call to
+                                action</em>.</div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Closing</div>
+                        <div class="mini-text"><em>Sincerely, Best regards, Yours faithfully</em> - sesuaikan
+                            formalitas.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Template: Email Lamaran Kerja</div>
+                        <div class="card-subtitle">Job application email</div>
+                    </div>
+                </div>
+                <div class="email-template">
+                    <div class="email-header">
+                        <div class="email-field"><strong>To:</strong> hr@company.com</div>
+                        <div class="email-field"><strong>Subject:</strong> Application for Marketing Coordinator
+                            Position - Ref: MC-2024</div>
+                    </div>
+                    <div class="email-body">
+                        <p><span class="greeting">Dear Ms. Johnson,</span></p>
+                        <p>I am writing to express my interest in the Marketing Coordinator position advertised on your
+                            company website. With three years of experience in digital marketing and a proven track
+                            record of increasing social media engagement by 150%, I believe I would be a valuable
+                            addition to your team.</p>
+                        <p>I have attached my resume and portfolio for your review. I am available for an interview at
+                            your earliest convenience and can be reached at (021) 123-4567 or via this email.</p>
+                        <p>Thank you for considering my application. I look forward to the opportunity to discuss how my
+                            skills align with your team's goals.</p>
+                        <p><span class="closing">Sincerely,<br>Ahmad Rizki<br>Digital Marketing Specialist</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Template: Email Permintaan Informasi</div>
+                        <div class="card-subtitle">Inquiry email</div>
+                    </div>
+                </div>
+                <div class="email-template">
+                    <div class="email-header">
+                        <div class="email-field"><strong>To:</strong> admissions@university.edu</div>
+                        <div class="email-field"><strong>Subject:</strong> Inquiry About Scholarship Opportunities for
+                            International Students</div>
+                    </div>
+                    <div class="email-body">
+                        <p><span class="greeting">Dear Sir or Madam,</span></p>
+                        <p>I am a prospective international student from Indonesia, and I am writing to inquire about
+                            scholarship opportunities available for the upcoming academic year. I am particularly
+                            interested in the Computer Science program and would like to know the eligibility criteria
+                            and application deadlines.</p>
+                        <p>Could you also kindly provide information regarding accommodation options and estimated
+                            living costs? Any brochures or links to relevant resources would be greatly appreciated.</p>
+                        <p>Thank you for your time and assistance. I look forward to hearing from you.</p>
+                        <p><span class="closing">Yours faithfully,<br>Sari Dewi</span></p>
+                    </div>
+                </div>
+                <div class="highlight-box">
+                    <div class="hl-icon">🔹</div>
+                    <div class="hl-text"><strong>"Dear Sir or Madam" + "Yours faithfully"</strong> - Ini pasangan yang
+                        benar ketika tidak mengetahui nama penerima. Jika tahu nama: <strong>"Dear Mr. Smith" + "Yours
+                            sincerely"</strong>.</div>
+                </div>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Formal vs Informal</div>
+                        <div class="card-subtitle">Perbedaan tone dan bahasa</div>
+                    </div>
+                </div>
+                <p class="body-text">Pilihan kata dan gaya bahasa harus sesuai dengan <strong>situasi dan
+                        hubungan</strong> dengan penerima.</p>
+                <div class="grid-2">
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Formal</div>
+                        <div class="mini-text"><em>I would like to inquire...</em><br><em>Please find
+                                attached...</em><br><em>I would appreciate it if...</em><br><em>I look forward to
+                                hearing from you.</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Informal</div>
+                        <div class="mini-text"><em>Just wondering...</em><br><em>Here's the file...</em><br><em>It would
+                                be great if...</em><br><em>Hope to hear from you soon!</em></div>
+                    </div>
+                </div>
+                <div class="warn-box" style="margin-top:20px">
+                    <div class="hl-icon">🔹</div>
+                    <div class="warn-text"><strong>Hindari:</strong> Singkatan (don't ? do not), emoji, bahasa slang,
+                        dan kalimat terlalu pendek dalam email formal. Juga hindari MENULIS DENGAN HURUF KAPITAL SEMUA -
+                        ini terasa seperti berteriak.</div>
+                </div>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Tips Menulis Email Efektif</div>
+                        <div class="card-subtitle">Prinsip-prinsip penting</div>
+                    </div>
+                </div>
+                <div class="tips-list">
+                    <div class="tip-item">
+                        <div class="tip-num">1</div>
+                        <div class="tip-text"><strong>Subject line harus spesifik.</strong> "Meeting" ? ? "Q2 Budget
+                            Meeting - Thursday 3PM" ?. Subject line yang baik meningkatkan kemungkinan email dibaca.
+                        </div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">2</div>
+                        <div class="tip-text"><strong>Langsung ke inti di paragraf pertama.</strong> Nyatakan tujuan
+                            emailmu di kalimat pertama atau kedua. Jangan bertele-tele.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">3</div>
+                        <div class="tip-text"><strong>Satu email = satu topik.</strong> Jika ada topik lain, kirim email
+                            terpisah. Ini memudahkan follow-up dan pelacakan.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">4</div>
+                        <div class="tip-text"><strong>Proofread sebelum kirim.</strong> Cek nama penerima (salah nama =
+                            fatal!), attachment, ejaan, dan tone keseluruhan.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">5</div>
+                        <div class="tip-text"><strong>Closing yang tepat.</strong> "Yours faithfully" untuk orang yang
+                            tidak dikenal. "Yours sincerely" / "Best regards" untuk yang sudah dikenal.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Mini Quiz</div>
+                        <div class="card-subtitle">8 soal - email &amp; surat formal</div>
+                    </div>
+                </div>
+                <div class="quiz-card" id="quizCard">
+                    <div class="quiz-prompt">Pertanyaan <span id="qNum">1</span> dari <span id="qTotal">8</span></div>
+                    <div class="quiz-q" id="qText">Loading...</div>
+                    <div class="quiz-options" id="qOptions"></div>
+                    <div class="quiz-feedback" id="qFeedback"></div>
+                    <button class="quiz-next" id="qNext" onclick="nextQuestion()">Pertanyaan Berikutnya ?</button>
+                </div>
+            </div>
+
+            <div class="section-divider">Selesai Membaca</div>
+            <div class="card" data-card style="text-align:center;padding:40px">
+                <div style="font-size:2rem;margin-bottom:14px">🔹</div>
+                <div class="card-title" style="margin-bottom:10px">Modul Email Formal selesai!</div>
+                <p class="body-text" style="margin-bottom:0;max-width:480px;margin-left:auto;margin-right:auto">Sekarang
+                    kamu bisa menulis email profesional dengan percaya diri!</p>
+                <div class="cta-row" style="justify-content:center;margin-top:24px">
+                    <a href="materi-menulis-kalimat.html" class="btn-secondary">? Menulis Kalimat</a>
+                    <a href="materi-essay-artikel.html" class="btn-primary">Essay & Artikel ?</a>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script>
+        const saved = localStorage.getItem('theme'); if (saved === 'dark') { document.body.classList.add('dark'); document.getElementById('themeBtn').textContent = '🔹' }
+        function toggleTheme() { const d = document.body.classList.toggle('dark'); localStorage.setItem('theme', d ? 'dark' : 'light'); document.getElementById('themeBtn').textContent = d ? '🔹' : '🔹' }
+        function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('backdrop').classList.add('open') }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('backdrop').classList.remove('open') }
+        window.addEventListener('scroll', () => { const el = document.documentElement; document.getElementById('progressBar').style.width = (el.scrollTop / (el.scrollHeight - el.clientHeight) * 100) + '%' });
+        const obs = new IntersectionObserver(entries => { entries.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 55); obs.unobserve(e.target) } }) }, { threshold: .07 }); document.querySelectorAll('[data-card]').forEach(c => obs.observe(c));
+        const questions = [
+            { q: "The correct greeting when you don't know the recipient's name is...", opts: ["Dear Friend", "Dear Sir or Madam", "Hey there", "Hi"], ans: 1, exp: "? 'Dear Sir or Madam' is the standard formal greeting for unknown recipients." },
+            { q: "Which closing matches 'Dear Sir or Madam'?", opts: ["Best wishes", "Yours sincerely", "Yours faithfully", "Cheers"], ans: 2, exp: "? 'Yours faithfully' pairs with 'Dear Sir or Madam'. 'Yours sincerely' pairs with a named recipient." },
+            { q: "A good email subject line should be...", opts: ["Vague and short", "Specific and descriptive", "In all capitals", "Just 'Hello'"], ans: 1, exp: "? Subject lines should clearly state the email's purpose to help the reader prioritize." },
+            { q: "Which is too informal for a business email?", opts: ["I would appreciate your response", "Please find attached", "Just FYI", "I look forward to hearing from you"], ans: 2, exp: "? 'Just FYI' is too casual for formal business correspondence." },
+            { q: "The first paragraph of a formal email should...", opts: ["Share personal stories", "State the purpose clearly", "Include jokes", "Be very long"], ans: 1, exp: "? Get to the point immediately - state your purpose in the first paragraph." },
+            { q: "Which is the correct order of email components?", opts: ["Body ? Subject ? Greeting", "Subject ? Greeting ? Body ? Closing", "Closing ? Body ? Greeting", "Greeting ? Subject ? Body"], ans: 1, exp: "? Subject line first, then greeting, body content, and closing." },
+            { q: "In formal writing, 'don't' should be written as...", opts: ["dont", "don't", "do not", "doesnt"], ans: 2, exp: "? In formal writing, avoid contractions. Write 'do not' instead of 'don't'." },
+            { q: "If you know the recipient's name, you should close with...", opts: ["Yours faithfully", "Yours sincerely", "See ya", "XOXO"], ans: 1, exp: "? 'Yours sincerely' is used when you address someone by name (Dear Mr. Smith ? Yours sincerely)." }
+        ];
+        let current = 0, score = 0, answered = false;
+        function renderQuestion() { const q = questions[current]; document.getElementById('qNum').textContent = current + 1; document.getElementById('qTotal').textContent = questions.length; document.getElementById('qText').textContent = q.q; document.getElementById('qFeedback').textContent = ''; document.getElementById('qFeedback').classList.remove('show'); document.getElementById('qNext').style.display = 'none'; answered = false; const o = document.getElementById('qOptions'); o.innerHTML = ''; q.opts.forEach((opt, i) => { const b = document.createElement('button'); b.className = 'q-option'; b.textContent = opt; b.onclick = () => selectAnswer(i); o.appendChild(b) }) }
+        function selectAnswer(i) { if (answered) return; answered = true; const q = questions[current]; const opts = document.querySelectorAll('.q-option'); opts[i].classList.add(i === q.ans ? 'correct' : 'wrong'); if (i !== q.ans) opts[q.ans].classList.add('correct'); else score++; const fb = document.getElementById('qFeedback'); fb.textContent = i === q.ans ? q.exp : '? ' + q.exp; fb.classList.add('show'); const n = document.getElementById('qNext'); n.style.display = 'inline-block'; if (current === questions.length - 1) n.textContent = 'Lihat Hasil 🔹' }
+        function nextQuestion() { current++; if (current < questions.length) { renderQuestion(); return } const s = score, t = questions.length, g = s >= 7 ? '🔹' : s >= 5 ? '🔹' : '🔹', m = s === t ? 'Sempurna!' : s >= 6 ? 'Bagus!' : s >= 4 ? 'Lumayan!' : 'Ayo ulangi.'; document.getElementById('quizCard').innerHTML = `<div class="quiz-prompt" style="position:relative;z-index:1">Hasil Akhir</div><div class="quiz-q" style="position:relative;z-index:1;font-size:2.8rem">${g}</div><div class="quiz-q" style="position:relative;z-index:1">Skor: ${s} / ${t}</div><p style="position:relative;z-index:1;opacity:.82;font-size:.88rem;margin-top:6px">${m}</p><button class="quiz-next" style="display:inline-block;margin-top:16px" onclick="restartQuiz()">Ulangi Quiz</button>` }
+        function restartQuiz() { current = 0; score = 0; document.getElementById('quizCard').innerHTML = `<div class="quiz-prompt">Pertanyaan <span id="qNum">1</span> dari <span id="qTotal">8</span></div><div class="quiz-q" id="qText"></div><div class="quiz-options" id="qOptions"></div><div class="quiz-feedback" id="qFeedback"></div><button class="quiz-next" id="qNext" onclick="nextQuestion()">Pertanyaan Berikutnya ?</button>`; renderQuestion() }
+        renderQuestion();
+    </script>
+</body>
+
+</html>
+
+
+

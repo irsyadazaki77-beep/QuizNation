@@ -1,0 +1,2574 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Library SNBT 2026 - QuizNation</title>
+    <meta name="description"
+        content="Kumpulan lengkap pembahasan materi SNBT 2026 untuk persiapan ujian masuk perguruan tinggi negeri.">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Mobile Optimization */
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --accent: #2563eb;
+            --accent2: #06b6d4;
+            --accent3: #f43f5e;
+            --gold: #f59e0b;
+            --sidebar-w: 290px;
+            --radius: 20px;
+            --bg: #f0f2f8;
+            --surface: rgba(255, 255, 255, 0.72);
+            --surface2: rgba(255, 255, 255, 0.45);
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #1a1a2e;
+            --text2: #4b5563;
+            --text3: #9ca3af;
+            --sidebar-bg: rgba(255, 255, 255, 0.96);
+            --card-hover: rgba(255, 255, 255, 0.95);
+            --glow: rgba(124, 58, 237, 0.18);
+        }
+
+        body.dark {
+            --bg: #050a15;
+            --surface: rgba(255, 255, 255, 0.055);
+            --surface2: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #f0edff;
+            --text2: rgba(240, 237, 255, 0.65);
+            --text3: rgba(240, 237, 255, 0.35);
+            --sidebar-bg: rgba(12, 9, 30, 0.97);
+            --card-hover: rgba(255, 255, 255, 0.09);
+            --glow: rgba(124, 58, 237, 0.28);
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+            transition: background .4s, color .4s
+        }
+
+        body.nav-open {
+            overflow: hidden
+        }
+
+        .skip-link {
+            position: fixed;
+            left: 12px;
+            top: -48px;
+            z-index: 2000;
+            background: var(--accent);
+            color: #fff;
+            text-decoration: none;
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: .82rem;
+            font-weight: 700;
+            transition: top .2s
+        }
+
+        .skip-link:focus {
+            top: 12px
+        }
+
+        a:focus-visible,
+        button:focus-visible,
+        .filter-tab:focus-visible,
+        input:focus-visible {
+            outline: 2px solid var(--accent2);
+            outline-offset: 2px
+        }
+
+        /* BG Canvas */
+        #bg-canvas {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            opacity: .6
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: .35
+        }
+
+        /* SIDEBAR */
+        #backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            z-index: 900;
+            opacity: 0;
+            visibility: hidden;
+            transition: all .4s
+        }
+
+        #backdrop.on {
+            opacity: 1;
+            visibility: visible
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-w);
+            height: 100vh;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(12px);
+            border-right: 1px solid var(--border);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            padding: 24px 18px;
+            transform: translateX(calc(-1 * var(--sidebar-w)));
+            transition: transform .45s cubic-bezier(.77, 0, .175, 1);
+            overflow-y: auto
+        }
+
+        .sidebar.on {
+            transform: translateX(0)
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 4px
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: linear-gradient(var(--accent), var(--accent2));
+            border-radius: 4px
+        }
+
+        .sb-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border)
+        }
+
+        .sb-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, .4)
+        }
+
+        .sb-logo-text {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .sb-close {
+            margin-left: auto;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            color: var(--text2);
+            font-size: .9rem;
+            display: grid;
+            place-items: center;
+            transition: all .2s
+        }
+
+        .sb-close:hover {
+            background: var(--accent);
+            color: white
+        }
+
+        /* Clock */
+        .clock-box {
+            background: linear-gradient(135deg, var(--accent) 0%, #1e3a8a 50%, var(--accent2) 100%);
+            border-radius: 16px;
+            padding: 20px 18px;
+            margin-bottom: 16px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(124, 58, 237, .4);
+            min-height: 120px
+        }
+
+        .clock-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(45deg, transparent, transparent 8px, rgba(255, 255, 255, .03) 8px, rgba(255, 255, 255, .03) 9px);
+            pointer-events: none
+        }
+
+        .clock-time {
+            font-family: 'DM Mono', monospace;
+            font-size: 2rem;
+            font-weight: 500;
+            color: white;
+            letter-spacing: 3px;
+            text-shadow: 0 0 30px rgba(255, 255, 255, .5);
+            line-height: 1.2
+        }
+
+        .clock-date {
+            font-size: .85rem;
+            color: rgba(255, 255, 255, .85);
+            margin-top: 6px
+        }
+
+        .clock-day {
+            font-size: .75rem;
+            color: rgba(255, 255, 255, .6);
+            margin-top: 2px
+        }
+
+        /* Theme toggle */
+        .theme-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin-bottom: 16px
+        }
+
+        .theme-label {
+            font-size: .85rem;
+            font-weight: 700;
+            color: var(--text2);
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .toggle {
+            position: relative;
+            width: 46px;
+            height: 24px;
+            background: #d1d5db;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background .3s
+        }
+
+        .toggle.on {
+            background: linear-gradient(135deg, var(--accent), var(--accent2))
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, .25);
+            transition: transform .3s
+        }
+
+        .toggle.on::after {
+            transform: translateX(22px)
+        }
+
+        /* Sidebar menu */
+        .sb-section {
+            margin-bottom: 14px
+        }
+
+        .sb-section-lbl {
+            font-size: .68rem;
+            font-weight: 800;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: var(--text3);
+            padding: 0 4px;
+            margin-bottom: 8px
+        }
+
+        .sb-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 13px;
+            margin-bottom: 3px;
+            border-radius: 12px;
+            text-decoration: none;
+            color: var(--text2);
+            font-size: .87rem;
+            font-weight: 600;
+            transition: all .25s;
+            position: relative
+        }
+
+        .sb-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 3px;
+            height: 0;
+            background: linear-gradient(var(--accent), var(--accent2));
+            border-radius: 3px;
+            transform: translateY(-50%);
+            transition: height .25s
+        }
+
+        .sb-item:hover::before {
+            height: 60%
+        }
+
+        .sb-item:hover {
+            background: var(--surface);
+            color: var(--accent);
+            padding-left: 17px
+        }
+
+        .sb-item.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, .35)
+        }
+
+        .sb-item.active::before {
+            display: none
+        }
+
+        .sb-icon {
+            font-size: 1.1rem
+        }
+
+        .sb-badge {
+            margin-left: auto;
+            background: var(--accent);
+            color: white;
+            font-size: .65rem;
+            font-weight: 800;
+            padding: 2px 7px;
+            border-radius: 20px
+        }
+
+        /* Sidebar stats */
+        .sb-stats {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 16px
+        }
+
+        .sb-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border)
+        }
+
+        .sb-stat:last-child {
+            border-bottom: none
+        }
+
+        .sb-stat-lbl {
+            font-size: .8rem;
+            color: var(--text3);
+            font-weight: 600
+        }
+
+        .sb-stat-val {
+            font-size: 1rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        /* Progress Ring */
+        .sb-progress-ring {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 14px;
+            margin-bottom: 16px
+        }
+
+        .ring-svg {
+            flex-shrink: 0
+        }
+
+        .ring-track {
+            fill: none;
+            stroke: var(--border);
+            stroke-width: 5
+        }
+
+        .ring-fill {
+            fill: none;
+            stroke: url(#ringGrad);
+            stroke-width: 5;
+            stroke-linecap: round;
+            stroke-dasharray: 100.5;
+            stroke-dashoffset: 35;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+            transition: stroke-dashoffset 1.5s cubic-bezier(.4, 0, .2, 1)
+        }
+
+        .ring-pct {
+            font-size: 1.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .ring-label {
+            font-size: .82rem;
+            color: var(--text2)
+        }
+
+        /* Hamburger */
+        #ham {
+            position: fixed;
+            top: 18px;
+            left: 18px;
+            z-index: 1001;
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, .15);
+            transition: all .3s
+        }
+
+        #ham:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 28px var(--glow);
+            border-color: var(--accent)
+        }
+
+        .ham-lines {
+            display: flex;
+            flex-direction: column;
+            gap: 5px
+        }
+
+        .ham-lines span {
+            display: block;
+            width: 20px;
+            height: 2px;
+            background: var(--text);
+            border-radius: 2px;
+            transition: all .3s
+        }
+
+        #ham.open {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: scale(0.8)
+        }
+
+        /* MAIN */
+        .main {
+            flex: 1;
+            width: 100%;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+            padding-top: 80px
+        }
+
+        /* HERO */
+        .hero {
+            padding: 40px 60px 50px;
+            position: relative;
+            overflow: hidden;
+            max-width: 1320px;
+            margin: 0 auto
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            right: -100px;
+            top: -100px;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+            pointer-events: none;
+            animation: heroGlow 6s ease-in-out infinite
+        }
+
+        @keyframes heroGlow {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: .7
+            }
+
+            50% {
+                transform: scale(1.2);
+                opacity: 1
+            }
+        }
+
+        .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 5px 15px;
+            font-size: .72rem;
+            font-weight: 700;
+            color: var(--text2);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 18px;
+            animation: fadeInUp .7s both
+        }
+
+        .eyebrow-dot {
+            width: 7px;
+            height: 7px;
+            background: linear-gradient(var(--accent), var(--accent2));
+            border-radius: 50%;
+            animation: pulse 2s infinite
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1)
+            }
+
+            50% {
+                transform: scale(1.4)
+            }
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.1;
+            margin-bottom: 16px;
+            animation: fadeInUp .8s .1s both
+        }
+
+        .hero-title span.grad {
+            background: linear-gradient(135deg, var(--accent) 0%, #60a5fa 50%, var(--accent2) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .hero-sub {
+            font-size: 1.05rem;
+            color: var(--text2);
+            max-width: 620px;
+            line-height: 1.75;
+            margin-bottom: 30px;
+            animation: fadeInUp .8s .2s both
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(24px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        /* Hero Stats */
+        .hero-stats {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            animation: fadeInUp .8s .3s both;
+            margin-bottom: 32px
+        }
+
+        .hero-stats .hstat {
+            flex: 1 1 220px
+        }
+
+        .hstat {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 16px 22px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: default;
+            transition: all .3s;
+            position: relative;
+            overflow: hidden
+        }
+
+        .hstat::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            opacity: 0;
+            transition: opacity .3s
+        }
+
+        .hstat:hover::before {
+            opacity: 0.07
+        }
+
+        .hstat:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px var(--glow)
+        }
+
+        .hstat-icon {
+            font-size: 1.5rem
+        }
+
+        .hstat-num {
+            font-family: 'DM Mono', monospace;
+            font-size: 1.35rem;
+            font-weight: 500;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .hstat-lbl {
+            font-size: .72rem;
+            color: var(--text3);
+            font-weight: 600
+        }
+
+        /* Filter Tabs */
+        .filter-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            animation: fadeInUp .8s .4s both
+        }
+
+        .filter-tools {
+            display: grid;
+            gap: 12px;
+            animation: fadeInUp .8s .4s both
+        }
+
+        .search-row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap
+        }
+
+        .tool-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap
+        }
+
+        .search-box {
+            flex: 1 1 280px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            padding: 10px 13px;
+            font-size: .88rem
+        }
+
+        .search-btn {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 14px;
+            background: var(--surface);
+            color: var(--text2);
+            cursor: pointer;
+            font-size: .82rem;
+            font-weight: 700;
+            transition: all .2s
+        }
+
+        .search-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent)
+        }
+
+        .sort-select {
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text2);
+            padding: 10px 12px;
+            font-size: .82rem;
+            font-weight: 700
+        }
+
+        .result-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin: 0 60px 16px;
+            max-width: 1320px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--surface)
+        }
+
+        .result-text {
+            font-size: .84rem;
+            color: var(--text2);
+            font-weight: 600
+        }
+
+        .hero-note {
+            margin-top: 14px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text2);
+            font-size: .88rem;
+            line-height: 1.7
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 12px
+        }
+
+        .quick-link {
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center
+        }
+
+        .focus-panel {
+            margin: 0 60px 18px;
+            max-width: 1320px;
+            padding: 18px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            background: var(--surface)
+        }
+
+        .focus-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            margin-bottom: 6px;
+            color: var(--text)
+        }
+
+        .focus-sub {
+            color: var(--text2);
+            font-size: .86rem;
+            line-height: 1.7;
+            margin-bottom: 14px
+        }
+
+        .focus-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+            gap: 12px
+        }
+
+        .focus-card {
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--surface2);
+            padding: 14px;
+            cursor: pointer;
+            transition: transform .2s, border-color .2s, box-shadow .2s
+        }
+
+        .focus-card:hover {
+            transform: translateY(-3px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 24px var(--glow)
+        }
+
+        .focus-card-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-bottom: 8px
+        }
+
+        .focus-card-title {
+            font-size: .95rem;
+            font-weight: 800;
+            color: var(--text)
+        }
+
+        .focus-card p {
+            font-size: .82rem;
+            color: var(--text2);
+            line-height: 1.65;
+            margin-bottom: 10px
+        }
+
+        .focus-chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px
+        }
+
+        .focus-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 9px;
+            border-radius: 999px;
+            font-size: .68rem;
+            font-weight: 800;
+            background: rgba(124, 58, 237, .12);
+            color: var(--accent);
+            border: 1px solid rgba(124, 58, 237, .16)
+        }
+
+        .empty-state {
+            display: none;
+            margin: 20px 0 4px;
+            padding: 18px;
+            border-radius: 14px;
+            border: 1px dashed var(--border);
+            background: var(--surface2);
+            color: var(--text2);
+            font-size: .9rem;
+            font-weight: 600;
+            text-align: center
+        }
+
+        .recent-wrap {
+            display: none;
+            margin: 0 60px 14px;
+            max-width: 1320px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: var(--surface)
+        }
+
+        .recent-title {
+            font-size: .78rem;
+            color: var(--text3);
+            text-transform: uppercase;
+            letter-spacing: .7px;
+            margin-bottom: 8px;
+            font-weight: 700
+        }
+
+        .recent-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px
+        }
+
+        .recent-chip {
+            text-decoration: none;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--text2);
+            border-radius: 999px;
+            padding: 6px 10px;
+            font-size: .76rem;
+            font-weight: 700
+        }
+
+        .recent-chip:hover {
+            border-color: var(--accent);
+            color: var(--accent)
+        }
+
+        .filter-tab {
+            padding: 7px 18px;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--text2);
+            font-size: .82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all .25s;
+            user-select: none
+        }
+
+        .filter-tab:hover {
+            border-color: var(--accent);
+            color: var(--accent)
+        }
+
+        .filter-tab.active {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border-color: transparent;
+            color: white;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, .35)
+        }
+
+        /* CONTENT */
+        .content {
+            padding: 0 60px 80px;
+            max-width: 1320px;
+            margin: 0 auto
+        }
+
+        .sec-head {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+            margin-top: 50px
+        }
+
+        .sec-head-info {
+            min-width: 0
+        }
+
+        .sec-head:first-child {
+            margin-top: 0
+        }
+
+        .sec-icon-wrap {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: grid;
+            place-items: center;
+            font-size: 1.3rem;
+            flex-shrink: 0
+        }
+
+        .sec-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--text)
+        }
+
+        .sec-sub {
+            font-size: .8rem;
+            color: var(--text3);
+            margin-top: 2px
+        }
+
+        .sec-line {
+            flex: 1;
+            min-width: 40px;
+            height: 1px;
+            background: var(--border);
+            margin-left: 8px
+        }
+
+        .sec-count {
+            font-family: 'DM Mono', monospace;
+            font-size: .78rem;
+            color: var(--text3);
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 3px 10px
+        }
+
+        /* CARD GRID */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 18px
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(8px);
+            border-radius: var(--radius);
+            padding: 26px;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+            overflow: hidden;
+            transition: transform .35s cubic-bezier(.4, 0, .2, 1), box-shadow .35s, border-color .35s, background .35s;
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(30px)
+        }
+
+        body.compact-cards .card {
+            padding: 16px;
+            gap: 7px
+        }
+
+        body.compact-cards .card-title {
+            font-size: .98rem
+        }
+
+        body.compact-cards .card-desc {
+            font-size: .78rem
+        }
+
+        .card.visible {
+            animation: cardIn .6s cubic-bezier(.4, 0, .2, 1) both
+        }
+
+        @keyframes cardIn {
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: conic-gradient(from var(--angle, 0deg) at 50% 50%, transparent 0deg, rgba(255, 255, 255, .06) 60deg, transparent 120deg);
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity .3s
+        }
+
+        .card:hover::before {
+            opacity: 1
+        }
+
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--card-accent, linear-gradient(90deg, var(--accent), var(--accent2)));
+            opacity: 0;
+            transition: opacity .3s
+        }
+
+        .card:hover::after {
+            opacity: 1
+        }
+
+        .card:hover {
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .15), 0 0 0 1px rgba(124, 58, 237, .15), 0 0 50px var(--glow);
+            border-color: rgba(124, 58, 237, .3);
+            background: var(--card-hover)
+        }
+
+        /* Card contents */
+        .card-icon {
+            font-size: 2.4rem;
+            display: inline-block;
+            transition: transform .35s cubic-bezier(.4, 0, .2, 1)
+        }
+
+        .card:hover .card-icon {
+            transform: translateY(-5px) scale(1.08) rotate(-5deg)
+        }
+
+        .cat-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: .68rem;
+            font-weight: 700;
+            padding: 3px 11px;
+            border-radius: 20px;
+            width: fit-content
+        }
+
+        .badge-tps {
+            background: rgba(37, 99, 235, .15);
+            color: #93c5fd;
+            border: 1px solid rgba(37, 99, 235, .25)
+        }
+
+        .badge-lit {
+            background: rgba(6, 182, 212, .15);
+            color: #67e8f9;
+            border: 1px solid rgba(6, 182, 212, .25)
+        }
+
+        .badge-mat {
+            background: rgba(244, 114, 182, .15);
+            color: #bae6fd;
+            border: 1px solid rgba(244, 114, 182, .25)
+        }
+
+        .badge-ppu {
+            background: rgba(251, 146, 60, .15);
+            color: #fcd34d;
+            border: 1px solid rgba(251, 146, 60, .25)
+        }
+
+        .badge-eng {
+            background: rgba(74, 222, 128, .15);
+            color: #86efac;
+            border: 1px solid rgba(74, 222, 128, .25)
+        }
+
+        .badge-pbm {
+            background: rgba(168, 85, 247, .15);
+            color: #93c5fd;
+            border: 1px solid rgba(168, 85, 247, .25)
+        }
+
+        .card-level {
+            font-size: .7rem;
+            color: var(--text3);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .card-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.08rem;
+            font-weight: 700;
+            color: var(--text);
+            line-height: 1.35
+        }
+
+        .card-desc {
+            font-size: .84rem;
+            color: var(--text2);
+            line-height: 1.65;
+            flex: 1
+        }
+
+        .card-stats {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 4px
+        }
+
+        .cstat {
+            font-size: .72rem;
+            color: var(--text3);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px
+        }
+
+        .card-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: .82rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-top: auto;
+            padding-top: 8px
+        }
+
+        .card-cta .arr {
+            transition: transform .3s
+        }
+
+        .card:hover .card-cta .arr {
+            transform: translateX(4px)
+        }
+
+        .card-fav {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--text3);
+            width: 30px;
+            height: 30px;
+            border-radius: 10px;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            font-size: .9rem;
+            z-index: 2
+        }
+
+        .card-fav.on {
+            color: #f59e0b;
+            border-color: rgba(245, 158, 11, .45)
+        }
+
+        /* Section accents */
+        .sec-tps .sec-icon-wrap {
+            background: rgba(37, 99, 235, .15)
+        }
+
+        .sec-tps {
+            --card-accent: linear-gradient(90deg, #60a5fa, #2563eb)
+        }
+
+        .sec-lit .sec-icon-wrap {
+            background: rgba(6, 182, 212, .15)
+        }
+
+        .sec-lit {
+            --card-accent: linear-gradient(90deg, #22d3ee, #06b6d4)
+        }
+
+        .sec-mat .sec-icon-wrap {
+            background: rgba(244, 114, 182, .15)
+        }
+
+        .sec-mat {
+            --card-accent: linear-gradient(90deg, #fb7185, #f43f5e)
+        }
+
+        .sec-ppu .sec-icon-wrap {
+            background: rgba(251, 146, 60, .15)
+        }
+
+        .sec-ppu {
+            --card-accent: linear-gradient(90deg, #fb923c, #f59e0b)
+        }
+
+        .sec-eng .sec-icon-wrap {
+            background: rgba(74, 222, 128, .15)
+        }
+
+        .sec-eng {
+            --card-accent: linear-gradient(90deg, #4ade80, #22c55e)
+        }
+
+        .sec-pbm .sec-icon-wrap {
+            background: rgba(168, 85, 247, .15)
+        }
+
+        .sec-pbm {
+            --card-accent: linear-gradient(90deg, #38bdf8, #3b82f6)
+        }
+
+        /* Footer */
+        footer {
+            padding: 28px 60px;
+            max-width: 1320px;
+            margin: 0 auto;
+            border-top: 1px solid var(--border);
+            text-align: center;
+            color: var(--text3);
+            font-size: .84rem
+        }
+
+        /* Scroll top */
+        #scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 28px;
+            z-index: 700;
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            display: grid;
+            place-items: center;
+            cursor: pointer;
+            box-shadow: 0 6px 24px rgba(124, 58, 237, .4);
+            font-size: 1.1rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all .35s
+        }
+
+        #scroll-top.show {
+            opacity: 1;
+            transform: translateY(0)
+        }
+
+        #scroll-top:hover {
+            transform: translateY(-4px) scale(1.05)
+        }
+
+        /* Responsive */
+        @media(max-width:768px) {
+            .hero {
+                padding: 30px 20px 40px
+            }
+
+            .content {
+                padding: 0 20px 60px
+            }
+
+            .result-bar {
+                margin: 0 20px 14px
+            }
+
+            .recent-wrap {
+                margin: 0 20px 12px
+            }
+
+            .hero-title {
+                font-size: clamp(1.6rem, 6vw, 2.5rem)
+            }
+
+            .hero-sub {
+                font-size: .92rem
+            }
+
+            .hero-stats {
+                gap: 10px
+            }
+
+            .hero-stats .hstat {
+                flex: 1 1 calc(50% - 10px);
+                min-width: 0;
+                padding: 14px 16px
+            }
+
+            .search-row {
+                gap: 8px
+            }
+
+            .search-box {
+                flex-basis: 100%
+            }
+
+            .tool-row {
+                width: 100%
+            }
+
+            .sort-select {
+                flex: 1 1 180px
+            }
+
+            .sec-head {
+                align-items: flex-start;
+                flex-wrap: wrap;
+                gap: 10px
+            }
+
+            .sec-line {
+                display: none
+            }
+
+            .sec-count {
+                margin-left: 58px
+            }
+
+            .grid {
+                grid-template-columns: 1fr
+            }
+
+            footer {
+                padding: 20px
+            }
+
+            .sidebar {
+                width: 100vw;
+                transform: translateX(-100vw);
+            }
+
+            .sidebar.on {
+                transform: translateX(0);
+            }
+        }
+
+        @media(max-width:520px) {
+            .hero-stats .hstat {
+                flex: 1 1 100%
+            }
+
+            .hstat-num {
+                font-size: 1.15rem
+            }
+
+            .filter-row {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                padding-bottom: 4px;
+                scrollbar-width: thin
+            }
+
+            .filter-tab {
+                flex: 0 0 auto;
+                white-space: nowrap
+            }
+
+            .result-text {
+                font-size: .78rem
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+                scroll-behavior: auto !important
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <a class="skip-link" href="#main">Lewati ke konten utama</a>
+    <canvas id="bg-canvas"></canvas>
+    <div class="noise-overlay"></div>
+
+    <svg style="position:absolute;width:0;height:0">
+        <defs>
+            <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#2563eb" />
+                <stop offset="100%" stop-color="#06b6d4" />
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <!-- Backdrop -->
+    <div id="backdrop" onclick="toggleSidebar(false)" aria-hidden="true"></div>
+
+    <!-- SIDEBAR -->
+    <nav class="sidebar" id="sidebar" aria-label="Menu samping utama">
+        <div class="sb-logo">
+            <div class="sb-logo-icon">🎓</div>
+            <div class="sb-logo-text">QuizNation</div>
+            <button class="sb-close" onclick="toggleSidebar(false)" aria-label="Tutup menu">?</button>
+        </div>
+
+        <div class="clock-box">
+            <div class="clock-time" id="clockTime">00:00:00</div>
+            <div class="clock-date" id="clockDate"></div>
+            <div class="clock-day" id="clockDay"></div>
+        </div>
+
+        <div class="theme-row">
+            <span class="theme-label">🔹 Mode Gelap</span>
+            <div class="toggle" id="themeToggle" onclick="toggleTheme()"></div>
+        </div>
+
+        <div class="sb-progress-ring">
+            <svg class="ring-svg" width="60" height="60" viewBox="0 0 36 36">
+                <circle class="ring-track" cx="18" cy="18" r="16" />
+                <circle class="ring-fill" id="ringFill" cx="18" cy="18" r="16" />
+            </svg>
+            <div>
+                <div class="ring-pct" id="ringPct">65%</div>
+                <div class="ring-label">Progress<br>Keseluruhan</div>
+            </div>
+        </div>
+
+        <div class="sb-stats">
+            <div class="sb-stat"><span class="sb-stat-lbl">Total Skor</span><span class="sb-stat-val"
+                    id="sbScore">0</span></div>
+            <div class="sb-stat"><span class="sb-stat-lbl">Level Terbuka</span><span class="sb-stat-val">100/100</span>
+            </div>
+            <div class="sb-stat"><span class="sb-stat-lbl">Streak Hari 🔥</span><span class="sb-stat-val"
+                    id="sbStreak">0</span></div>
+            <div class="sb-stat"><span class="sb-stat-lbl">Materi Selesai</span><span class="sb-stat-val">7/33</span>
+            </div>
+        </div>
+
+        <div class="sb-section">
+            <div class="sb-section-lbl">Menu Utama</div>
+            <a href="index.html" class="sb-item"><span class="sb-icon">🏠</span>Beranda</a>
+            <a href="statistik.html" class="sb-item"><span class="sb-icon">📊</span>Statistik<span
+                    class="sb-badge">NEW</span></a>
+            <a href="evaluasi.html" class="sb-item"><span class="sb-icon">🎓</span>Evaluasi SNBT</a>
+            <a href="pencapaian.html" class="sb-item"><span class="sb-icon">🏆</span>Pencapaian</a>
+            <a href="materi.html" class="sb-item"><span class="sb-icon">📚</span>Materi</a>
+            <a href="library.html" class="sb-item active"><span class="sb-icon">📖</span>Library</a>
+        </div>
+
+        <div class="sb-section">
+            <div class="sb-section-lbl">Bantuan</div>
+            <a href="pengaturan.html" class="sb-item"><span class="sb-icon">⚙️</span>Pengaturan</a>
+            <a href="panduan.html" class="sb-item"><span class="sb-icon">📋</span>Panduan</a>
+            <a href="feedback.html" class="sb-item"><span class="sb-icon">💬</span>Feedback</a>
+            <a href="login.html" class="sb-item"
+                style="color:#d94646;margin-top:15px;border-top:1px solid rgba(255,255,255,0.1);padding-top:15px;border-radius:0">
+                <span class="sb-icon">🔑</span><span>Masuk Akun</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hamburger -->
+    <button id="ham" onclick="toggleSidebar()" aria-label="Buka menu" aria-controls="sidebar" aria-expanded="false">
+        <div class="ham-lines"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Scroll Top -->
+    <div id="scroll-top" role="button" tabindex="0" aria-label="Kembali ke atas"
+        onclick="window.scrollTo({top:0,behavior:'smooth'})">?</div>
+
+    <!-- MAIN -->
+    <main class="main" id="main">
+        <!-- HERO -->
+        <section class="hero">
+            <div class="eyebrow">
+                <div class="eyebrow-dot"></div> Library SNBT 2026
+            </div>
+            <h1 class="hero-title">Pembahasan <span class="grad">SNBT 2026</span><br>Lengkap & Menyeluruh</h1>
+            <p class="hero-sub">Akses seluruh materi persiapan SNBT 2026 - dari Penalaran Umum, Literasi, Pengetahuan
+                Kuantitatif, hingga Penalaran Matematika. Semua tersusun rapi, kini diperluas dengan penjelasan langkah demi langkah, contoh kontekstual, strategi cepat, dan latihan yang lebih relevan untuk 2026.</p>
+
+            <div class="hero-stats">
+                <div class="hstat"><span class="hstat-icon">👥</span>
+                    <div>
+                        <div class="hstat-num" data-count="25000">0</div>
+                        <div class="hstat-lbl">Pelajar Aktif</div>
+                    </div>
+                </div>
+                <div class="hstat"><span class="hstat-icon">?</span>
+                    <div>
+                        <div class="hstat-num" data-count="4.9">0</div>
+                        <div class="hstat-lbl">Rating</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-tools">
+                <div class="search-row">
+                    <input id="searchInput" class="search-box" type="search"
+                        placeholder="Cari materi... contoh: rasio, eksponen, parafrase" aria-label="Cari materi">
+                    <div class="tool-row">
+                        <select id="sortSelect" class="sort-select" aria-label="Urutkan materi">
+                            <option value="default">Urutkan: Default</option>
+                            <option value="az">Judul A-Z</option>
+                            <option value="za">Judul Z-A</option>
+                            <option value="level">Level: Dasar ke Lanjutan</option>
+                            <option value="duration">Durasi: Cepat ke Lama</option>
+                        </select>
+                        <button id="favOnlyBtn" class="search-btn" type="button">Favorit Saja: OFF</button>
+                        <button id="compactBtn" class="search-btn" type="button">Mode Compact: OFF</button>
+                        <button id="randomBtn" class="search-btn" type="button">Materi Acak</button>
+                        <button id="copyListBtn" class="search-btn" type="button">Copy Daftar</button>
+                        <button id="clearSearch" class="search-btn" type="button">Reset Pencarian</button>
+                        <button id="resetPrefsBtn" class="search-btn" type="button">Reset Preferensi</button>
+                    </div>
+                </div>
+                <div class="filter-row" id="filter-row" aria-label="Filter kategori">
+                    <button class="filter-tab active" data-filter="all" type="button">Semua</button>
+                    <button class="filter-tab" data-filter="ppu" type="button">Penalaran Umum</button>
+                    <button class="filter-tab" data-filter="pbm" type="button">Penalaran Matematika</button>
+                    <button class="filter-tab" data-filter="pk" type="button">Pengetahuan Kuantitatif</button>
+                    <button class="filter-tab" data-filter="indo" type="button">Literasi B. Indonesia</button>
+                    <button class="filter-tab" data-filter="eng" type="button">Literasi B. Inggris</button>
+                </div>
+            </div>
+
+            <div class="hero-note">🔹 Semua menu materi kini diarahkan ke <strong>tren SNBT 2025 yang masih relevan untuk 2026</strong>. Ini bukan bocoran resmi, tetapi peta fokus belajar yang lebih aman dan tepat sasaran.</div>
+            <div class="hero-actions">
+                <a class="search-btn quick-link" href="lib-roadmap-snbt-2026.html">🔹 Lihat Roadmap Fokus 2026</a>
+                <button class="search-btn" type="button" onclick="openCategoryFocus('ppu')">🔹 Fokus PU</button>
+                <button class="search-btn" type="button" onclick="openCategoryFocus('pk')">🔹 Fokus PK</button>
+                <button class="search-btn" type="button" onclick="openCategoryFocus('indo')">🔹 Fokus Literasi</button>
+            </div>
+        </section>
+
+        <div class="result-bar" id="resultBar">
+            <div class="result-text" id="resultText">Menampilkan semua materi.</div>
+            <div class="result-text" id="resultCount">0 materi terlihat</div>
+        </div>
+
+        <section class="focus-panel" aria-label="Fokus materi SNBT 2026">
+            <div class="focus-title">🔹 Fokus Materi SNBT 2026 per Menu</div>
+            <div class="focus-sub">Disusun dari pola pembahasan dan tren fokus 2025 agar kamu bisa memprioritaskan materi yang paling sering menguji nalar, interpretasi, dan kecepatan analisis.</div>
+            <div class="focus-grid">
+                <button class="focus-card" type="button" onclick="openCategoryFocus('ppu')">
+                    <div class="focus-card-head"><span class="focus-card-title">🔹 Penalaran Umum</span><span>?</span></div>
+                    <p>Prioritaskan asumsi, evaluasi argumen, validitas data, dan sebab-akibat.</p>
+                    <div class="focus-chip-row"><span class="focus-chip">Asumsi</span><span class="focus-chip">Inferensi</span><span class="focus-chip">Data</span></div>
+                </button>
+                <button class="focus-card" type="button" onclick="openCategoryFocus('pbm')">
+                    <div class="focus-card-head"><span class="focus-card-title">🔹 Penalaran Matematika</span><span>?</span></div>
+                    <p>Fungsi, optimasi, statistika, dan eksponen-logaritma tetap sangat layak diprioritaskan.</p>
+                    <div class="focus-chip-row"><span class="focus-chip">Fungsi</span><span class="focus-chip">Optimasi</span><span class="focus-chip">Eksponen</span></div>
+                </button>
+                <button class="focus-card" type="button" onclick="openCategoryFocus('pk')">
+                    <div class="focus-card-head"><span class="focus-card-title">🔹 Pengetahuan Kuantitatif</span><span>?</span></div>
+                    <p>Rasio, persen, grafik, laju kerja, dan konversi satuan sering jadi penentu skor cepat.</p>
+                    <div class="focus-chip-row"><span class="focus-chip">Rasio</span><span class="focus-chip">Grafik</span><span class="focus-chip">Laju</span></div>
+                </button>
+                <button class="focus-card" type="button" onclick="openCategoryFocus('indo')">
+                    <div class="focus-card-head"><span class="focus-card-title">📖 Literasi Indonesia</span><span>?</span></div>
+                    <p>Fokus pada ide pokok, simpulan, makna tersirat, parafrase, dan argumen.</p>
+                    <div class="focus-chip-row"><span class="focus-chip">Ide Pokok</span><span class="focus-chip">Inferensi</span><span class="focus-chip">Parafrase</span></div>
+                </button>
+                <button class="focus-card" type="button" onclick="openCategoryFocus('eng')">
+                    <div class="focus-card-head"><span class="focus-card-title">📖 Literasi Inggris</span><span>?</span></div>
+                    <p>Main idea, reference, tone, purpose, dan paraphrase masih jadi fokus utama.</p>
+                    <div class="focus-chip-row"><span class="focus-chip">Reference</span><span class="focus-chip">Tone</span><span class="focus-chip">Main Idea</span></div>
+                </button>
+            </div>
+        </section>
+
+        <div class="recent-wrap" id="recentWrap">
+            <div class="recent-title">Terakhir Dibuka</div>
+            <div class="recent-list" id="recentList"></div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content" id="content">
+            <div class="empty-state" id="emptyState">Tidak ada materi yang cocok dengan filter atau kata kunci saat ini.</div>
+
+            <!-- PENALARAN UMUM -->
+            <div class="section-block sec-ppu" data-cat="ppu">
+                <div class="sec-head">
+                    <div class="sec-icon-wrap">🔹</div>
+                    <div class="sec-head-info">
+                        <div class="sec-title">Penalaran Umum (PU)</div>
+                        <div class="sec-sub">Tes kemampuan berpikir logis, analitis & kritis</div>
+                    </div>
+                    <div class="sec-line"></div>
+                    <div class="sec-count">8 Materi</div>
+                </div>
+                <div class="grid">
+                    <a href="lib-penalaran-logis.html" class="card" data-cat="ppu"><span class="cat-badge badge-ppu">?
+                            PU</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Dasar</div>
+                        <div class="card-title">Penalaran Logis (Logika Formal)</div>
+                        <div class="card-desc">Kuasai silogisme, premis & kesimpulan, penalaran deduktif-induktif
+                            sebagai dasar berpikir logis.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 12 Topik</div>
+                            <div class="cstat">🔹 3 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-penalaran-analitis.html" class="card" data-cat="ppu"><span
+                            class="cat-badge badge-ppu">? PU</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Menengah</div>
+                        <div class="card-title">Penalaran Analitis</div>
+                        <div class="card-desc">Pelajari cara menganalisis data tabel, grafik, diagram, dan menarik
+                            kesimpulan dari informasi kompleks.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 10 Topik</div>
+                            <div class="cstat">🔹 2.5 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-penalaran-keruangan.html" class="card" data-cat="ppu"><span
+                            class="cat-badge badge-ppu">? PU</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Menengah</div>
+                        <div class="card-title">Penalaran Figural & Keruangan</div>
+                        <div class="card-desc">Latih kemampuan spasial: pola gambar, rotasi, pencerminan, dan melipat
+                            bangun ruang.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 8 Topik</div>
+                            <div class="cstat">🔹 2 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-penalaran-induktif.html" class="card" data-cat="ppu"><span
+                            class="cat-badge badge-ppu">? PU</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Lanjutan</div>
+                        <div class="card-title">Penalaran Induktif & Deduktif</div>
+                        <div class="card-desc">Pahami perbedaan dan penerapan penalaran induktif vs deduktif dalam
+                            soal-soal SNBT.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 10 Topik</div>
+                            <div class="cstat">🔹 2.5 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-penalaran-kausal.html" class="card" data-cat="ppu"><span
+                            class="cat-badge badge-ppu">? PU</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Menengah</div>
+                        <div class="card-title">Penalaran Kausal & Sebab-Akibat</div>
+                        <div class="card-desc">Latih kemampuan membedakan korelasi dan kausalitas, menguji asumsi,
+                            serta menyusun argumen sebab-akibat yang valid.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 9 Topik</div>
+                            <div class="cstat">🔹 2.5 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-pu-strategi-logika.html" class="card" data-cat="ppu"><span
+                            class="cat-badge badge-ppu">? PU</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Lanjutan</div>
+                        <div class="card-title">Strategi Pemecahan Soal Logika</div>
+                        <div class="card-desc">Pelajari teknik cepat memecah soal penalaran umum: eliminasi opsi,
+                            pemetaan informasi, dan validasi kesimpulan di bawah tekanan waktu.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 10 Topik</div>
+                            <div class="cstat">🔹 3 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-asumsi-evaluasi-argumen.html" class="card" data-cat="ppu"><span
+                            class="cat-badge badge-ppu">? PU</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Lanjutan</div>
+                        <div class="card-title">Asumsi & Evaluasi Argumen</div>
+                        <div class="card-desc">Pelajari cara menemukan asumsi tersembunyi, menilai kekuatan bukti,
+                            menguji validitas data, serta memperkuat atau melemahkan argumen dengan pola soal yang tetap relevan di SNBT 2026.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 12 Topik</div>
+                            <div class="cstat">🔹 3 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-validitas-data-inferensi.html" class="card" data-cat="ppu"><span
+                            class="cat-badge badge-ppu">? PU</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Lanjutan</div>
+                        <div class="card-title">Validitas Data & Inferensi</div>
+                        <div class="card-desc">Pahami cara menilai kualitas data, mendeteksi sampel bias, dan menarik
+                            inferensi yang sah sesuai model penalaran berbasis data yang makin sering muncul pada SNBT 2025/2026.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 11 Topik</div>
+                            <div class="cstat">🔹 2.5 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- PENALARAN MATEMATIKA -->
+            <div class="section-block sec-pbm" data-cat="pbm">
+                <div class="sec-head">
+                    <div class="sec-icon-wrap">🔹</div>
+                    <div class="sec-head-info">
+                        <div class="sec-title">Penalaran Matematika (PM)</div>
+                        <div class="sec-sub">Kemampuan bernalar menggunakan konsep matematika</div>
+                    </div>
+                    <div class="sec-line"></div>
+                    <div class="sec-count">8 Materi</div>
+                </div>
+                <div class="grid">
+                    <a href="lib-aljabar.html" class="card" data-cat="pbm"><span class="cat-badge badge-pbm">?
+                            PM</span><span class="card-icon">?</span>
+                        <div class="card-level">Dasar</div>
+                        <div class="card-title">Aljabar & Persamaan</div>
+                        <div class="card-desc">Kuasai persamaan linear, kuadrat, sistem persamaan, pertidaksamaan, dan
+                            fungsi aljabar.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 15 Topik</div>
+                            <div class="cstat">🔹 4 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-geometri.html" class="card" data-cat="pbm"><span class="cat-badge badge-pbm">?
+                            PM</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Menengah</div>
+                        <div class="card-title">Geometri & Pengukuran</div>
+                        <div class="card-desc">Pelajari bangun datar, bangun ruang, koordinat, transformasi, dan
+                            aplikasi geometri.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 12 Topik</div>
+                            <div class="cstat">🔹 3.5 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-statistika.html" class="card" data-cat="pbm"><span class="cat-badge badge-pbm">?
+                            PM</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Menengah</div>
+                        <div class="card-title">Statistika & Peluang</div>
+                        <div class="card-desc">Mean, median, modus, simpangan baku, distribusi data, dan konsep peluang
+                            dasar hingga lanjut.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 10 Topik</div>
+                            <div class="cstat">🔹 3 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-aritmatika.html" class="card" data-cat="pbm"><span class="cat-badge badge-pbm">?
+                            PM</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Dasar</div>
+                        <div class="card-title">Aritmatika & Bilangan</div>
+                        <div class="card-desc">Pahami operasi bilangan, FPB, KPK, bilangan berpangkat, akar, dan
+                            barisan-deret.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 12 Topik</div>
+                            <div class="cstat">🔹 3 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-fungsi-kuadrat-optimasi.html" class="card" data-cat="pbm"><span class="cat-badge badge-pbm">?
+                            PM</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Menengah</div>
+                        <div class="card-title">Fungsi Kuadrat & Optimasi</div>
+                        <div class="card-desc">Pahami titik puncak, sumbu simetri, diskriminan, nilai maksimum-minimum,
+                            serta pemodelan optimasi kontekstual yang sering muncul di penalaran matematika SNBT 2026.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 12 Topik</div>
+                            <div class="cstat">🔹 3 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-eksponen-logaritma.html" class="card" data-cat="pbm"><span class="cat-badge badge-pbm">?
+                            PM</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Lanjutan</div>
+                        <div class="card-title">Eksponen, Logaritma & Pertumbuhan</div>
+                        <div class="card-desc">Materi lengkap untuk bentuk eksponen, logaritma, bunga majemuk, pertumbuhan,
+                            dan peluruhan yang relevan dengan pola PM SNBT 2025/2026.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 13 Topik</div>
+                            <div class="cstat">🔹 3.5 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- PENGETAHUAN KUANTITATIF -->
+            <div class="section-block sec-tps" data-cat="pk">
+                <div class="sec-head">
+                    <div class="sec-icon-wrap">🔹</div>
+                    <div class="sec-head-info">
+                        <div class="sec-title">Pengetahuan Kuantitatif (PK)</div>
+                        <div class="sec-sub">Penerapan konsep kuantitatif dalam konteks nyata</div>
+                    </div>
+                    <div class="sec-line"></div>
+                    <div class="sec-count">8 Materi</div>
+                </div>
+                <div class="grid">
+                    <a href="lib-pk-numerik.html" class="card" data-cat="pk"><span class="cat-badge badge-tps">?
+                            PK</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Dasar</div>
+                        <div class="card-title">Numerik & Komputasi</div>
+                        <div class="card-desc">Latih kecepatan dan akurasi operasi hitung: persen, rasio, proporsi, dan
+                            perbandingan.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 10 Topik</div>
+                            <div class="cstat">🔹 2.5 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-pk-tabel-grafik.html" class="card" data-cat="pk"><span class="cat-badge badge-tps">?
+                            PK</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Menengah</div>
+                        <div class="card-title">Interpretasi Tabel & Grafik</div>
+                        <div class="card-desc">Baca dan analisis data dari tabel, diagram batang, lingkaran, garis, dan
+                            scatter plot.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 8 Topik</div>
+                            <div class="cstat">🔹 2 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-pk-logika-kuantitatif.html" class="card" data-cat="pk"><span
+                            class="cat-badge badge-tps">? PK</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Lanjutan</div>
+                        <div class="card-title">Logika Kuantitatif</div>
+                        <div class="card-desc">Selesaikan soal perbandingan kuantitatif, pola bilangan, dan logika
+                            matematika terapan.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 10 Topik</div>
+                            <div class="cstat">🔹 3 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-pk-persen-bunga.html" class="card" data-cat="pk"><span
+                            class="cat-badge badge-tps">? PK</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Menengah</div>
+                        <div class="card-title">Persentase, Diskon & Bunga</div>
+                        <div class="card-desc">Pelajari strategi cepat menghitung persentase, untung-rugi, diskon
+                            bertingkat, bunga tunggal, hingga bunga majemuk.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 9 Topik</div>
+                            <div class="cstat">🔹 2.5 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-pk-kombinatorika-peluang.html" class="card" data-cat="pk"><span
+                            class="cat-badge badge-tps">? PK</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Lanjutan</div>
+                        <div class="card-title">Kombinatorika & Peluang Terapan</div>
+                        <div class="card-desc">Kuasai aturan pencacahan, permutasi, kombinasi, peluang kejadian
+                            majemuk, dan peluang bersyarat untuk soal HOTS.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 11 Topik</div>
+                            <div class="cstat">🔹 3 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-pk-rasio-proporsi.html" class="card" data-cat="pk"><span
+                            class="cat-badge badge-tps">? PK</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Dasar</div>
+                        <div class="card-title">Rasio, Proporsi & Skala</div>
+                        <div class="card-desc">Pelajari perbandingan senilai, berbalik nilai, pembagian berbanding, skala peta,
+                            kecepatan, debit, dan produktivitas dengan strategi hitung cepat yang relevan untuk 2026.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 11 Topik</div>
+                            <div class="cstat">🔹 2.5 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-pk-laju-kerja-konversi.html" class="card" data-cat="pk"><span
+                            class="cat-badge badge-tps">? PK</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Menengah</div>
+                        <div class="card-title">Laju Kerja, Debit & Konversi Satuan</div>
+                        <div class="card-desc">Kuasai soal pekerja, mesin, debit air, kecepatan, dan konversi satuan dengan
+                            pendekatan cepat yang sering dipakai pada konteks kuantitatif SNBT.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 12 Topik</div>
+                            <div class="cstat">🔹 3 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- LITERASI BAHASA INDONESIA -->
+            <div class="section-block sec-lit" data-cat="indo">
+                <div class="sec-head">
+                    <div class="sec-icon-wrap">🔹</div>
+                    <div class="sec-head-info">
+                        <div class="sec-title">Literasi Bahasa Indonesia</div>
+                        <div class="sec-sub">Kemampuan memahami, menganalisis & menyimpulkan teks</div>
+                    </div>
+                    <div class="sec-line"></div>
+                    <div class="sec-count">8 Materi</div>
+                </div>
+                <div class="grid">
+                    <a href="lib-memahami-teks.html" class="card" data-cat="indo"><span class="cat-badge badge-lit">?
+                            Literasi ID</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Dasar</div>
+                        <div class="card-title">Memahami Isi & Ide Pokok Teks</div>
+                        <div class="card-desc">Teknik menemukan gagasan utama, ide pokok, dan informasi
+                            tersurat-tersirat dalam bacaan.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 10 Topik</div>
+                            <div class="cstat">🔹 2.5 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-analisis-argumen.html" class="card" data-cat="indo"><span class="cat-badge badge-lit">?
+                            Literasi ID</span><span class="card-icon">🔹?</span>
+                        <div class="card-level">Menengah</div>
+                        <div class="card-title">Analisis Argumen & Opini</div>
+                        <div class="card-desc">Identifikasi fakta vs opini, validitas argumen, kelemahan penalaran, dan
+                            bias dalam teks.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 8 Topik</div>
+                            <div class="cstat">🔹 2 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-kalimat-efektif.html" class="card" data-cat="indo"><span class="cat-badge badge-lit">?
+                            Literasi ID</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Menengah</div>
+                        <div class="card-title">Kalimat Efektif & Kepaduan</div>
+                        <div class="card-desc">Pahami kaidah kalimat efektif, koherensi antar paragraf, dan kesejajaran
+                            dalam penulisan.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 10 Topik</div>
+                            <div class="cstat">🔹 2.5 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-ejaan-tanda-baca.html" class="card" data-cat="indo"><span class="cat-badge badge-lit">?
+                            Literasi ID</span><span class="card-icon">🔹?</span>
+                        <div class="card-level">Dasar</div>
+                        <div class="card-title">Ejaan, Tanda Baca & PUEBI</div>
+                        <div class="card-desc">Kuasai pedoman ejaan bahasa Indonesia, penggunaan tanda baca, dan
+                            penulisan kata baku.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 8 Topik</div>
+                            <div class="cstat">🔹 2 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-ringkasan-parafrase.html" class="card" data-cat="indo"><span class="cat-badge badge-lit">?
+                            Literasi ID</span><span class="card-icon">🔹?</span>
+                        <div class="card-level">Menengah</div>
+                        <div class="card-title">Ringkasan, Parafrase & Sintesis</div>
+                        <div class="card-desc">Pelajari teknik merangkum teks, memparafrase ide tanpa mengubah makna,
+                            menemukan ide pokok, dan menyatukan informasi dari beberapa paragraf secara efektif untuk soal literasi 2026.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 11 Topik</div>
+                            <div class="cstat">🔹 3 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-inferensi-simpulan-teks.html" class="card" data-cat="indo"><span class="cat-badge badge-lit">?
+                            Literasi ID</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Lanjutan</div>
+                        <div class="card-title">Inferensi, Simpulan & Makna Tersirat</div>
+                        <div class="card-desc">Belajar menarik simpulan logis, membaca makna implisit, dan mengenali sikap
+                            penulis dalam teks sesuai pola soal literasi SNBT 2025/2026.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 12 Topik</div>
+                            <div class="cstat">🔹 3 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- LITERASI BAHASA INGGRIS -->
+            <div class="section-block sec-eng" data-cat="eng">
+                <div class="sec-head">
+                    <div class="sec-icon-wrap">🔹</div>
+                    <div class="sec-head-info">
+                        <div class="sec-title">Literasi Bahasa Inggris</div>
+                        <div class="sec-sub">Reading comprehension & language skills</div>
+                    </div>
+                    <div class="sec-line"></div>
+                    <div class="sec-count">8 Materi</div>
+                </div>
+                <div class="grid">
+                    <a href="lib-reading-comprehension.html" class="card" data-cat="eng"><span
+                            class="cat-badge badge-eng">? Literasi EN</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Dasar</div>
+                        <div class="card-title">Reading Comprehension</div>
+                        <div class="card-desc">Strategi membaca cepat, scanning, skimming, dan menjawab soal pemahaman
+                            bacaan.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 12 Topik</div>
+                            <div class="cstat">🔹 3 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-vocabulary-context.html" class="card" data-cat="eng"><span
+                            class="cat-badge badge-eng">? Literasi EN</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Menengah</div>
+                        <div class="card-title">Vocabulary in Context</div>
+                        <div class="card-desc">Tebak makna kata dari konteks kalimat, sinonim, antonim, dan word
+                            formation.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 10 Topik</div>
+                            <div class="cstat">🔹 2.5 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-grammar-structure.html" class="card" data-cat="eng"><span class="cat-badge badge-eng">?
+                            Literasi EN</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Menengah</div>
+                        <div class="card-title">Grammar & Structure</div>
+                        <div class="card-desc">Tenses, subject-verb agreement, conditionals, passive voice, dan
+                            structure error analysis.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 14 Topik</div>
+                            <div class="cstat">🔹 3.5 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-inference-main-idea.html" class="card" data-cat="eng"><span
+                            class="cat-badge badge-eng">? Literasi EN</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Lanjutan</div>
+                        <div class="card-title">Inference & Main Idea</div>
+                        <div class="card-desc">Teknik menyimpulkan informasi tersirat, menentukan main idea, dan
+                            author's purpose.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 10 Topik</div>
+                            <div class="cstat">🔹 2.5 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-text-structure-reference.html" class="card" data-cat="eng"><span
+                            class="cat-badge badge-eng">? Literasi EN</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Menengah</div>
+                        <div class="card-title">Text Structure & Reference</div>
+                        <div class="card-desc">Pahami pola organisasi teks, reference words, cohesion, connector,
+                            dan strategi membaca cepat agar lebih akurat menjawab soal bacaan bahasa Inggris yang relevan di SNBT 2026.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 11 Topik</div>
+                            <div class="cstat">🔹 3 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+
+                    <a href="lib-author-tone-paraphrase.html" class="card" data-cat="eng"><span
+                            class="cat-badge badge-eng">? Literasi EN</span><span class="card-icon">🔹</span>
+                        <div class="card-level">Lanjutan</div>
+                        <div class="card-title">Author-s Tone, Purpose & Paraphrase</div>
+                        <div class="card-desc">Materi reading untuk memahami nada penulis, tujuan paragraf, dan teknik
+                            mencari paraphrase yang paling tepat sesuai tren soal English SNBT.</div>
+                        <div class="card-stats">
+                            <div class="cstat">🔹 12 Topik</div>
+                            <div class="cstat">🔹 3 Jam</div>
+                        </div><span class="card-cta">Baca Materi <span class="arr">?</span></span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+        <footer>- 2026 QuizNation - Library SNBT 2026. Semua hak dilindungi.</footer>
+    </main>
+
+    <script>
+        const sidebarEl = document.getElementById('sidebar');
+        const backdropEl = document.getElementById('backdrop');
+        const hamEl = document.getElementById('ham');
+        const searchInputEl = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearch');
+        const sortSelectEl = document.getElementById('sortSelect');
+        const favOnlyBtnEl = document.getElementById('favOnlyBtn');
+        const compactBtnEl = document.getElementById('compactBtn');
+        const randomBtnEl = document.getElementById('randomBtn');
+        const copyListBtnEl = document.getElementById('copyListBtn');
+        const resetPrefsBtnEl = document.getElementById('resetPrefsBtn');
+        const resultTextEl = document.getElementById('resultText');
+        const resultCountEl = document.getElementById('resultCount');
+        const emptyStateEl = document.getElementById('emptyState');
+        const recentWrapEl = document.getElementById('recentWrap');
+        const recentListEl = document.getElementById('recentList');
+        const sectionEls = Array.from(document.querySelectorAll('.section-block'));
+        const cardEls = Array.from(document.querySelectorAll('.card'));
+        const filterTabs = Array.from(document.querySelectorAll('.filter-tab'));
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        let currentFilter = localStorage.getItem('libraryFilter') || 'all';
+        let currentQuery = localStorage.getItem('librarySearch') || '';
+        let sortMode = localStorage.getItem('librarySort') || 'default';
+        let favoritesOnly = localStorage.getItem('libraryFavOnly') === '1';
+        let compactMode = localStorage.getItem('libraryCompact') === '1';
+        let favorites = JSON.parse(localStorage.getItem('libraryFavorites') || '[]');
+        let recentItems = JSON.parse(localStorage.getItem('libraryRecent') || '[]');
+
+        cardEls.forEach((card, index) => {
+            card.dataset.order = String(index);
+            const favBtn = document.createElement('button');
+            favBtn.className = 'card-fav';
+            favBtn.type = 'button';
+            favBtn.textContent = '?';
+            favBtn.setAttribute('aria-label', 'Toggle favorit');
+            const href = card.getAttribute('href') || '';
+            if (favorites.includes(href)) {
+                favBtn.classList.add('on');
+                favBtn.textContent = '?';
+            }
+
+            favBtn.addEventListener('click', (event) => {
+                event.preventDefault();
+                event.stopPropagation();
+                const i = favorites.indexOf(href);
+                if (i >= 0) {
+                    favorites.splice(i, 1);
+                    favBtn.classList.remove('on');
+                    favBtn.textContent = '?';
+                } else {
+                    favorites.push(href);
+                    favBtn.classList.add('on');
+                    favBtn.textContent = '?';
+                }
+                localStorage.setItem('libraryFavorites', JSON.stringify(favorites));
+                applyFilters();
+            });
+
+            card.appendChild(favBtn);
+
+            card.addEventListener('click', () => {
+                const title = card.querySelector('.card-title')?.textContent?.trim() || href;
+                recentItems = recentItems.filter((item) => item.href !== href);
+                recentItems.unshift({ href, title });
+                recentItems = recentItems.slice(0, 6);
+                localStorage.setItem('libraryRecent', JSON.stringify(recentItems));
+            });
+        });
+
+        function renderRecent() {
+            recentListEl.innerHTML = '';
+            if (!recentItems.length) {
+                recentWrapEl.style.display = 'none';
+                return;
+            }
+            recentWrapEl.style.display = 'block';
+            recentItems.forEach((item) => {
+                const a = document.createElement('a');
+                a.className = 'recent-chip';
+                a.href = item.href;
+                a.textContent = item.title;
+                recentListEl.appendChild(a);
+            });
+        }
+
+        function openCategoryFocus(category) {
+            currentFilter = category;
+            filterTabs.forEach((tab) => tab.classList.toggle('active', tab.dataset.filter === category));
+            applyFilters();
+            document.getElementById('content')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function setSidebarState(isOpen) {
+            sidebarEl.classList.toggle('on', isOpen);
+            backdropEl.classList.toggle('on', isOpen);
+            hamEl.classList.toggle('open', isOpen);
+            hamEl.setAttribute('aria-expanded', String(isOpen));
+            document.body.classList.toggle('nav-open', isOpen);
+        }
+
+        // Sidebar
+        function toggleSidebar(forceOpen) {
+            if (typeof forceOpen === 'boolean') {
+                setSidebarState(forceOpen);
+                return;
+            }
+            setSidebarState(!sidebarEl.classList.contains('on'));
+        }
+
+        // Theme
+        function toggleTheme() {
+            if (typeof window.__quizNationApplyGlobalPreferences === 'function') { window.__quizNationApplyGlobalPreferences(); }
+            document.body.classList.toggle('dark');
+            document.getElementById('themeToggle').classList.toggle('on');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        }
+        if (localStorage.getItem('theme') === 'dark') { document.body.classList.add('dark'); document.getElementById('themeToggle').classList.add('on') }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && sidebarEl.classList.contains('on')) {
+                toggleSidebar(false);
+            }
+        });
+
+        document.querySelectorAll('.sidebar .sb-item').forEach((item) => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 768) {
+                    toggleSidebar(false);
+                }
+            });
+        });
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                toggleSidebar(false);
+            }
+        });
+
+        // Clock
+        function updateClock() {
+            const now = new Date();
+            const h = String(now.getHours()).padStart(2, '0');
+            const m = String(now.getMinutes()).padStart(2, '0');
+            const s = String(now.getSeconds()).padStart(2, '0');
+            document.getElementById('clockTime').textContent = `${h}:${m}:${s}`;
+            const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            document.getElementById('clockDate').textContent = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
+            document.getElementById('clockDay').textContent = days[now.getDay()];
+        }
+        updateClock(); setInterval(updateClock, 1000);
+
+        // Count animation
+        document.querySelectorAll('.hstat-num').forEach(el => {
+            const target = parseFloat(el.dataset.count);
+            const isFloat = String(target).includes('.');
+            if (reduceMotion) {
+                el.textContent = isFloat ? target.toFixed(1) : target >= 1000 ? Math.round(target / 1000) + 'K' : Math.floor(target);
+                return;
+            }
+            let current = 0; const step = target / 40;
+            const interval = setInterval(() => {
+                current += step;
+                if (current >= target) { current = target; clearInterval(interval) }
+                el.textContent = isFloat ? current.toFixed(1) : target >= 1000 ? Math.round(current / 1000) + 'K' : Math.floor(current);
+            }, 40);
+        });
+
+        // Card reveal
+        if (reduceMotion) {
+            cardEls.forEach((card) => card.classList.add('visible'));
+        } else {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 80); observer.unobserve(e.target) } });
+            }, { threshold: 0.1 });
+            cardEls.forEach(c => observer.observe(c));
+        }
+
+        function updateSectionCounts() {
+            sectionEls.forEach((section) => {
+                const visibleCards = section.querySelectorAll('.card:not([hidden])').length;
+                const countEl = section.querySelector('.sec-count');
+                if (countEl) {
+                    countEl.textContent = `${visibleCards} Materi`;
+                }
+            });
+        }
+
+        function applyFilters() {
+            const query = currentQuery.toLowerCase().trim();
+            let visibleCards = 0;
+
+            sectionEls.forEach((section) => {
+                const categoryMatch = currentFilter === 'all' || section.dataset.cat === currentFilter;
+                let sectionVisibleCards = 0;
+                const gridEl = section.querySelector('.grid');
+                const cardsInSection = Array.from(section.querySelectorAll('.card'));
+
+                const sorted = cardsInSection.slice().sort((a, b) => {
+                    if (sortMode === 'az') {
+                        return (a.querySelector('.card-title')?.textContent || '').localeCompare(b.querySelector('.card-title')?.textContent || '', 'id');
+                    }
+                    if (sortMode === 'za') {
+                        return (b.querySelector('.card-title')?.textContent || '').localeCompare(a.querySelector('.card-title')?.textContent || '', 'id');
+                    }
+                    if (sortMode === 'level') {
+                        const map = { 'Dasar': 1, 'Menengah': 2, 'Lanjutan': 3 };
+                        const la = map[(a.querySelector('.card-level')?.textContent || '').trim()] || 99;
+                        const lb = map[(b.querySelector('.card-level')?.textContent || '').trim()] || 99;
+                        return la - lb;
+                    }
+                    if (sortMode === 'duration') {
+                        const pa = parseFloat((a.textContent.match(/(\d+(?:\.\d+)?)\s*Jam/i) || [0, 99])[1]);
+                        const pb = parseFloat((b.textContent.match(/(\d+(?:\.\d+)?)\s*Jam/i) || [0, 99])[1]);
+                        return pa - pb;
+                    }
+                    return Number(a.dataset.order) - Number(b.dataset.order);
+                });
+
+                sorted.forEach((card) => gridEl.appendChild(card));
+
+                cardsInSection.forEach((card) => {
+                    const haystack = card.textContent.toLowerCase();
+                    const queryMatch = !query || haystack.includes(query);
+                    const href = card.getAttribute('href') || '';
+                    const favMatch = !favoritesOnly || favorites.includes(href);
+                    const showCard = categoryMatch && queryMatch && favMatch;
+                    card.hidden = !showCard;
+                    if (showCard) {
+                        sectionVisibleCards += 1;
+                        visibleCards += 1;
+                    }
+                });
+
+                section.style.display = sectionVisibleCards > 0 ? '' : 'none';
+            });
+
+            const categoryLabel = currentFilter === 'all'
+                ? 'semua kategori'
+                : (filterTabs.find((tab) => tab.dataset.filter === currentFilter)?.textContent || currentFilter);
+            resultTextEl.textContent = query
+                ? `Filter: ${categoryLabel} - Pencarian: "${currentQuery}" - fokus tren 2026`
+                : `Filter: ${categoryLabel} - fokus tren 2026`;
+            const favCount = favorites.length;
+            resultCountEl.textContent = `${visibleCards} materi terlihat - ${favCount} favorit`;
+            emptyStateEl.style.display = visibleCards === 0 ? 'block' : 'none';
+
+            updateSectionCounts();
+            localStorage.setItem('libraryFilter', currentFilter);
+            localStorage.setItem('librarySearch', currentQuery);
+            localStorage.setItem('librarySort', sortMode);
+            localStorage.setItem('libraryFavOnly', favoritesOnly ? '1' : '0');
+        }
+
+        filterTabs.forEach((tab) => {
+            if (tab.dataset.filter === currentFilter) {
+                tab.classList.add('active');
+            } else {
+                tab.classList.remove('active');
+            }
+            tab.addEventListener('click', () => {
+                filterTabs.forEach((t) => t.classList.remove('active'));
+                tab.classList.add('active');
+                currentFilter = tab.dataset.filter;
+                applyFilters();
+            });
+        });
+
+        searchInputEl.value = currentQuery;
+        let searchTimer;
+        searchInputEl.addEventListener('input', () => {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => {
+                currentQuery = searchInputEl.value;
+                applyFilters();
+            }, 150);
+        });
+
+        searchInputEl.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter') {
+                const firstVisible = document.querySelector('.card:not([hidden])');
+                if (firstVisible) {
+                    firstVisible.click();
+                }
+            }
+        });
+
+        clearSearchBtn.addEventListener('click', () => {
+            searchInputEl.value = '';
+            currentQuery = '';
+            applyFilters();
+            searchInputEl.focus();
+        });
+
+        sortSelectEl.value = sortMode;
+        sortSelectEl.addEventListener('change', () => {
+            sortMode = sortSelectEl.value;
+            applyFilters();
+        });
+
+        function syncFavOnlyBtn() {
+            favOnlyBtnEl.textContent = `Favorit Saja: ${favoritesOnly ? 'ON' : 'OFF'}`;
+        }
+
+        favOnlyBtnEl.addEventListener('click', () => {
+            favoritesOnly = !favoritesOnly;
+            syncFavOnlyBtn();
+            applyFilters();
+        });
+
+        function syncCompactBtn() {
+            compactBtnEl.textContent = `Mode Compact: ${compactMode ? 'ON' : 'OFF'}`;
+            document.body.classList.toggle('compact-cards', compactMode);
+            localStorage.setItem('libraryCompact', compactMode ? '1' : '0');
+        }
+
+        compactBtnEl.addEventListener('click', () => {
+            compactMode = !compactMode;
+            syncCompactBtn();
+        });
+
+        randomBtnEl.addEventListener('click', () => {
+            const visible = Array.from(document.querySelectorAll('.card:not([hidden])'));
+            if (!visible.length) return;
+            const picked = visible[Math.floor(Math.random() * visible.length)];
+            window.location.href = picked.getAttribute('href');
+        });
+
+        copyListBtnEl.addEventListener('click', async () => {
+            const visible = Array.from(document.querySelectorAll('.card:not([hidden]) .card-title')).map((el) => `- ${el.textContent.trim()}`);
+            if (!visible.length) return;
+            const text = `Daftar materi terlihat:\n${visible.join('\n')}`;
+            try {
+                await navigator.clipboard.writeText(text);
+                resultTextEl.textContent = 'Daftar materi berhasil disalin.';
+            } catch {
+                resultTextEl.textContent = 'Gagal menyalin otomatis. Coba izin clipboard browser.';
+            }
+        });
+
+        resetPrefsBtnEl.addEventListener('click', () => {
+            currentFilter = 'all';
+            currentQuery = '';
+            sortMode = 'default';
+            favoritesOnly = false;
+            compactMode = false;
+            searchInputEl.value = '';
+            sortSelectEl.value = 'default';
+            filterTabs.forEach((t) => t.classList.toggle('active', t.dataset.filter === 'all'));
+            syncFavOnlyBtn();
+            syncCompactBtn();
+            applyFilters();
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === '/' && document.activeElement !== searchInputEl) {
+                event.preventDefault();
+                searchInputEl.focus();
+            }
+            if (event.key.toLowerCase() === 'r' && event.altKey) {
+                event.preventDefault();
+                randomBtnEl.click();
+            }
+        });
+
+        syncFavOnlyBtn();
+        syncCompactBtn();
+        renderRecent();
+        applyFilters();
+
+        // Scroll top
+        window.addEventListener('scroll', () => {
+            document.getElementById('scroll-top').classList.toggle('show', window.scrollY > 400);
+        });
+
+        document.getElementById('scroll-top').addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+
+        // BG Canvas
+        const canvas = document.getElementById('bg-canvas');
+        const perfState = window.__QUIZNATION_PERF__ || {};
+        if (canvas) {
+            if (perfState.disableDecorations && (perfState.isAndroid || perfState.isTouchDevice || perfState.isSmallScreen)) {
+                canvas.style.display = 'none';
+            } else {
+                const ctx = canvas.getContext('2d');
+                let w, h, particles = [];
+                function resize() { w = canvas.width = innerWidth; h = canvas.height = innerHeight }
+                resize(); window.addEventListener('resize', resize);
+                for (let i = 0; i < 50; i++) { particles.push({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 2 + 1, dx: (Math.random() - .5) * .5, dy: (Math.random() - .5) * .5, o: Math.random() * .5 + .1 }) }
+                function drawBG() {
+                    ctx.clearRect(0, 0, w, h);
+                    particles.forEach(p => {
+                        ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                        ctx.fillStyle = `rgba(124,58,237,${p.o})`; ctx.fill();
+                        p.x += p.dx; p.y += p.dy;
+                        if (p.x < 0 || p.x > w) p.dx *= -1;
+                        if (p.y < 0 || p.y > h) p.dy *= -1;
+                    });
+                    requestAnimationFrame(drawBG);
+                }
+                drawBG();
+            }
+        }
+    </script>
+</body>
+
+</html>
+
+

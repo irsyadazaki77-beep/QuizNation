@@ -1,0 +1,610 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Aljabar & Persamaan - Library SNBT 2025</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Mobile Optimization */
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --accent: #2563eb;
+            --accent2: #06b6d4;
+            --bg: #f0f2f8;
+            --surface: rgba(255, 255, 255, 0.72);
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #1a1a2e;
+            --text2: #4b5563;
+            --text3: #9ca3af;
+            --glow: rgba(124, 58, 237, 0.18);
+            --radius: 20px
+        }
+
+        body.dark {
+            --bg: #050a15;
+            --surface: rgba(255, 255, 255, 0.055);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #f0edff;
+            --text2: rgba(240, 237, 255, 0.65);
+            --text3: rgba(240, 237, 255, 0.35);
+            --glow: rgba(124, 58, 237, 0.28)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: .35
+        }
+
+        /* Top Nav */
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            gap: 16px
+        }
+
+        .topnav a {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .2s
+        }
+
+        .topnav a:hover {
+            gap: 10px
+        }
+
+        .topnav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-left: auto
+        }
+
+        .theme-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: grid;
+            place-items: center;
+            transition: all .2s;
+            margin-left: 8px
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent)
+        }
+
+        /* Content */
+        .wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px 80px;
+            position: relative;
+            z-index: 1
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(251, 146, 60, .12);
+            color: #f59e0b;
+            border: 1px solid rgba(251, 146, 60, .25);
+            border-radius: 30px;
+            padding: 5px 14px;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.15;
+            margin-bottom: 14px
+        }
+
+        .page-title .grad {
+            background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .page-desc {
+            font-size: 1.05rem;
+            color: var(--text2);
+            line-height: 1.8;
+            margin-bottom: 40px;
+            max-width: 700px
+        }
+
+        /* TOC */
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 40px
+        }
+
+        .toc-title {
+            font-weight: 800;
+            font-size: .9rem;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .toc ol {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px
+        }
+
+        .toc li {
+            color: var(--text2);
+            font-size: .95rem;
+            font-weight: 500;
+        }
+
+        .toc a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: color .2s
+        }
+
+        .toc a:hover {
+            color: var(--accent2);
+            text-decoration: underline;
+        }
+
+        /* Sections */
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: all .3s
+        }
+
+        .section:hover {
+            box-shadow: 0 10px 40px var(--glow);
+            border-color: rgba(124, 58, 237, .2)
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 24px 0 10px
+        }
+
+        .section p,
+        .section li {
+            font-size: .95rem;
+            color: var(--text2);
+            line-height: 1.85
+        }
+
+        .section ul,
+        .section ol {
+            padding-left: 24px;
+            margin: 12px 0
+        }
+
+        .section li {
+            margin-bottom: 8px
+        }
+
+        /* Formula Box */
+        .formula {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 16px 0;
+            text-align: center;
+            font-family: 'DM Mono', monospace;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--accent);
+            box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Example Box */
+        .example {
+            background: rgba(124, 58, 237, .06);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 20px 0;
+            font-size: .9rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .example strong {
+            color: var(--accent);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* Tip Box */
+        .tip {
+            background: rgba(6, 182, 212, .08);
+            border-left: 4px solid var(--accent2);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 20px 0;
+            font-size: .9rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .tip strong {
+            color: var(--accent2);
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* Warning */
+        .warning {
+            background: rgba(244, 63, 94, .08);
+            border-left: 4px solid #f43f5e;
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 20px 0;
+            font-size: .9rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .warning strong {
+            color: #f43f5e;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        /* Nav buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 14px;
+            margin-top: 40px;
+            flex-wrap: wrap
+        }
+
+        .nav-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all .3s
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px var(--glow);
+            transform: translateY(-2px)
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, .4)
+        }
+
+        .nav-btn.primary:hover {
+            box-shadow: 0 8px 28px rgba(124, 58, 237, .5);
+            transform: translateY(-3px)
+        }
+
+        .nav-btn-label {
+            font-size: .7rem;
+            color: var(--text3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .nav-btn.primary .nav-btn-label {
+            color: rgba(255, 255, 255, .7)
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text3);
+            font-size: .8rem;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px
+        }
+
+        @media(max-width:768px) {
+            .topnav {
+                padding: 14px 16px
+            }
+
+            .wrapper {
+                padding: 24px 16px 60px
+            }
+
+            .section {
+                padding: 20px
+            }
+
+            .nav-buttons {
+                flex-direction: column
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">? Kembali</a>
+        <span class="topnav-title">Aljabar & Persamaan</span>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">Penalaran Matematika SNBT</div>
+        <h1 class="page-title">Aljabar & <span class="grad">Persamaan</span></h1>
+        <p class="page-desc">Aljabar adalah fondasi utama dalam soal Pengetahuan Kuantitatif dan Penalaran Matematika
+            SNBT. Kuasai eksponen, persamaan kuadrat, sistem persamaan, hingga fungsi komposisi di modul ini.</p>
+
+        <div class="toc">
+            <div class="toc-title">📑 Daftar Isi</div>
+            <ol>
+                <li><a href="#eksponen">Eksponen & Bentuk Akar</a></li>
+                <li><a href="#linear">Persamaan Linear (PLSV)</a></li>
+                <li><a href="#kuadrat">Persamaan & Fungsi Kuadrat</a></li>
+                <li><a href="#sistem">Sistem Persamaan (SPLDV & SPLTV)</a></li>
+                <li><a href="#pertidaksamaan">Pertidaksamaan & Garis Bilangan</a></li>
+                <li><a href="#fungsi">Fungsi Komposisi & Invers</a></li>
+                <li><a href="#tips">Strategi Menjawab SNBT</a></li>
+            </ol>
+        </div>
+
+        <div class="section" id="eksponen">
+            <h2>🔹 1. Eksponen & Bentuk Akar</h2>
+            <p>Materi ini hampir dipastikan keluar setiap tahun di SNBT. Kuncinya adalah menyamakan basis bilangan
+                dasar.</p>
+            <h3>Sifat Penting Eksponen:</h3>
+            <ul>
+                <li>Perkalian: <code>a<sup>m</sup> &times; a<sup>n</sup> = a<sup>m+n</sup></code></li>
+                <li>Pembagian: <code>a<sup>m</sup> / a<sup>n</sup> = a<sup>m-n</sup></code></li>
+                <li>Pangkat Berpangkat: <code>(a<sup>m</sup>)<sup>n</sup> = a<sup>m&times;n</sup></code></li>
+                <li>Pangkat Negatif: <code>a<sup>-n</sup> = 1 / a<sup>n</sup></code></li>
+            </ul>
+            <div class="example">
+                <strong>Contoh Soal:</strong><br>
+                Jika 2<sup>3x-1</sup> = 32, berapakah nilai x?<br><br>
+                <strong>Pembahasan:</strong><br>
+                Samakan basis kiri dan kanan (32 adalah 2<sup>5</sup>):<br>
+                2<sup>3x-1</sup> = 2<sup>5</sup><br>
+                Karena basis sudah sama, kita samakan pangkatnya:<br>
+                3x - 1 = 5 &rarr; 3x = 6 &rarr; <strong>x = 2</strong>
+            </div>
+        </div>
+
+        <div class="section" id="linear">
+            <h2>🔹 2. Persamaan Linear (PLSV)</h2>
+            <p>Persamaan linear ditandai dengan variabel berpangkat tertinggi 1. Pada SNBT, materi ini sering
+                disembunyikan dalam bentuk soal cerita kehidupan sehari-hari (model matematika).</p>
+            <ul>
+                <li><strong>Cara Penyelesaian:</strong> Kumpulkan variabel (x) di satu ruas (misal kiri), dan angka
+                    konstanta di ruas lainnya (kanan).</li>
+            </ul>
+            <div class="example">
+                <strong>Contoh Soal Model Matematika:</strong><br>
+                Usia ayah saat ini 3 kali usia anaknya. Lima tahun yang lalu, usia ayah 4 kali usia anaknya. Berapa usia
+                anak saat ini?<br><br>
+                <strong>Pembahasan:</strong><br>
+                Misal Anak = x, Ayah = 3x.<br>
+                Lima tahun lalu: (3x - 5) = 4(x - 5)<br>
+                3x - 5 = 4x - 20<br>
+                20 - 5 = 4x - 3x &rarr; <strong>x = 15</strong>. Jadi usia anak saat ini 15 tahun.
+            </div>
+        </div>
+
+        <div class="section" id="kuadrat">
+            <h2>🔹 3. Persamaan & Fungsi Kuadrat</h2>
+            <p>Bentuk umumnya adalah <code>ax<sup>2</sup> + bx + c = 0</code>. Kamu tidak perlu selalu memfaktorkan,
+                pahami sifat akar-akarnya!</p>
+
+            <h3>Sifat Akar-akar Persamaan (x<sub>1</sub> dan x<sub>2</sub>):</h3>
+            <div class="formula">
+                Penjumlahan Akar: x<sub>1</sub> + x<sub>2</sub> = -b / a<br>
+                Perkalian Akar: x<sub>1</sub> &times; x<sub>2</sub> = c / a
+            </div>
+
+            <h3>Diskriminan (D):</h3>
+            <p>Diskriminan menentukan jenis akar, dihitung dengan rumus <code>D = b<sup>2</sup> - 4ac</code>.</p>
+            <ul>
+                <li><strong>D &gt; 0 :</strong> Memiliki 2 akar real yang berbeda (Kurva memotong sumbu X di 2 titik).
+                </li>
+                <li><strong>D = 0 :</strong> Memiliki 1 akar kembar (Kurva menyinggung sumbu X).</li>
+                <li><strong>D &lt; 0 :</strong> Tidak memiliki akar real / Imajiner (Kurva melayang di atas/bawah sumbu
+                    X).</li>
+            </ul>
+            <div class="tip">
+                <strong>🔹 Tip Menjawab:</strong><br>
+                Jika soal SNBT menanyakan "Berapakah nilai minimum fungsi kuadrat?", gunakan rumus titik puncak y:
+                <strong>y = -D / 4a</strong>.
+            </div>
+        </div>
+
+        <div class="section" id="sistem">
+            <h2>🔹 4. Sistem Persamaan (SPLDV & SPLTV)</h2>
+            <p>Menyelesaikan dua atau tiga variabel yang saling terkait. Metode utamanya adalah
+                <strong>Eliminasi</strong> (menghilangkan salah satu variabel) dan <strong>Substitusi</strong>
+                (mengganti nilai variabel).
+            </p>
+            <div class="tip">
+                <strong>🔹 Trik Curang SNBT:</strong><br>
+                Seringkali soal SPLTV (3 variabel) tidak meminta kamu mencari x, y, dan z satu per satu. <br>
+                Misal ditanya: x + y + z = ?<br>
+                Coba jumlahkan atau kurangkan semua persamaan yang ada ke bawah sekaligus! Biasanya hasilnya langsung
+                terbentuk.
+            </div>
+        </div>
+
+        <div class="section" id="pertidaksamaan">
+            <h2>🔹 5. Pertidaksamaan & Garis Bilangan</h2>
+            <p>Menyelesaikan pertidaksamaan sedikit berbeda dengan persamaan. Tanda yang digunakan adalah
+                <code>&gt;, &lt;, &ge;, &le;</code>.
+            </p>
+            <div class="warning">
+                <strong>🔹 Aturan Emas Pertidaksamaan:</strong><br>
+                Jika kamu mengalikan atau membagi kedua ruas dengan bilangan <b>negatif</b>, maka arah tanda
+                ketidaksamaan <b>WAJIB DIBALIK</b>!<br>
+                Contoh: -2x &lt; 6 &rarr; x &gt; -3
+            </div>
+            <h3>Pertidaksamaan Kuadrat / Rasional:</h3>
+            <ol>
+                <li>Jadikan ruas kanan sama dengan Nol (0).</li>
+                <li>Faktorkan ruas kiri untuk mencari "Nilai Pembuat Nol".</li>
+                <li>Buat <strong>Garis Bilangan</strong> dan uji titik (plus-minus-plus) untuk menentukan daerah
+                    penyelesaian.</li>
+            </ol>
+        </div>
+
+        <div class="section" id="fungsi">
+            <h2>🔹 6. Fungsi Komposisi & Invers</h2>
+            <p>Materi ini menguji logika substitusimu. Ingat bahwa komposisi fungsi dibaca dari belakang.</p>
+            <ul>
+                <li><strong>Komposisi:</strong> <code>(f &#8728; g)(x) = f(g(x))</code> &rarr; Masukkan fungsi g(x) ke
+                    dalam huruf x milik fungsi f.</li>
+                <li><strong>Invers (Kebalikan):</strong> <code>f<sup>-1</sup>(x)</code> &rarr; Cara cepat bentuk
+                    pecahan: Jika <code>f(x) = (ax+b)/(cx+d)</code>, maka
+                    <code>f<sup>-1</sup>(x) = (-dx+b)/(cx-a)</code> (Tukar posisi <b>a</b> dan <b>d</b> lalu kalikan
+                    minus).
+                </li>
+            </ul>
+        </div>
+
+        <div class="section" id="tips">
+            <h2>🔹 7. Strategi Menjawab SNBT Aljabar</h2>
+            <ul>
+                <li><strong>Uji Pilihan Jawaban (Plugging In):</strong> Jika kamu mentok dengan aljabarnya, ambil angka
+                    dari opsi jawaban A, B, C, D, E lalu masukkan (substitusikan) ke dalam soal. Mana yang sesuai, itu
+                    jawabannya!</li>
+                <li><strong>Gunakan Angka Permisalan:</strong> Untuk soal yang bentuknya murni variabel (misal "Berapa
+                    x/y jika..."), coba ganti x dan y dengan angka kecil yang mudah dihitung seperti 1, 2, atau 3.</li>
+                <li><strong>Latih Kecepatan Memfaktorkan:</strong> Jangan bergantung pada Rumus ABC. Kemampuan
+                    memfaktorkan bentuk kuadrat secara mental akan menghemat waktumu hingga 1 menit per soal.</li>
+            </ul>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="library.html" class="nav-btn">
+                <div>
+                    <div class="nav-btn-label">? Kembali</div>Library SNBT
+                </div>
+            </a>
+            <a href="lib-geometri.html" class="nav-btn primary">
+                <div>
+                    <div class="nav-btn-label">Materi Selanjutnya &rarr;</div>Geometri & Pengukuran
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>- 2026 QuizNation - Library SNBT 2026</footer>
+    <script>if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark')</script>
+</body>
+
+</html>

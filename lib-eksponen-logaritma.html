@@ -1,0 +1,173 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Eksponen, Logaritma & Pertumbuhan - Library SNBT 2026</title>
+    <meta name="description" content="Materi lengkap eksponen, logaritma, dan pertumbuhan untuk penalaran matematika SNBT 2026, berdasarkan tipe soal yang umum pada referensi 2025/2026.">
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        html, body { max-width: 100%; overflow-x: hidden; }
+        * { -webkit-tap-highlight-color: transparent !important; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --accent:#2563eb; --accent2:#06b6d4; --bg:#f0f2f8; --surface:rgba(255,255,255,.72); --border:rgba(0,0,0,.08); --text:#1a1a2e; --text2:#4b5563; --text3:#9ca3af; --radius:20px; }
+        body.dark { --bg:#050a15; --surface:rgba(255,255,255,.055); --border:rgba(255,255,255,.09); --text:#f0edff; --text2:rgba(240,237,255,.68); --text3:rgba(240,237,255,.36); }
+        body { font-family:'Bricolage Grotesque',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; transition:background .3s,color .3s; }
+        .noise-overlay { position:fixed; inset:0; z-index:0; opacity:.35; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); }
+        .topnav { position:sticky; top:0; z-index:10; display:flex; align-items:center; gap:14px; padding:16px 20px; background:var(--surface); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); }
+        .topnav a { text-decoration:none; color:var(--accent); font-weight:800; }
+        .topnav-title { margin-left:auto; font-family:'Playfair Display',serif; font-weight:700; }
+        .theme-btn { width:36px; height:36px; border-radius:10px; border:1px solid var(--border); background:var(--surface); cursor:pointer; }
+        .wrapper { max-width:920px; margin:0 auto; padding:34px 18px 70px; position:relative; z-index:1; }
+        .hero-badge { display:inline-flex; padding:6px 14px; border-radius:999px; background:rgba(168,85,247,.12); color:#3b82f6; border:1px solid rgba(168,85,247,.24); font-size:.74rem; font-weight:800; margin-bottom:14px; }
+        .page-title { font-family:'Playfair Display',serif; font-size:clamp(2rem,4vw,3rem); line-height:1.15; margin-bottom:12px; }
+        .page-title .grad { background:linear-gradient(135deg,var(--accent),#60a5fa,var(--accent2)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+        .page-desc { color:var(--text2); line-height:1.85; margin-bottom:26px; }
+        .toc, .section { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); }
+        .toc { padding:22px 24px; margin-bottom:24px; }
+        .toc-title { font-weight:800; margin-bottom:10px; }
+        .toc ol { padding-left:20px; display:grid; gap:6px; color:var(--text2); }
+        .toc a { color:var(--accent); text-decoration:none; font-weight:700; }
+        .section { padding:24px; margin-bottom:18px; }
+        .section h2 { font-family:'Playfair Display',serif; margin-bottom:12px; font-size:1.45rem; }
+        .section h3 { color:var(--accent); margin:16px 0 8px; font-size:1.02rem; }
+        .section p, .section li { color:var(--text2); line-height:1.85; font-size:.95rem; }
+        .section ul, .section ol { padding-left:20px; margin:10px 0; }
+        .example, .tip, .warning { padding:14px 16px; border-radius:12px; margin:14px 0; line-height:1.75; font-size:.9rem; }
+        .example { background:rgba(124,58,237,.07); border-left:3px solid var(--accent); }
+        .tip { background:rgba(6,182,212,.08); border-left:3px solid var(--accent2); }
+        .warning { background:rgba(244,63,94,.08); border-left:3px solid #f43f5e; }
+        .formula { font-family:'DM Mono',monospace; background:rgba(125,125,125,.10); padding:6px 10px; border-radius:10px; display:inline-block; margin:6px 0; }
+        .nav-buttons { display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; }
+        .nav-btn { flex:1 1 220px; padding:14px 16px; border-radius:14px; text-decoration:none; border:1px solid var(--border); background:var(--surface); color:var(--text); font-weight:800; }
+        .nav-btn.primary { color:#fff; border:none; background:linear-gradient(135deg,var(--accent),var(--accent2)); }
+        footer { text-align:center; color:var(--text3); padding:18px; margin-top:22px; border-top:1px solid var(--border); }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">? Kembali ke Library</a>
+        <span class="topnav-title">Eksponen, Logaritma & Pertumbuhan</span>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">Penalaran Matematika</div>
+        <h1 class="page-title">Eksponen, Logaritma & <span class="grad">Pertumbuhan</span></h1>
+        <p class="page-desc">Eksponen dan logaritma sering muncul pada soal penalaran matematika berbentuk penyederhanaan bentuk, perbandingan nilai, pertumbuhan-populasi, bunga majemuk, hingga model peluruhan. Mengacu pola soal 2025 dan prediksi 2026, topik ini tetap penting karena menguji kombinasi <strong>konsep, manipulasi aljabar, dan penalaran konteks</strong>.</p>
+
+        <div class="toc">
+            <div class="toc-title">📑 Daftar Isi</div>
+            <ol>
+                <li><a href="#aturan">Aturan inti eksponen</a></li>
+                <li><a href="#akar">Pangkat pecahan dan akar</a></li>
+                <li><a href="#log">Konsep logaritma</a></li>
+                <li><a href="#aplikasi">Aplikasi pertumbuhan dan peluruhan</a></li>
+                <li><a href="#strategi">Strategi cepat model SNBT</a></li>
+                <li><a href="#latihan">Latihan + pembahasan</a></li>
+            </ol>
+        </div>
+
+        <section class="section" id="aturan">
+            <h2>1. Aturan inti eksponen</h2>
+            <p>Eksponen menyatakan perkalian berulang. Beberapa aturan paling penting:</p>
+            <ul>
+                <li><span class="formula">a^m - a^n = a^(m+n)</span></li>
+                <li><span class="formula">a^m / a^n = a^(m-n)</span>, dengan <em>a ? 0</em></li>
+                <li><span class="formula">(a^m)^n = a^(mn)</span></li>
+                <li><span class="formula">(ab)^n = a^n b^n</span></li>
+                <li><span class="formula">a^0 = 1</span> untuk <em>a ? 0</em></li>
+                <li><span class="formula">a^-n = 1 / a^n</span></li>
+            </ul>
+            <div class="example"><strong>Contoh:</strong> <span class="formula">2^3 - 2^5 = 2^8 = 256</span>. Soal SNBT sering menyamarkan pola ini dalam bentuk pecahan atau akar.</div>
+        </section>
+
+        <section class="section" id="akar">
+            <h2>2. Pangkat pecahan dan bentuk akar</h2>
+            <p>Pangkat pecahan sebenarnya hanya cara lain menulis akar:</p>
+            <ul>
+                <li><span class="formula">a^(1/n) = nva</span></li>
+                <li><span class="formula">a^(m/n) = nv(a^m)</span></li>
+            </ul>
+            <p>Hubungan ini penting untuk menyederhanakan bentuk campuran, misalnya:</p>
+            <div class="example"><span class="formula">16^(3/4) = (2^4)^(3/4) = 2^3 = 8</span></div>
+            <div class="tip"><strong>Trik cepat:</strong> pecah bilangan menjadi basis prima lebih dulu. Misalnya 81 jadi <span class="formula">3^4</span>, 32 jadi <span class="formula">2^5</span>, 125 jadi <span class="formula">5^3</span>.</div>
+        </section>
+
+        <section class="section" id="log">
+            <h2>3. Konsep logaritma</h2>
+            <p>Logaritma adalah kebalikan dari eksponen. Jika <span class="formula">a^x = b</span>, maka <span class="formula">log_a b = x</span>.</p>
+            <h3>Sifat dasar yang harus hafal</h3>
+            <ul>
+                <li><span class="formula">log_a (MN) = log_a M + log_a N</span></li>
+                <li><span class="formula">log_a (M/N) = log_a M - log_a N</span></li>
+                <li><span class="formula">log_a (M^k) = k log_a M</span></li>
+                <li><span class="formula">log_a a = 1</span> dan <span class="formula">log_a 1 = 0</span></li>
+            </ul>
+            <div class="warning"><strong>Catatan:</strong> syarat logaritma adalah <em>a &gt; 0, a ? 1, dan M &gt; 0</em>. Pada soal pilihan ganda, syarat ini kadang menjadi sumber jebakan.</div>
+        </section>
+
+        <section class="section" id="aplikasi">
+            <h2>4. Aplikasi pertumbuhan dan peluruhan</h2>
+            <p>Soal kontekstual sering memakai model eksponen untuk pertumbuhan populasi, investasi, peluruhan zat radioaktif, atau penyusutan kapasitas.</p>
+            <ul>
+                <li><strong>Pertumbuhan:</strong> <span class="formula">N = N0(1+r)^t</span></li>
+                <li><strong>Peluruhan:</strong> <span class="formula">N = N0(1-r)^t</span> atau bentuk setengah umur.</li>
+                <li><strong>Bunga majemuk:</strong> nilai akhir terus berkembang berdasarkan hasil sebelumnya.</li>
+            </ul>
+            <div class="example"><strong>Contoh:</strong> uang Rp1.000.000 tumbuh 10% per tahun selama 2 tahun menjadi <span class="formula">1.000.000 - 1,1- = 1.210.000</span>.</div>
+            <p>Dalam SNBT, konteks ini kadang disatukan dengan grafik, tabel, atau perbandingan antar skenario.</p>
+        </section>
+
+        <section class="section" id="strategi">
+            <h2>5. Strategi cepat model SNBT 2025/2026</h2>
+            <ol>
+                <li>Ubah semua bilangan ke <strong>basis yang sama</strong> sebelum membandingkan.</li>
+                <li>Gunakan sifat eksponen dulu, jangan langsung menghitung angka besar.</li>
+                <li>Untuk logaritma, ubah ke bentuk eksponen bila lebih mudah dipahami.</li>
+                <li>Kalau soal konteks, identifikasi dulu apakah itu <em>pertumbuhan</em> atau <em>peluruhan</em>.</li>
+                <li>Periksa syarat domain pada soal logaritma dan akar.</li>
+            </ol>
+            <div class="tip"><strong>Mindset ujian:</strong> SNBT lebih suka menilai cara berpikir efisien daripada perhitungan panjang. Cari pola, sederhanakan basis, lalu simpulkan.</div>
+        </section>
+
+        <section class="section" id="latihan">
+            <h2>6. Latihan + pembahasan</h2>
+            <p><strong>Soal 1:</strong> Sederhanakan <span class="formula">(3- - 35) / 34</span>.</p>
+            <div class="example"><strong>Pembahasan:</strong> <span class="formula">3^(2+5-4) = 3- = 27</span>.</div>
+
+            <p><strong>Soal 2:</strong> Jika <span class="formula">log2 32 = x</span>, tentukan nilai <em>x</em>.</p>
+            <div class="example"><strong>Pembahasan:</strong> karena <span class="formula">2^5 = 32</span>, maka <span class="formula">x = 5</span>.</div>
+
+            <p><strong>Soal 3:</strong> Sebuah populasi bakteri bertambah 20% setiap jam. Jika mula-mula 500, berapa setelah 3 jam?</p>
+            <div class="example"><strong>Pembahasan:</strong> <span class="formula">500(1,2)^3 = 500 - 1,728 = 864</span>. Jadi jumlah bakteri menjadi <strong>864</strong>.</div>
+        </section>
+
+        <div class="nav-buttons">
+            <a class="nav-btn" href="library.html">? Kembali ke Library</a>
+            <a class="nav-btn primary" href="snbt.html?type=math">Lanjut ke Evaluasi Matematika ?</a>
+        </div>
+
+        <footer>- 2026 QuizNation - Materi Library SNBT 2026.</footer>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            if (typeof window.__quizNationApplyGlobalPreferences === 'function') { window.__quizNationApplyGlobalPreferences(); }
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        }
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+    </script>
+</body>
+
+</html>
+

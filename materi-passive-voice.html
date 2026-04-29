@@ -1,0 +1,1403 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Passive Voice - QuizNation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&display=swap"
+        rel="stylesheet">
+    <style>
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #f5f2f8;
+            --surface: #ffffff;
+            --surface2: #eee9f4;
+            --border: #ddd6e8;
+            --text: #1a1520;
+            --text2: #5a4868;
+            --text3: #9a88a8;
+            --ink: #1a1520;
+            --accent: #1d4ed8;
+            --accent-mid: #2563eb;
+            --accent-light: #dbeafe;
+            --accent-glow: rgba(109, 40, 217, 0.12);
+            --active: #0369a1;
+            --active-light: #e0f2fe;
+            --passive: #b45309;
+            --passive-light: #fef3c7;
+            --teal: #0f766e;
+            --teal-light: #ccfbf1;
+            --rose: #9f1239;
+            --rose-light: #ffe4e6;
+            --red: #b91c1c;
+            --red-light: #fee2e2;
+            --green: #166534;
+            --green-light: #dcfce7;
+            --sidebar-w: 260px;
+            --r: 20px;
+            --r-sm: 12px;
+            --shadow: 0 2px 20px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.09);
+        }
+
+        body.dark {
+            --bg: #0d0a12;
+            --surface: #0f172a;
+            --surface2: #0f172a;
+            --border: #1e293b;
+            --text: #f0eaf8;
+            --text2: #a898c0;
+            --text3: #685880;
+            --ink: #f0eaf8;
+            --accent-light: rgba(109, 40, 217, 0.2);
+            --active-light: rgba(3, 105, 161, 0.2);
+            --passive-light: rgba(180, 83, 9, 0.2);
+            --teal-light: rgba(15, 118, 110, 0.15);
+            --rose-light: rgba(159, 18, 57, 0.2);
+            --red-light: rgba(185, 28, 28, 0.2);
+            --green-light: rgba(22, 101, 52, 0.2);
+            --shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            transition: background 0.4s, color 0.4s;
+            overflow-x: hidden;
+        }
+
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 90;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+        }
+
+        .backdrop.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-w);
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            z-index: 100;
+            padding: 28px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media(min-width:1024px) {
+            .sidebar {
+                transform: translateX(0);
+            }
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 28px;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-close {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text2);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 8px;
+            line-height: 1;
+        }
+
+        @media(max-width:1023px) {
+            .logo-close {
+                display: block;
+            }
+        }
+
+        .nav-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text3);
+            padding: 16px 12px 6px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--r-sm);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text2);
+            transition: 0.15s;
+        }
+
+        .nav-link:hover {
+            background: var(--surface2);
+            color: var(--text);
+        }
+
+        .nav-link.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .hamburger {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--text);
+            box-shadow: var(--shadow);
+        }
+
+        @media(max-width:1023px) {
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+        }
+
+        .main {
+            flex: 1;
+            margin-left: 0;
+            transition: margin 0.4s;
+            min-width: 0;
+        }
+
+        @media(min-width:1024px) {
+            .main {
+                margin-left: var(--sidebar-w);
+            }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--passive));
+            z-index: 200;
+            transition: width 0.15s;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .hero {
+            padding: 80px 48px 56px;
+            max-width: 840px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: rise 0.7s 0.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @media(max-width:768px) {
+            .hero {
+                padding: 72px 24px 40px;
+            }
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text3);
+            margin-bottom: 28px;
+            font-weight: 500;
+        }
+
+        .breadcrumb span {
+            color: var(--text2);
+        }
+
+        .module-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 100px;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border: 1px solid rgba(109, 40, 217, 0.15);
+        }
+
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--text);
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text2);
+            max-width: 560px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 36px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text2);
+            font-weight: 500;
+        }
+
+        .stat-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .content {
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 0 48px 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        @media(max-width:768px) {
+            .content {
+                padding: 0 20px 80px;
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 36px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(24px);
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        @media(max-width:768px) {
+            .card {
+                padding: 24px;
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: var(--accent-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .card-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+
+        .card-subtitle {
+            font-size: 0.82rem;
+            color: var(--text3);
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        .body-text {
+            font-size: 0.97rem;
+            line-height: 1.8;
+            color: var(--text2);
+            margin-bottom: 24px;
+        }
+
+        .body-text strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            margin-top: 8px;
+        }
+
+        .sh-badge {
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .sh-badge.active-v {
+            background: var(--active-light);
+            color: var(--active);
+        }
+
+        .sh-badge.passive-v {
+            background: var(--passive-light);
+            color: var(--passive);
+        }
+
+        .sh-badge.accent {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+
+        .sh-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .formula-strip {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 22px;
+            margin-bottom: 20px;
+        }
+
+        .formula-label {
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text3);
+            margin-bottom: 12px;
+        }
+
+        .formula-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .f-chip {
+            padding: 8px 16px;
+            border-radius: 9px;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border: 1.5px solid transparent;
+            cursor: default;
+            transition: transform 0.2s;
+            font-family: monospace;
+        }
+
+        .f-chip:hover {
+            transform: translateY(-2px);
+        }
+
+        .f-chip.sub {
+            background: var(--active-light);
+            color: var(--active);
+            border-color: rgba(3, 105, 161, 0.2);
+        }
+
+        .f-chip.be {
+            background: var(--accent-light);
+            color: var(--accent);
+            border-color: rgba(109, 40, 217, 0.2);
+        }
+
+        .f-chip.v3 {
+            background: var(--passive-light);
+            color: var(--passive);
+            border-color: rgba(180, 83, 9, 0.2);
+        }
+
+        .f-chip.by {
+            background: var(--teal-light);
+            color: var(--teal);
+            border-color: rgba(15, 118, 110, 0.2);
+        }
+
+        .plus-sign {
+            color: var(--text3);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .formula-note {
+            font-size: 0.82rem;
+            color: var(--text3);
+            margin-top: 4px;
+        }
+
+        .formula-note strong {
+            color: var(--text2);
+        }
+
+        .example-block {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 18px;
+            margin-bottom: 12px;
+        }
+
+        .ex-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--text3);
+            margin-bottom: 10px;
+        }
+
+        .sentence {
+            font-family: 'Fraunces', serif;
+            font-size: 1.2rem;
+            font-weight: 400;
+            line-height: 1.6;
+            color: var(--text);
+            margin-bottom: 10px;
+            letter-spacing: 0.01em;
+        }
+
+        .word {
+            display: inline-block;
+            padding: 2px 4px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.15s;
+            position: relative;
+        }
+
+        .word.s {
+            color: var(--active);
+        }
+
+        .word.v {
+            color: var(--rose);
+        }
+
+        .word.b {
+            color: var(--accent);
+        }
+
+        .word.o {
+            color: var(--teal);
+        }
+
+        .word.p {
+            color: var(--passive);
+        }
+
+        .word:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        .word::after {
+            content: attr(data-label);
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%) scale(0.85);
+            background: var(--ink);
+            color: var(--bg);
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            white-space: nowrap;
+            letter-spacing: 0.04em;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.18s;
+            z-index: 10;
+        }
+
+        .word:hover::after {
+            opacity: 1;
+            transform: translateX(-50%) scale(1);
+        }
+
+        .ex-translation {
+            font-size: 0.83rem;
+            color: var(--text3);
+            font-style: italic;
+        }
+
+        .highlight-box {
+            background: var(--accent-light);
+            border: 1px solid rgba(109, 40, 217, 0.18);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .hl-icon {
+            font-size: 1.05rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .hl-text {
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .hl-text strong {
+            font-weight: 700;
+        }
+
+        .warn-box {
+            background: var(--rose-light);
+            border: 1px solid rgba(159, 18, 57, 0.18);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .warn-text {
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: var(--rose);
+            font-weight: 500;
+        }
+
+        .warn-text strong {
+            font-weight: 700;
+        }
+
+        .tense-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 0.88rem;
+        }
+
+        .tense-table th {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .tense-table td {
+            padding: 11px 14px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text2);
+        }
+
+        .tense-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .tense-table tr:hover td {
+            background: var(--surface2);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 14px;
+        }
+
+        .mini-card {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            transition: 0.25s;
+            cursor: default;
+        }
+
+        .mini-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 20px var(--accent-glow);
+            transform: translateY(-2px);
+        }
+
+        .mini-icon {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+        }
+
+        .mini-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--text);
+            margin-bottom: 7px;
+        }
+
+        .mini-text {
+            font-size: 0.82rem;
+            line-height: 1.6;
+            color: var(--text2);
+        }
+
+        .mini-text em {
+            font-style: normal;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tip-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 14px 16px;
+            background: var(--surface2);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .tip-num {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--accent-light);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 0.88rem;
+            line-height: 1.65;
+            color: var(--text2);
+        }
+
+        .tip-text strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .quiz-card {
+            background: linear-gradient(135deg, #1d4ed8, #b45309);
+            border-radius: 20px;
+            padding: 36px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-card::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .quiz-card::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -5%;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .quiz-prompt {
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.65;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-q {
+            font-family: 'Fraunces', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .q-option {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1.5px solid rgba(255, 255, 255, 0.22);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .q-option:hover {
+            background: rgba(255, 255, 255, 0.22);
+            transform: translateY(-1px);
+        }
+
+        .q-option.correct {
+            background: rgba(255, 255, 255, 0.28);
+            border-color: white;
+        }
+
+        .q-option.wrong {
+            background: rgba(0, 0, 0, 0.25);
+            border-color: rgba(255, 100, 100, 0.5);
+        }
+
+        .quiz-feedback {
+            margin-top: 14px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: 0.3s;
+            position: relative;
+            z-index: 1;
+            line-height: 1.5;
+        }
+
+        .quiz-feedback.show {
+            opacity: 1;
+        }
+
+        .quiz-next {
+            margin-top: 16px;
+            background: white;
+            color: #1d4ed8;
+            border: none;
+            padding: 11px 26px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: none;
+            transition: 0.2s;
+            position: relative;
+            z-index: 1;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .quiz-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--text3);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.25s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.25s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="backdrop" id="backdrop" onclick="closeSidebar()"></div>
+        <nav class="sidebar" id="sidebar">
+        <div class="logo">QuizNation <button class="logo-close" onclick="closeSidebar()">✕</button></div>
+        <div class="nav-label">Menu Utama</div>
+        <a href="index.html" class="nav-link">🏠 Beranda</a>
+        <a href="statistik.html" class="nav-link">📊 Statistik</a>
+        <a href="evaluasi.html" class="nav-link">🎓 Evaluasi SNBT</a>
+        <a href="pencapaian.html" class="nav-link">🏆 Pencapaian</a>
+        <a href="materi.html" class="nav-link active">📚 Materi</a>
+        <a href="library.html" class="nav-link">📖 Library</a>
+        <div class="nav-label" style="margin-top:10px">Bantuan</div>
+        <a href="pengaturan.html" class="nav-link">⚙️ Pengaturan</a>
+        <a href="panduan.html" class="nav-link">📋 Panduan</a>
+        <a href="feedback.html" class="nav-link">💬 Feedback</a>
+    </nav>
+    <button class="hamburger" onclick="openSidebar()">☰</button>
+    <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</div>
+
+    <main class="main">
+        <section class="hero">
+            <div class="breadcrumb"><span>📚 Materi</span> - <span>Grammar Lanjutan</span> - Modul 6</div>
+            <div class="module-tag">🧩 Grammar Lanjutan - Modul 6</div>
+            <h1>Passive<br><em>Voice</em></h1>
+            <p>Pahami cara mengubah kalimat aktif menjadi pasif dan kapan waktu yang tepat menggunakannya - termasuk di
+                berbagai tenses.</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-dot"></div> Active vs Passive
+                </div>
+                <div class="stat">
+                    <div class="stat-dot" style="background:var(--passive)"></div> Passive di Semua Tenses
+                </div>
+                <div class="stat">
+                    <div class="stat-dot" style="background:var(--teal)"></div> -20 menit baca
+                </div>
+            </div>
+        </section>
+
+        <div class="content">
+            <!-- 1 -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Apa itu Passive Voice?</div>
+                        <div class="card-subtitle">Ketika subjek menerima aksi, bukan melakukannya</div>
+                    </div>
+                </div>
+                <p class="body-text">Dalam <strong>active voice</strong>, subjek melakukan aksi. Dalam <strong>passive
+                        voice</strong>, subjek <strong>menerima</strong> aksi. Passive voice digunakan ketika kita ingin
+                    menekankan objek/hasil, bukan pelakunya.</p>
+                <div class="formula-strip">
+                    <div class="formula-label">Rumus Passive Voice</div>
+                    <div class="formula-row"><span class="f-chip sub">Object (jadi Subject)</span><span
+                            class="plus-sign">+</span><span class="f-chip be">to be</span><span
+                            class="plus-sign">+</span><span class="f-chip v3">V3 (past participle)</span><span
+                            class="plus-sign">+</span><span class="f-chip by">(by + agent)</span></div>
+                    <div class="formula-note"><strong>Catatan:</strong> "By + agent" bersifat opsional. Sering
+                        dihilangkan jika pelaku tidak penting atau tidak diketahui.</div>
+                </div>
+                <div class="example-block">
+                    <div class="ex-label">Active ? Passive</div>
+                    <div class="sentence"><span class="word s" data-label="Subject (pelaku)">The teacher</span> <span
+                            class="word v" data-label="Verb (active)">teaches</span> <span class="word o"
+                            data-label="Object">the students.</span></div>
+                    <div class="ex-translation">? Active: Guru mengajar para siswa.</div>
+                </div>
+                <div class="example-block">
+                    <div class="ex-label">Passive Version</div>
+                    <div class="sentence"><span class="word s" data-label="Object ? Subject">The students</span> <span
+                            class="word b" data-label="to be (present)">are</span> <span class="word p"
+                            data-label="V3 (past participle)">taught</span> <span class="word o"
+                            data-label="by + agent">by the teacher.</span></div>
+                    <div class="ex-translation">? Passive: Para siswa diajar oleh guru.</div>
+                </div>
+            </div>
+
+            <!-- 2 -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Passive di Berbagai Tenses</div>
+                        <div class="card-subtitle">Bentuk "to be" berubah sesuai tenses</div>
+                    </div>
+                </div>
+                <p class="body-text">Kunci passive voice adalah <strong>"to be" yang berubah sesuai tenses</strong> +
+                    <strong>V3</strong> yang selalu tetap.</p>
+                <table class="tense-table">
+                    <thead>
+                        <tr>
+                            <th>Tense</th>
+                            <th>Active</th>
+                            <th>Passive</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="font-weight:600;color:var(--accent)">Simple Present</td>
+                            <td>She writes a letter.</td>
+                            <td>A letter <strong>is written</strong> by her.</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:600;color:var(--accent)">Present Continuous</td>
+                            <td>She is writing a letter.</td>
+                            <td>A letter <strong>is being written</strong> by her.</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:600;color:var(--accent)">Simple Past</td>
+                            <td>She wrote a letter.</td>
+                            <td>A letter <strong>was written</strong> by her.</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:600;color:var(--accent)">Past Continuous</td>
+                            <td>She was writing a letter.</td>
+                            <td>A letter <strong>was being written</strong> by her.</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:600;color:var(--accent)">Present Perfect</td>
+                            <td>She has written a letter.</td>
+                            <td>A letter <strong>has been written</strong> by her.</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:600;color:var(--accent)">Past Perfect</td>
+                            <td>She had written a letter.</td>
+                            <td>A letter <strong>had been written</strong> by her.</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:600;color:var(--accent)">Future (will)</td>
+                            <td>She will write a letter.</td>
+                            <td>A letter <strong>will be written</strong> by her.</td>
+                        </tr>
+                        <tr>
+                            <td style="font-weight:600;color:var(--accent)">Modal</td>
+                            <td>She can write a letter.</td>
+                            <td>A letter <strong>can be written</strong> by her.</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="highlight-box">
+                    <div class="hl-icon">🔹</div>
+                    <div class="hl-text"><strong>Pola Universal:</strong> Apapun tenses-nya, passive voice selalu
+                        mengikuti pola: <strong>to be (sesuai tenses) + V3</strong>. Yang berubah hanya bentuk "to be".
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3 -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">?</div>
+                    <div>
+                        <div class="card-title">Kapan Menggunakan Passive Voice?</div>
+                        <div class="card-subtitle">Situasi yang tepat untuk passive</div>
+                    </div>
+                </div>
+                <p class="body-text">Passive voice bukan sekadar variasi - ada <strong>situasi spesifik</strong> yang
+                    membuatnya lebih tepat daripada active.</p>
+                <div class="grid-2">
+                    <div class="mini-card">
+                        <div class="mini-icon">?</div>
+                        <div class="mini-title">Pelaku Tidak Diketahui</div>
+                        <div class="mini-text"><em>My car was stolen last night.</em> (Tidak tahu siapa pencurinya)
+                        </div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Fokus pada Hasil/Objek</div>
+                        <div class="mini-text"><em>The bridge was built in 1990.</em> (Yang penting adalah jembatannya)
+                        </div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Konteks Formal/Ilmiah</div>
+                        <div class="mini-text"><em>The experiment was conducted successfully.</em></div>
+                    </div>
+                    <div class="mini-card">
+                        <div class="mini-icon">🔹</div>
+                        <div class="mini-title">Fakta Umum</div>
+                        <div class="mini-text"><em>English is spoken worldwide.</em> (Tidak perlu menyebut pelaku)</div>
+                    </div>
+                </div>
+                <div class="warn-box" style="margin-top:20px">
+                    <div class="hl-icon">🔹</div>
+                    <div class="warn-text"><strong>Jangan berlebihan!</strong> Terlalu banyak passive voice membuat
+                        tulisan terasa kaku dan membingungkan. Gunakan active voice sebagai default, dan passive hanya
+                        saat memang diperlukan.</div>
+                </div>
+            </div>
+
+            <!-- 4 -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Langkah Mengubah Active ? Passive</div>
+                        <div class="card-subtitle">4 langkah mudah konversi kalimat</div>
+                    </div>
+                </div>
+                <p class="body-text">Ikuti langkah-langkah ini untuk mengubah kalimat aktif menjadi pasif:</p>
+                <div class="tips-list">
+                    <div class="tip-item">
+                        <div class="tip-num">1</div>
+                        <div class="tip-text"><strong>Identifikasi S-V-O.</strong> Temukan Subject, Verb, dan Object di
+                            kalimat aktif.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">2</div>
+                        <div class="tip-text"><strong>Pindahkan Object ? Subject.</strong> Object kalimat aktif menjadi
+                            Subject kalimat pasif.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">3</div>
+                        <div class="tip-text"><strong>Ubah Verb ? to be + V3.</strong> Sesuaikan "to be" dengan tenses
+                            yang digunakan.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">4</div>
+                        <div class="tip-text"><strong>Tambahkan "by + agent" (opsional).</strong> Subject kalimat aktif
+                            menjadi agent setelah "by".</div>
+                    </div>
+                </div>
+                <div class="example-block" style="margin-top:20px">
+                    <div class="ex-label">Contoh Lengkap: Present Perfect</div>
+                    <div class="sentence" style="margin-bottom:6px"><strong>Active:</strong> <span class="word s"
+                            data-label="Subject">Scientists</span> <span class="word v" data-label="have + V3">have
+                            discovered</span> <span class="word o" data-label="Object">a new planet.</span></div>
+                    <div class="sentence"><strong>Passive:</strong> <span class="word s" data-label="Object ? Subject">A
+                            new planet</span> <span class="word b" data-label="to be (present perfect)">has been</span>
+                        <span class="word p" data-label="V3">discovered</span> <span class="word o"
+                            data-label="by + agent">by scientists.</span></div>
+                    <div class="ex-translation">? Sebuah planet baru telah ditemukan oleh para ilmuwan.</div>
+                </div>
+            </div>
+
+            <!-- 5 Tips -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Tips &amp; Jebakan Soal SNBT</div>
+                        <div class="card-subtitle">Strategi menjawab soal passive voice</div>
+                    </div>
+                </div>
+                <div class="tips-list">
+                    <div class="tip-item">
+                        <div class="tip-num">1</div>
+                        <div class="tip-text"><strong>Identifikasi tenses dulu.</strong> Lihat "to be" ? tentukan tenses
+                            ? cocokkan dengan V3. Jangan langsung lihat pilihan jawaban.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">2</div>
+                        <div class="tip-text"><strong>"By" tidak selalu ada.</strong> Banyak kalimat passive tanpa "by +
+                            agent". Ini bukan berarti kalimat tersebut salah.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">3</div>
+                        <div class="tip-text"><strong>Only transitive verbs.</strong> Hanya verb yang memiliki object
+                            (transitive) yang bisa dipassive-kan. "She sleeps" tidak bisa menjadi passive.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">4</div>
+                        <div class="tip-text"><strong>"Get" bisa menggantikan "be".</strong> Dalam percakapan informal:
+                            "He got promoted." = "He was promoted." Tapi di SNBT, biasanya pakai "be".</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">5</div>
+                        <div class="tip-text"><strong>Double object ? dua versi passive.</strong> "She gave me a book."
+                            ? "I was given a book." ATAU "A book was given to me." Keduanya benar.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6 Quiz -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Mini Quiz</div>
+                        <div class="card-subtitle">8 soal - passive voice</div>
+                    </div>
+                </div>
+                <p class="body-text" style="margin-bottom:20px">Pilih bentuk passive yang benar untuk setiap kalimat!
+                </p>
+                <div class="quiz-card" id="quizCard">
+                    <div class="quiz-prompt">Pertanyaan <span id="qNum">1</span> dari <span id="qTotal">8</span></div>
+                    <div class="quiz-q" id="qText">Loading...</div>
+                    <div class="quiz-options" id="qOptions"></div>
+                    <div class="quiz-feedback" id="qFeedback"></div>
+                    <button class="quiz-next" id="qNext" onclick="nextQuestion()">Pertanyaan Berikutnya ?</button>
+                </div>
+            </div>
+
+            <div class="section-divider">Selesai Membaca</div>
+            <div class="card" data-card style="text-align:center; padding:40px">
+                <div style="font-size:2rem; margin-bottom:14px">🔹</div>
+                <div class="card-title" style="margin-bottom:10px">Modul 6 selesai!</div>
+                <p class="body-text" style="margin-bottom:0; max-width:480px; margin-left:auto; margin-right:auto">Kamu
+                    sudah menguasai passive voice. Lanjutkan ke modul berikutnya!</p>
+                <div class="cta-row" style="justify-content:center; margin-top:24px">
+                    <a href="materi-modal-verbs.html" class="btn-secondary">? Modal Verbs</a>
+                    <a href="materi.html" class="btn-primary">Modul Lainnya ?</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') { document.body.classList.add('dark'); document.getElementById('themeBtn').textContent = '🔹'; }
+        function toggleTheme() { const d = document.body.classList.toggle('dark'); localStorage.setItem('theme', d ? 'dark' : 'light'); document.getElementById('themeBtn').textContent = d ? '🔹' : '🔹'; }
+        function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('backdrop').classList.add('open'); }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('backdrop').classList.remove('open'); }
+        window.addEventListener('scroll', () => { const el = document.documentElement; document.getElementById('progressBar').style.width = (el.scrollTop / (el.scrollHeight - el.clientHeight) * 100) + '%'; });
+        const obs = new IntersectionObserver(entries => { entries.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 55); obs.unobserve(e.target); } }); }, { threshold: 0.07 });
+        document.querySelectorAll('[data-card]').forEach(c => obs.observe(c));
+
+        const questions = [
+            { q: "The letter _____ by the secretary yesterday.", opts: ["wrote", "was written", "is written", "has been written"], ans: 1, exp: "? 'was written' - Simple Past passive: was/were + V3." },
+            { q: "A new hospital _____ in this area next year.", opts: ["will build", "will be built", "is built", "has built"], ans: 1, exp: "? 'will be built' - Future passive: will be + V3." },
+            { q: "The cake _____ right now.", opts: ["is baked", "is being baked", "was baked", "has been baked"], ans: 1, exp: "? 'is being baked' - Present Continuous passive: is being + V3." },
+            { q: "English _____ all over the world.", opts: ["speaks", "is speaking", "is spoken", "has spoken"], ans: 2, exp: "? 'is spoken' - Simple Present passive untuk fakta umum." },
+            { q: "The project _____ before the deadline.", opts: ["completed", "was completed", "has completed", "completing"], ans: 1, exp: "? 'was completed' - Simple Past passive." },
+            { q: "This book _____ by millions of people.", opts: ["has read", "has been read", "was reading", "is reading"], ans: 1, exp: "? 'has been read' - Present Perfect passive: has/have been + V3." },
+            { q: "The windows _____ when I arrived.", opts: ["were being cleaned", "was cleaned", "is being cleaned", "have cleaned"], ans: 0, exp: "? 'were being cleaned' - Past Continuous passive: was/were being + V3." },
+            { q: "The documents must _____ before Friday.", opts: ["be signed", "signed", "be signing", "to sign"], ans: 0, exp: "? 'be signed' - Modal passive: modal + be + V3." }
+        ];
+
+        let current = 0, score = 0, answered = false;
+        function renderQuestion() {
+            const q = questions[current]; document.getElementById('qNum').textContent = current + 1; document.getElementById('qTotal').textContent = questions.length; document.getElementById('qText').textContent = q.q; document.getElementById('qFeedback').textContent = ''; document.getElementById('qFeedback').classList.remove('show'); document.getElementById('qNext').style.display = 'none'; answered = false;
+            const optDiv = document.getElementById('qOptions'); optDiv.innerHTML = '';
+            q.opts.forEach((opt, i) => { const btn = document.createElement('button'); btn.className = 'q-option'; btn.textContent = opt; btn.onclick = () => selectAnswer(i); optDiv.appendChild(btn); });
+        }
+        function selectAnswer(i) {
+            if (answered) return; answered = true; const q = questions[current]; const opts = document.querySelectorAll('.q-option');
+            opts[i].classList.add(i === q.ans ? 'correct' : 'wrong'); if (i !== q.ans) opts[q.ans].classList.add('correct'); else score++;
+            const fb = document.getElementById('qFeedback'); fb.textContent = i === q.ans ? q.exp : '? Kurang tepat. ' + q.exp; fb.classList.add('show');
+            const nxt = document.getElementById('qNext'); nxt.style.display = 'inline-block'; if (current === questions.length - 1) nxt.textContent = 'Lihat Hasil 🔹';
+        }
+        function nextQuestion() {
+            current++; if (current < questions.length) { renderQuestion(); return; }
+            const s = score, total = questions.length, grade = s >= 7 ? '🔹' : s >= 5 ? '🔹' : '🔹';
+            const msg = s === total ? 'Sempurna! Kamu menguasai Passive Voice.' : s >= 6 ? 'Bagus sekali!' : s >= 4 ? 'Lumayan! Baca ulang tabel tenses passive.' : 'Ayo ulangi materi ini.';
+            document.getElementById('quizCard').innerHTML = `<div class="quiz-prompt" style="position:relative;z-index:1">Hasil Akhir</div><div class="quiz-q" style="position:relative;z-index:1;font-size:2.8rem">${grade}</div><div class="quiz-q" style="position:relative;z-index:1">Skor: ${s} / ${total}</div><p style="position:relative;z-index:1;opacity:0.82;font-size:0.88rem;margin-top:6px">${msg}</p><button class="quiz-next" style="display:inline-block;margin-top:16px" onclick="restartQuiz()">Ulangi Quiz</button>`;
+        }
+        function restartQuiz() {
+            current = 0; score = 0;
+            document.getElementById('quizCard').innerHTML = `<div class="quiz-prompt">Pertanyaan <span id="qNum">1</span> dari <span id="qTotal">8</span></div><div class="quiz-q" id="qText"></div><div class="quiz-options" id="qOptions"></div><div class="quiz-feedback" id="qFeedback"></div><button class="quiz-next" id="qNext" onclick="nextQuestion()">Pertanyaan Berikutnya ?</button>`;
+            renderQuestion();
+        }
+        renderQuestion();
+    </script>
+</body>
+
+</html>
+
+
+

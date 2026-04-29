@@ -1,0 +1,1316 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Kosakata Tema Khusus - QuizNation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Mobile Optimization */
+        html, body { max-width: 100%; overflow-x: hidden; }
+        * { -webkit-tap-highlight-color: transparent !important; }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #f8f7f4;
+            --surface: #ffffff;
+            --surface2: #f1f0ea;
+            --border: #e8e6dd;
+            --text: #1c1a17;
+            --text2: #5c5848;
+            --text3: #9c9880;
+            --ink: #1c1a17;
+            --accent: #2563eb;
+            --accent-mid: #3b82f6;
+            --accent-light: #dbeafe;
+            --accent-glow: rgba(124, 58, 237, 0.12);
+            --rose: #9f1239;
+            --rose-light: #ffe4e6;
+            --teal: #0f766e;
+            --teal-light: #ccfbf1;
+            --indigo: #3730a3;
+            --indigo-light: #e0e7ff;
+            --amber: #92400e;
+            --amber-light: #fef3c7;
+            --orange: #c2410c;
+            --orange-light: #ffedd5;
+            --emerald: #065f46;
+            --emerald-light: #d1fae5;
+            --blue: #1a4e8a;
+            --blue-light: #dbeafe;
+            --sidebar-w: 260px;
+            --r: 20px;
+            --r-sm: 12px;
+            --shadow: 0 2px 20px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.09);
+        }
+
+        body.dark {
+            --bg: #0a1120;
+            --surface: #0f172a;
+            --surface2: #0f172a;
+            --border: #1e293b;
+            --text: #ece8f4;
+            --text2: #a098b8;
+            --text3: #6a6080;
+            --ink: #ece8f4;
+            --accent-light: rgba(124, 58, 237, 0.22);
+            --rose-light: rgba(159, 18, 57, 0.18);
+            --teal-light: rgba(15, 118, 110, 0.18);
+            --indigo-light: rgba(30, 58, 138, 0.18);
+            --amber-light: rgba(146, 64, 14, 0.18);
+            --orange-light: rgba(194, 65, 12, 0.18);
+            --emerald-light: rgba(6, 95, 70, 0.18);
+            --blue-light: rgba(26, 78, 138, 0.2);
+            --shadow: 0 2px 20px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.55);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            transition: background 0.4s, color 0.4s;
+            overflow-x: hidden;
+        }
+
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(4px);
+            z-index: 90;
+            opacity: 0;
+            visibility: hidden;
+            transition: 0.3s;
+        }
+
+        .backdrop.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-w);
+            height: 100vh;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            z-index: 100;
+            padding: 28px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media(min-width:1024px) {
+            .sidebar {
+                transform: translateX(0);
+            }
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin-bottom: 28px;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-close {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text2);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 8px;
+            line-height: 1;
+        }
+
+        @media(max-width:1023px) {
+            .logo-close {
+                display: block;
+            }
+        }
+
+        .nav-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text3);
+            padding: 16px 12px 6px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: var(--r-sm);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text2);
+            transition: 0.15s;
+        }
+
+        .nav-link:hover {
+            background: var(--surface2);
+            color: var(--text);
+        }
+
+        .nav-link.active {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        .hamburger {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: var(--text);
+            box-shadow: var(--shadow);
+        }
+
+        @media(max-width:1023px) {
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 110;
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+        }
+
+        .main {
+            flex: 1;
+            margin-left: 0;
+            transition: margin 0.4s;
+            min-width: 0;
+        }
+
+        @media(min-width:1024px) {
+            .main {
+                margin-left: var(--sidebar-w);
+            }
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), #60a5fa);
+            z-index: 200;
+            transition: width 0.15s;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .hero {
+            padding: 80px 48px 56px;
+            max-width: 840px;
+            margin: 0 auto;
+            opacity: 0;
+            animation: rise 0.7s 0.1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @media(max-width:768px) {
+            .hero {
+                padding: 72px 24px 40px;
+            }
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            color: var(--text3);
+            margin-bottom: 28px;
+            font-weight: 500;
+        }
+
+        .breadcrumb span {
+            color: var(--text2);
+        }
+
+        .module-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 14px;
+            border-radius: 100px;
+            background: var(--accent-light);
+            color: var(--accent);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            border: 1px solid rgba(124, 58, 237, 0.18);
+        }
+
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--text);
+            margin-bottom: 20px;
+            letter-spacing: -0.02em;
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--accent);
+        }
+
+        .hero p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: var(--text2);
+            max-width: 560px;
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 36px;
+            flex-wrap: wrap;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text2);
+            font-weight: 500;
+        }
+
+        .stat-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        .content {
+            max-width: 840px;
+            margin: 0 auto;
+            padding: 0 48px 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        @media(max-width:768px) {
+            .content {
+                padding: 0 20px 80px;
+            }
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 36px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            transform: translateY(24px);
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        @media(max-width:768px) {
+            .card {
+                padding: 24px;
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: var(--accent-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .card-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text);
+            letter-spacing: -0.01em;
+        }
+
+        .card-subtitle {
+            font-size: 0.82rem;
+            color: var(--text3);
+            margin-top: 2px;
+            font-weight: 500;
+        }
+
+        .body-text {
+            font-size: 0.97rem;
+            line-height: 1.8;
+            color: var(--text2);
+            margin-bottom: 24px;
+        }
+
+        .body-text strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .vocab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .vocab-item {
+            border-radius: 16px;
+            padding: 20px;
+            border: 1.5px solid transparent;
+            cursor: default;
+            transition: 0.25s;
+        }
+
+        .vocab-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .vi-word {
+            font-family: 'Fraunces', serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .vi-meaning {
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .vi-example {
+            font-size: 0.8rem;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        .vi-tech {
+            background: var(--accent-light);
+            border-color: rgba(124, 58, 237, 0.2);
+        }
+
+        .vi-tech .vi-word,
+        .vi-tech .vi-meaning {
+            color: var(--accent);
+        }
+
+        .vi-tech .vi-example {
+            color: var(--accent);
+        }
+
+        .vi-science {
+            background: var(--teal-light);
+            border-color: rgba(15, 118, 110, 0.2);
+        }
+
+        .vi-science .vi-word,
+        .vi-science .vi-meaning {
+            color: var(--teal);
+        }
+
+        .vi-science .vi-example {
+            color: var(--teal);
+        }
+
+        .vi-art {
+            background: var(--rose-light);
+            border-color: rgba(159, 18, 57, 0.2);
+        }
+
+        .vi-art .vi-word,
+        .vi-art .vi-meaning {
+            color: var(--rose);
+        }
+
+        .vi-art .vi-example {
+            color: var(--rose);
+        }
+
+        .vi-env {
+            background: var(--emerald-light);
+            border-color: rgba(6, 95, 70, 0.2);
+        }
+
+        .vi-env .vi-word,
+        .vi-env .vi-meaning {
+            color: var(--emerald);
+        }
+
+        .vi-env .vi-example {
+            color: var(--emerald);
+        }
+
+        .vi-health {
+            background: var(--blue-light);
+            border-color: rgba(26, 78, 138, 0.2);
+        }
+
+        .vi-health .vi-word,
+        .vi-health .vi-meaning {
+            color: var(--blue);
+        }
+
+        .vi-health .vi-example {
+            color: var(--blue);
+        }
+
+        .highlight-box {
+            background: var(--accent-light);
+            border: 1px solid rgba(124, 58, 237, 0.18);
+            border-radius: 14px;
+            padding: 16px 18px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .hl-icon {
+            font-size: 1.05rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .hl-text {
+            font-size: 0.87rem;
+            line-height: 1.65;
+            color: var(--accent);
+            font-weight: 500;
+        }
+
+        .hl-text strong {
+            font-weight: 700;
+        }
+
+        .vocab-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+
+        .vocab-table th {
+            background: var(--accent-light);
+            color: var(--accent);
+            font-weight: 700;
+            padding: 10px 16px;
+            text-align: left;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        .vocab-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text2);
+        }
+
+        .vocab-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .vocab-table tr:hover td {
+            background: var(--surface2);
+        }
+
+        .vocab-table .eng {
+            color: var(--text);
+            font-weight: 600;
+        }
+
+        .vocab-table .indo {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .section-head {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            margin-top: 6px;
+        }
+
+        .sh-badge {
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .sh-badge.purple {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+
+        .sh-line {
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .tips-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tip-item {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            padding: 14px 16px;
+            background: var(--surface2);
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .tip-num {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--accent-light);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.78rem;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .tip-text {
+            font-size: 0.88rem;
+            line-height: 1.65;
+            color: var(--text2);
+        }
+
+        .tip-text strong {
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        .quiz-card {
+            background: linear-gradient(135deg, #2563eb, #60a5fa);
+            border-radius: 20px;
+            padding: 36px;
+            text-align: center;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-card::before {
+            content: '';
+            position: absolute;
+            top: -30%;
+            right: -10%;
+            width: 280px;
+            height: 280px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .quiz-card::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -5%;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .quiz-prompt {
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            opacity: 0.65;
+            margin-bottom: 14px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-q {
+            font-family: 'Fraunces', serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            line-height: 1.5;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .q-option {
+            background: rgba(255, 255, 255, 0.12);
+            border: 1.5px solid rgba(255, 255, 255, 0.22);
+            border-radius: 12px;
+            padding: 12px 14px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: 0.2s;
+            text-align: center;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .q-option:hover {
+            background: rgba(255, 255, 255, 0.22);
+            transform: translateY(-1px);
+        }
+
+        .q-option.correct {
+            background: rgba(255, 255, 255, 0.28);
+            border-color: white;
+        }
+
+        .q-option.wrong {
+            background: rgba(0, 0, 0, 0.25);
+            border-color: rgba(255, 100, 100, 0.5);
+        }
+
+        .quiz-feedback {
+            margin-top: 14px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: 0.3s;
+            position: relative;
+            z-index: 1;
+            line-height: 1.5;
+        }
+
+        .quiz-feedback.show {
+            opacity: 1;
+        }
+
+        .quiz-next {
+            margin-top: 16px;
+            background: white;
+            color: #2563eb;
+            border: none;
+            padding: 11px 26px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: none;
+            transition: 0.2s;
+            position: relative;
+            z-index: 1;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .quiz-next:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: var(--text3);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .cta-row {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.25s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-mid);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 13px 26px;
+            background: var(--surface2);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 0.93rem;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.25s;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        @keyframes rise {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    <div class="backdrop" id="backdrop" onclick="closeSidebar()"></div>
+        <nav class="sidebar" id="sidebar">
+        <div class="logo">QuizNation <button class="logo-close" onclick="closeSidebar()">✕</button></div>
+        <div class="nav-label">Menu Utama</div>
+        <a href="index.html" class="nav-link">🏠 Beranda</a>
+        <a href="statistik.html" class="nav-link">📊 Statistik</a>
+        <a href="evaluasi.html" class="nav-link">🎓 Evaluasi SNBT</a>
+        <a href="pencapaian.html" class="nav-link">🏆 Pencapaian</a>
+        <a href="materi.html" class="nav-link active">📚 Materi</a>
+        <a href="library.html" class="nav-link">📖 Library</a>
+        <div class="nav-label" style="margin-top:10px">Bantuan</div>
+        <a href="pengaturan.html" class="nav-link">⚙️ Pengaturan</a>
+        <a href="panduan.html" class="nav-link">📋 Panduan</a>
+        <a href="feedback.html" class="nav-link">💬 Feedback</a>
+    </nav>
+    <button class="hamburger" onclick="openSidebar()">☰</button>
+    <div class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</div>
+
+    <main class="main">
+        <section class="hero">
+            <div class="breadcrumb"><span>📚 Materi</span> - <span>Vocabulary</span> - Tema Khusus</div>
+            <div class="module-tag">📝 Vocabulary - Tema Khusus</div>
+            <h1>Kosakata<br><em>Tema Khusus</em></h1>
+            <p>Eksplorasi kosakata teknologi, sains, lingkungan, seni, dan kesehatan - topik penting untuk komunikasi
+                yang lebih kaya dan luas.</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <div class="stat-dot"></div> 5 Tema
+                </div>
+                <div class="stat">
+                    <div class="stat-dot" style="background:var(--rose)"></div> 60+ Kosakata
+                </div>
+                <div class="stat">
+                    <div class="stat-dot" style="background:var(--teal)"></div> -25 menit baca
+                </div>
+            </div>
+        </section>
+
+        <div class="content">
+
+            <!-- 1. Teknologi -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Teknologi & Digital</div>
+                        <div class="card-subtitle">Kosakata dunia teknologi modern</div>
+                    </div>
+                </div>
+                <p class="body-text">Di era digital, kosakata teknologi menjadi bagian dari <strong>percakapan
+                        sehari-hari</strong>. Dari smartphone hingga AI, kuasai istilah-istilah yang sering muncul.</p>
+                <div class="vocab-grid">
+                    <div class="vocab-item vi-tech">
+                        <div class="vi-word">Software</div>
+                        <div class="vi-meaning">Perangkat lunak</div>
+                        <div class="vi-example">"We need to update the software regularly."</div>
+                    </div>
+                    <div class="vocab-item vi-tech">
+                        <div class="vi-word">Hardware</div>
+                        <div class="vi-meaning">Perangkat keras</div>
+                        <div class="vi-example">"The hardware needs to be replaced."</div>
+                    </div>
+                    <div class="vocab-item vi-tech">
+                        <div class="vi-word">Algorithm</div>
+                        <div class="vi-meaning">Algoritma</div>
+                        <div class="vi-example">"Social media uses algorithms to show relevant content."</div>
+                    </div>
+                    <div class="vocab-item vi-tech">
+                        <div class="vi-word">Database</div>
+                        <div class="vi-meaning">Basis data</div>
+                        <div class="vi-example">"All customer information is stored in the database."</div>
+                    </div>
+                    <div class="vocab-item vi-tech">
+                        <div class="vi-word">Artificial Intelligence</div>
+                        <div class="vi-meaning">Kecerdasan buatan</div>
+                        <div class="vi-example">"AI is transforming many industries."</div>
+                    </div>
+                    <div class="vocab-item vi-tech">
+                        <div class="vi-word">Cybersecurity</div>
+                        <div class="vi-meaning">Keamanan siber</div>
+                        <div class="vi-example">"Cybersecurity is crucial for protecting personal data."</div>
+                    </div>
+                </div>
+                <div class="highlight-box">
+                    <div class="hl-icon">🔹</div>
+                    <div class="hl-text"><strong>Fun fact:</strong> Banyak kosakata teknologi yang langsung diserap ke
+                        bahasa Indonesia tanpa diterjemahkan, seperti "software", "hardware", "download", "upload". Tapi
+                        penting untuk tahu artinya secara tepat!</div>
+                </div>
+            </div>
+
+            <!-- 2. Sains -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Sains & Penelitian</div>
+                        <div class="card-subtitle">Istilah ilmiah yang penting</div>
+                    </div>
+                </div>
+                <p class="body-text">Kosakata sains sangat penting untuk <strong>reading comprehension</strong> di SNBT,
+                    terutama saat membaca teks tentang penemuan ilmiah atau fenomena alam.</p>
+                <table class="vocab-table">
+                    <tr>
+                        <th>English</th>
+                        <th>Indonesian</th>
+                        <th>Contoh Kalimat</th>
+                    </tr>
+                    <tr>
+                        <td class="eng">Experiment</td>
+                        <td class="indo">Eksperimen</td>
+                        <td>"The scientists conducted an experiment."</td>
+                    </tr>
+                    <tr>
+                        <td class="eng">Hypothesis</td>
+                        <td class="indo">Hipotesis</td>
+                        <td>"Our hypothesis was proven correct."</td>
+                    </tr>
+                    <tr>
+                        <td class="eng">Research</td>
+                        <td class="indo">Penelitian</td>
+                        <td>"More research is needed on this topic."</td>
+                    </tr>
+                    <tr>
+                        <td class="eng">Discovery</td>
+                        <td class="indo">Penemuan</td>
+                        <td>"This discovery changed the field of medicine."</td>
+                    </tr>
+                    <tr>
+                        <td class="eng">Molecule</td>
+                        <td class="indo">Molekul</td>
+                        <td>"Water molecules consist of hydrogen and oxygen."</td>
+                    </tr>
+                    <tr>
+                        <td class="eng">Evolution</td>
+                        <td class="indo">Evolusi</td>
+                        <td>"Darwin's theory of evolution is widely accepted."</td>
+                    </tr>
+                    <tr>
+                        <td class="eng">Phenomenon</td>
+                        <td class="indo">Fenomena</td>
+                        <td>"Climate change is a global phenomenon."</td>
+                    </tr>
+                    <tr>
+                        <td class="eng">Species</td>
+                        <td class="indo">Spesies</td>
+                        <td>"Many species are endangered due to habitat loss."</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- 3. Lingkungan -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Lingkungan & Alam</div>
+                        <div class="card-subtitle">Kosakata tentang isu lingkungan</div>
+                    </div>
+                </div>
+                <p class="body-text">Isu lingkungan adalah topik yang sangat <strong>sering muncul di ujian</strong> dan
+                    dalam diskusi sehari-hari. Kuasai kosakata ini untuk memahami dan membahas isu-isu global.</p>
+                <div class="vocab-grid">
+                    <div class="vocab-item vi-env">
+                        <div class="vi-word">Climate Change</div>
+                        <div class="vi-meaning">Perubahan iklim</div>
+                        <div class="vi-example">"Climate change affects weather patterns worldwide."</div>
+                    </div>
+                    <div class="vocab-item vi-env">
+                        <div class="vi-word">Pollution</div>
+                        <div class="vi-meaning">Polusi / Pencemaran</div>
+                        <div class="vi-example">"Air pollution is a serious problem in big cities."</div>
+                    </div>
+                    <div class="vocab-item vi-env">
+                        <div class="vi-word">Renewable Energy</div>
+                        <div class="vi-meaning">Energi terbarukan</div>
+                        <div class="vi-example">"Solar power is a form of renewable energy."</div>
+                    </div>
+                    <div class="vocab-item vi-env">
+                        <div class="vi-word">Deforestation</div>
+                        <div class="vi-meaning">Penggundulan hutan</div>
+                        <div class="vi-example">"Deforestation contributes to global warming."</div>
+                    </div>
+                    <div class="vocab-item vi-env">
+                        <div class="vi-word">Sustainable</div>
+                        <div class="vi-meaning">Berkelanjutan</div>
+                        <div class="vi-example">"We need to adopt sustainable practices."</div>
+                    </div>
+                    <div class="vocab-item vi-env">
+                        <div class="vi-word">Ecosystem</div>
+                        <div class="vi-meaning">Ekosistem</div>
+                        <div class="vi-example">"Coral reefs are fragile ecosystems."</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Seni & Budaya -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Seni & Budaya</div>
+                        <div class="card-subtitle">Kosakata dunia seni dan ekspresi budaya</div>
+                    </div>
+                </div>
+                <p class="body-text">Seni dan budaya memperkaya hidup dan percakapan. Berikut kosakata untuk
+                    membicarakan <strong>musik, lukisan, sastra, dan pertunjukan</strong>.</p>
+                <table class="vocab-table">
+                    <tr>
+                        <th>English</th>
+                        <th>Indonesian</th>
+                        <th>Contoh Kalimat</th>
+                    </tr>
+                    <tr>
+                        <td class="eng">Exhibition</td>
+                        <td class="indo">Pameran</td>
+                        <td>"The art exhibition will run until December."</td>
+                    </tr>
+                    <tr>
+                        <td class="eng">Sculpture</td>
+                        <td class="indo">Patung / Pahatan</td>
+                        <td>"Michelangelo's sculptures are masterpieces."</td>
+                    </tr>
+                    <tr>
+                        <td class="eng">Melody</td>
+                        <td class="indo">Melodi</td>
+                        <td>"The melody of this song is beautiful."</td>
+                    </tr>
+                    <tr>
+                        <td class="eng">Literature</td>
+                        <td class="indo">Sastra</td>
+                        <td>"She studies English literature at university."</td>
+                    </tr>
+                    <tr>
+                        <td class="eng">Performance</td>
+                        <td class="indo">Pertunjukan</td>
+                        <td>"The dance performance was spectacular."</td>
+                    </tr>
+                    <tr>
+                        <td class="eng">Masterpiece</td>
+                        <td class="indo">Karya agung / Mahakarya</td>
+                        <td>"The Mona Lisa is a masterpiece of art."</td>
+                    </tr>
+                    <tr>
+                        <td class="eng">Heritage</td>
+                        <td class="indo">Warisan budaya</td>
+                        <td>"Borobudur is a UNESCO World Heritage site."</td>
+                    </tr>
+                    <tr>
+                        <td class="eng">Aesthetic</td>
+                        <td class="indo">Estetika</td>
+                        <td>"The building has a modern aesthetic."</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- 5. Kesehatan -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Kesehatan & Medis</div>
+                        <div class="card-subtitle">Istilah kesehatan yang sering digunakan</div>
+                    </div>
+                </div>
+                <p class="body-text">Kosakata kesehatan penting untuk <strong>kehidupan sehari-hari</strong> dan sering
+                    muncul dalam teks reading SNBT tentang kesehatan dan gaya hidup.</p>
+                <div class="vocab-grid">
+                    <div class="vocab-item vi-health">
+                        <div class="vi-word">Symptom</div>
+                        <div class="vi-meaning">Gejala</div>
+                        <div class="vi-example">"What are the symptoms of the flu?"</div>
+                    </div>
+                    <div class="vocab-item vi-health">
+                        <div class="vi-word">Diagnosis</div>
+                        <div class="vi-meaning">Diagnosis</div>
+                        <div class="vi-example">"The doctor gave an accurate diagnosis."</div>
+                    </div>
+                    <div class="vocab-item vi-health">
+                        <div class="vi-word">Vaccine</div>
+                        <div class="vi-meaning">Vaksin</div>
+                        <div class="vi-example">"The vaccine has been proven safe and effective."</div>
+                    </div>
+                    <div class="vocab-item vi-health">
+                        <div class="vi-word">Nutrition</div>
+                        <div class="vi-meaning">Nutrisi / Gizi</div>
+                        <div class="vi-example">"Good nutrition is important for growth."</div>
+                    </div>
+                    <div class="vocab-item vi-health">
+                        <div class="vi-word">Mental Health</div>
+                        <div class="vi-meaning">Kesehatan mental</div>
+                        <div class="vi-example">"We should take mental health seriously."</div>
+                    </div>
+                    <div class="vocab-item vi-health">
+                        <div class="vi-word">Immune System</div>
+                        <div class="vi-meaning">Sistem kekebalan tubuh</div>
+                        <div class="vi-example">"Exercise strengthens the immune system."</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Tips -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Tips Menguasai Kosakata Tema Khusus</div>
+                        <div class="card-subtitle">Strategi belajar kosakata spesifik</div>
+                    </div>
+                </div>
+                <div class="tips-list">
+                    <div class="tip-item">
+                        <div class="tip-num">1</div>
+                        <div class="tip-text"><strong>Baca artikel bertema.</strong> National Geographic untuk
+                            lingkungan, Wired untuk teknologi, BBC Health untuk kesehatan. Baca secara rutin 10 menit
+                            sehari.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">2</div>
+                        <div class="tip-text"><strong>Perhatikan root word.</strong> Banyak kata sains berasal dari
+                            Latin/Greek. Contoh: "bio" = hidup, "geo" = bumi, "eco" = rumah/lingkungan. Ini membantu
+                            menebak arti kata baru.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">3</div>
+                        <div class="tip-text"><strong>Tonton dokumenter berbahasa Inggris.</strong> Netflix, YouTube,
+                            atau BBC documentaries. Aktifkan subtitle bahasa Inggris untuk memaksimalkan belajar.</div>
+                    </div>
+                    <div class="tip-item">
+                        <div class="tip-num">4</div>
+                        <div class="tip-text"><strong>Buat mind map per tema.</strong> Kelompokkan kata-kata berdasarkan
+                            tema dan hubungan antar kata. Ini membantu otak membuat koneksi yang lebih kuat.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. Mini Quiz -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="card-icon">⭐</div>
+                    <div>
+                        <div class="card-title">Mini Quiz</div>
+                        <div class="card-subtitle">8 soal - kosakata tema khusus</div>
+                    </div>
+                </div>
+                <p class="body-text" style="margin-bottom:20px">Pilih jawaban yang paling tepat!</p>
+                <div class="quiz-card" id="quizCard">
+                    <div class="quiz-prompt">Pertanyaan <span id="qNum">1</span> dari <span id="qTotal">8</span></div>
+                    <div class="quiz-q" id="qText">Loading...</div>
+                    <div class="quiz-options" id="qOptions"></div>
+                    <div class="quiz-feedback" id="qFeedback"></div>
+                    <button class="quiz-next" id="qNext" onclick="nextQuestion()">Pertanyaan Berikutnya ?</button>
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <div class="section-divider">Selesai Membaca</div>
+            <div class="card" data-card style="text-align:center; padding:40px">
+                <div style="font-size:2rem; margin-bottom:14px">🔹</div>
+                <div class="card-title" style="margin-bottom:10px">Modul Kosakata Tema Khusus selesai!</div>
+                <p class="body-text" style="margin-bottom:0; max-width:480px; margin-left:auto; margin-right:auto">Kamu
+                    sudah menguasai kosakata teknologi, sains, lingkungan, seni, dan kesehatan. Wawasanmu semakin luas!
+                </p>
+                <div class="cta-row" style="justify-content:center; margin-top:24px">
+                    <a href="materi-vocab-bisnis.html" class="btn-secondary">? Vocabulary Bisnis</a>
+                    <a href="materi.html" class="btn-primary">Kembali ke Materi ?</a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const saved = localStorage.getItem('theme');
+        if (saved === 'dark') { document.body.classList.add('dark'); document.getElementById('themeBtn').textContent = '🔹'; }
+        function toggleTheme() { const d = document.body.classList.toggle('dark'); localStorage.setItem('theme', d ? 'dark' : 'light'); document.getElementById('themeBtn').textContent = d ? '🔹' : '🔹'; }
+        function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('backdrop').classList.add('open'); }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('backdrop').classList.remove('open'); }
+        window.addEventListener('scroll', () => { const el = document.documentElement; document.getElementById('progressBar').style.width = (el.scrollTop / (el.scrollHeight - el.clientHeight) * 100) + '%'; });
+        const obs = new IntersectionObserver(entries => { entries.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('visible'), i * 55); obs.unobserve(e.target); } }); }, { threshold: 0.07 });
+        document.querySelectorAll('[data-card]').forEach(c => obs.observe(c));
+
+        const questions = [
+            { q: "Apa bahasa Inggris dari 'perangkat lunak'?", opts: ["Hardware", "Software", "Database", "Network"], ans: 1, exp: "? 'Software' = perangkat lunak. Lawan dari 'hardware' (perangkat keras)." },
+            { q: "Apa arti 'hypothesis' dalam sains?", opts: ["Kesimpulan", "Eksperimen", "Hipotesis / Dugaan ilmiah", "Penemuan"], ans: 2, exp: "? 'Hypothesis' = hipotesis, dugaan awal yang akan diuji melalui eksperimen." },
+            { q: "\"___ contributes to global warming.\" (Penggundulan hutan)", opts: ["Pollution", "Deforestation", "Ecosystem", "Renewable"], ans: 1, exp: "? 'Deforestation' = penggundulan hutan. Salah satu penyebab pemanasan global." },
+            { q: "Apa arti 'masterpiece'?", opts: ["Karya gagal", "Mahakarya", "Miniatur", "Sketsa"], ans: 1, exp: "? 'Masterpiece' = mahakarya / karya agung yang luar biasa." },
+            { q: "\"The doctor gave an accurate ___.\" (diagnosis)", opts: ["symptom", "vaccine", "diagnosis", "nutrition"], ans: 2, exp: "? 'Diagnosis' = diagnosis, penentuan jenis penyakit dari gejala." },
+            { q: "Apa bahasa Inggris dari 'energi terbarukan'?", opts: ["Nuclear energy", "Fossil fuel", "Renewable energy", "Solar panel"], ans: 2, exp: "? 'Renewable energy' = energi terbarukan (matahari, angin, air)." },
+            { q: "AI adalah singkatan dari...?", opts: ["Auto Internet", "Artificial Intelligence", "Advanced Input", "Applied Information"], ans: 1, exp: "? AI = Artificial Intelligence = Kecerdasan Buatan." },
+            { q: "Apa arti 'heritage'?", opts: ["Warisan budaya", "Pameran", "Pertunjukan", "Estetika"], ans: 0, exp: "? 'Heritage' = warisan budaya. Contoh: UNESCO World Heritage Site." }
+        ];
+
+        let current = 0, score = 0, answered = false;
+        function renderQuestion() { const q = questions[current]; document.getElementById('qNum').textContent = current + 1; document.getElementById('qTotal').textContent = questions.length; document.getElementById('qText').textContent = q.q; document.getElementById('qFeedback').textContent = ''; document.getElementById('qFeedback').classList.remove('show'); document.getElementById('qNext').style.display = 'none'; answered = false; const optDiv = document.getElementById('qOptions'); optDiv.innerHTML = ''; q.opts.forEach((opt, i) => { const btn = document.createElement('button'); btn.className = 'q-option'; btn.textContent = opt; btn.onclick = () => selectAnswer(i); optDiv.appendChild(btn); }); }
+        function selectAnswer(i) { if (answered) return; answered = true; const q = questions[current]; const opts = document.querySelectorAll('.q-option'); opts[i].classList.add(i === q.ans ? 'correct' : 'wrong'); if (i !== q.ans) opts[q.ans].classList.add('correct'); else score++; const fb = document.getElementById('qFeedback'); fb.textContent = i === q.ans ? q.exp : '? Kurang tepat. ' + q.exp; fb.classList.add('show'); const nxt = document.getElementById('qNext'); nxt.style.display = 'inline-block'; if (current === questions.length - 1) nxt.textContent = 'Lihat Hasil ?'; }
+        function nextQuestion() { current++; if (current < questions.length) { renderQuestion(); return; } const s = score; const total = questions.length; const grade = s >= 7 ? '🔹' : s >= 5 ? '🔹' : '🔹'; const msg = s === total ? 'Sempurna! Kosakata tema khususmu luar biasa!' : s >= 6 ? 'Bagus! Hampir sempurna.' : s >= 4 ? 'Lumayan! Baca ulang bagian yang masih salah.' : 'Ayo ulangi materinya dan coba lagi!'; document.getElementById('quizCard').innerHTML = `<div class="quiz-prompt" style="position:relative;z-index:1">Hasil Akhir</div><div class="quiz-q" style="position:relative;z-index:1;font-size:2.8rem">${grade}</div><div class="quiz-q" style="position:relative;z-index:1">Skor: ${s} / ${total}</div><p style="position:relative;z-index:1;opacity:0.82;font-size:0.88rem;margin-top:6px">${msg}</p><button class="quiz-next" style="display:inline-block;margin-top:16px" onclick="restartQuiz()">Ulangi Quiz</button>`; }
+        function restartQuiz() { current = 0; score = 0; document.getElementById('quizCard').innerHTML = `<div class="quiz-prompt">Pertanyaan <span id="qNum">1</span> dari <span id="qTotal">8</span></div><div class="quiz-q" id="qText"></div><div class="quiz-options" id="qOptions"></div><div class="quiz-feedback" id="qFeedback"></div><button class="quiz-next" id="qNext" onclick="nextQuestion()">Pertanyaan Berikutnya ?</button>`; renderQuestion(); }
+        renderQuestion();
+    </script>
+</body>
+
+</html>
+
+
+

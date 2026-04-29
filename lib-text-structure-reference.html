@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Text Structure & Reference - Library SNBT 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        html, body { max-width: 100%; overflow-x: hidden; }
+        * { -webkit-tap-highlight-color: transparent !important; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --accent:#2563eb; --accent2:#06b6d4; --bg:#f0f2f8; --surface:rgba(255,255,255,.72); --border:rgba(0,0,0,.08); --text:#1a1a2e; --text2:#4b5563; --text3:#9ca3af; --glow:rgba(124,58,237,.18); --radius:20px; }
+        body.dark { --bg:#050a15; --surface:rgba(255,255,255,.055); --border:rgba(255,255,255,.09); --text:#f0edff; --text2:rgba(240,237,255,.68); --text3:rgba(240,237,255,.36); --glow:rgba(124,58,237,.28); }
+        body { font-family:'Bricolage Grotesque',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; transition:background .3s,color .3s; }
+        .noise-overlay { position:fixed; inset:0; z-index:0; opacity:.35; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); }
+        .topnav { position:sticky; top:0; z-index:10; display:flex; align-items:center; gap:14px; padding:16px 20px; background:var(--surface); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); }
+        .topnav a { text-decoration:none; color:var(--accent); font-weight:800; }
+        .topnav-title { margin-left:auto; font-family:'Playfair Display',serif; font-weight:700; }
+        .theme-btn { width:36px; height:36px; border-radius:10px; border:1px solid var(--border); background:var(--surface); cursor:pointer; }
+        .wrapper { max-width:920px; margin:0 auto; padding:34px 18px 70px; position:relative; z-index:1; }
+        .hero-badge { display:inline-flex; padding:6px 14px; border-radius:999px; background:rgba(74,222,128,.12); color:#16a34a; border:1px solid rgba(74,222,128,.24); font-size:.74rem; font-weight:800; margin-bottom:14px; }
+        .page-title { font-family:'Playfair Display',serif; font-size:clamp(2rem,4vw,3rem); line-height:1.15; margin-bottom:12px; }
+        .page-title .grad { background:linear-gradient(135deg,var(--accent),#60a5fa,var(--accent2)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+        .page-desc { color:var(--text2); line-height:1.8; margin-bottom:26px; }
+        .toc, .section { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); }
+        .toc { padding:22px 24px; margin-bottom:24px; }
+        .toc-title { font-weight:800; margin-bottom:10px; }
+        .toc ol { padding-left:20px; display:grid; gap:6px; color:var(--text2); }
+        .section { padding:24px; margin-bottom:18px; }
+        .section h2 { font-family:'Playfair Display',serif; margin-bottom:12px; font-size:1.45rem; }
+        .section h3 { color:var(--accent); margin:16px 0 8px; font-size:1.02rem; }
+        .section p, .section li { color:var(--text2); line-height:1.8; font-size:.94rem; }
+        .section ul, .section ol { padding-left:20px; margin:10px 0; }
+        .example, .tip, .warning { padding:14px 16px; border-radius:12px; margin:14px 0; line-height:1.75; font-size:.9rem; }
+        .example { background:rgba(124,58,237,.07); border-left:3px solid var(--accent); }
+        .tip { background:rgba(6,182,212,.08); border-left:3px solid var(--accent2); }
+        .warning { background:rgba(244,63,94,.08); border-left:3px solid #f43f5e; }
+        .nav-buttons { display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; }
+        .nav-btn { flex:1 1 220px; padding:14px 16px; border-radius:14px; text-decoration:none; border:1px solid var(--border); background:var(--surface); color:var(--text); font-weight:800; }
+        .nav-btn.primary { color:#fff; border:none; background:linear-gradient(135deg,var(--accent),var(--accent2)); }
+        footer { text-align:center; color:var(--text3); padding:18px; margin-top:22px; border-top:1px solid var(--border); }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">? Kembali ke Library</a>
+        <span class="topnav-title">Text Structure & Reference</span>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">Literasi Bahasa Inggris</div>
+        <h1 class="page-title">Text Structure & <span class="grad">Reference</span></h1>
+        <p class="page-desc">Di soal reading SNBT, memahami struktur teks dan reference words membuat proses membaca jauh lebih cepat. Kamu tidak hanya tahu arti kalimat, tetapi juga memahami bagaimana paragraf dibangun. Materi ini tetap relevan untuk 2026 karena soal literasi Inggris masih sangat bergantung pada inference, paragraph function, dan cohesion.</p>
+
+        <div class="toc">
+            <div class="toc-title">🔹 Table of Contents</div>
+            <ol>
+                <li>Why text structure matters</li>
+                <li>Common text structures and signal words</li>
+                <li>Reference words and how to answer them</li>
+                <li>Cohesion and connectors</li>
+                <li>Fast reading strategy for SNBT 2026</li>
+                <li>Mini practice</li>
+            </ol>
+        </div>
+
+        <section class="section">
+            <h2>1. Why text structure matters</h2>
+            <p>Academic and informational texts usually follow a recognizable pattern. If you know the pattern, you can predict where the answer is located and avoid translating every sentence word by word.</p>
+            <div class="tip"><strong>Main idea:</strong> structure helps you locate <em>purpose, contrast, result, example,</em> and <em>conclusion</em> much faster.</div>
+        </section>
+
+        <section class="section">
+            <h2>2. Common text structures and signal words</h2>
+            <ul>
+                <li><strong>Cause - Effect:</strong> explains why something happens and what the result is. Signal words: <em>because, therefore, as a result</em>.</li>
+                <li><strong>Problem - Solution:</strong> presents an issue, then offers one or more solutions. Signal words: <em>issue, challenge, solve, address</em>.</li>
+                <li><strong>Compare - Contrast:</strong> shows similarities and differences. Signal words: <em>however, similarly, unlike, on the other hand</em>.</li>
+                <li><strong>Chronological order:</strong> explains events in sequence. Signal words: <em>first, then, finally, afterward</em>.</li>
+                <li><strong>Claim - Evidence:</strong> presents an opinion or finding, followed by support or proof.</li>
+            </ul>
+            <div class="example"><strong>Exam hint:</strong> if a paragraph begins with <em>however</em>, expect a contrast or shift in the writer-s stance.</div>
+        </section>
+
+        <section class="section">
+            <h2>3. Reference words and how to answer them</h2>
+            <p>Reference questions ask what a word such as <em>it, they, this, these, such, those, former, latter</em> refers to. The answer is usually found <strong>just before</strong> the reference word appears.</p>
+            <div class="example"><strong>Example:</strong> -Many students join study groups because <em>they</em> can exchange ideas.-<br>The word <em>they</em> refers to <strong>many students</strong>.</div>
+            <ol>
+                <li>Read the sentence containing the reference word.</li>
+                <li>Move one clause or one sentence backward.</li>
+                <li>Find the nearest noun that is logical in meaning and number.</li>
+                <li>Reinsert that noun into the sentence to check if it makes sense.</li>
+            </ol>
+            <div class="tip"><strong>Quick rule:</strong> do not pick the nearest noun automatically; pick the nearest <em>logical</em> noun.</div>
+        </section>
+
+        <section class="section">
+            <h2>4. Cohesion and connectors</h2>
+            <p>Connectors help the reader follow the logic of a paragraph.</p>
+            <ul>
+                <li><strong>Addition:</strong> moreover, furthermore, in addition</li>
+                <li><strong>Contrast:</strong> however, nevertheless, on the other hand</li>
+                <li><strong>Cause:</strong> because, since, due to</li>
+                <li><strong>Result:</strong> therefore, thus, consequently</li>
+                <li><strong>Example:</strong> for instance, for example, such as</li>
+                <li><strong>Conclusion:</strong> in conclusion, overall, to sum up</li>
+            </ul>
+            <div class="warning"><strong>Common trap:</strong> many students translate every single word, but miss the connector that actually reveals the paragraph-s direction.</div>
+        </section>
+
+        <section class="section">
+            <h2>5. Fast reading strategy for SNBT 2026</h2>
+            <ol>
+                <li>Read the first and last sentence of each paragraph first.</li>
+                <li>Notice connectors and repeated keywords.</li>
+                <li>Identify whether the paragraph is explaining, comparing, supporting, or concluding.</li>
+                <li>Only scan deeper when the question requires detail.</li>
+                <li>For 2026 preparation, practice identifying <strong>main idea, author-s purpose, inference, and reference</strong> in one reading pass.</li>
+            </ol>
+        </section>
+
+        <section class="section">
+            <h2>6. Mini practice</h2>
+            <p><strong>Sentence:</strong> -Renewable energy is becoming more popular. <em>This trend</em> is driven by lower costs and environmental awareness.-</p>
+            <p><strong>Question:</strong> what does <em>This trend</em> refer to?</p>
+            <div class="example"><strong>Answer:</strong> it refers to the increasing popularity of <strong>renewable energy</strong>.</div>
+
+            <p><strong>Extra drill:</strong> -Online learning offers flexibility. <em>However</em>, some students still prefer face-to-face interaction.- What is the function of <em>however</em>?</p>
+            <div class="example"><strong>Answer:</strong> it signals <strong>contrast</strong> between the advantage of online learning and the different preference of some students.</div>
+        </section>
+
+        <div class="nav-buttons">
+            <a class="nav-btn" href="library.html">? Kembali ke Library</a>
+            <a class="nav-btn primary" href="snbt.html?type=english">Lanjut ke Literasi Inggris ?</a>
+        </div>
+
+        <footer>- 2026 QuizNation - Materi Library SNBT 2026.</footer>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            if (typeof window.__quizNationApplyGlobalPreferences === 'function') { window.__quizNationApplyGlobalPreferences(); }
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        }
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+    </script>
+</body>
+
+</html>
+

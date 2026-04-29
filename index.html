@@ -1,0 +1,2685 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta name="theme-color" content="#0a1120" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>QuizNation - 2026</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;600;700;800;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="index.css">
+  <link rel="stylesheet" href="android-optimized.css">
+  <script src="android-optimized.js" defer></script>
+</head>
+
+<body class="home-page">
+
+  <canvas id="particleCanvas"></canvas>
+
+  <div class="bg-animation">
+    <div class="circle"></div>
+    <div class="circle"></div>
+    <div class="circle"></div>
+  </div>
+
+  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar(false)" aria-hidden="true"></div>
+
+  <div class="sidebar" id="sidebar" aria-hidden="true">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <img id="sidebarAvatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix&backgroundColor=b6e3f4"
+          alt="Avatar"
+          style="width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); display: none;" />
+        <span class="sidebar-logo-icon" id="sidebarDefaultIcon">🎓</span>
+        <span class="sidebar-logo-text">QuizNation</span>
+      </div>
+      <button class="sidebar-close" type="button" aria-label="Tutup sidebar" onclick="toggleSidebar(false)">✕</button>
+    </div>
+
+    <div class="sidebar-body">
+      <div class="clock-widget">
+      <div class="clock-time" id="clockTime">00:00:00</div>
+      <div class="clock-date" id="clockDate">Loading...</div>
+      <div class="clock-day" id="clockDay">Loading...</div>
+    </div>
+
+    <div class="theme-toggle">
+      <div class="theme-label">
+        <span id="themeIcon">🌙</span>
+        <span id="themeText">Mode Gelap</span>
+      </div>
+      <div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
+        <div class="toggle-slider"></div>
+      </div>
+    </div>
+
+    <div class="theme-toggle" style="margin-top: -8px;">
+      <div class="theme-label">
+        <span id="musicIcon">🔊</span>
+        <span id="musicText">Musik Nyala</span>
+      </div>
+      <div class="toggle-switch active" id="musicToggle" onclick="toggleMusic()">
+        <div class="toggle-slider"></div>
+      </div>
+    </div>
+
+    <!-- Backsound Selector -->
+    <div class="backsound-panel" id="backsoundPanel">
+      <div class="backsound-label">🎵 Pilih Backsound</div>
+      <div class="backsound-list" id="backsoundList">
+        <button class="bs-item" data-index="0" onclick="selectBacksound(0)">
+          <span class="bs-icon">☕</span>
+          <div class="bs-info">
+            <div class="bs-name">Lofi Chill</div>
+            <div class="bs-genre">Lo-fi Hip-hop · Santai</div>
+          </div>
+          <span class="bs-playing" id="bsPlaying0"></span>
+        </button>
+        <button class="bs-item" data-index="1" onclick="selectBacksound(1)">
+          <span class="bs-icon">🌊</span>
+          <div class="bs-info">
+            <div class="bs-name">Ocean Waves</div>
+            <div class="bs-genre">Nature · Menenangkan</div>
+          </div>
+          <span class="bs-playing" id="bsPlaying1"></span>
+        </button>
+        <button class="bs-item" data-index="2" onclick="selectBacksound(2)">
+          <span class="bs-icon">🌧️</span>
+          <div class="bs-info">
+            <div class="bs-name">Rain Ambience</div>
+            <div class="bs-genre">Ambient · Fokus</div>
+          </div>
+          <span class="bs-playing" id="bsPlaying2"></span>
+        </button>
+        <button class="bs-item" data-index="3" onclick="selectBacksound(3)">
+          <span class="bs-icon">🎷</span>
+          <div class="bs-info">
+            <div class="bs-name">Café Jazz</div>
+            <div class="bs-genre">Jazz · Hangat</div>
+          </div>
+          <span class="bs-playing" id="bsPlaying3"></span>
+        </button>
+        <button class="bs-item" data-index="4" onclick="selectBacksound(4)">
+          <span class="bs-icon">🌲</span>
+          <div class="bs-info">
+            <div class="bs-name">Forest Birds</div>
+            <div class="bs-genre">Nature · Segar</div>
+          </div>
+          <span class="bs-playing" id="bsPlaying4"></span>
+        </button>
+        <button class="bs-item" data-index="5" onclick="selectBacksound(5)">
+          <span class="bs-icon">🎹</span>
+          <div class="bs-info">
+            <div class="bs-name">Piano Dreamy</div>
+            <div class="bs-genre">Classical · Lembut</div>
+          </div>
+          <span class="bs-playing" id="bsPlaying5"></span>
+        </button>
+      </div>
+      <div class="backsound-volume">
+        <span class="backsound-volume-label">Volume</span>
+        <input type="range" id="volumeSlider" min="0" max="100" value="50" aria-label="Atur volume musik" oninput="setMusicVolume(this.value)">
+        <span class="backsound-volume-value" id="volumeValue">50%</span>
+      </div>
+    </div>
+
+    <div class="sidebar-stats">
+      <div class="sidebar-stat-item">
+        <span class="sidebar-stat-label">Total Skor</span>
+        <span class="sidebar-stat-value" id="sidebarScore">0</span>
+      </div>
+      <div class="sidebar-stat-item">
+        <span class="sidebar-stat-label">Bintang ⭐</span>
+        <span class="sidebar-stat-value" id="sidebarBintang">0</span>
+      </div>
+      <div class="sidebar-stat-item">
+        <span class="sidebar-stat-label">Level Terbuka</span>
+        <span class="sidebar-stat-value" id="sidebarLevels">0/0</span>
+      </div>
+      <div class="sidebar-stat-item">
+        <span class="sidebar-stat-label">Streak Hari</span>
+        <span class="sidebar-stat-value" id="sidebarStreak">0</span>
+      </div>
+    </div>
+
+    <div class="sidebar-menu">
+      <div class="menu-title">Menu Utama</div>
+      <a href="index.html" class="menu-item active"><span class="menu-icon">🏠</span><span>Beranda</span></a>
+      <a href="statistik.html" class="menu-item"><span class="menu-icon">📊</span><span>Statistik</span></a>
+      <a href="evaluasi.html" class="menu-item"><span class="menu-icon">🎓</span><span>Evaluasi SNBT</span></a>
+      <a href="pencapaian.html" class="menu-item"><span class="menu-icon">🏆</span><span>Pencapaian</span></a>
+      <a href="materi.html" class="menu-item"><span class="menu-icon">📚</span><span>Materi</span></a>
+      <a href="library.html" class="menu-item"><span class="menu-icon">📖</span><span>Library</span></a>
+    </div>
+
+    <div class="sidebar-menu">
+      <div class="menu-title">Bantuan</div>
+      <a href="pengaturan.html" class="menu-item"><span class="menu-icon">⚙️</span><span>Pengaturan</span></a>
+      <a href="panduan.html" class="menu-item"><span class="menu-icon">📋</span><span>Panduan</span></a>
+      <a href="feedback.html" class="menu-item"><span class="menu-icon">💬</span><span>Feedback</span></a>
+      <a href="login.html" class="menu-item login-btn-sidebar"
+        style="color:var(--accent); margin-top:15px; border-top: 1px solid var(--card-border); padding-top: 15px; border-radius: 0;">
+        <span class="menu-icon">🔑</span><span class="login-text" id="logoutText">Masuk Akun</span>
+      </a>
+    </div>
+    </div>
+  </div>
+
+  <div class="hamburger" id="hamburger" role="button" tabindex="0" aria-label="Buka sidebar" aria-controls="sidebar" aria-expanded="false" onclick="toggleSidebar()">
+    <span>☰</span>
+  </div>
+
+  <div class="container" id="container">
+    <div class="hero-section">
+      <div class="hero-content">
+        <div class="hero-brand-row">
+          <div class="logo">✦</div>
+          <div class="hero-brand-copy">
+            <div class="hero-brand-title">QuizNation</div>
+            <div class="hero-brand-sub">Adaptive Learning and Test Preparation Suite</div>
+          </div>
+        </div>
+        <div class="hero-kicker">Platform Belajar Terintegrasi</div>
+        <h1>Belajar lebih terarah dengan pengalaman yang terasa seperti produk pendidikan kelas dunia.</h1>
+        <p class="subtitle">Dashboard Bahasa Inggris, SNBT, statistik, dan fokus belajar dalam satu sistem</p>
+        <p class="description">QuizNation menggabungkan latihan bertahap, evaluasi SNBT, tools produktivitas, dan insight performa menjadi satu workspace belajar yang rapi, cepat, dan siap dipakai setiap hari.</p>
+
+        <div class="hero-actions">
+          <a href="#englishLevelsGrid" class="hero-btn hero-btn-primary">Mulai Belajar</a>
+          <a href="#smartToolsSection" class="hero-btn hero-btn-secondary">Lihat Smart Tools</a>
+        </div>
+
+        <div class="hero-trust-row">
+          <div class="trust-pill">100 level bertahap</div>
+          <div class="trust-pill">Latihan SNBT multi kategori</div>
+          <div class="trust-pill">Progress real-time</div>
+        </div>
+      </div>
+
+      <div class="hero-showcase">
+        <div class="hero-panel hero-panel-main">
+          <div class="hero-panel-header">
+            <div>
+              <div class="hero-panel-kicker">Live Overview</div>
+              <div class="hero-panel-title">Performance Center</div>
+            </div>
+            <div class="hero-status">System Active</div>
+          </div>
+
+          <div class="stats">
+            <div class="stat-box">
+              <div class="stat-number" id="heroSoal">0</div>
+              <div class="stat-label">Soal</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-number" id="heroLevel">0</div>
+              <div class="stat-label">Level</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-number" id="mainScore">0</div>
+              <div class="stat-label">Skor</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-number" id="mainBintang">0</div>
+              <div class="stat-label">Bintang</div>
+            </div>
+          </div>
+
+          <div class="hero-insight-grid">
+            <div class="hero-insight-card">
+              <div class="hero-insight-label">Learning Stack</div>
+              <div class="hero-insight-value">English + SNBT + Focus Tools</div>
+            </div>
+            <div class="hero-insight-card">
+              <div class="hero-insight-label">Ideal For</div>
+              <div class="hero-insight-value">Siswa yang ingin belajar rutin dan terukur</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hero-panel hero-panel-side">
+          <div class="hero-side-item">
+            <div class="hero-side-label">Workflow</div>
+            <div class="hero-side-value">Learn, measure, improve.</div>
+          </div>
+          <div class="hero-side-item">
+            <div class="hero-side-label">Experience</div>
+            <div class="hero-side-value">Cepat, mobile-friendly, dan fokus pada progres.</div>
+          </div>
+          <div class="hero-side-item">
+            <div class="hero-side-label">Output</div>
+            <div class="hero-side-value">Bukan cuma latihan banyak, tapi latihan yang lebih terarah.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="content-section">
+      <div class="section-intro">
+        <div>
+          <div class="section-kicker">Core Learning</div>
+          <h2 class="section-title">Peta Level Bahasa Inggris</h2>
+          <p class="section-summary">Mulai dari fondasi dasar sampai latihan level tinggi dengan struktur progresif yang mudah dipantau.</p>
+        </div>
+        <div class="section-chip">100 Level Kurikulum Internal</div>
+      </div>
+      <div class="levels-grid-container" id="englishLevelsGrid">
+      </div>
+
+      <section class="smart-tools-section reveal" id="smartToolsSection">
+        <div class="smart-tools-head">
+          <div class="section-kicker">Productivity Suite</div>
+          <div class="smart-tools-title">⚙ Smart Tools Belajar</div>
+          <div class="smart-tools-subtitle">Workspace kecil untuk membantu kamu belajar lebih cepat, lebih fokus, dan lebih konsisten.</div>
+        </div>
+
+        <div class="smart-controls-row">
+          <input type="text" id="levelSearchInput" class="smart-input" placeholder="Cari level, contoh: 12" />
+          <select id="levelSortSelect" class="smart-select">
+            <option value="asc">Urutkan: Level 1 → 100</option>
+            <option value="desc">Urutkan: Level 100 → 1</option>
+            <option value="favorite">Urutkan: Favorit Dulu</option>
+          </select>
+          <button class="smart-btn" id="continueBtn" onclick="goToContinueLevel()">▶ Lanjut Belajar</button>
+          <button class="smart-btn" id="randomChallengeBtn" onclick="startRandomChallenge()">🎲 Random Challenge</button>
+          <button class="smart-btn" id="focusModeBtn" onclick="toggleFocusMode()">🎯 Mode Fokus: OFF</button>
+          <div class="smart-badge" id="favoriteCountBadge">Favorit: 0</div>
+        </div>
+
+        <div class="smart-widgets-grid">
+          <div class="smart-widget-card">
+            <div class="smart-widget-title">⏱ Pomodoro Timer</div>
+            <div class="pomodoro-time" id="pomodoroTime">25:00</div>
+            <div class="pomodoro-controls">
+              <button class="smart-btn mini" onclick="startPomodoro()">Mulai</button>
+              <button class="smart-btn mini" onclick="pausePomodoro()">Pause</button>
+              <button class="smart-btn mini" onclick="resetPomodoro()">Reset</button>
+            </div>
+            <div class="smart-note" id="pomodoroStatus">Siap fokus 25 menit.</div>
+          </div>
+
+          <div class="smart-widget-card">
+            <div class="smart-widget-title">📝 Catatan Cepat</div>
+            <textarea id="quickNotesInput" class="smart-textarea" placeholder="Tulis rangkuman, kata sulit, atau target belajar kamu..."></textarea>
+            <div class="smart-note" id="quickNotesStatus">Belum ada perubahan.</div>
+          </div>
+
+          <div class="smart-widget-card">
+            <div class="smart-widget-title">💾 Data Progress</div>
+            <div class="data-tools-row">
+              <button class="smart-btn mini" onclick="exportProgressData()">Export JSON</button>
+              <label class="smart-btn mini file-label" for="importProgressFile">Import JSON</label>
+              <input type="file" id="importProgressFile" accept="application/json" />
+            </div>
+            <button class="smart-btn mini" onclick="openShortcutsModal()">⌨ Lihat Shortcut</button>
+            <div class="smart-note">Shortcut cepat: / cari level, R random challenge, F mode fokus, ? bantuan.</div>
+          </div>
+        </div>
+      </section>
+
+      <div class="snbt-section">
+        <div class="section-intro section-intro-wide">
+          <div>
+            <div class="section-kicker">Exam Preparation</div>
+            <h2 class="snbt-title">
+              <span>🎓</span>
+              <span>Latihan Soal SNBT</span>
+            </h2>
+            <p class="snbt-subtitle">
+              Persiapkan diri menghadapi SNBT dengan modul kategori yang lebih tersegmentasi, lebih jelas, dan lebih mudah dipilih sesuai strategi belajar.
+            </p>
+          </div>
+          <div class="section-chip">TPS, Literasi, dan Penalaran • Update 2026</div>
+        </div>
+
+        <div class="snbt-cards">
+          <a href="snbt.html?type=tps" class="snbt-card tps">
+            <div class="snbt-card-header">
+              <div class="snbt-card-icon">🧠</div>
+              <div class="snbt-card-badge">TPS</div>
+            </div>
+            <div class="snbt-card-title">Tes Potensi Skolastik</div>
+            <div class="snbt-card-desc">
+              Uji kemampuan penalaran umum, pengetahuan kuantitatif, dan pemahaman bacaan.
+            </div>
+            <div class="snbt-card-stats">
+              <div class="snbt-stat-item">
+                <span class="snbt-stat-icon">📝</span>
+                <span id="snbtTpsSoal">0 Soal</span>
+              </div>
+              <div class="snbt-stat-item">
+                <span class="snbt-stat-icon">📝</span>
+                <span id="snbtTpsLevel">0 Level</span>
+              </div>
+            </div>
+            <div class="snbt-card-footer">
+              <div class="snbt-progress">
+                <div class="snbt-progress-label">Progress: 0%</div>
+                <div class="snbt-progress-bar">
+                  <div class="snbt-progress-fill" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="snbt-action">
+                <span>Mulai</span>
+                <span>→</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="snbt.html?type=indo" class="snbt-card indo">
+            <div class="snbt-card-header">
+              <div class="snbt-card-icon">📖</div>
+              <div class="snbt-card-badge">Literasi</div>
+            </div>
+            <div class="snbt-card-title">Bahasa Indonesia</div>
+            <div class="snbt-card-desc">
+              Latihan pemahaman teks, analisis wacana, dan kemampuan berbahasa Indonesia.
+            </div>
+            <div class="snbt-card-stats">
+              <div class="snbt-stat-item">
+                <span class="snbt-stat-icon">📝</span>
+                <span id="snbtIndoSoal">0 Soal</span>
+              </div>
+              <div class="snbt-stat-item">
+                <span class="snbt-stat-icon">📝</span>
+                <span id="snbtIndoLevel">0 Level</span>
+              </div>
+            </div>
+            <div class="snbt-card-footer">
+              <div class="snbt-progress">
+                <div class="snbt-progress-label">Progress: 0%</div>
+                <div class="snbt-progress-bar">
+                  <div class="snbt-progress-fill" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="snbt-action">
+                <span>Mulai</span>
+                <span>→</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="snbt.html?type=english" class="snbt-card english">
+            <div class="snbt-card-header">
+              <div class="snbt-card-icon">🌐</div>
+              <div class="snbt-card-badge">Literasi</div>
+            </div>
+            <div class="snbt-card-title">Bahasa Inggris</div>
+            <div class="snbt-card-desc">
+              Reading comprehension, grammar, vocabulary, dan analisis teks berbahasa Inggris.
+            </div>
+            <div class="snbt-card-stats">
+              <div class="snbt-stat-item">
+                <span class="snbt-stat-icon">📝</span>
+                <span id="snbtEngSoal">0 Soal</span>
+              </div>
+              <div class="snbt-stat-item">
+                <span class="snbt-stat-icon">📝</span>
+                <span id="snbtEngLevel">0 Level</span>
+              </div>
+            </div>
+            <div class="snbt-card-footer">
+              <div class="snbt-progress">
+                <div class="snbt-progress-label">Progress: 0%</div>
+                <div class="snbt-progress-bar">
+                  <div class="snbt-progress-fill" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="snbt-action">
+                <span>Mulai</span>
+                <span>→</span>
+              </div>
+            </div>
+          </a>
+
+          <a href="snbt.html?type=math" class="snbt-card math">
+            <div class="snbt-card-header">
+              <div class="snbt-card-icon">🔢</div>
+              <div class="snbt-card-badge">Literasi</div>
+            </div>
+            <div class="snbt-card-title">Penalaran Matematika</div>
+            <div class="snbt-card-desc">
+              Soal logika matematis, penalaran kuantitatif, dan pemecahan masalah numerik.
+            </div>
+            <div class="snbt-card-stats">
+              <div class="snbt-stat-item">
+                <span class="snbt-stat-icon">📝</span>
+                <span id="snbtMathSoal">0 Soal</span>
+              </div>
+              <div class="snbt-stat-item">
+                <span class="snbt-stat-icon">📝</span>
+                <span id="snbtMathLevel">0 Level</span>
+              </div>
+            </div>
+            <div class="snbt-card-footer">
+              <div class="snbt-progress">
+                <div class="snbt-progress-label">Progress: 0%</div>
+                <div class="snbt-progress-bar">
+                  <div class="snbt-progress-fill" style="width: 0%"></div>
+                </div>
+              </div>
+              <div class="snbt-action">
+                <span>Mulai</span>
+                <span>→</span>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="quests-section">
+        <div class="quests-header">
+          <div class="quests-title">
+            <span class="quests-icon">📜</span>
+            <span>Misi Harian</span>
+          </div>
+          <div class="quests-timer" id="questsTimer">Loading...</div>
+        </div>
+        <div class="quests-grid">
+          <div class="quest-card" id="questCard0">
+            <div class="quest-icon bg-blue">📚</div>
+            <div class="quest-info">
+              <div class="quest-name">Selesaikan 3 Level</div>
+              <div class="quest-progress">
+                <div class="q-bar-bg">
+                  <div class="q-bar-fill" id="questBar0" style="width: 66%;"></div>
+                </div>
+                <div class="q-progress-text" id="questText0">2/3</div>
+              </div>
+            </div>
+            <div class="quest-reward">
+              <span class="reward-icon">⭐</span>
+              <span class="reward-val">+50</span>
+            </div>
+            <button class="quest-btn not-ready" data-quest="levels3" data-reward="50" onclick="claimQuestReward(this)">Belum</button>
+          </div>
+          <div class="quest-card" id="questCard1">
+            <div class="quest-icon bg-red">🔥</div>
+            <div class="quest-info">
+              <div class="quest-name">Pertahankan Streak</div>
+              <div class="quest-progress">
+                <div class="q-bar-bg">
+                  <div class="q-bar-fill" id="questBar1" style="width: 100%;"></div>
+                </div>
+                <div class="q-progress-text" id="questText1">1/1</div>
+              </div>
+            </div>
+            <div class="quest-reward">
+              <span class="reward-icon">⭐</span>
+              <span class="reward-val">+20</span>
+            </div>
+            <button class="quest-btn claim" data-quest="streak1" data-reward="20" onclick="claimQuestReward(this)">Klaim!</button>
+          </div>
+          <div class="quest-card" id="questCard2">
+            <div class="quest-icon bg-green">🎯</div>
+            <div class="quest-info">
+              <div class="quest-name">Skor Sempurna 1x</div>
+              <div class="quest-progress">
+                <div class="q-bar-bg">
+                  <div class="q-bar-fill" id="questBar2" style="width: 0%;"></div>
+                </div>
+                <div class="q-progress-text" id="questText2">0/1</div>
+              </div>
+            </div>
+            <div class="quest-reward">
+              <span class="reward-icon">⭐</span>
+              <span class="reward-val">+100</span>
+            </div>
+            <button class="quest-btn not-ready" data-quest="perfect1" data-reward="100" onclick="claimQuestReward(this)">Belum</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="gacha-section reveal">
+        <div class="gacha-title">🎁 Tukar Bintangmu!</div>
+        <div class="gacha-desc">Gunakan bintang yang kamu dapat dari misi harian untuk membuka hadiah misteri. Bisa
+          dapat bantuan dalam soal, perlambat waktu, dan banyak lagi!</div>
+        <button class="gacha-btn" onclick="bukaGift(50)">Buka Gift (50 ⭐)</button>
+      </div>
+
+      <div class="modal-gift" id="modalGift">
+        <div class="gift-box-animate">
+          <div class="gift-icon-big" id="giftIconResult">🎁</div>
+          <div class="gift-result-title" id="giftTitleResult">Membuka...</div>
+          <div class="gift-result-desc" id="giftDescResult">Sedang membuka hadiahmu...</div>
+          <button class="gift-close-btn" onclick="closeGiftModal()" id="giftCloseBtn"
+            style="display:none;">Tutup</button>
+        </div>
+      </div>
+
+      <div class="modal-gift" id="modalNews">
+        <div class="gift-box-animate" style="max-width: 600px; padding: 30px; text-align: left; width: 90%;">
+          <img id="newsModalImg" src="" alt="News Image"
+            style="width: 100%; height: 220px; object-fit: cover; border-radius: 16px; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+          <div
+            style="font-size: 0.85rem; color: var(--accent); font-weight: 800; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;"
+            id="newsModalCategory">Kategori</div>
+          <div class="gift-result-title" id="newsModalTitle"
+            style="font-size: 1.4rem; margin-bottom: 12px; text-align: left; line-height: 1.4;">Judul Berita</div>
+          <div class="gift-result-desc" id="newsModalText"
+            style="text-align: left; margin-bottom: 24px; font-size: 0.95rem; line-height: 1.7;">Isi berita...</div>
+          <button class="gift-close-btn" onclick="closeNewsModal()">Tutup Berita</button>
+        </div>
+      </div>
+
+      <div class="modal-gift" id="modalShortcuts">
+        <div class="gift-box-animate" style="max-width: 480px; padding: 28px; text-align: left; width: 92%;">
+          <div class="gift-result-title" style="text-align:left; margin-bottom: 12px;">⌨ Shortcut Keyboard</div>
+          <div class="gift-result-desc" style="text-align:left; margin-bottom: 18px;">
+            <strong>/</strong> fokus ke pencarian level<br>
+            <strong>R</strong> mulai random challenge<br>
+            <strong>F</strong> toggle mode fokus<br>
+            <strong>?</strong> buka bantuan shortcut<br>
+            <strong>Esc</strong> tutup semua modal
+          </div>
+          <button class="gift-close-btn" onclick="closeShortcutsModal()">Tutup</button>
+        </div>
+      </div>
+
+      <div class="section-intro section-intro-wide" style="margin-top: 40px;">
+        <div>
+          <div class="section-kicker">Insight Hub</div>
+          <h2 class="section-title">💡 Informasi & Inspirasi</h2>
+          <p class="section-summary">Insight tambahan untuk menjaga motivasi, membaca tren, dan memberi konteks lebih luas pada perjalanan belajarmu.</p>
+        </div>
+        <div class="section-chip">Data, News, dan Motivation</div>
+      </div>
+      <div class="content-grid">
+        <div>
+          <div class="motivation-section" onclick="changeQuote()">
+            <button class="motivation-refresh" onclick="event.stopPropagation(); changeQuote();">🔄</button>
+            <div class="motivation-icon" id="quoteIcon">💪</div>
+            <div class="motivation-quote" id="quoteText">Loading...</div>
+            <div class="motivation-author" id="quoteAuthor">— Motivasi Hari Ini</div>
+          </div>
+
+          <div class="snbt-score-section">
+            <div class="snbt-score-header">
+              <div class="snbt-score-title">
+                <span class="snbt-score-icon">🎓</span>
+                <span>Passing Grade SNBT</span>
+              </div>
+              <div class="university-selector">
+                <select class="university-dropdown" id="universitySelect" onchange="loadPassingScores()">
+                  <option value="ui">Universitas Indonesia</option>
+                  <option value="itb">Institut Teknologi Bandung</option>
+                  <option value="ugm">Universitas Gadjah Mada</option>
+                  <option value="its">Institut Teknologi Sepuluh Nopember</option>
+                  <option value="unair">Universitas Airlangga</option>
+                  <option value="undip">Universitas Diponegoro</option>
+                  <option value="unpad">Universitas Padjadjaran</option>
+                  <option value="upi">Universitas Pendidikan Indonesia</option>
+                  <option value="uns">Universitas Sebelas Maret</option>
+                  <option value="unhas">Universitas Hasanuddin</option>
+                  <option value="telu">Telkom University</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="snbt-info-box">
+              <div class="snbt-info-icon">💡</div>
+              <div class="snbt-info-text">
+                <strong>Update 2026:</strong> Jadwal UTBK-SNBT terbaru mengarah pada pendaftaran hingga <strong>7 April 2026</strong>, pembayaran hingga <strong>8 April 2026</strong>, unduh kartu <strong>11–15 April 2026</strong>, pelaksanaan UTBK <strong>21–30 April 2026</strong>, dan pengumuman hasil <strong>25 Mei 2026</strong>. Passing grade di bawah tetap berupa estimasi 2026, bukan angka resmi pemerintah.
+              </div>
+            </div>
+
+            <div class="snbt-chart" id="snbtChart">
+            </div>
+
+            <div class="snbt-legend">
+              <div class="snbt-legend-item">
+                <div class="snbt-legend-label">Tertinggi</div>
+                <div class="snbt-legend-value" id="snbtMax">--</div>
+              </div>
+              <div class="snbt-legend-item">
+                <div class="snbt-legend-label">Terendah</div>
+                <div class="snbt-legend-value" id="snbtMin">--</div>
+              </div>
+              <div class="snbt-legend-item">
+                <div class="snbt-legend-label">Rata-rata</div>
+                <div class="snbt-legend-value" id="snbtAvg">--</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <div class="iq-section">
+            <div class="iq-header">
+              <div class="iq-title">
+                <span class="iq-icon">🧠</span>
+                <span>Rata-rata IQ Indonesia</span>
+              </div>
+              <div class="iq-info">
+                <div class="iq-current" id="iqCurrent">78.49</div>
+                <div class="iq-trend">📈 Data publik terakhir s.d. 2024</div>
+              </div>
+            </div>
+            <div class="iq-chart">
+              <div class="chart-bar-container" id="iqChart">
+              </div>
+            </div>
+            <div class="iq-stats">
+              <div class="iq-stat">
+                <div class="iq-stat-label">Tertinggi</div>
+                <div class="iq-stat-value" id="iqMax">--</div>
+              </div>
+              <div class="iq-stat">
+                <div class="iq-stat-label">Terendah</div>
+                <div class="iq-stat-value" id="iqMin">--</div>
+              </div>
+              <div class="iq-stat">
+                <div class="iq-stat-label">Rata-rata</div>
+                <div class="iq-stat-value" id="iqAvg">--</div>
+              </div>
+            </div>
+            <div class="iq-note">
+              💡 <strong>Catatan:</strong> Data rata-rata IQ Indonesia yang paling konsisten di sumber publik masih aman tersedia sampai <strong>2024</strong>. Jika rilis 2025/2026 yang lebih resmi dan stabil sudah tersedia, grafik ini bisa diperbarui lagi. Rata-rata global umumnya tetap dirujuk di angka sekitar <strong>100</strong>.
+            </div>
+          </div>
+
+          <div class="news-section">
+            <div class="news-header">
+              <div class="news-title">
+                <span class="news-icon">📰</span>
+                <span>Berita & Update 2026</span>
+              </div>
+              <div class="news-source-group">
+                <div class="news-source">
+                  <span class="news-source-icon">🏫</span>
+                  <span>SMB Telkom University</span>
+                </div>
+                <button class="news-refresh-trigger" onclick="loadSNPMBNews(true)">↻ Refresh</button>
+              </div>
+            </div>
+
+            <div class="news-container" id="newsContainer">
+              <div class="news-loading">
+                <div class="news-loading-icon">⏳</div>
+                <div>Memuat berita terbaru...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="features">
+        <div class="section-kicker">Platform Highlights</div>
+        <div class="features-title">⚡ Fitur Unggulan</div>
+        <div class="feature-list">
+          <div class="feature-item">
+            <span class="feature-icon">✅</span>
+            <span>2000 Soal Pilihan Ganda</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">⏱️</span>
+            <span>Tracking Waktu</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">📊</span>
+            <span>Statistik Lengkap</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">🏅</span>
+            <span>Sistem Predikat</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">💯</span>
+            <span>Sistem Scoring</span>
+          </div>
+          <div class="feature-item">
+            <span class="feature-icon">🎨</span>
+            <span>Desain Modern</span>
+          </div>
+        </div>
+
+        <footer>
+          <div class="footer-text">
+            Belajar tanpa batas, kapan saja dimana saja<br>
+            Soalnya duitlu kaga cukup buat langganan Duolingo Plus 😅
+          </div>
+          <div class="footer-badge">100% Gratis</div>
+        </footer>
+      </div>
+    </div>
+
+    <script>
+      // Motivational Quotes Database
+      const quotes = [
+        { icon: '💪', text: 'Kesuksesan adalah hasil dari persiapan, kerja keras, dan belajar dari kegagalan.', author: '— Colin Powell' },
+        { icon: '🌟', text: 'Masa depan milik mereka yang percaya pada keindahan impian mereka.', author: '— Eleanor Roosevelt' },
+        { icon: '🚀', text: 'Cara terbaik untuk memprediksi masa depan adalah dengan menciptakannya.', author: '— Peter Drucker' },
+        { icon: '🎯', text: 'Jangan menunggu kesempatan. Ciptakanlah!', author: '— George Bernard Shaw' },
+        { icon: '⭐', text: 'Percaya pada diri sendiri. Kamu lebih mampu dari yang kamu pikirkan!', author: '— Christian D. Larson' },
+        { icon: '🔥', text: 'Belajar hari ini, panen kesuksesan esok hari.', author: '— QuizNation Team' },
+        { icon: '💡', text: 'Satu-satunya cara untuk melakukan pekerjaan hebat adalah mencintai apa yang kamu lakukan.', author: '— Steve Jobs' },
+        { icon: '🌈', text: 'Setiap ahli pernah menjadi pemula. Jangan menyerah!', author: '— Helen Hayes' },
+        { icon: '🎓', text: 'Pendidikan adalah senjata paling ampuh untuk mengubah dunia.', author: '— Nelson Mandela' },
+        { icon: '🔹', text: 'Mulailah dari mana kamu berada. Gunakan apa yang kamu punya. Lakukan apa yang kamu bisa.', author: '— Arthur Ashe' },
+        { icon: '🏆', text: 'Kesuksesan bukan kunci kebahagiaan. Kebahagiaan adalah kunci kesuksesan.', author: '— Albert Schweitzer' },
+        { icon: '🎨', text: 'Kreativitas adalah kecerdasan yang bersenang-senang.', author: '— Albert Einstein' },
+        { icon: '💫', text: 'Jangan biarkan kemarin menghabiskan terlalu banyak hari ini.', author: '— Will Rogers' },
+        { icon: '🌺', text: 'Perjalanan seribu mil dimulai dengan satu langkah kecil.', author: '— Lao Tzu' },
+        { icon: '🎪', text: 'Hidup adalah 10% apa yang terjadi padamu dan 90% bagaimana kamu meresponnya.', author: '— Charles R. Swindoll' }
+      ];
+
+      let currentQuoteIndex = Math.floor(Math.random() * quotes.length);
+      const perfState = window.__QUIZNATION_PERF__ || {};
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let newsRefreshTimerId = null;
+
+      function queueNonCriticalTask(task, timeout = 120) {
+        const scheduler = window.requestIdleCallback || ((callback) => setTimeout(() => callback({
+          didTimeout: false,
+          timeRemaining: () => 0
+        }), timeout));
+
+        scheduler(() => {
+          try {
+            task();
+          } catch (error) {
+            console.warn('Non-critical task skipped:', error);
+          }
+        }, { timeout });
+      }
+
+      function setPerformanceMode(enabled) {
+        document.body.classList.toggle('performance-mode', !!enabled);
+      }
+
+      function monitorInitialPerformance() {
+        if (prefersReducedMotion || perfState.reduceEffects) {
+          setPerformanceMode(true);
+          return;
+        }
+
+        let frames = 0;
+        const start = performance.now();
+
+        function sample(now) {
+          frames += 1;
+          if (now - start < 900) {
+            requestAnimationFrame(sample);
+            return;
+          }
+
+          const fps = Math.round((frames * 1000) / Math.max(now - start, 1));
+          setPerformanceMode(fps < 55);
+        }
+
+        requestAnimationFrame(sample);
+      }
+
+      function changeQuote() {
+        currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+        const quote = quotes[currentQuoteIndex];
+        document.getElementById('quoteIcon').textContent = quote.icon;
+        document.getElementById('quoteText').textContent = quote.text;
+        document.getElementById('quoteAuthor').textContent = quote.author;
+      }
+
+      // Load initial quote
+      changeQuote();
+
+      // SNBT Passing Score Data by University (Updated with realistic estimates)
+      const snbtPassingScores = {
+        ui: [
+          { major: 'Kedokteran', score: 745 },
+          { major: 'Ilmu Komputer', score: 730 },
+          { major: 'Aktuaria', score: 715 },
+          { major: 'Psikologi', score: 710 },
+          { major: 'Ilmu Hubungan Internasional', score: 705 },
+          { major: 'Akuntansi', score: 695 },
+          { major: 'Ilmu Komunikasi', score: 690 },
+          { major: 'Teknik Industri', score: 685 },
+          { major: 'Manajemen', score: 680 },
+          { major: 'Hukum', score: 675 }
+        ],
+        itb: [
+          { major: 'STEI (Sekolah Teknik Elektro & Informatika)', score: 750 },
+          { major: 'FTMD (Fakultas Teknik Mesin & Dirgantara)', score: 725 },
+          { major: 'FTI (Fakultas Teknologi Industri)', score: 720 },
+          { major: 'SAPPK (Sekolah Arsitektur, Perencanaan & Pengembangan Kebijakan)', score: 710 },
+          { major: 'SBM (Sekolah Bisnis & Manajemen)', score: 705 },
+          { major: 'FITB (Fakultas Teknologi Industri)', score: 700 },
+          { major: 'FTSL (Fakultas Teknik Sipil & Lingkungan)', score: 695 },
+          { major: 'FTTM (Fakultas Teknik Pertambangan & Perminyakan)', score: 690 },
+          { major: 'FMIPA (Fakultas Matematika & Ilmu Pengetahuan Alam)', score: 680 },
+          { major: 'SF (Sekolah Farmasi)', score: 675 }
+        ],
+        ugm: [
+          { major: 'Kedokteran', score: 735 },
+          { major: 'Teknologi Informasi', score: 715 },
+          { major: 'Psikologi', score: 705 },
+          { major: 'Akuntansi', score: 695 },
+          { major: 'Manajemen', score: 690 },
+          { major: 'Ilmu Hubungan Internasional', score: 685 },
+          { major: 'Hukum', score: 680 },
+          { major: 'Teknik Industri', score: 675 },
+          { major: 'Ilmu Komunikasi', score: 670 },
+          { major: 'Farmasi', score: 665 }
+        ],
+        its: [
+          { major: 'Teknik Informatika', score: 720 },
+          { major: 'Teknik Elektro', score: 695 },
+          { major: 'Sistem Informasi', score: 690 },
+          { major: 'Teknik Industri', score: 685 },
+          { major: 'Teknik Mesin', score: 680 },
+          { major: 'Arsitektur', score: 670 },
+          { major: 'Teknik Kimia', score: 665 },
+          { major: 'Teknik Sipil', score: 660 },
+          { major: 'Statistika', score: 655 },
+          { major: 'Teknik Lingkungan', score: 650 }
+        ],
+        unair: [
+          { major: 'Kedokteran', score: 725 },
+          { major: 'Kedokteran Gigi', score: 695 },
+          { major: 'Psikologi', score: 685 },
+          { major: 'Akuntansi', score: 680 },
+          { major: 'Ilmu Hubungan Internasional', score: 675 },
+          { major: 'Hukum', score: 670 },
+          { major: 'Farmasi', score: 665 },
+          { major: 'Manajemen', score: 660 },
+          { major: 'Ilmu Komunikasi', score: 655 },
+          { major: 'Kesehatan Masyarakat', score: 645 }
+        ],
+        undip: [
+          { major: 'Kedokteran', score: 720 },
+          { major: 'Teknik Informatika', score: 690 },
+          { major: 'Psikologi', score: 680 },
+          { major: 'Akuntansi', score: 675 },
+          { major: 'Ilmu Komunikasi', score: 670 },
+          { major: 'Hukum', score: 665 },
+          { major: 'Manajemen', score: 660 },
+          { major: 'Teknik Industri', score: 655 },
+          { major: 'Teknik Elektro', score: 650 },
+          { major: 'Teknik Sipil', score: 645 }
+        ],
+        unpad: [
+          { major: 'Kedokteran', score: 725 },
+          { major: 'Psikologi', score: 695 },
+          { major: 'Ilmu Komunikasi', score: 685 },
+          { major: 'Akuntansi', score: 680 },
+          { major: 'Teknik Informatika', score: 675 },
+          { major: 'Manajemen', score: 670 },
+          { major: 'Hukum', score: 665 },
+          { major: 'Hubungan Internasional', score: 660 },
+          { major: 'Farmasi', score: 655 },
+          { major: 'Televisi dan Film', score: 650 }
+        ],
+        upi: [
+          { major: 'Ilmu Komunikasi', score: 655 },
+          { major: 'Manajemen', score: 650 },
+          { major: 'Psikologi', score: 645 },
+          { major: 'Akuntansi', score: 640 },
+          { major: 'Pendidikan Bahasa Inggris', score: 635 },
+          { major: 'Ilmu Komputer', score: 630 },
+          { major: 'Pendidikan Matematika', score: 625 },
+          { major: 'Pendidikan Khusus', score: 620 },
+          { major: 'Bimbingan dan Konseling', score: 615 },
+          { major: 'PGSD', score: 610 }
+        ],
+        uns: [
+          { major: 'Kedokteran', score: 715 },
+          { major: 'Informatika', score: 685 },
+          { major: 'Psikologi', score: 675 },
+          { major: 'Akuntansi', score: 670 },
+          { major: 'Ilmu Komunikasi', score: 665 },
+          { major: 'Manajemen', score: 660 },
+          { major: 'Hukum', score: 655 },
+          { major: 'Teknik Industri', score: 650 },
+          { major: 'Farmasi', score: 645 },
+          { major: 'Teknik Sipil', score: 640 }
+        ],
+        unhas: [
+          { major: 'Kedokteran', score: 710 },
+          { major: 'Teknik Informatika', score: 675 },
+          { major: 'Kedokteran Gigi', score: 670 },
+          { major: 'Psikologi', score: 665 },
+          { major: 'Akuntansi', score: 660 },
+          { major: 'Ilmu Hukum', score: 655 },
+          { major: 'Manajemen', score: 650 },
+          { major: 'Ilmu Hubungan Internasional', score: 645 },
+          { major: 'Farmasi', score: 640 },
+          { major: 'Teknik Sipil', score: 635 }
+        ],
+        telu: [
+          { major: 'S1 Informatika', score: 660 },
+          { major: 'S1 Rekayasa Perangkat Lunak', score: 655 },
+          { major: 'S1 Data Science', score: 650 },
+          { major: 'S1 Sistem Informasi', score: 645 },
+          { major: 'S1 Teknologi Informasi', score: 640 },
+          { major: 'S1 Teknik Telekomunikasi', score: 635 },
+          { major: 'S1 Teknik Elektro', score: 630 },
+          { major: 'S1 Manajemen Bisnis Telekomunikasi & Informatika (MBTI)', score: 625 },
+          { major: 'S1 Ilmu Komunikasi', score: 620 },
+          { major: 'S1 Desain Komunikasi Visual', score: 615 }
+        ]
+      };
+
+      function loadPassingScores() {
+        const university = document.getElementById('universitySelect').value;
+        const data = snbtPassingScores[university];
+        const container = document.getElementById('snbtChart');
+
+        container.innerHTML = '';
+
+        // Calculate stats
+        const scores = data.map(d => d.score);
+        const maxScore = Math.max(...scores);
+        const minScore = Math.min(...scores);
+        const avgScore = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+
+        // Update legend
+        document.getElementById('snbtMax').textContent = maxScore;
+        document.getElementById('snbtMin').textContent = minScore;
+        document.getElementById('snbtAvg').textContent = avgScore;
+
+        // Render chart items
+        const scoreRange = Math.max(maxScore - minScore, 1);
+
+        data.forEach((item, index) => {
+          const percentage = ((item.score - minScore) / scoreRange) * 100;
+
+          const itemEl = document.createElement('div');
+          itemEl.className = 'snbt-chart-item';
+          itemEl.style.animationDelay = `${index * 0.05}s`;
+          itemEl.innerHTML = `
+          <div class="snbt-chart-major">${item.major}</div>
+          <div class="snbt-chart-score">
+            <div class="snbt-score-value">${item.score}</div>
+            <div class="snbt-score-bar">
+              <div class="snbt-score-bar-fill" style="width: ${percentage}%"></div>
+            </div>
+          </div>
+        `;
+          container.appendChild(itemEl);
+        });
+      }
+
+      // Load initial passing scores without blocking first paint
+      queueNonCriticalTask(loadPassingScores, 160);
+
+      // SNPMB / Telkom University News Loader
+      function renderNewsItems(newsList) {
+        const container = document.getElementById('newsContainer');
+        if (!container) return;
+
+        container.innerHTML = '';
+
+        newsList.forEach((news, index) => {
+          const newsDate = new Date(news.date);
+          const timeAgo = getTimeAgo(newsDate);
+
+          const newsItem = document.createElement('div');
+          newsItem.className = 'news-item';
+          newsItem.style.animationDelay = `${index * 0.1}s`;
+          newsItem.onclick = () => openNewsModal(news);
+
+          const safeTitle = news.title.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          const safeExcerpt = news.excerpt.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          const safeCategory = news.category.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+          const safeImage = encodeURI(news.image);
+
+          newsItem.innerHTML = `
+            <div class="news-item-header">
+              <img src="${safeImage}" alt="${safeTitle}" class="news-item-image" loading="lazy" onerror="this.style.display='none'">
+              <div class="news-item-content">
+                <div class="news-item-title">${safeTitle}</div>
+                <div class="news-item-meta">
+                  <div class="news-meta-item">
+                    <span>🕐</span>
+                    <span>${timeAgo}</span>
+                  </div>
+                  <div class="news-meta-item">
+                    <span>🏷️</span>
+                    <span>${safeCategory}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="news-item-excerpt">${safeExcerpt}</div>
+            <div class="news-item-footer">
+              <div class="news-item-category">${safeCategory}</div>
+              <a href="#" class="news-item-link read-more-btn">
+                Baca Selengkapnya →
+              </a>
+            </div>
+          `;
+
+          const readMoreBtn = newsItem.querySelector('.read-more-btn');
+          readMoreBtn.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            openNewsModal(news);
+          };
+
+          container.appendChild(newsItem);
+        });
+      }
+
+      async function loadSNPMBNews(forceRefresh = false) {
+        const container = document.getElementById('newsContainer');
+        if (!container) return;
+
+        try {
+          const cachedRaw = localStorage.getItem(SMART_KEYS.newsCache);
+          if (!forceRefresh && cachedRaw) {
+            const cachedData = JSON.parse(cachedRaw);
+            const freshEnough = cachedData?.timestamp && (Date.now() - cachedData.timestamp < (15 * 60 * 1000));
+            if (freshEnough && Array.isArray(cachedData.items) && cachedData.items.length) {
+              renderNewsItems(cachedData.items);
+              return;
+            }
+          }
+        } catch (error) {
+          localStorage.removeItem(SMART_KEYS.newsCache);
+        }
+
+        container.innerHTML = `
+          <div class="news-loading">
+            <div class="news-loading-icon">⏳</div>
+            <div>${forceRefresh ? 'Memperbarui berita...' : 'Memuat berita terbaru...'}</div>
+          </div>
+        `;
+
+        try {
+          const mockNews = [
+            {
+              title: 'Jalur Beasiswa Telkom University 2026 Dibuka hingga 10 April',
+              excerpt: 'Jalur Beasiswa Unggulan dan Beasiswa Pintar untuk calon mahasiswa baru 2026 masih dibuka. Calon pendaftar disarankan segera menyiapkan dokumen dan memilih jalur yang sesuai.',
+              category: 'Beasiswa 2026',
+              date: '2026-02-18',
+              image: 'https://images.unsplash.com/photo-1523050854058-8df90110c9f1?w=800&auto=format&fit=crop&q=60',
+              link: '#'
+            },
+            {
+              title: 'Jalur Penerimaan Telkom University 2026 Masih Tersedia, Termasuk Tanpa Tes',
+              excerpt: 'Beberapa jalur masuk Telkom University 2026 masih dibuka, termasuk opsi seleksi tertentu tanpa tes serta jalur berbasis prestasi dan beasiswa.',
+              category: 'Admisi',
+              date: '2026-03-22',
+              image: 'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=800&auto=format&fit=crop&q=60',
+              link: '#'
+            },
+            {
+              title: 'Tel-U Camp Digelar 7–9 Mei 2026, Pendaftaran Sebelum 3 Mei',
+              excerpt: 'Melalui kanal resmi SMB Telkom, calon mahasiswa diajak melihat suasana laboratorium, kelas, student club, dan pengalaman belajar nyata di kampus utama.',
+              category: 'Event Kampus',
+              date: '2026-04-04',
+              image: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&auto=format&fit=crop&q=60',
+              link: '#'
+            },
+            {
+              title: 'S1 Desain Komunikasi Visual Tel-U Jadi Sorotan pada Update 1 April 2026',
+              excerpt: 'Artikel terbaru Cerita TelUtizen menyoroti kurikulum, fasilitas, laboratorium, magang, dan prospek kerja program studi S1 Desain Komunikasi Visual.',
+              category: 'Fakta Jurusan',
+              date: '2026-04-01',
+              image: 'https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=800&auto=format&fit=crop&q=60',
+              link: '#'
+            },
+            {
+              title: 'Apa Itu S1 Sistem Informasi? Menjadi Profesional di Dunia Teknologi',
+              excerpt: 'Update Cerita TelUtizen tanggal 31 Maret 2026 membahas jalur belajar, skill inti, dan prospek karier program studi Sistem Informasi di Telkom University.',
+              category: 'Cerita TelUtizen',
+              date: '2026-03-31',
+              image: 'https://images.unsplash.com/photo-1517673132405-a56a62b18caf?w=800&auto=format&fit=crop&q=60',
+              link: '#'
+            }
+          ];
+
+          await new Promise(resolve => setTimeout(resolve, forceRefresh ? 300 : 700));
+          localStorage.setItem(SMART_KEYS.newsCache, JSON.stringify({ timestamp: Date.now(), items: mockNews }));
+          renderNewsItems(mockNews);
+
+          if (forceRefresh) {
+            showToast('Berita berhasil diperbarui.', 'success');
+          }
+        } catch (error) {
+          console.error('Error loading news:', error);
+          container.innerHTML = `
+          <div class="news-error">
+            <div class="news-error-icon">⚠️</div>
+            <div>Gagal memuat berita</div>
+            <button class="news-refresh-btn" onclick="loadSNPMBNews(true)">🔄 Coba Lagi</button>
+          </div>
+          `;
+          showToast('Berita belum bisa dimuat.', 'error');
+        }
+      }
+
+      function getTimeAgo(date) {
+        const now = new Date();
+        const diffTime = Math.abs(now - date);
+        const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+        if (diffDays === 0) return 'Hari ini';
+        if (diffDays === 1) return 'Kemarin';
+        if (diffDays < 7) return `${diffDays} hari lalu`;
+        if (diffDays < 30) return `${Math.floor(diffDays / 7)} minggu lalu`;
+        return `${Math.floor(diffDays / 30)} bulan lalu`;
+      }
+
+      function syncPageScrollLock() {
+        const hasActiveModal = !!document.querySelector('.modal-gift.active');
+        const hasOpenSidebar = document.body.classList.contains('sidebar-open') || document.body.classList.contains('nav-open');
+        document.body.style.overflow = (hasActiveModal || hasOpenSidebar) ? 'hidden' : '';
+      }
+
+      function setOverlayState(modalId, isOpen) {
+        const modal = document.getElementById(modalId);
+        if (!modal) return;
+        modal.classList.toggle('active', isOpen);
+        modal.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+        syncPageScrollLock();
+      }
+
+      // Fungsi untuk membuka modal berita
+      function openNewsModal(news) {
+        const imgEl = document.getElementById('newsModalImg');
+        imgEl.style.display = 'block';
+        imgEl.src = encodeURI(news.image);
+        imgEl.onerror = function () { this.style.display = 'none'; };
+
+        const newsDate = new Date(news.date);
+        document.getElementById('newsModalCategory').textContent = news.category + " • " + getTimeAgo(newsDate);
+        document.getElementById('newsModalTitle').textContent = news.title;
+
+        // Simulasi teks lengkap berita (safe rendering)
+        const safeExcerpt = news.excerpt.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        const fullText = safeExcerpt + "<br><br>Pihak Direktorat Admisi Telkom University menghimbau agar seluruh calon pendaftar mempersiapkan dokumen persyaratan jauh-jauh hari. 'Kami berkomitmen untuk terus mencetak generasi digital yang unggul melalui program-program yang relevan dengan kebutuhan industri masa depan,' ujar perwakilan Tel-U.<br><br>Informasi lebih lanjut serta detail pendaftaran dapat diakses langsung melalui portal resmi admisi Telkom University.";
+
+        document.getElementById('newsModalText').innerHTML = fullText;
+        setOverlayState('modalNews', true);
+      }
+
+      // Fungsi untuk menutup modal berita
+      function closeNewsModal() {
+        setOverlayState('modalNews', false);
+      }
+
+      // News boot is deferred below so initial render stays lighter.
+
+      // IQ Data Indonesia (2015-2024)
+      const iqData = [
+        { year: '2015', value: 78.20 },
+        { year: '2016', value: 78.25 },
+        { year: '2017', value: 78.30 },
+        { year: '2018', value: 78.35 },
+        { year: '2019', value: 78.38 },
+        { year: '2020', value: 78.41 },
+        { year: '2021', value: 78.44 },
+        { year: '2022', value: 78.46 },
+        { year: '2023', value: 78.48 },
+        { year: '2024', value: 78.49 }
+      ];
+
+      function renderIQChart() {
+        const container = document.getElementById('iqChart');
+        container.innerHTML = '';
+
+        // Calculate min, max, avg
+        const values = iqData.map(d => d.value);
+        const minVal = Math.min(...values);
+        const maxVal = Math.max(...values);
+        const avgVal = (values.reduce((a, b) => a + b, 0) / values.length).toFixed(2);
+
+        // Update stats
+        document.getElementById('iqCurrent').textContent = iqData[iqData.length - 1].value;
+        document.getElementById('iqMax').textContent = maxVal;
+        document.getElementById('iqMin').textContent = minVal;
+        document.getElementById('iqAvg').textContent = avgVal;
+
+        // Calculate heights (normalized to 100%)
+        const range = Math.max(maxVal - minVal, 1);
+        const baseHeight = 30; // Minimum height percentage
+
+        iqData.forEach((data, index) => {
+          const wrapper = document.createElement('div');
+          wrapper.className = 'chart-bar-wrapper';
+
+          const heightPercent = baseHeight + ((data.value - minVal) / range) * (100 - baseHeight);
+
+          wrapper.innerHTML = `
+              <div class="chart-bar" style="height: ${heightPercent}%; animation-delay: ${index * 0.1}s;">
+                <div class="chart-value">${data.value}</div>
+              </div>
+              <div class="chart-label">${data.year}</div>
+            `;
+
+          container.appendChild(wrapper);
+        });
+      }
+
+      // Render chart after the first paint for smoother loading
+      queueNonCriticalTask(renderIQChart, 180);
+
+      // Generate levels 1-100
+      const SMART_KEYS = {
+        favorites: 'qn_level_favorites',
+        focus: 'qn_focus_mode',
+        notes: 'qn_quick_notes',
+        pomodoroLeft: 'qn_pomodoro_left',
+        pomodoroRunning: 'qn_pomodoro_running',
+        pomodoroEndAt: 'qn_pomodoro_end_at',
+        pomodoroSessions: 'qn_pomodoro_sessions',
+        lastLevel: 'qn_last_level',
+        bonusScore: 'qn_bonus_score',
+        questState: 'qn_daily_quest_state',
+        musicVolume: 'qn_music_volume',
+        newsCache: 'qn_news_cache'
+      };
+
+      let levelFavorites = new Set(JSON.parse(localStorage.getItem(SMART_KEYS.favorites) || '[]'));
+      let focusModeEnabled = localStorage.getItem(SMART_KEYS.focus) === 'on';
+      let pomodoroRemaining = parseInt(localStorage.getItem(SMART_KEYS.pomodoroLeft) || '1500', 10);
+      let pomodoroTimerId = null;
+      let toastTimerId = null;
+      let levelFilterRaf = null;
+
+      function showToast(message, tone = 'info') {
+        const toast = document.getElementById('appToast');
+        if (!toast) return;
+
+        const palette = {
+          info: '#2563eb',
+          success: '#10b981',
+          warning: '#f59e0b',
+          error: '#ef4444'
+        };
+
+        toast.textContent = message;
+        toast.style.setProperty('--toast-accent', palette[tone] || palette.info);
+        toast.classList.add('show');
+
+        if (toastTimerId) clearTimeout(toastTimerId);
+        toastTimerId = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2400);
+      }
+
+      function getTodayKey() {
+        return new Date().toISOString().slice(0, 10);
+      }
+
+      function readQuestState() {
+        try {
+          const raw = JSON.parse(localStorage.getItem(SMART_KEYS.questState) || '{}');
+          if (raw.date !== getTodayKey()) {
+            return { date: getTodayKey(), claimed: [] };
+          }
+          return {
+            date: raw.date || getTodayKey(),
+            claimed: Array.isArray(raw.claimed) ? raw.claimed : []
+          };
+        } catch (error) {
+          return { date: getTodayKey(), claimed: [] };
+        }
+      }
+
+      function writeQuestState(state) {
+        localStorage.setItem(SMART_KEYS.questState, JSON.stringify(state));
+      }
+
+      function notifyPomodoroComplete() {
+        if ('Notification' in window && Notification.permission === 'granted') {
+          new Notification('Pomodoro selesai! 🎉', {
+            body: 'Waktunya istirahat sebentar lalu lanjut lagi.',
+            icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><text y="50" font-size="48">🎯</text></svg>'
+          });
+        }
+      }
+
+      function saveFavorites() {
+        localStorage.setItem(SMART_KEYS.favorites, JSON.stringify(Array.from(levelFavorites)));
+      }
+
+      function updateFavoriteBadge(visibleCount = null) {
+        const badge = document.getElementById('favoriteCountBadge');
+        if (!badge) return;
+        badge.textContent = visibleCount === null
+          ? `Favorit: ${levelFavorites.size}`
+          : `Favorit: ${levelFavorites.size} • Tampil: ${visibleCount}`;
+      }
+
+      function updateContinueButton() {
+        const btn = document.getElementById('continueBtn');
+        if (!btn) return;
+        const lastLevel = Math.min(Math.max(parseInt(localStorage.getItem(SMART_KEYS.lastLevel) || '1', 10), 1), 100);
+        btn.textContent = `▶ Lanjut Level ${lastLevel}`;
+      }
+
+      function toggleLevelFavorite(level, event) {
+        if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+
+        if (levelFavorites.has(level)) {
+          levelFavorites.delete(level);
+        } else {
+          levelFavorites.add(level);
+        }
+
+        saveFavorites();
+        updateFavoriteBadge();
+        applyLevelFilterAndSort();
+      }
+
+      function generateEnglishLevels() {
+        const grid = document.getElementById('englishLevelsGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+
+        const emojis = ['📚', '🎯', '⭐', '🏆', '💡', '🔥', '🎓', '🌟', '💪', '🚀', '📝', '🎲', '🎪', '🎭', '🏅', '🎨', '🎵', '🎬', '🔮', '🎊'];
+
+        const totalLevels = 100;
+        const chunkSize = 20;
+        let current = 1;
+
+        function buildChunk() {
+          const fragment = document.createDocumentFragment();
+          const end = Math.min(current + chunkSize - 1, totalLevels);
+
+          for (let i = current; i <= end; i++) {
+            const emoji = emojis[(i - 1) % emojis.length];
+            const item = document.createElement('a');
+            item.href = `lesson.html?level=${i}`;
+            item.className = 'level-glass-card';
+            item.dataset.level = String(i);
+
+            const shouldAnimateCard = !document.body.classList.contains('performance-mode') && i <= 18;
+            if (shouldAnimateCard) {
+              item.style.animation = `slideInGlassLevel 0.32s ease forwards ${Math.min(i * 0.018, 0.24)}s`;
+            } else {
+              item.style.animation = 'none';
+              item.style.opacity = '1';
+              item.style.transform = 'none';
+            }
+
+            const isFavorite = levelFavorites.has(i);
+
+            item.innerHTML = `
+            <button class="level-fav-btn ${isFavorite ? 'active' : ''}" aria-label="Favoritkan level ${i}">★</button>
+            <div class="level-emoji">${emoji}</div>
+            <div class="level-num">Level ${i}</div>
+            <div class="level-info-badge">20 Soal</div>
+          `;
+
+            item.addEventListener('click', () => {
+              localStorage.setItem(SMART_KEYS.lastLevel, String(i));
+              updateContinueButton();
+            });
+
+            const favBtn = item.querySelector('.level-fav-btn');
+            if (favBtn) {
+              favBtn.addEventListener('click', (event) => toggleLevelFavorite(i, event));
+            }
+
+            fragment.appendChild(item);
+          }
+
+          grid.appendChild(fragment);
+          current = end + 1;
+
+          if (current <= totalLevels) {
+            const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 0));
+            idle(buildChunk);
+          }
+        }
+
+        buildChunk();
+      }
+
+      function applyLevelFilterAndSort() {
+        if (levelFilterRaf) cancelAnimationFrame(levelFilterRaf);
+
+        levelFilterRaf = requestAnimationFrame(() => {
+          levelFilterRaf = null;
+
+          const searchInput = document.getElementById('levelSearchInput');
+          const sortSelect = document.getElementById('levelSortSelect');
+          const grid = document.getElementById('englishLevelsGrid');
+          if (!grid) return;
+
+          const keyword = (searchInput?.value || '').trim().toLowerCase();
+          const sortBy = sortSelect?.value || 'asc';
+          const cards = Array.from(grid.querySelectorAll('.level-glass-card'));
+          const rangeMatch = keyword.match(/^(\d{1,3})\s*[-/]\s*(\d{1,3})$/);
+          const favoritesOnly = ['fav', 'favorit', 'favorite', 'bintang'].includes(keyword);
+
+          let visibleCount = 0;
+
+          cards.forEach((card) => {
+            const level = parseInt(card.dataset.level || '0', 10);
+            let match = keyword === '';
+
+            if (favoritesOnly) {
+              match = levelFavorites.has(level);
+            } else if (rangeMatch) {
+              const start = Math.min(parseInt(rangeMatch[1], 10), parseInt(rangeMatch[2], 10));
+              const end = Math.max(parseInt(rangeMatch[1], 10), parseInt(rangeMatch[2], 10));
+              match = level >= start && level <= end;
+            } else if (keyword !== '') {
+              const numericKeyword = keyword.replace(/[^\d]/g, '');
+              match = (numericKeyword !== '' && String(level).includes(numericKeyword)) || `level ${level}`.includes(keyword);
+            }
+
+            card.classList.toggle('hidden-level', !match);
+            if (match) visibleCount += 1;
+
+            const favBtn = card.querySelector('.level-fav-btn');
+            if (favBtn) favBtn.classList.toggle('active', levelFavorites.has(level));
+          });
+
+          cards.sort((a, b) => {
+            const levelA = parseInt(a.dataset.level || '0', 10);
+            const levelB = parseInt(b.dataset.level || '0', 10);
+
+            if (sortBy === 'desc') return levelB - levelA;
+            if (sortBy === 'favorite') {
+              const favA = levelFavorites.has(levelA) ? 1 : 0;
+              const favB = levelFavorites.has(levelB) ? 1 : 0;
+              if (favA !== favB) return favB - favA;
+            }
+            return levelA - levelB;
+          });
+
+          const fragment = document.createDocumentFragment();
+          cards.forEach((card) => fragment.appendChild(card));
+          grid.appendChild(fragment);
+          updateFavoriteBadge(visibleCount);
+        });
+      }
+
+      function goToContinueLevel() {
+        const lastLevel = parseInt(localStorage.getItem(SMART_KEYS.lastLevel) || '1', 10);
+        window.location.href = `lesson.html?level=${Math.min(Math.max(lastLevel, 1), 100)}`;
+      }
+
+      function startRandomChallenge() {
+        const randomLevel = Math.floor(Math.random() * 100) + 1;
+        localStorage.setItem(SMART_KEYS.lastLevel, String(randomLevel));
+        updateContinueButton();
+        window.location.href = `lesson.html?level=${randomLevel}`;
+      }
+
+      function setFocusModeState(enabled, persist = true) {
+        focusModeEnabled = enabled;
+        if (persist) {
+          localStorage.setItem(SMART_KEYS.focus, focusModeEnabled ? 'on' : 'off');
+        }
+        document.body.classList.toggle('focus-mode', focusModeEnabled);
+        const btn = document.getElementById('focusModeBtn');
+        if (btn) btn.textContent = `🎯 Mode Fokus: ${focusModeEnabled ? 'ON' : 'OFF'}`;
+      }
+
+      function toggleFocusMode() {
+        setFocusModeState(!focusModeEnabled, true);
+        showToast(`Mode fokus ${focusModeEnabled ? 'aktif' : 'dinonaktifkan'}.`, 'info');
+      }
+
+      function formatPomodoro(seconds) {
+        const safeSeconds = Math.max(0, seconds);
+        const mm = String(Math.floor(safeSeconds / 60)).padStart(2, '0');
+        const ss = String(safeSeconds % 60).padStart(2, '0');
+        return `${mm}:${ss}`;
+      }
+
+      function syncPomodoroUI() {
+        const timeEl = document.getElementById('pomodoroTime');
+        if (timeEl) timeEl.textContent = formatPomodoro(pomodoroRemaining);
+      }
+
+      function updatePomodoroRemainingFromClock() {
+        const endAt = parseInt(localStorage.getItem(SMART_KEYS.pomodoroEndAt) || '0', 10);
+        if (localStorage.getItem(SMART_KEYS.pomodoroRunning) === 'true' && endAt > 0) {
+          pomodoroRemaining = Math.max(0, Math.ceil((endAt - Date.now()) / 1000));
+          localStorage.setItem(SMART_KEYS.pomodoroLeft, String(pomodoroRemaining));
+        }
+        syncPomodoroUI();
+      }
+
+      function finishPomodoroSession() {
+        if (pomodoroTimerId) {
+          clearInterval(pomodoroTimerId);
+          pomodoroTimerId = null;
+        }
+
+        pomodoroRemaining = 0;
+        localStorage.setItem(SMART_KEYS.pomodoroLeft, '0');
+        localStorage.setItem(SMART_KEYS.pomodoroRunning, 'false');
+        localStorage.removeItem(SMART_KEYS.pomodoroEndAt);
+        localStorage.setItem(SMART_KEYS.pomodoroSessions, String((parseInt(localStorage.getItem(SMART_KEYS.pomodoroSessions) || '0', 10)) + 1));
+        syncPomodoroUI();
+
+        const doneMsg = document.getElementById('pomodoroStatus');
+        if (doneMsg) doneMsg.textContent = 'Sesi selesai! Istirahat 5 menit.';
+        showToast('Pomodoro selesai. Saatnya rehat sebentar 🔹', 'success');
+        notifyPomodoroComplete();
+      }
+
+      function startPomodoro() {
+        if (pomodoroTimerId) return;
+        if (pomodoroRemaining <= 0) {
+          pomodoroRemaining = 1500;
+        }
+
+        if ('Notification' in window && Notification.permission === 'default') {
+          Notification.requestPermission().catch(() => {});
+        }
+
+        const status = document.getElementById('pomodoroStatus');
+        if (status) status.textContent = 'Fokus berjalan... semangat!';
+
+        localStorage.setItem(SMART_KEYS.pomodoroRunning, 'true');
+        localStorage.setItem(SMART_KEYS.pomodoroEndAt, String(Date.now() + (pomodoroRemaining * 1000)));
+        updatePomodoroRemainingFromClock();
+
+        pomodoroTimerId = setInterval(() => {
+          updatePomodoroRemainingFromClock();
+          if (pomodoroRemaining <= 0) {
+            finishPomodoroSession();
+          }
+        }, 1000);
+      }
+
+      function pausePomodoro() {
+        if (pomodoroTimerId) {
+          clearInterval(pomodoroTimerId);
+          pomodoroTimerId = null;
+        }
+        updatePomodoroRemainingFromClock();
+        localStorage.setItem(SMART_KEYS.pomodoroRunning, 'false');
+        localStorage.removeItem(SMART_KEYS.pomodoroEndAt);
+        const status = document.getElementById('pomodoroStatus');
+        if (status) status.textContent = 'Timer dipause.';
+      }
+
+      function resetPomodoro() {
+        pausePomodoro();
+        pomodoroRemaining = 1500;
+        localStorage.setItem(SMART_KEYS.pomodoroLeft, String(pomodoroRemaining));
+        syncPomodoroUI();
+        const status = document.getElementById('pomodoroStatus');
+        if (status) status.textContent = 'Timer direset ke 25:00.';
+      }
+
+      function exportProgressData() {
+        const payload = {};
+        Object.keys(localStorage).forEach((key) => {
+          if (key.startsWith('snbt_') || key.startsWith('level_') || key.startsWith('item_') || key === 'totalScore' || key === 'snbt_totalScore' || key === 'starBalance' || key.startsWith('qn_')) {
+            payload[key] = localStorage.getItem(key);
+          }
+        });
+
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'quiznation-progress.json';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+        showToast('Progress berhasil diexport ke JSON.', 'success');
+      }
+
+      function importProgressData(event) {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const parsed = JSON.parse(String(reader.result || '{}'));
+            Object.entries(parsed).forEach(([key, value]) => {
+              localStorage.setItem(key, String(value));
+            });
+
+            levelFavorites = new Set(JSON.parse(localStorage.getItem(SMART_KEYS.favorites) || '[]'));
+            applyLevelFilterAndSort();
+            calculateDynamicStats();
+            loadSNBTProgress();
+            updateFavoriteBadge();
+            updateBintangUI();
+            updateContinueButton();
+            showToast('Import berhasil. Progress sudah diperbarui.', 'success');
+          } catch (err) {
+            showToast('File JSON tidak valid.', 'error');
+          }
+        };
+
+        reader.readAsText(file);
+        event.target.value = '';
+      }
+
+      function openShortcutsModal() {
+        const modal = document.getElementById('modalShortcuts');
+        if (!modal) return;
+        setOverlayState('modalShortcuts', true);
+      }
+
+      function closeShortcutsModal() {
+        const modal = document.getElementById('modalShortcuts');
+        if (!modal) return;
+        setOverlayState('modalShortcuts', false);
+      }
+
+      function bindSmartToolEvents() {
+        const searchInput = document.getElementById('levelSearchInput');
+        const sortSelect = document.getElementById('levelSortSelect');
+        const notesInput = document.getElementById('quickNotesInput');
+        const notesStatus = document.getElementById('quickNotesStatus');
+        const importFile = document.getElementById('importProgressFile');
+
+        if (searchInput) {
+          searchInput.addEventListener('input', applyLevelFilterAndSort);
+        }
+
+        if (sortSelect) {
+          sortSelect.addEventListener('change', applyLevelFilterAndSort);
+        }
+
+        if (notesInput) {
+          notesInput.value = localStorage.getItem(SMART_KEYS.notes) || '';
+          notesInput.addEventListener('input', () => {
+            localStorage.setItem(SMART_KEYS.notes, notesInput.value);
+            if (notesStatus) notesStatus.textContent = 'Catatan tersimpan otomatis.';
+          });
+        }
+
+        if (importFile) {
+          importFile.addEventListener('change', importProgressData);
+        }
+
+        const overlayClosers = {
+          modalShortcuts: closeShortcutsModal,
+          modalNews: closeNewsModal,
+          modalGift: closeGiftModal
+        };
+
+        Object.entries(overlayClosers).forEach(([modalId, closeHandler]) => {
+          const modal = document.getElementById(modalId);
+          if (!modal) return;
+          modal.setAttribute('role', 'dialog');
+          modal.setAttribute('aria-hidden', modal.classList.contains('active') ? 'false' : 'true');
+          modal.addEventListener('click', (event) => {
+            if (event.target === modal) {
+              closeHandler();
+            }
+          });
+        });
+
+        const hamburgerBtn = document.getElementById('hamburger');
+        if (hamburgerBtn) {
+          hamburgerBtn.addEventListener('keydown', (event) => {
+            if (event.key === 'Enter' || event.key === ' ') {
+              event.preventDefault();
+              toggleSidebar();
+            }
+          });
+        }
+
+        document.addEventListener('keydown', (event) => {
+          const activeTag = document.activeElement?.tagName?.toLowerCase();
+          const typing = activeTag === 'input' || activeTag === 'textarea';
+
+          if (event.key === 'Escape') {
+            closeShortcutsModal();
+            closeNewsModal();
+            closeGiftModal();
+            return;
+          }
+
+          if (typing) return;
+
+          if (event.key === '/') {
+            event.preventDefault();
+            searchInput?.focus();
+          } else if (event.key.toLowerCase() === 'r') {
+            startRandomChallenge();
+          } else if (event.key.toLowerCase() === 'f') {
+            toggleFocusMode();
+          } else if (event.key === '?') {
+            openShortcutsModal();
+          }
+        });
+      }
+
+      requestAnimationFrame(() => {
+        generateEnglishLevels();
+        updateFavoriteBadge();
+        applyLevelFilterAndSort();
+        updateContinueButton();
+        updatePomodoroRemainingFromClock();
+        setFocusModeState(focusModeEnabled, false);
+        bindSmartToolEvents();
+      });
+
+      queueNonCriticalTask(() => {
+        calculateDynamicStats();
+        loadSNBTProgress();
+        loadSNPMBNews();
+
+        if (!newsRefreshTimerId) {
+          newsRefreshTimerId = setInterval(() => {
+            if (!document.hidden) loadSNPMBNews();
+          }, 5 * 60 * 1000);
+        }
+      }, 220);
+
+      monitorInitialPerformance();
+
+      if (localStorage.getItem(SMART_KEYS.pomodoroRunning) === 'true') {
+        updatePomodoroRemainingFromClock();
+        if (pomodoroRemaining <= 0) {
+          finishPomodoroSession();
+        } else {
+          startPomodoro();
+        }
+      }
+
+      // Clock Function
+      function updateClock() {
+        const now = new Date();
+
+        // Time
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        document.getElementById('clockTime').textContent = `${hours}:${minutes}:${seconds}`;
+
+        // Date
+        const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+        const months = ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'];
+
+        const dayName = days[now.getDay()];
+        const date = now.getDate();
+        const month = months[now.getMonth()];
+        const year = now.getFullYear();
+
+        document.getElementById('clockDate').textContent = `${date} ${month} ${year}`;
+        document.getElementById('clockDay').textContent = dayName;
+      }
+
+      // Update clock every second
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      // Theme Toggle
+      function toggleTheme() {
+        const body = document.body;
+        const toggle = document.getElementById('themeToggle');
+        const icon = document.getElementById('themeIcon');
+        const text = document.getElementById('themeText');
+
+        body.classList.toggle('light-mode');
+        toggle.classList.toggle('active');
+
+        if (body.classList.contains('light-mode')) {
+          icon.textContent = '☀️';
+          text.textContent = 'Mode Terang';
+          localStorage.setItem('theme', 'light');
+        } else {
+          icon.textContent = '🌙';
+          text.textContent = 'Mode Gelap';
+          localStorage.setItem('theme', 'dark');
+        }
+
+        if (typeof window.__quizNationApplyGlobalPreferences === 'function') {
+            window.__quizNationApplyGlobalPreferences();
+        }
+      }
+
+      // Load saved theme
+      const savedTheme = localStorage.getItem('theme');
+      if (savedTheme === 'light') {
+        const body = document.body;
+        body.classList.add('light-mode');
+        const toggle = document.getElementById('themeToggle');
+        if (toggle) toggle.classList.add('active');
+        const icon = document.getElementById('themeIcon');
+        if (icon) icon.textContent = '☀️';
+        const text = document.getElementById('themeText');
+        if (text) text.textContent = 'Mode Terang';
+      }
+
+      const backsoundTracks = [
+        {
+          name: 'Lofi Chill',
+          src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3'
+        },
+        {
+          name: 'Ocean Waves',
+          src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3'
+        },
+        {
+          name: 'Rain Ambience',
+          src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3'
+        },
+        {
+          name: 'Café Jazz',
+          src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3'
+        },
+        {
+          name: 'Forest Birds',
+          src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3'
+        },
+        {
+          name: 'Piano Dreamy',
+          src: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3'
+        }
+      ];
+
+      let currentTrackIndex = parseInt(localStorage.getItem('backsoundIndex') || '0');
+
+      function updateBacksoundUI(index) {
+        document.querySelectorAll('.bs-item').forEach((el, i) => {
+          el.classList.toggle('active', i === index);
+          const playingEl = document.getElementById('bsPlaying' + i);
+          if (playingEl) playingEl.textContent = i === index ? '▶' : '';
+        });
+      }
+
+      function setMusicVolume(value) {
+        const normalized = Math.min(Math.max(parseInt(value, 10) || 0, 0), 100);
+        const lobbyMusic = document.getElementById('lobbyMusic');
+        const slider = document.getElementById('volumeSlider');
+        const label = document.getElementById('volumeValue');
+
+        if (slider) slider.value = String(normalized);
+        if (label) label.textContent = `${normalized}%`;
+        if (lobbyMusic) lobbyMusic.volume = normalized / 100;
+
+        localStorage.setItem(SMART_KEYS.musicVolume, String(normalized));
+      }
+
+      function selectBacksound(index) {
+        currentTrackIndex = index;
+        localStorage.setItem('backsoundIndex', index);
+        const lobbyMusic = document.getElementById('lobbyMusic');
+        if (lobbyMusic) {
+          const wasPlaying = !lobbyMusic.paused;
+          lobbyMusic.pause();
+          lobbyMusic.src = backsoundTracks[index].src;
+          lobbyMusic.load();
+          setMusicVolume(localStorage.getItem(SMART_KEYS.musicVolume) || '50');
+          if (wasPlaying || document.getElementById('musicToggle').classList.contains('active')) {
+            lobbyMusic.play().catch(e => console.log('Play issue:', e));
+          }
+        }
+        updateBacksoundUI(index);
+      }
+
+      // Music Toggle
+      function toggleMusic() {
+        const toggle = document.getElementById('musicToggle');
+        const icon = document.getElementById('musicIcon');
+        const text = document.getElementById('musicText');
+        const lobbyMusic = document.getElementById('lobbyMusic');
+        const panel = document.getElementById('backsoundPanel');
+
+        toggle.classList.toggle('active');
+
+        if (toggle.classList.contains('active')) {
+          icon.textContent = '🔊';
+          text.textContent = 'Musik Nyala';
+          localStorage.setItem('music', 'on');
+          if (panel) { panel.style.opacity = '1'; panel.style.pointerEvents = 'auto'; }
+          if (lobbyMusic) lobbyMusic.play().catch(e => console.log('Autoplay issue:', e));
+          showToast('Backsound diaktifkan.', 'success');
+        } else {
+          icon.textContent = '🔇';
+          text.textContent = 'Musik Mati';
+          localStorage.setItem('music', 'off');
+          if (panel) { panel.style.opacity = '0.4'; panel.style.pointerEvents = 'none'; }
+          if (lobbyMusic) lobbyMusic.pause();
+          showToast('Backsound dimatikan.', 'warning');
+        }
+      }
+
+      const savedMusic = localStorage.getItem('music');
+      if (savedMusic === 'off') {
+        const toggle = document.getElementById('musicToggle');
+        if (toggle) {
+          toggle.classList.remove('active');
+          document.getElementById('musicIcon').textContent = '🔇';
+          document.getElementById('musicText').textContent = 'Musik Mati';
+        }
+        const panel = document.getElementById('backsoundPanel');
+        if (panel) { panel.style.opacity = '0.4'; panel.style.pointerEvents = 'none'; }
+      }
+
+      setMusicVolume(localStorage.getItem(SMART_KEYS.musicVolume) || '50');
+
+      // Sidebar Toggle
+      function toggleSidebar(forceOpen) {
+        if (typeof window.__quizNationToggleSidebar === 'function') {
+          return window.__quizNationToggleSidebar(forceOpen);
+        }
+
+        const sidebar = document.getElementById('sidebar');
+        const hamburger = document.getElementById('hamburger');
+        const backdrop = document.getElementById('sidebarBackdrop');
+        if (!sidebar || !hamburger || !backdrop) return false;
+
+        const nextState = typeof forceOpen === 'boolean'
+          ? forceOpen
+          : !sidebar.classList.contains('active');
+
+        sidebar.classList.toggle('active', nextState);
+        sidebar.setAttribute('aria-hidden', nextState ? 'false' : 'true');
+        hamburger.classList.toggle('sidebar-active', nextState);
+        hamburger.setAttribute('aria-expanded', String(nextState));
+        backdrop.classList.toggle('active', nextState);
+        syncPageScrollLock();
+        return nextState;
+      }
+
+      // ---------------------------------------------------------------
+      // DYNAMIC STATS: soal, level, skor — semua otomatis dari data
+      // ---------------------------------------------------------------
+
+      // Jumlah soal per level (sesuai questionBank di snbt.html)
+      // Format: { type: { levelId: jumlahSoal } }
+      const questionCountMap = {
+        tps: { 1: 30, 2: 30, 3: 30, 4: 30, 5: 30, 6: 30, 7: 30, 8: 30, 9: 30, 10: 30 },
+        indo: { 1: 2, 2: 2, 3: 0, 4: 2 },
+        english: { 1: 2, 2: 2, 3: 2 },
+        math: { 1: 2, 2: 2, 3: 2 }
+      };
+
+      // Total level per type (sesuai levelData di snbt.html)
+      const levelCountMap = {
+        tps: 21,
+        indo: 21,
+        english: 21,
+        math: 21
+      };
+
+      // Lesson (Bahasa Inggris levels di index) — 100 level × 20 soal
+      const lessonSoalCount = 100 * 20;
+      const lessonLevelCount = 100;
+
+      // --- DAILY STREAK LOGIC ---
+      function handleDailyStreak() {
+        const today = new Date().toDateString();
+        const lastDate = localStorage.getItem('lastCheckInDate');
+        let streak = parseInt(localStorage.getItem('streakDays')) || 0;
+
+        if (lastDate === today) {
+          // Already checked in today, no change
+          return streak;
+        }
+
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.toDateString();
+
+        if (lastDate === yesterdayStr || !lastDate) {
+          // Increment if yesterday was the last login or it's the very first time
+          streak += 1;
+        } else {
+          // Reset streak if we missed a day
+          streak = 1;
+        }
+
+        localStorage.setItem('streakDays', streak.toString());
+        localStorage.setItem('lastCheckInDate', today);
+        return streak;
+      }
+
+      const currentStreak = handleDailyStreak();
+
+      function getCompletedLevelCount() {
+        let completedLevels = 0;
+
+        for (const type of Object.keys(levelCountMap)) {
+          for (let i = 1; i <= levelCountMap[type]; i++) {
+            if (localStorage.getItem(`snbt_${type}_level${i}_completed`) === 'true') {
+              completedLevels++;
+            }
+          }
+        }
+
+        for (let i = 1; i <= lessonLevelCount; i++) {
+          if (localStorage.getItem(`level_${i}_completed`) === 'true') {
+            completedLevels++;
+          }
+        }
+
+        return completedLevels;
+      }
+
+      function getPerfectScoreCount() {
+        let perfectCount = 0;
+
+        for (let i = 1; i <= lessonLevelCount; i++) {
+          const pct = parseInt(localStorage.getItem(`level_${i}_percentage`) || '0', 10);
+          if (pct >= 100) perfectCount++;
+        }
+
+        for (const type of Object.keys(levelCountMap)) {
+          for (let i = 1; i <= levelCountMap[type]; i++) {
+            const pct = parseInt(localStorage.getItem(`snbt_${type}_level${i}_percentage`) || '0', 10);
+            if (pct >= 100) perfectCount++;
+          }
+        }
+
+        return perfectCount;
+      }
+
+      function getStoredBonusScore() {
+        return parseInt(localStorage.getItem(SMART_KEYS.bonusScore) || '0', 10);
+      }
+
+      // Calculate dynamic stats
+      function calculateDynamicStats() {
+        let totalSnbtSoal = 0;
+        let totalSnbtLevels = 0;
+        const typeDetails = {};
+
+        for (const [type, levels] of Object.entries(questionCountMap)) {
+          let typeSoal = 0;
+          for (const count of Object.values(levels)) {
+            typeSoal += count;
+          }
+          typeDetails[type] = { soal: typeSoal, levels: levelCountMap[type] || 0 };
+          totalSnbtSoal += typeSoal;
+          totalSnbtLevels += levelCountMap[type] || 0;
+        }
+
+        const grandTotalSoal = totalSnbtSoal + lessonSoalCount;
+        const grandTotalLevels = totalSnbtLevels + lessonLevelCount;
+
+        const snbtScore = parseInt(localStorage.getItem('snbt_totalScore') || '0', 10);
+        const lessonScore = parseInt(localStorage.getItem('totalScore') || '0', 10);
+        const grandTotalScore = snbtScore + lessonScore + getStoredBonusScore();
+        const completedLevels = getCompletedLevelCount();
+        const streak = parseInt(localStorage.getItem('streakDays') || '0', 10);
+
+        document.getElementById('heroSoal').textContent = grandTotalSoal.toLocaleString();
+        document.getElementById('heroLevel').textContent = grandTotalLevels;
+        document.getElementById('mainScore').textContent = grandTotalScore.toLocaleString();
+
+        document.getElementById('sidebarScore').textContent = grandTotalScore.toLocaleString();
+        document.getElementById('sidebarLevels').textContent = `${completedLevels}/${grandTotalLevels}`;
+
+        if (document.getElementById('sidebarStreak')) {
+          document.getElementById('sidebarStreak').textContent = streak;
+        }
+
+        if (document.getElementById('snbtTpsSoal')) {
+          document.getElementById('snbtTpsSoal').textContent = `${typeDetails.tps.soal} Soal`;
+          document.getElementById('snbtTpsLevel').textContent = `${typeDetails.tps.levels} Level`;
+        }
+        if (document.getElementById('snbtIndoSoal')) {
+          document.getElementById('snbtIndoSoal').textContent = `${typeDetails.indo.soal} Soal`;
+          document.getElementById('snbtIndoLevel').textContent = `${typeDetails.indo.levels} Level`;
+        }
+        if (document.getElementById('snbtEngSoal')) {
+          document.getElementById('snbtEngSoal').textContent = `${typeDetails.english.soal} Soal`;
+          document.getElementById('snbtEngLevel').textContent = `${typeDetails.english.levels} Level`;
+        }
+        if (document.getElementById('snbtMathSoal')) {
+          document.getElementById('snbtMathSoal').textContent = `${typeDetails.math.soal} Soal`;
+          document.getElementById('snbtMathLevel').textContent = `${typeDetails.math.levels} Level`;
+        }
+
+        if (typeof updateQuestProgress === 'function') {
+          updateQuestProgress();
+        }
+      }
+
+      // Stats are initialized during the scheduled boot phase above.
+
+      // Load SNBT progress from localStorage
+      function loadSNBTProgress() {
+        const types = ['tps', 'indo', 'english', 'math'];
+
+        types.forEach(type => {
+          // Calculate average progress across all completed levels
+          let totalPercentage = 0;
+          let completedCount = 0;
+          const numLevels = levelCountMap[type] || 21;
+
+          for (let i = 1; i <= numLevels; i++) {
+            const pct = parseInt(localStorage.getItem(`snbt_${type}_level${i}_percentage`)) || 0;
+            if (pct > 0) {
+              totalPercentage += pct;
+              completedCount++;
+            }
+          }
+
+          const avgPercentage = completedCount > 0 ? Math.round(totalPercentage / numLevels) : 0;
+          const card = document.querySelector(`.snbt-card.${type}`);
+
+          if (card) {
+            const progressLabel = card.querySelector('.snbt-progress-label');
+            const progressFill = card.querySelector('.snbt-progress-fill');
+
+            if (progressLabel) progressLabel.textContent = `Progress: ${avgPercentage}%`;
+            if (progressFill) progressFill.style.width = `${avgPercentage}%`;
+          }
+        });
+
+        // Also refresh score
+        calculateDynamicStats();
+      }
+
+      // Load SNBT progress on page load during the scheduled boot phase.
+
+      // Refresh less frequently and pause when tab is hidden
+      const snbtProgressIntervalMs = 45000;
+      let snbtProgressTimer = null;
+
+      function startSNBTProgressPolling() {
+        if (snbtProgressTimer) return;
+        snbtProgressTimer = setInterval(loadSNBTProgress, snbtProgressIntervalMs);
+      }
+
+      function stopSNBTProgressPolling() {
+        if (!snbtProgressTimer) return;
+        clearInterval(snbtProgressTimer);
+        snbtProgressTimer = null;
+      }
+
+      if (document.hidden) {
+        stopSNBTProgressPolling();
+      } else {
+        startSNBTProgressPolling();
+      }
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          stopSNBTProgressPolling();
+        } else {
+          loadSNBTProgress();
+          startSNBTProgressPolling();
+        }
+      });
+
+      document.addEventListener('DOMContentLoaded', () => {
+        const isGuest = localStorage.getItem('isGuest');
+        const currentUser = localStorage.getItem('currentUser');
+        const loginBtnText = document.querySelector('.login-btn-sidebar .login-text');
+        const authLink = document.querySelector('.login-btn-sidebar');
+
+        if (isGuest === 'false' && currentUser) {
+          if (loginBtnText) loginBtnText.textContent = 'Keluar (' + currentUser.split('@')[0] + ')';
+        } else {
+          if (loginBtnText) loginBtnText.textContent = 'Masuk / Daftar';
+        }
+
+        if (authLink) {
+          authLink.addEventListener('click', (event) => {
+            const activeGuestState = localStorage.getItem('isGuest');
+            const activeUser = localStorage.getItem('currentUser');
+
+            if (activeGuestState === 'false' && activeUser) {
+              event.preventDefault();
+              localStorage.setItem('qn_isGuest', 'true');
+              localStorage.setItem('isGuest', 'true');
+              localStorage.removeItem('currentUser');
+              localStorage.removeItem('qn_email');
+              localStorage.setItem('currentUserName', 'Tamu');
+              localStorage.setItem('qn_name', 'Tamu');
+              showToast('Kamu sudah keluar dari akun.', 'success');
+              setTimeout(() => {
+                window.location.href = 'login.html';
+              }, 350);
+            }
+          });
+        }
+
+        const savedAvatar = localStorage.getItem('userAvatar');
+        const sidebarAvatar = document.getElementById('sidebarAvatar');
+        const sidebarDefaultIcon = document.getElementById('sidebarDefaultIcon');
+
+        if (savedAvatar && sidebarAvatar && sidebarDefaultIcon) {
+          sidebarAvatar.src = savedAvatar;
+          sidebarAvatar.style.display = 'block';
+          sidebarDefaultIcon.style.display = 'none';
+        }
+      });
+
+      // Daily Quests Timer & Logic
+      function updateQuestsTimer() {
+        const now = new Date();
+        const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+        const diff = tomorrow - now;
+
+        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+        const timerEl = document.getElementById('questsTimer');
+        if (timerEl) {
+          timerEl.textContent = `Sisa waktu: ${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+      }
+      setInterval(updateQuestsTimer, 1000);
+      updateQuestsTimer();
+
+      // Fun Confetti & Reward Claim
+      function updateQuestProgress() {
+        const questState = readQuestState();
+        const completedLevels = getCompletedLevelCount();
+        const streak = parseInt(localStorage.getItem('streakDays') || '0', 10);
+        const perfectScores = getPerfectScoreCount();
+
+        const quests = [
+          { key: 'levels3', current: Math.min(completedLevels, 3), goal: 3, reward: 50 },
+          { key: 'streak1', current: streak > 0 ? 1 : 0, goal: 1, reward: 20 },
+          { key: 'perfect1', current: perfectScores > 0 ? 1 : 0, goal: 1, reward: 100 }
+        ];
+
+        quests.forEach((quest, index) => {
+          const progressPercent = Math.round((quest.current / quest.goal) * 100);
+          const progressText = document.getElementById(`questText${index}`);
+          const progressBar = document.getElementById(`questBar${index}`);
+          const card = document.getElementById(`questCard${index}`);
+          const button = card?.querySelector('.quest-btn');
+          const claimed = questState.claimed.includes(quest.key);
+
+          if (progressText) progressText.textContent = `${quest.current}/${quest.goal}`;
+          if (progressBar) progressBar.style.width = `${progressPercent}%`;
+
+          if (button) {
+            button.dataset.quest = quest.key;
+            button.dataset.reward = String(quest.reward);
+
+            if (claimed) {
+              button.textContent = 'Selesai';
+              button.className = 'quest-btn claimed';
+              button.disabled = true;
+            } else if (quest.current >= quest.goal) {
+              button.textContent = 'Klaim!';
+              button.className = 'quest-btn claim';
+              button.disabled = false;
+            } else {
+              button.textContent = 'Belum';
+              button.className = 'quest-btn not-ready';
+              button.disabled = false;
+            }
+          }
+        });
+      }
+
+      function claimQuestReward(btn) {
+        if (!btn) return;
+
+        const questKey = btn.dataset.quest || '';
+        const amount = parseInt(btn.dataset.reward || '0', 10);
+        const questState = readQuestState();
+
+        if (questState.claimed.includes(questKey)) {
+          showToast('Reward quest ini sudah diambil hari ini.', 'warning');
+          updateQuestProgress();
+          return;
+        }
+
+        if (!btn.classList.contains('claim')) {
+          showToast('Quest ini belum siap diklaim.', 'warning');
+          return;
+        }
+
+        questState.claimed.push(questKey);
+        writeQuestState(questState);
+
+        const rect = btn.getBoundingClientRect();
+        const floatEl = document.createElement('div');
+        floatEl.innerHTML = `+${amount} ⭐`;
+        floatEl.style.position = 'fixed';
+        floatEl.style.left = `${rect.left}px`;
+        floatEl.style.top = `${rect.top}px`;
+        floatEl.style.color = '#2563eb';
+        floatEl.style.fontWeight = '900';
+        floatEl.style.fontSize = '1.8rem';
+        floatEl.style.zIndex = '9999';
+        floatEl.style.pointerEvents = 'none';
+        floatEl.style.textShadow = '0 4px 10px rgba(0,0,0,0.3)';
+        floatEl.style.transition = 'all 1s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+        document.body.appendChild(floatEl);
+
+        setTimeout(() => {
+          floatEl.style.transform = 'translateY(-80px) scale(1.2)';
+          floatEl.style.opacity = '0';
+        }, 50);
+
+        setTimeout(() => {
+          if (floatEl.parentNode) document.body.removeChild(floatEl);
+        }, 1200);
+
+        const currentStars = parseInt(localStorage.getItem('starBalance') || '0', 10) + amount;
+        localStorage.setItem('starBalance', String(currentStars));
+        localStorage.setItem(SMART_KEYS.bonusScore, String(getStoredBonusScore() + amount));
+
+        updateBintangUI();
+        calculateDynamicStats();
+        updateQuestProgress();
+        showToast(`+${amount}⭐ berhasil diklaim!`, 'success');
+      }
+
+      function klaimReward(btn, amount) {
+        if (btn && amount) {
+          btn.dataset.reward = String(amount);
+        }
+        claimQuestReward(btn);
+      }
+
+      function updateBintangUI() {
+        let currentStars = parseInt(localStorage.getItem('starBalance') || '0', 10);
+        if (document.getElementById('mainBintang')) document.getElementById('mainBintang').textContent = currentStars;
+        if (document.getElementById('sidebarBintang')) document.getElementById('sidebarBintang').textContent = currentStars;
+      }
+
+      // Load initially
+      document.addEventListener('DOMContentLoaded', () => {
+        updateBintangUI();
+        updateQuestProgress();
+      });
+
+      function bukaGift(cost) {
+        let currentStars = parseInt(localStorage.getItem('starBalance') || '0', 10);
+        if (currentStars < cost) {
+          showToast('Bintang kamu belum cukup untuk membuka gift.', 'warning');
+          return;
+        }
+
+        currentStars -= cost;
+        localStorage.setItem('starBalance', String(currentStars));
+        updateBintangUI();
+
+        const modal = document.getElementById('modalGift');
+        const icon = document.getElementById('giftIconResult');
+        const title = document.getElementById('giftTitleResult');
+        const desc = document.getElementById('giftDescResult');
+        const btn = document.getElementById('giftCloseBtn');
+
+        setOverlayState('modalGift', true);
+        icon.textContent = '🎁';
+        title.textContent = 'Membuka Gift...';
+        desc.textContent = 'Menunggu reaksi berantai kuantum...';
+        btn.style.display = 'none';
+
+        setTimeout(() => {
+          const rand = Math.random();
+          let giftTitle = '';
+          let giftDesc = '';
+          let giftIcon = '';
+
+          if (rand < 0.25) {
+            giftTitle = 'Bantuan 50:50';
+            giftDesc = 'Selamat! Kamu mendapat fitur bantuan hilangkan 2 opsi salah yang bisa dipakai saat evaluasi / quiz!';
+            giftIcon = '✂️';
+            let qty = parseInt(localStorage.getItem('item_5050') || '0', 10);
+            localStorage.setItem('item_5050', String(qty + 1));
+          } else if (rand < 0.50) {
+            giftTitle = 'Waktu +60 Detik';
+            giftDesc = 'Mantap! Kamu mendapat jam pasir untuk menambah waktu 60 detik saat ujian berlangsung!';
+            giftIcon = '⏳';
+            let qty = parseInt(localStorage.getItem('item_time') || '0', 10);
+            localStorage.setItem('item_time', String(qty + 1));
+          } else if (rand < 0.75) {
+            giftTitle = 'Freeze Waktu';
+            giftDesc = 'Whoa! Kamu bisa membekukan waktu ujian selama 30 detik untuk berpikir keras!';
+            giftIcon = '❄️';
+            let qty = parseInt(localStorage.getItem('item_freeze') || '0', 10);
+            localStorage.setItem('item_freeze', String(qty + 1));
+          } else {
+            giftTitle = 'Bintang Jackpot!';
+            giftDesc = 'Gila! Kamu malah dapat jackpot pengembalian 100 Bintang!';
+            giftIcon = '🌟';
+            currentStars += 100;
+            localStorage.setItem('starBalance', String(currentStars));
+            updateBintangUI();
+          }
+
+          icon.textContent = giftIcon;
+          title.textContent = giftTitle;
+          desc.textContent = giftDesc;
+          btn.style.display = 'inline-block';
+          showToast(`${giftTitle} berhasil didapat!`, 'success');
+        }, 1500);
+      }
+
+      function closeGiftModal() {
+        setOverlayState('modalGift', false);
+      }
+
+      // --- PARTICLE ANIMATION (Adaptive: powerful desktop, light mobile) ---
+      (function initParticles() {
+        const canvas = document.getElementById('particleCanvas');
+        if (!canvas) return;
+        const perfState = window.__QUIZNATION_PERF__ || {};
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion || (perfState.disableDecorations && (perfState.isAndroid || perfState.isTouchDevice || perfState.isSmallScreen))) {
+          canvas.style.display = 'none';
+          return;
+        }
+        const ctx = canvas.getContext('2d', { alpha: true });
+        let particles = [];
+        const isMobile = window.innerWidth < 768;
+        const lowCpu = navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4;
+        const lowMemory = navigator.deviceMemory && navigator.deviceMemory <= 4;
+        const isLowEnd = lowCpu || lowMemory;
+        const useMinimalParticles = isLowEnd || window.innerWidth < 1440;
+        const PARTICLE_COUNT = isMobile ? (useMinimalParticles ? 6 : 10) : (useMinimalParticles ? 12 : 20);
+        const CONNECTION_DIST = isMobile ? 64 : 110;
+        const CONNECTION_DIST_SQ = CONNECTION_DIST * CONNECTION_DIST;
+        const FRAME_INTERVAL = 1000 / (isMobile ? 18 : (useMinimalParticles ? 20 : 30));
+        const allowConnections = !useMinimalParticles;
+        const allowGlow = !isMobile && !useMinimalParticles;
+        let animId;
+        let isVisible = true;
+        let resizeRaf = null;
+        let lastFrameTime = 0;
+
+        function resize() {
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', () => {
+          if (resizeRaf) cancelAnimationFrame(resizeRaf);
+          resizeRaf = requestAnimationFrame(resize);
+        });
+
+        // Pause when tab is hidden for battery saving
+        document.addEventListener('visibilitychange', () => {
+          isVisible = !document.hidden;
+          if (isVisible && !animId) animate(performance.now());
+        });
+
+        for (let i = 0; i < PARTICLE_COUNT; i++) {
+          particles.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * (isMobile ? 1.5 : 2.5) + 0.5,
+            speedX: (Math.random() - 0.5) * (isMobile ? 0.25 : 0.45),
+            speedY: (Math.random() - 0.5) * (isMobile ? 0.25 : 0.45),
+            opacity: Math.random() * 0.5 + 0.1,
+            pulse: Math.random() * Math.PI * 2
+          });
+        }
+
+        function animate(now = 0) {
+          if (!isVisible) {
+            animId = null;
+            return;
+          }
+
+          if (now - lastFrameTime < FRAME_INTERVAL) {
+            animId = requestAnimationFrame(animate);
+            return;
+          }
+          lastFrameTime = now;
+
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          particles.forEach(p => {
+            p.x += p.speedX;
+            p.y += p.speedY;
+            // Gentle pulsing opacity (desktop only)
+            if (!isMobile) {
+              p.pulse += 0.015;
+              p.currentOpacity = p.opacity + Math.sin(p.pulse) * 0.15;
+            } else {
+              p.currentOpacity = p.opacity;
+            }
+            if (p.x < 0) p.x = canvas.width;
+            if (p.x > canvas.width) p.x = 0;
+            if (p.y < 0) p.y = canvas.height;
+            if (p.y > canvas.height) p.y = 0;
+
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(59, 130, 246, ${p.currentOpacity})`;
+            ctx.fill();
+
+            if (allowGlow && p.size > 1.5) {
+              ctx.beginPath();
+              ctx.arc(p.x, p.y, p.size * 2.4, 0, Math.PI * 2);
+              ctx.fillStyle = `rgba(59, 130, 246, ${p.currentOpacity * 0.05})`;
+              ctx.fill();
+            }
+          });
+
+          if (allowConnections) {
+            for (let i = 0; i < particles.length; i++) {
+              for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const distSq = (dx * dx) + (dy * dy);
+                if (distSq < CONNECTION_DIST_SQ) {
+                  const ratio = distSq / CONNECTION_DIST_SQ;
+                  const alpha = 0.06 * (1 - ratio);
+                  ctx.beginPath();
+                  ctx.moveTo(particles[i].x, particles[i].y);
+                  ctx.lineTo(particles[j].x, particles[j].y);
+                  ctx.strokeStyle = `rgba(59, 130, 246, ${alpha})`;
+                  ctx.lineWidth = isMobile ? 0.25 : 0.45;
+                  ctx.stroke();
+                }
+              }
+            }
+          }
+
+          animId = requestAnimationFrame(animate);
+        }
+        animate(performance.now());
+      })();
+
+      // --- SCROLL REVEAL (Enhanced with stagger) ---
+      document.addEventListener('DOMContentLoaded', () => {
+        // Add reveal class to sections
+        document.querySelectorAll('.snbt-section, .quests-section, .content-grid, .features, .motivation-section, .iq-section, .news-section, .snbt-score-section, .gacha-section').forEach(el => {
+          el.classList.add('reveal');
+        });
+
+        // Staggered reveal for grid children
+        document.querySelectorAll('.snbt-cards, .quests-grid, .feature-list, .stats').forEach(grid => {
+          Array.from(grid.children).forEach((child, i) => {
+            child.classList.add('reveal');
+            child.style.transitionDelay = `${i * 0.07}s`;
+          });
+        });
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              // Once visible, stop observing for performance
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+      });
+
+      // --- LOBBY MUSIC ---
+      document.addEventListener('DOMContentLoaded', () => {
+        const lobbyMusic = document.getElementById('lobbyMusic');
+        if (!lobbyMusic) return;
+
+        setMusicVolume(localStorage.getItem(SMART_KEYS.musicVolume) || '50');
+
+        // Load saved track
+        const savedIndex = parseInt(localStorage.getItem('backsoundIndex') || '0');
+        currentTrackIndex = savedIndex;
+        lobbyMusic.src = backsoundTracks[savedIndex].src;
+        lobbyMusic.load();
+        updateBacksoundUI(savedIndex);
+
+        // Create tap-to-play floating prompt (shown if music is ON but autoplay blocked)
+        const tapPrompt = document.createElement('div');
+        tapPrompt.id = 'tapMusicPrompt';
+        tapPrompt.innerHTML = '🎵 Tap di mana saja untuk memulai musik';
+        tapPrompt.style.cssText = `
+          position:fixed; bottom:24px; left:50%; transform:translateX(-50%);
+          background:rgba(59,130,246,0.92); color:white; padding:10px 20px;
+          border-radius:30px; font-size:.82rem; font-weight:700; z-index:9999;
+          backdrop-filter:blur(12px); box-shadow:0 4px 20px rgba(59,130,246,.4);
+          cursor:pointer; transition:opacity .5s; white-space:nowrap;
+          font-family:'Inter',sans-serif; display:none;
+        `;
+        document.body.appendChild(tapPrompt);
+
+        const savedMusicState = localStorage.getItem('music');
+        if (savedMusicState !== 'off') {
+          tapPrompt.style.display = 'block';
+        }
+
+        // Hide prompt with fade
+        function hidePrompt() {
+          tapPrompt.style.opacity = '0';
+          setTimeout(() => tapPrompt.remove(), 500);
+        }
+
+        // Play on first user interaction
+        let hasPlayed = false;
+        function tryPlay() {
+          if (hasPlayed) return;
+          const state = localStorage.getItem('music');
+          if (state !== 'off') {
+            lobbyMusic.play()
+              .then(() => { hasPlayed = true; hidePrompt(); })
+              .catch(err => console.log('Play blocked:', err));
+          } else {
+            hidePrompt();
+            hasPlayed = true;
+          }
+          document.removeEventListener('click', tryPlay);
+          document.removeEventListener('keydown', tryPlay);
+          document.removeEventListener('touchstart', tryPlay, { passive: true });
+        }
+
+        document.addEventListener('click', tryPlay);
+        document.addEventListener('keydown', tryPlay);
+        document.addEventListener('touchstart', tryPlay, { passive: true });
+        tapPrompt.addEventListener('click', tryPlay);
+
+        // Handle network error — show alert once
+        lobbyMusic.addEventListener('error', () => {
+          console.warn('Music failed to load. Check internet connection or URL.');
+          hidePrompt();
+        });
+      });
+
+    </script>
+
+    <div id="appToast" class="app-toast" role="status" aria-live="polite"></div>
+    <audio id="lobbyMusic" loop preload="metadata"></audio>
+</body>
+
+</html>

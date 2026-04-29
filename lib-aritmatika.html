@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Aritmatika &amp; Bilangan - Library SNBT 2025</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        html, body { max-width: 100%; overflow-x: hidden; }
+        * { -webkit-tap-highlight-color: transparent !important; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0 }
+        :root { --accent: #2563eb; --accent2: #06b6d4; --bg: #f0f2f8; --surface: rgba(255,255,255,0.72); --border: rgba(0,0,0,0.08); --text: #1a1a2e; --text2: #4b5563; --text3: #9ca3af; --glow: rgba(124,58,237,0.18); --radius: 20px }
+        body.dark { --bg: #050a15; --surface: rgba(255,255,255,0.055); --border: rgba(255,255,255,0.09); --text: #f0edff; --text2: rgba(240,237,255,0.65); --text3: rgba(240,237,255,0.35); --glow: rgba(124,58,237,0.28) }
+        html { scroll-behavior: smooth }
+        body { font-family: 'Bricolage Grotesque', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; transition: background .4s, color .4s; overflow-x: hidden }
+        .noise-overlay { position: fixed; inset: 0; z-index: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events: none; opacity: .35 }
+        .topnav { position: sticky; top: 0; z-index: 100; background: var(--surface); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border); padding: 16px 40px; display: flex; align-items: center; gap: 16px }
+        .topnav a { text-decoration: none; color: var(--accent); font-weight: 700; font-size: .9rem; display: flex; align-items: center; gap: 6px; transition: all .2s }
+        .topnav a:hover { gap: 10px }
+        .topnav-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--text); margin-left: auto }
+        .theme-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; width: 36px; height: 36px; cursor: pointer; font-size: 1rem; display: grid; place-items: center; transition: all .2s; margin-left: 8px }
+        .theme-btn:hover { border-color: var(--accent) }
+        .wrapper { max-width: 900px; margin: 0 auto; padding: 40px 30px 80px; position: relative; z-index: 1 }
+        .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(251,146,60,.12); color: #f59e0b; border: 1px solid rgba(251,146,60,.25); border-radius: 30px; padding: 5px 14px; font-size: .72rem; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 16px }
+        .page-title { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: var(--text); line-height: 1.15; margin-bottom: 14px }
+        .page-title .grad { background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent }
+        .page-desc { font-size: 1.05rem; color: var(--text2); line-height: 1.8; margin-bottom: 40px; max-width: 700px }
+        .toc { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 40px }
+        .toc-title { font-weight: 800; font-size: .9rem; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px }
+        .toc ol { padding-left: 20px; display: flex; flex-direction: column; gap: 6px }
+        .toc li { color: var(--text2); font-size: .88rem }
+        .toc a { color: var(--accent); text-decoration: none; font-weight: 600; transition: color .2s }
+        .toc a:hover { color: var(--accent2) }
+        .section { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; margin-bottom: 24px; transition: all .3s }
+        .section:hover { box-shadow: 0 10px 40px var(--glow); border-color: rgba(124,58,237,.2) }
+        .section h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--text); margin-bottom: 16px; display: flex; align-items: center; gap: 10px }
+        .section h3 { font-size: 1.1rem; font-weight: 700; color: var(--accent); margin: 20px 0 10px }
+        .section p, .section li { font-size: .92rem; color: var(--text2); line-height: 1.85 }
+        .section ul, .section ol { padding-left: 20px; margin: 10px 0 }
+        .section li { margin-bottom: 6px }
+        .example { background: rgba(124,58,237,.06); border-left: 3px solid var(--accent); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 16px 0; font-size: .88rem; color: var(--text2); line-height: 1.75 }
+        .example strong { color: var(--text) }
+        .tip { background: rgba(6,182,212,.08); border-left: 3px solid var(--accent2); border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 16px 0; font-size: .88rem; color: var(--text2); line-height: 1.75 }
+        .tip strong { color: var(--accent2) }
+        .warning { background: rgba(244,63,94,.08); border-left: 3px solid #f43f5e; border-radius: 0 12px 12px 0; padding: 16px 20px; margin: 16px 0; font-size: .88rem; color: var(--text2); line-height: 1.75 }
+        .warning strong { color: #f43f5e }
+        .nav-buttons { display: flex; gap: 14px; margin-top: 40px; flex-wrap: wrap }
+        .nav-btn { flex: 1; min-width: 200px; padding: 16px 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 16px; text-decoration: none; color: var(--text); font-weight: 700; font-size: .9rem; display: flex; align-items: center; gap: 10px; transition: all .3s }
+        .nav-btn:hover { border-color: var(--accent); box-shadow: 0 8px 24px var(--glow); transform: translateY(-2px) }
+        .nav-btn.primary { background: linear-gradient(135deg, var(--accent), var(--accent2)); color: white; border: none; box-shadow: 0 4px 16px rgba(124,58,237,.4) }
+        .nav-btn.primary:hover { box-shadow: 0 8px 28px rgba(124,58,237,.5); transform: translateY(-3px) }
+        .nav-btn-label { font-size: .7rem; color: var(--text3); font-weight: 600; text-transform: uppercase; letter-spacing: .5px }
+        .nav-btn.primary .nav-btn-label { color: rgba(255,255,255,.7) }
+        footer { text-align: center; color: var(--text3); font-size: .8rem; padding: 20px; border-top: 1px solid var(--border); margin-top: 40px }
+        @media(max-width:768px) { .topnav { padding: 14px 16px } .wrapper { padding: 24px 16px 60px } .section { padding: 20px } .nav-buttons { flex-direction: column } }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">&#8592; Kembali ke Library</a>
+        <span class="topnav-title">Aritmatika &amp; Bilangan</span>
+        <button class="theme-btn" onclick="document.body.classList.toggle('dark')">&#127769;</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">Penalaran Matematika</div>
+        <h1 class="page-title">Aritmatika &amp; <span class="grad">Bilangan</span></h1>
+        <p class="page-desc">Pahami operasi bilangan, FPB, KPK, bilangan berpangkat, akar, perbandingan, dan barisan-deret dalam konteks soal SNBT 2025.</p>
+
+        <div class="toc">
+            <div class="toc-title">&#128203; Daftar Isi</div>
+            <ol>
+                <li><a href="#operasi">Operasi Bilangan Bulat &amp; Pecahan</a></li>
+                <li><a href="#kpk">Penerapan FPB &amp; KPK</a></li>
+                <li><a href="#eksponen">Eksponen &amp; Bentuk Akar</a></li>
+                <li><a href="#perbandingan">Perbandingan &amp; Proporsi</a></li>
+                <li><a href="#barisan">Barisan &amp; Deret</a></li>
+                <li><a href="#tips">Strategi Menjawab SNBT</a></li>
+            </ol>
+        </div>
+
+        <div class="section" id="operasi">
+            <h2>&#127942; 1. Operasi Bilangan Bulat &amp; Pecahan</h2>
+            <p>Pemahaman hierarki operasi dasar: <strong>KaBaTaKu</strong> (Kali, Bagi, Tambah, Kurang) selalu berlaku.</p>
+            
+            <h3>A. Sifat-Sifat Operasi</h3>
+            <ul>
+                <li><strong>Komutatif:</strong> a + b = b + a &nbsp;|&nbsp; a &times; b = b &times; a</li>
+                <li><strong>Asosiatif:</strong> (a + b) + c = a + (b + c)</li>
+                <li><strong>Distributif:</strong> a &times; (b + c) = (a &times; b) + (a &times; c)</li>
+            </ul>
+
+            <h3>B. Operasi Pecahan</h3>
+            <ul>
+                <li><strong>Penjumlahan/Pengurangan:</strong> Samakan penyebutnya terlebih dahulu (gunakan KPK)</li>
+                <li><strong>Perkalian:</strong> Kalikan pembilang &times; pembilang, penyebut &times; penyebut</li>
+                <li><strong>Pembagian:</strong> Kalikan dengan kebalikannya (reciprocal)</li>
+            </ul>
+            <div class="example">
+                <strong>Contoh:</strong> 2/3 &divide; 4/5 = 2/3 &times; 5/4 = 10/12 = <strong>5/6</strong>
+            </div>
+
+            <h3>C. Konversi Pecahan - Desimal - Persen</h3>
+            <ul>
+                <li>1/4 = 0,25 = 25%</li>
+                <li>1/3 = 0,333... = 33,3%</li>
+                <li>1/5 = 0,2 = 20%</li>
+                <li>3/8 = 0,375 = 37,5%</li>
+            </ul>
+            <div class="tip">
+                <strong>&#128161; Trik Cepat Persen:</strong><br>
+                &#8226; x% dari y = y% dari x (misal: 8% dari 50 = 50% dari 8 = <strong>4</strong>)<br>
+                &#8226; 10% = bagi 10 | 5% = setengah dari 10% | 1% = bagi 100
+            </div>
+        </div>
+
+        <div class="section" id="kpk">
+            <h2>&#129517; 2. Penerapan FPB &amp; KPK</h2>
+            <p>Dua konsep dasar yang selalu dibungkus soal cerita menantang di SNBT.</p>
+            
+            <h3>A. FPB (Faktor Persekutuan Terbesar)</h3>
+            <p>Bilangan terbesar yang membagi habis semua bilangan yang diberikan.</p>
+            <ul>
+                <li><strong>Konteks soal:</strong> Memotong benda, membagi parsel, mengelompokkan barang sama rata tanpa sisa</li>
+            </ul>
+            <div class="example">
+                <strong>Soal:</strong> 36 buah apel dan 48 buah jeruk akan dibagikan ke beberapa kantong. Setiap kantong berisi apel dan jeruk sama banyak. Berapa kantong paling banyak?<br>
+                <strong>Cara:</strong> FPB(36, 48) = 12 &#8594; <strong>12 kantong</strong><br>
+                Masing-masing: 36/12 = 3 apel, 48/12 = 4 jeruk per kantong
+            </div>
+
+            <h3>B. KPK (Kelipatan Persekutuan Terkecil)</h3>
+            <p>Bilangan terkecil yang bisa habis dibagi oleh semua bilangan yang diberikan.</p>
+            <ul>
+                <li><strong>Konteks soal:</strong> Lampu berkedip bersamaan, jadwal piket bertemu lagi, bus berangkat bersamaan</li>
+            </ul>
+            <div class="example">
+                <strong>Soal:</strong> Lampu A menyala setiap 12 menit, Lampu B setiap 15 menit. Keduanya menyala bersamaan pada pukul 08.00. Kapan menyala bersamaan lagi?<br>
+                <strong>Cara:</strong> KPK(12, 15)<br>
+                12 = 2&sup2; &times; 3 | 15 = 3 &times; 5<br>
+                KPK = 2&sup2; &times; 3 &times; 5 = 60 menit &#8594; <strong>Pukul 09.00</strong>
+            </div>
+
+            <h3>C. Teknik Cepat Mencari FPB &amp; KPK</h3>
+            <div class="tip">
+                <strong>&#128161; Faktorisasi Prima:</strong><br>
+                &#8226; <strong>FPB</strong> = ambil faktor prima yang <em>sama</em> dengan pangkat <em>terkecil</em><br>
+                &#8226; <strong>KPK</strong> = ambil <em>semua</em> faktor prima dengan pangkat <em>terbesar</em><br><br>
+                <strong>Rumus Hubungan:</strong> FPB(a,b) &times; KPK(a,b) = a &times; b
+            </div>
+        </div>
+
+        <div class="section" id="eksponen">
+            <h2>&#128161; 3. Eksponen &amp; Bentuk Akar</h2>
+            
+            <h3>A. Sifat-Sifat Perpangkatan</h3>
+            <ul>
+                <li>a&#7504; &times; a&#8319; = a&#7504;&#8314;&#8319;</li>
+                <li>a&#7504; &divide; a&#8319; = a&#7504;&#8315;&#8319;</li>
+                <li>(a&#7504;)&#8319; = a&#7504;&#215;&#8319;</li>
+                <li>(a &times; b)&#8319; = a&#8319; &times; b&#8319;</li>
+                <li>a&#8304; = 1 (untuk a &#8800; 0)</li>
+                <li>a&#8315;&#8319; = 1/a&#8319;</li>
+            </ul>
+
+            <h3>B. Bentuk Akar</h3>
+            <p>Akar pangkat dua = pangkat 1/2, akar pangkat tiga = pangkat 1/3.</p>
+            <div class="example">
+                <strong>Merasionalkan Penyebut:</strong><br>
+                5 / &#8730;3 = (5 &times; &#8730;3) / (&#8730;3 &times; &#8730;3) = 5&#8730;3 / 3<br><br>
+                <strong>Bentuk a + &#8730;b:</strong><br>
+                1 / (2 + &#8730;3) = (2 - &#8730;3) / [(2+&#8730;3)(2-&#8730;3)] = (2 - &#8730;3) / (4 - 3) = <strong>2 - &#8730;3</strong>
+            </div>
+
+            <div class="warning">
+                <strong>&#128721; Awas Jebakan:</strong><br>
+                &#8226; &#8730;(a + b) &#8800; &#8730;a + &#8730;b (SALAH!)<br>
+                &#8226; &#8730;(a &times; b) = &#8730;a &times; &#8730;b (BENAR)<br>
+                &#8226; (&#8730;a)&sup2; = a tetapi &#8730;(a&sup2;) = |a| (nilai mutlak!)
+            </div>
+
+            <h3>C. Logaritma Dasar (Sering Muncul!)</h3>
+            <ul>
+                <li><sup>a</sup>log b = c berarti a&#7580; = b</li>
+                <li><sup>a</sup>log (b &times; c) = <sup>a</sup>log b + <sup>a</sup>log c</li>
+                <li><sup>a</sup>log (b/c) = <sup>a</sup>log b - <sup>a</sup>log c</li>
+                <li><sup>a</sup>log b&#8319; = n &times; <sup>a</sup>log b</li>
+            </ul>
+        </div>
+
+        <div class="section" id="perbandingan">
+            <h2>&#9878; 4. Perbandingan &amp; Proporsi</h2>
+            
+            <h3>A. Perbandingan Senilai</h3>
+            <p>Jika x naik maka y juga naik. Contoh: jumlah barang dan harga total.</p>
+            <div class="example">
+                <strong>Soal:</strong> 5 buku harganya Rp75.000. Berapa harga 8 buku?<br>
+                5/8 = 75.000/x &#8594; x = 8 &times; 75.000 / 5 = <strong>Rp120.000</strong>
+            </div>
+
+            <h3>B. Perbandingan Berbalik Nilai</h3>
+            <p>Jika x naik maka y turun. Contoh: jumlah pekerja dan waktu penyelesaian.</p>
+            <div class="example">
+                <strong>Soal:</strong> 6 pekerja menyelesaikan proyek dalam 10 hari. Jika pekerja ditambah menjadi 10, berapa hari?<br>
+                6 &times; 10 = 10 &times; x &#8594; x = 60/10 = <strong>6 hari</strong>
+            </div>
+
+            <h3>C. Perbandingan Bertingkat</h3>
+            <div class="example">
+                <strong>Soal:</strong> A : B = 2 : 3 dan B : C = 4 : 5. Cari A : B : C.<br>
+                Samakan nilai B: A : B = 8 : 12, B : C = 12 : 15<br>
+                Jadi A : B : C = <strong>8 : 12 : 15</strong>
+            </div>
+        </div>
+
+        <div class="section" id="barisan">
+            <h2>&#129513; 5. Barisan &amp; Deret</h2>
+            
+            <h3>A. Barisan &amp; Deret Aritmatika</h3>
+            <p>Setiap suku bertambah/berkurang dengan <strong>beda (b)</strong> yang konstan.</p>
+            <ul>
+                <li><strong>Suku ke-n:</strong> U&#8345; = a + (n-1)b</li>
+                <li><strong>Jumlah n suku:</strong> S&#8345; = n/2 &times; (2a + (n-1)b) atau S&#8345; = n/2 &times; (U&#8321; + U&#8345;)</li>
+            </ul>
+            <div class="example">
+                <strong>Soal:</strong> Barisan: 3, 7, 11, 15, ... Cari suku ke-20!<br>
+                a = 3, b = 4 &#8594; U&#8322;&#8320; = 3 + (20-1)&times;4 = 3 + 76 = <strong>79</strong>
+            </div>
+
+            <h3>B. Barisan &amp; Deret Geometri</h3>
+            <p>Setiap suku dikalikan dengan <strong>rasio (r)</strong> yang konstan.</p>
+            <ul>
+                <li><strong>Suku ke-n:</strong> U&#8345; = a &times; r&#8319;&#8315;&#185;</li>
+                <li><strong>Jumlah n suku (r &gt; 1):</strong> S&#8345; = a(r&#8319; - 1) / (r - 1)</li>
+                <li><strong>Jumlah n suku (r &lt; 1):</strong> S&#8345; = a(1 - r&#8319;) / (1 - r)</li>
+                <li><strong>Jumlah deret tak hingga (|r| &lt; 1):</strong> S&#8734; = a / (1 - r)</li>
+            </ul>
+            <div class="example">
+                <strong>Soal:</strong> Barisan: 2, 6, 18, 54, ... Cari suku ke-8!<br>
+                a = 2, r = 3 &#8594; U&#8328; = 2 &times; 3&#8311; = 2 &times; 2187 = <strong>4374</strong>
+            </div>
+
+            <h3>C. Pola Barisan Bertingkat</h3>
+            <p>Jika selisih antar suku tidak konstan, coba hitung selisih dari selisihnya (selisih tingkat 2).</p>
+            <div class="example">
+                <strong>Barisan:</strong> 1, 3, 7, 13, 21, ...<br>
+                Selisih tingkat 1: 2, 4, 6, 8 &#8594; Selisih tingkat 2: 2, 2, 2 (KONSTAN!)<br>
+                Suku berikutnya: 21 + 10 = <strong>31</strong>
+            </div>
+
+            <div class="tip">
+                <strong>&#128161; Segitiga Pascal:</strong> Sangat berguna untuk penjabaran binomial Newton (a+b)&#8319;. Baris ke-n memberikan koefisien:<br>
+                (a+b)&sup2; = 1a&sup2; + 2ab + 1b&sup2;<br>
+                (a+b)&sup3; = 1a&sup3; + 3a&sup2;b + 3ab&sup2; + 1b&sup3;
+            </div>
+        </div>
+        
+        <div class="section" id="tips">
+            <h2>&#127919; 6. Strategi Menjawab SNBT</h2>
+            <ol>
+                <li><strong>Hafalkan kuadrat 1-25:</strong> 1, 4, 9, 16, 25, 36, 49, 64, 81, 100, 121, 144, 169, 196, 225, 256, 289, 324, 361, 400, 441, 484, 529, 576, 625.</li>
+                <li><strong>Konversi bentuk akar</strong> sangat krusial dalam menyederhanakan pecahan besar. Kalikan dengan sekawan!</li>
+                <li><strong>Soal cerita FPB/KPK:</strong> Identifikasi kata kunci "paling banyak" (FPB) vs "paling sedikit berapa lama" (KPK).</li>
+                <li><strong>Untuk soal persen berturut-turut,</strong> jangan jumlahkan langsung. Hitung bertahap!<br>
+                Naik 20% lalu turun 10% &#8800; naik 10%. Hitung: 100 &times; 1,2 &times; 0,9 = 108 (naik hanya 8%).</li>
+                <li><strong>Estimasi:</strong> Jika pilihan jawabannya jauh berbeda, gunakan pembulatan untuk mempercepat perhitungan.</li>
+            </ol>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="library.html" class="nav-btn">
+                <div>
+                    <div class="nav-btn-label">&#8592; Kembali</div>Library SNBT
+                </div>
+            </a>
+            <a href="lib-pk-numerik.html" class="nav-btn primary">
+                <div>
+                    <div class="nav-btn-label">Materi Selanjutnya &rarr;</div>Numerik &amp; Komputasi
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>&copy; 2025 QuizNation &mdash; Library SNBT 2025</footer>
+    <script>if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark')</script>
+</body>
+
+</html>

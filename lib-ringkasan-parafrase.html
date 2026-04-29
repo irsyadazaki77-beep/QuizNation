@@ -1,0 +1,162 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Ringkasan, Parafrase & Sintesis - Library SNBT 2026</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        html, body { max-width: 100%; overflow-x: hidden; }
+        * { -webkit-tap-highlight-color: transparent !important; }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root { --accent:#2563eb; --accent2:#06b6d4; --bg:#f0f2f8; --surface:rgba(255,255,255,.72); --border:rgba(0,0,0,.08); --text:#1a1a2e; --text2:#4b5563; --text3:#9ca3af; --glow:rgba(124,58,237,.18); --radius:20px; }
+        body.dark { --bg:#050a15; --surface:rgba(255,255,255,.055); --border:rgba(255,255,255,.09); --text:#f0edff; --text2:rgba(240,237,255,.68); --text3:rgba(240,237,255,.36); --glow:rgba(124,58,237,.28); }
+        body { font-family:'Bricolage Grotesque',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; transition:background .3s,color .3s; }
+        .noise-overlay { position:fixed; inset:0; z-index:0; opacity:.35; pointer-events:none; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); }
+        .topnav { position:sticky; top:0; z-index:10; display:flex; align-items:center; gap:14px; padding:16px 20px; background:var(--surface); backdrop-filter:blur(10px); border-bottom:1px solid var(--border); }
+        .topnav a { text-decoration:none; color:var(--accent); font-weight:800; }
+        .topnav-title { margin-left:auto; font-family:'Playfair Display',serif; font-weight:700; }
+        .theme-btn { width:36px; height:36px; border-radius:10px; border:1px solid var(--border); background:var(--surface); cursor:pointer; }
+        .wrapper { max-width:920px; margin:0 auto; padding:34px 18px 70px; position:relative; z-index:1; }
+        .hero-badge { display:inline-flex; padding:6px 14px; border-radius:999px; background:rgba(6,182,212,.12); color:#06b6d4; border:1px solid rgba(6,182,212,.24); font-size:.74rem; font-weight:800; margin-bottom:14px; }
+        .page-title { font-family:'Playfair Display',serif; font-size:clamp(2rem,4vw,3rem); line-height:1.15; margin-bottom:12px; }
+        .page-title .grad { background:linear-gradient(135deg,var(--accent),#60a5fa,var(--accent2)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+        .page-desc { color:var(--text2); line-height:1.8; margin-bottom:26px; }
+        .toc, .section { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); }
+        .toc { padding:22px 24px; margin-bottom:24px; }
+        .toc-title { font-weight:800; margin-bottom:10px; }
+        .toc ol { padding-left:20px; display:grid; gap:6px; color:var(--text2); }
+        .section { padding:24px; margin-bottom:18px; }
+        .section h2 { font-family:'Playfair Display',serif; margin-bottom:12px; font-size:1.45rem; }
+        .section h3 { color:var(--accent); margin:16px 0 8px; font-size:1.02rem; }
+        .section p, .section li { color:var(--text2); line-height:1.8; font-size:.94rem; }
+        .section ul, .section ol { padding-left:20px; margin:10px 0; }
+        .example, .tip, .warning { padding:14px 16px; border-radius:12px; margin:14px 0; line-height:1.75; font-size:.9rem; }
+        .example { background:rgba(124,58,237,.07); border-left:3px solid var(--accent); }
+        .tip { background:rgba(6,182,212,.08); border-left:3px solid var(--accent2); }
+        .warning { background:rgba(244,63,94,.08); border-left:3px solid #f43f5e; }
+        .nav-buttons { display:flex; flex-wrap:wrap; gap:12px; margin-top:28px; }
+        .nav-btn { flex:1 1 220px; padding:14px 16px; border-radius:14px; text-decoration:none; border:1px solid var(--border); background:var(--surface); color:var(--text); font-weight:800; }
+        .nav-btn.primary { color:#fff; border:none; background:linear-gradient(135deg,var(--accent),var(--accent2)); }
+        footer { text-align:center; color:var(--text3); padding:18px; margin-top:22px; border-top:1px solid var(--border); }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">? Kembali ke Library</a>
+        <span class="topnav-title">Ringkasan, Parafrase & Sintesis</span>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">Literasi Bahasa Indonesia</div>
+        <h1 class="page-title">Ringkasan, Parafrase & <span class="grad">Sintesis</span></h1>
+        <p class="page-desc">Kemampuan merangkum dan memparafrase sangat penting di SNBT karena membantu memahami inti bacaan dengan cepat tanpa terjebak pada detail yang tidak perlu. Untuk konteks 2026, materi ini tetap relevan karena soal literasi cenderung menilai pemahaman isi, pemilihan parafrase paling sepadan, dan kemampuan menyatukan ide dari beberapa paragraf.</p>
+
+        <div class="toc">
+            <div class="toc-title">📑 Daftar Isi</div>
+            <ol>
+                <li>Bedakan ringkasan, parafrase, dan sintesis</li>
+                <li>Prinsip menemukan ide pokok</li>
+                <li>Teknik parafrase yang aman</li>
+                <li>Sintesis beberapa paragraf</li>
+                <li>Kesalahan umum dan fokus 2026</li>
+                <li>Latihan bertahap</li>
+            </ol>
+        </div>
+
+        <section class="section">
+            <h2>1. Bedakan ringkasan, parafrase, dan sintesis</h2>
+            <ul>
+                <li><strong>Ringkasan:</strong> memadatkan isi teks menjadi lebih singkat dengan tetap mempertahankan gagasan utama.</li>
+                <li><strong>Parafrase:</strong> menyampaikan ide yang sama dengan susunan kalimat berbeda.</li>
+                <li><strong>Sintesis:</strong> menggabungkan beberapa gagasan dari paragraf atau teks berbeda menjadi satu pemahaman utuh.</li>
+            </ul>
+            <div class="example"><strong>Ingat mudahnya:</strong> <em>ringkasan = dipadatkan, parafrase = diucapkan ulang, sintesis = digabungkan</em>.</div>
+        </section>
+
+        <section class="section">
+            <h2>2. Prinsip menemukan ide pokok</h2>
+            <p>Ringkasan yang baik hanya memuat <strong>gagasan utama</strong>, tidak menyalin semua detail. Fokus pada siapa, apa, mengapa, dan hasil akhirnya.</p>
+            <ol>
+                <li>Baca teks sampai paham inti pesannya.</li>
+                <li>Tandai kalimat utama tiap paragraf.</li>
+                <li>Bedakan fakta inti dengan ilustrasi atau contoh.</li>
+                <li>Gabungkan inti paragraf menjadi satu alur singkat.</li>
+            </ol>
+            <div class="tip"><strong>Tip:</strong> ringkasan bukan kumpulan kutipan. Gunakan bahasamu sendiri secara singkat, runtut, dan tetap netral.</div>
+        </section>
+
+        <section class="section">
+            <h2>3. Teknik parafrase yang aman</h2>
+            <p>Parafrase berarti menyampaikan kembali ide yang sama dengan susunan kalimat berbeda tanpa mengubah makna.</p>
+            <h3>Cara sederhana:</h3>
+            <ol>
+                <li>Ubah struktur kalimat aktif ? pasif bila perlu.</li>
+                <li>Ganti beberapa kata dengan sinonim yang tepat.</li>
+                <li>Sederhanakan frasa yang berulang atau terlalu panjang.</li>
+                <li>Pertahankan makna utama dan hubungan logisnya.</li>
+            </ol>
+            <div class="example"><strong>Teks asli:</strong> -Kebiasaan membaca secara rutin dapat memperluas wawasan siswa.-<br><strong>Parafrase:</strong> -Siswa yang rajin membaca cenderung memiliki pengetahuan yang lebih luas.-</div>
+            <div class="warning"><strong>Jangan keliru:</strong> parafrase bukan sekadar mengganti satu-dua kata. Jika makna berubah, jawaban tetap salah.</div>
+        </section>
+
+        <section class="section">
+            <h2>4. Sintesis beberapa paragraf</h2>
+            <p>Sintesis diperlukan ketika soal meminta kesimpulan umum dari beberapa paragraf atau dua teks berbeda.</p>
+            <ul>
+                <li>Cari tema besar yang sama.</li>
+                <li>Bedakan informasi inti dan informasi penjelas.</li>
+                <li>Amati hubungan antargagasan: sebab-akibat, perbandingan, atau solusi.</li>
+                <li>Gabungkan poin utama tanpa mengulang detail berlebihan.</li>
+            </ul>
+            <div class="example"><strong>Rumus praktis:</strong> <em>tema umum + ide pokok tiap paragraf + hubungan antargagasan = sintesis yang kuat</em>.</div>
+        </section>
+
+        <section class="section">
+            <h2>5. Kesalahan umum dan fokus 2026</h2>
+            <ul>
+                <li>Terlalu banyak menyalin kalimat asli.</li>
+                <li>Memasukkan opini pribadi yang tidak ada di teks.</li>
+                <li>Membuang ide utama tetapi justru mempertahankan detail kecil.</li>
+                <li>Mengubah makna karena salah memilih sinonim.</li>
+                <li>Tertipu pilihan jawaban yang bahasanya indah tetapi tidak mewakili inti teks.</li>
+            </ul>
+            <div class="tip"><strong>Fokus belajar 2026:</strong> prioritaskan latihan pada <em>ide pokok, simpulan, parafrase sepadan, hubungan antarparagraf,</em> dan <em>tujuan penulis</em> - itulah kompetensi yang paling konsisten muncul dalam literasi.</div>
+        </section>
+
+        <section class="section">
+            <h2>6. Latihan bertahap</h2>
+            <p><strong>Teks:</strong> -Penggunaan transportasi umum dapat mengurangi kemacetan dan menekan polusi udara di kota besar. Namun, keberhasilannya tetap bergantung pada keterjangkauan biaya dan kenyamanan layanan.-</p>
+            <p><strong>Ringkasan yang tepat:</strong> Transportasi umum dapat membantu mengurangi kemacetan dan polusi jika layanannya terjangkau serta nyaman.</p>
+            <div class="example"><strong>Latihan parafrase:</strong> -Pemerintah daerah mendorong ruang terbuka hijau karena kawasan hijau membantu memperbaiki kualitas udara.-<br><strong>Parafrase tepat:</strong> Pemerintah daerah memperluas ruang hijau untuk mendukung kualitas udara yang lebih baik.</div>
+        </section>
+
+        <div class="nav-buttons">
+            <a class="nav-btn" href="library.html">? Kembali ke Library</a>
+            <a class="nav-btn primary" href="snbt.html?type=indo">Lanjut ke Literasi Indonesia ?</a>
+        </div>
+
+        <footer>- 2026 QuizNation - Materi Library SNBT 2026.</footer>
+    </div>
+
+    <script>
+        function toggleTheme() {
+            if (typeof window.__quizNationApplyGlobalPreferences === 'function') { window.__quizNationApplyGlobalPreferences(); }
+            document.body.classList.toggle('dark');
+            localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+        }
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+    </script>
+</body>
+
+</html>
+

@@ -1,0 +1,3340 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#050a15" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8" />
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Panduan Penggunaan — QuizNation</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&display=swap"
+        rel="stylesheet">
+    <style>
+        /* ── RESET & BASE ── */
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        *,
+        *::before,
+        *::after {
+            -webkit-tap-highlight-color: transparent !important;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --surface2: #f1f5f9;
+            --surface3: #e2e8f0;
+            --border: #e2e8f0;
+            --text: #0f172a;
+            --text2: #334155;
+            --text3: #64748b;
+            --accent: #3b82f6;
+            --accent-mid: #60a5fa;
+            --accent-light: #eff6ff;
+            --accent-glow: rgba(59, 130, 246, 0.15);
+            --green: #10b981;
+            --green-l: #d1fae5;
+            --amber: #f59e0b;
+            --amber-l: #fef3c7;
+            --rose: #f43f5e;
+            --rose-l: #ffe4e6;
+            --sidebar-w: 260px;
+            --r: 20px;
+            --r-sm: 12px;
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            --shadow-md: 0 10px 40px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 20px 60px rgba(59, 130, 246, 0.14);
+            --bouncy: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        body.dark {
+            --bg: #050a15;
+            --surface: #0a1120;
+            --surface2: rgba(255, 255, 255, 0.05);
+            --surface3: rgba(255, 255, 255, 0.09);
+            --border: rgba(255, 255, 255, 0.11);
+            --text: #f0ebff;
+            --text2: #b8aad4;
+            --text3: #7a6d99;
+            --accent-light: rgba(59, 130, 246, 0.18);
+            --green-l: rgba(16, 185, 129, 0.15);
+            --amber-l: rgba(245, 158, 11, 0.15);
+            --rose-l: rgba(244, 63, 94, 0.15);
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+            --shadow-md: 0 12px 40px rgba(0, 0, 0, 0.5);
+            --shadow-lg: 0 24px 60px rgba(59, 130, 246, 0.25);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            transition: background .5s, color .5s;
+        }
+
+        /* ── NEW UI UPGRADES (Loading, Progress, BackToTop, Tooltip) ── */
+        #pageLoader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s var(--bouncy), visibility 0.6s;
+        }
+
+        #pageLoader.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .spinner-logo {
+            font-size: 3rem;
+            animation: float 2s infinite ease-in-out;
+        }
+
+        #scrollProgress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-mid));
+            z-index: 99999;
+            width: 0%;
+            transition: width 0.1s;
+            border-radius: 0 2px 2px 0;
+        }
+
+        #backToTop {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+            width: 50px;
+            height: 50px;
+            border-radius: 16px;
+            background: var(--accent);
+            color: white;
+            border: none;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(20px);
+            transition: all 0.4s var(--bouncy);
+            cursor: pointer;
+        }
+
+        #backToTop.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        #backToTop:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px var(--accent-glow);
+        }
+
+        [data-tooltip] {
+            position: relative;
+            cursor: pointer;
+        }
+
+        [data-tooltip]::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 120%;
+            left: 50%;
+            transform: translateX(-50%) translateY(10px);
+            background: var(--text);
+            color: var(--bg);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s var(--bouncy);
+            box-shadow: var(--shadow-md);
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        [data-tooltip]:hover::before {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s var(--bouncy);
+            color: var(--text2);
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-light);
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .copy-btn.copied {
+            background: var(--green-l);
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        /* ── ANIMATIONS ── */
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @keyframes wobble {
+
+            0%,
+            100% {
+                transform: rotate(0) scale(1);
+            }
+
+            25% {
+                transform: rotate(-12deg) scale(1.15);
+            }
+
+            75% {
+                transform: rotate(12deg) scale(1.15);
+            }
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes wave {
+
+            0%,
+            100% {
+                transform: rotate(0);
+            }
+
+            25% {
+                transform: rotate(-15deg) scale(1.1);
+            }
+
+            75% {
+                transform: rotate(10deg) scale(1.1);
+            }
+        }
+
+        @keyframes slideDownFade {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUpFade {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes shine {
+            to {
+                background-position: 200% center;
+            }
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* ── BACKDROP ── */
+        .backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(6px);
+            z-index: 90;
+            opacity: 0;
+            visibility: hidden;
+            transition: .3s;
+        }
+
+        .backdrop.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* ── SIDEBAR ── */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-w);
+            height: 100vh;
+            background: linear-gradient(180deg, #050a15 0%, #0a1120 100%);
+            border-right: 1px solid rgba(59, 130, 246, 0.2);
+            z-index: 100;
+            padding: 28px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            overflow-y: auto;
+            transform: translateX(-100%);
+            transition: transform .4s cubic-bezier(.175, .885, .32, 1);
+        }
+
+        @media(min-width:1024px) {
+            .sidebar {
+                transform: translateX(0);
+            }
+        }
+
+        .sidebar.open {
+            transform: translateX(0);
+        }
+
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-size: 1.55rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 28px;
+            padding: 0 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-close {
+            display: none;
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 1rem;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 8px;
+            -webkit-text-fill-color: rgba(255, 255, 255, 0.5);
+        }
+
+        @media(max-width:1023px) {
+            .logo-close {
+                display: block;
+            }
+        }
+
+        .nav-label {
+            font-size: .65rem;
+            font-weight: 800;
+            letter-spacing: .12em;
+            text-transform: uppercase;
+            color: rgba(59, 130, 246, 0.5);
+            padding: 14px 12px 5px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 12px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: .88rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            transition: all .25s cubic-bezier(.4, 0, .2, 1);
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: rgba(255, 255, 255, .9);
+            background: rgba(255, 255, 255, .06);
+            padding-left: 16px;
+        }
+
+        .nav-link.active {
+            color: #fff;
+            background: linear-gradient(90deg, rgba(59, 130, 246, .3), rgba(59, 130, 246, .15));
+            border: 1px solid rgba(59, 130, 246, .35);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, .2);
+        }
+
+        .nav-link.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 3px;
+            height: 60%;
+            background: linear-gradient(180deg, #60a5fa, #3b82f6);
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* ── FLOATING BTNS ── */
+        .hamburger,
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            z-index: 110;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--text);
+            box-shadow: var(--shadow);
+            transition: all .4s var(--bouncy);
+        }
+
+        .hamburger {
+            left: 16px;
+            display: none;
+        }
+
+        .theme-toggle {
+            right: 16px;
+        }
+
+        @media(max-width:1023px) {
+            .hamburger {
+                display: flex;
+            }
+        }
+
+        .hamburger:hover,
+        .theme-toggle:hover {
+            transform: scale(1.15) translateY(-2px);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ── MAIN ── */
+        .main {
+            flex: 1;
+            margin-left: 0;
+            transition: margin .4s;
+            min-width: 0;
+            position: relative;
+            z-index: 10;
+        }
+
+        @media(min-width:1024px) {
+            .main {
+                margin-left: var(--sidebar-w);
+            }
+        }
+
+        .bg-grid {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            background-image: radial-gradient(circle at 15% 15%, rgba(59, 130, 246, .07) 0%, transparent 50%),
+                radial-gradient(circle at 85% 85%, rgba(59, 130, 246, .06) 0%, transparent 50%);
+        }
+
+        body.dark .bg-grid {
+            background-image: radial-gradient(circle at 15% 15%, rgba(59, 130, 246, .14) 0%, transparent 50%),
+                radial-gradient(circle at 85% 85%, rgba(59, 130, 246, .12) 0%, transparent 50%);
+        }
+
+        /* ── HERO ── */
+        .hero {
+            padding: 100px 48px 50px;
+            max-width: 960px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media(max-width:768px) {
+            .hero {
+                padding: 88px 22px 36px;
+            }
+        }
+
+        .badge-anim {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            border-radius: 100px;
+            background: var(--accent-light);
+            border: 1.5px solid rgba(59, 130, 246, .3);
+            color: var(--accent);
+            font-size: .8rem;
+            font-weight: 800;
+            margin-bottom: 24px;
+            animation: slideDownFade .8s var(--bouncy) both, float 4s ease-in-out infinite;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        .badge-anim i {
+            font-style: normal;
+            animation: wave 2s infinite;
+            display: inline-block;
+            font-size: 1.1rem;
+        }
+
+        .hero h1 {
+            font-family: 'Fraunces', serif;
+            font-size: clamp(2.4rem, 6vw, 4rem);
+            font-weight: 800;
+            line-height: 1.15;
+            color: var(--text);
+            margin-bottom: 24px;
+            letter-spacing: -.02em;
+            animation: slideUpFade .8s .1s var(--bouncy) both;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #60a5fa, #93c5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 4s linear infinite;
+        }
+
+        .hero p {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--text2);
+            max-width: 600px;
+            animation: slideUpFade .8s .2s var(--bouncy) both;
+        }
+
+        /* ── SEARCH ── */
+        .search-wrap {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 0 48px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media(max-width:768px) {
+            .search-wrap {
+                padding: 0 22px;
+            }
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 18px 26px;
+            box-shadow: var(--shadow);
+            transition: all .4s var(--bouncy);
+            animation: slideUpFade .8s .3s var(--bouncy) both;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 8px 30px var(--accent-glow);
+            transform: translateY(-3px) scale(1.01);
+        }
+
+        .search-box span {
+            font-size: 1.3rem;
+            flex-shrink: 0;
+            animation: wobble 3s infinite ease-in-out;
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            background: none;
+            font-size: 1.05rem;
+            color: var(--text);
+            font-family: inherit;
+            outline: none;
+            font-weight: 500;
+        }
+
+        .search-box input::placeholder {
+            color: var(--text3);
+        }
+
+        .search-results {
+            margin-top: 12px;
+            display: none;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .search-results.show {
+            display: flex;
+            animation: popIn 0.4s var(--bouncy) both;
+        }
+
+        .search-result-item {
+            padding: 16px 22px;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text);
+            transition: all .3s var(--bouncy);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .search-result-item mark {
+            background: var(--amber-l);
+            color: var(--amber);
+            border-radius: 4px;
+            padding: 0 4px;
+            font-weight: 800;
+        }
+
+        .search-result-item:hover {
+            border-color: var(--accent);
+            background: var(--accent-light);
+            transform: translateX(8px) scale(1.02);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ── CONTENT AREA ── */
+        .content {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 32px 48px 100px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            position: relative;
+            z-index: 1;
+        }
+
+        @media(max-width:768px) {
+            .content {
+                padding: 24px 22px 80px;
+                gap: 24px;
+            }
+        }
+
+        /* ── CARDS & SECTIONS ── */
+        .card {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            opacity: 0;
+            position: relative;
+            transition: box-shadow .4s var(--bouncy), border-color .4s var(--bouncy), transform .4s var(--bouncy);
+        }
+
+        .card.visible {
+            animation: popIn 0.8s var(--bouncy) forwards;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent), var(--accent-mid));
+            opacity: 0;
+            transition: .4s var(--bouncy);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            border-color: rgba(59, 130, 246, .3);
+            transform: translateY(-4px);
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        @media(max-width:600px) {
+            .card {
+                padding: 28px 22px;
+                border-radius: 20px;
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            margin-bottom: 28px;
+            position: relative;
+        }
+
+        .header-actions {
+            margin-left: auto;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .bookmark-btn,
+        .mobile-collapse-btn {
+            background: var(--surface2);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s var(--bouncy);
+            color: var(--text3);
+        }
+
+        .bookmark-btn:hover,
+        .mobile-collapse-btn:hover {
+            background: var(--accent-light);
+            color: var(--accent);
+            border-color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .bookmark-btn.saved {
+            background: var(--amber-l);
+            border-color: var(--amber);
+            color: var(--amber);
+        }
+
+        .mobile-collapse-btn {
+            display: none;
+        }
+
+        @media(max-width:768px) {
+            .mobile-collapse-btn {
+                display: flex;
+            }
+        }
+
+        .card-body {
+            transition: max-height 0.5s var(--bouncy), opacity 0.4s ease;
+            overflow: hidden;
+            max-height: 5000px;
+            opacity: 1;
+        }
+
+        .card.collapsed .card-body {
+            max-height: 0;
+            opacity: 0;
+            margin-top: -10px;
+            pointer-events: none;
+        }
+
+        .card.collapsed .mobile-collapse-btn {
+            transform: rotate(180deg);
+        }
+
+        .icon-box {
+            width: 58px;
+            height: 58px;
+            border-radius: 16px;
+            background: var(--accent-light);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            flex-shrink: 0;
+            transition: all .4s var(--bouncy);
+            animation: float 5s ease-in-out infinite;
+        }
+
+        .card:hover .icon-box {
+            transform: scale(1.15) rotate(10deg);
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 8px 24px var(--accent-glow);
+            animation: none;
+        }
+
+        .card-title {
+            font-family: 'Fraunces', serif;
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-sub {
+            font-size: .95rem;
+            color: var(--text3);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .body-text {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: var(--text2);
+            margin-bottom: 24px;
+        }
+
+        /* ── STEP LIST & LISTS ── */
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 18px;
+            background: var(--surface2);
+            padding: 20px;
+            border-radius: 18px;
+            border: 2px solid transparent;
+            transition: all .4s var(--bouncy);
+            cursor: default;
+            position: relative;
+        }
+
+        .step-item:hover {
+            border-color: var(--accent);
+            background: var(--surface);
+            box-shadow: var(--shadow-md);
+            transform: translateX(10px) scale(1.02);
+        }
+
+        .step-num {
+            width: 34px;
+            height: 34px;
+            background: var(--accent);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: .95rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px var(--accent-glow);
+            transition: .4s var(--bouncy);
+        }
+
+        .step-item:hover .step-num {
+            transform: scale(1.1) rotate(-10deg);
+        }
+
+        .step-content h4 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .step-content p {
+            font-size: .95rem;
+            color: var(--text2);
+            line-height: 1.65;
+        }
+
+        /* ── QUICK NAV GRID ── */
+        .quick-nav {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+        }
+
+        .qnav-card {
+            background: var(--surface2);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 24px 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: all .4s var(--bouncy);
+            text-decoration: none;
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .qnav-card:hover {
+            transform: translateY(-8px) scale(1.03);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--accent);
+            background: var(--surface);
+        }
+
+        .qnav-card .qicon {
+            font-size: 2.2rem;
+            margin-bottom: 12px;
+            display: block;
+            transition: all .4s var(--bouncy);
+        }
+
+        .qnav-card:hover .qicon {
+            animation: wobble 0.6s ease-in-out;
+            transform: scale(1.2);
+        }
+
+        .qnav-card h4 {
+            font-size: .95rem;
+            font-weight: 800;
+            margin-bottom: 4px;
+        }
+
+        .qnav-card p {
+            font-size: .8rem;
+            color: var(--text3);
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        /* ── TIPS GRID ── */
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        .tip-card {
+            background: var(--surface2);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 26px;
+            transition: all .4s var(--bouncy);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tip-card:hover {
+            border-color: var(--accent);
+            background: var(--surface);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-6px) scale(1.02);
+        }
+
+        .tip-card .tip-emoji {
+            font-size: 2.2rem;
+            margin-bottom: 14px;
+            display: inline-block;
+            transition: .4s var(--bouncy);
+        }
+
+        .tip-card:hover .tip-emoji {
+            transform: scale(1.2) translateY(-4px);
+        }
+
+        .tip-card h4 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 8px;
+            padding-right: 35px;
+        }
+
+        .tip-card p {
+            font-size: .95rem;
+            color: var(--text2);
+            line-height: 1.65;
+        }
+
+        /* ── FAQ ── */
+        .faq-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .faq-item {
+            background: var(--surface2);
+            border: 2px solid transparent;
+            border-radius: 18px;
+            overflow: hidden;
+            transition: all .4s var(--bouncy);
+        }
+
+        .faq-item.active {
+            border-color: var(--accent);
+            background: var(--surface);
+            box-shadow: var(--shadow-md);
+            transform: scale(1.01);
+        }
+
+        .faq-question {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            background: none;
+            border: none;
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text);
+            cursor: pointer;
+            text-align: left;
+            font-family: inherit;
+            gap: 12px;
+            transition: color .3s;
+        }
+
+        .faq-item:hover .faq-question {
+            color: var(--accent);
+        }
+
+        .faq-icon {
+            font-size: 1.1rem;
+            color: var(--accent);
+            transition: transform .5s var(--bouncy);
+            flex-shrink: 0;
+            background: var(--accent-light);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .faq-item.active .faq-icon {
+            transform: rotate(180deg) scale(1.1);
+            background: var(--accent);
+            color: white;
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height .5s var(--bouncy);
+        }
+
+        .faq-answer-inner {
+            padding: 0 24px 24px;
+            color: var(--text2);
+            font-size: .95rem;
+            line-height: 1.75;
+        }
+
+        /* ── TROUBLE LIST ── */
+        .trouble-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .trouble-item {
+            background: var(--surface2);
+            border: 2px solid transparent;
+            border-radius: 18px;
+            padding: 24px;
+            transition: all .4s var(--bouncy);
+            position: relative;
+        }
+
+        .trouble-item:hover {
+            border-color: var(--accent);
+            background: var(--surface);
+            box-shadow: var(--shadow-md);
+            transform: translateX(6px);
+        }
+
+        .trouble-item h4 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding-right: 35px;
+        }
+
+        .trouble-item p {
+            font-size: .95rem;
+            color: var(--text2);
+            line-height: 1.65;
+        }
+
+        .solve {
+            margin-top: 12px;
+            padding: 10px 16px;
+            background: var(--green-l);
+            border-radius: 12px;
+            font-size: .88rem;
+            color: var(--green);
+            font-weight: 800;
+            display: inline-block;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        /* ── FEATURE HIGHLIGHT ── */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+        }
+
+        .feature-card {
+            background: var(--surface2);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 26px;
+            transition: all .4s var(--bouncy);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            border-color: var(--accent);
+            background: var(--surface);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-6px) scale(1.02);
+        }
+
+        .feature-card .fc-head {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .fc-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: var(--accent-light);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            transition: all .4s var(--bouncy);
+        }
+
+        .feature-card:hover .fc-icon {
+            background: var(--accent);
+            color: white;
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        .feature-card h4 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        .feature-card p {
+            font-size: .95rem;
+            color: var(--text2);
+            line-height: 1.65;
+        }
+
+        .feature-card .badge {
+            display: inline-block;
+            margin-top: 14px;
+            padding: 6px 14px;
+            border-radius: 100px;
+            font-size: .75rem;
+            font-weight: 800;
+            letter-spacing: .04em;
+        }
+
+        .badge-new {
+            background: var(--green-l);
+            color: var(--green);
+        }
+
+        .badge-soon {
+            background: var(--amber-l);
+            color: var(--amber);
+        }
+
+        .badge-hot {
+            background: var(--rose-l);
+            color: var(--rose);
+        }
+
+        /* ── KEYBOARD SHORTCUTS ── */
+        .kbd-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .kbd-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 22px;
+            background: var(--surface2);
+            border-radius: 16px;
+            transition: all .4s var(--bouncy);
+            border: 2px solid transparent;
+        }
+
+        .kbd-row:hover {
+            background: var(--surface);
+            box-shadow: var(--shadow-md);
+            border-color: var(--border);
+            transform: scale(1.02);
+        }
+
+        .kbd-key {
+            display: inline-flex;
+            gap: 6px;
+        }
+
+        .kbd-key kbd {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 6px 14px;
+            font-family: inherit;
+            font-size: .88rem;
+            font-weight: 800;
+            color: var(--text);
+            box-shadow: 0 4px 0 var(--border);
+            min-width: 38px;
+            text-align: center;
+            transition: .2s;
+        }
+
+        .kbd-row:hover kbd {
+            transform: translateY(2px);
+            box-shadow: 0 2px 0 var(--border);
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .kbd-label {
+            font-size: .95rem;
+            color: var(--text2);
+            font-weight: 600;
+        }
+
+        /* ── PROGRESS ── */
+        .progress-track {
+            height: 10px;
+            background: var(--surface2);
+            border-radius: 99px;
+            overflow: hidden;
+            margin: 22px 0 8px;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 99px;
+            background: linear-gradient(90deg, var(--accent), var(--accent-mid), #93c5fd);
+            background-size: 200%;
+            animation: shine 3s linear infinite;
+            transition: width 1.5s var(--bouncy);
+        }
+
+        .progress-label {
+            font-size: .9rem;
+            color: var(--text3);
+            font-weight: 700;
+            text-align: right;
+        }
+
+        /* ── VIDEO PLACEHOLDER ── */
+        .video-placeholder {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, var(--surface2), var(--surface3));
+            border-radius: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 26px;
+            cursor: pointer;
+            border: 2px dashed var(--border);
+            transition: all .4s var(--bouncy);
+        }
+
+        .video-placeholder:hover {
+            border-style: solid;
+            border-color: var(--accent);
+            transform: scale(1.02);
+            box-shadow: var(--shadow-md);
+        }
+
+        .video-placeholder::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, .15), transparent);
+            transform: translateX(-100%);
+            transition: .6s ease-in-out;
+        }
+
+        .video-placeholder:hover::after {
+            transform: translateX(100%);
+        }
+
+        .play-btn {
+            width: 72px;
+            height: 72px;
+            background: var(--surface);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--accent);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, .1);
+            transition: all .4s var(--bouncy);
+            padding-left: 6px;
+            z-index: 2;
+        }
+
+        .video-placeholder:hover .play-btn {
+            transform: scale(1.2);
+            background: var(--accent);
+            color: white;
+            box-shadow: 0 12px 40px var(--accent-glow);
+        }
+
+        /* ── DIVIDER & MISC ── */
+        .section-divider {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 12px 0 24px;
+        }
+
+        .section-divider span {
+            font-size: .8rem;
+            font-weight: 800;
+            letter-spacing: .1em;
+            text-transform: uppercase;
+            color: var(--text3);
+            white-space: nowrap;
+            background: var(--surface2);
+            padding: 6px 14px;
+            border-radius: 100px;
+        }
+
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: var(--surface2);
+            border-radius: 2px;
+        }
+
+        code {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 3px 10px;
+            font-family: 'Plus Jakarta Sans', monospace;
+            font-size: .9em;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .callout {
+            display: flex;
+            gap: 16px;
+            padding: 22px 24px;
+            border-radius: 20px;
+            margin: 20px 0;
+            transition: all .4s var(--bouncy);
+        }
+
+        .callout:hover {
+            transform: scale(1.02);
+            box-shadow: var(--shadow-md);
+        }
+
+        .callout.info {
+            background: var(--accent-light);
+            border: 2px solid rgba(59, 130, 246, .25);
+        }
+
+        .callout.tip {
+            background: var(--green-l);
+            border: 2px solid rgba(16, 185, 129, .25);
+        }
+
+        .callout.warn {
+            background: var(--amber-l);
+            border: 2px solid rgba(245, 158, 11, .25);
+        }
+
+        .callout-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .callout p {
+            font-size: .95rem;
+            line-height: 1.65;
+            color: var(--text2);
+            margin: auto 0;
+        }
+
+        .callout p strong {
+            color: var(--text);
+            font-weight: 800;
+        }
+
+        /* ── PROFILE & STATS ── */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+
+        .profile-card {
+            background: var(--surface2);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 28px 20px;
+            text-align: center;
+            transition: all .4s var(--bouncy);
+        }
+
+        .profile-card:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-8px) scale(1.03);
+            background: var(--surface);
+        }
+
+        .profile-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 20px;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            transition: .4s var(--bouncy);
+            box-shadow: var(--shadow);
+        }
+
+        .profile-card:hover .profile-avatar {
+            transform: scale(1.15) rotate(10deg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .profile-card h4 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .profile-card p {
+            font-size: .88rem;
+            color: var(--text3);
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 16px;
+        }
+
+        .stat-item {
+            background: var(--surface2);
+            border: 2px solid transparent;
+            border-radius: 20px;
+            padding: 24px 18px;
+            text-align: center;
+            transition: all .4s var(--bouncy);
+        }
+
+        .stat-item:hover {
+            border-color: var(--accent);
+            background: var(--surface);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-5px) scale(1.05);
+        }
+
+        .stat-item .num {
+            font-family: 'Fraunces', serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent), var(--accent-mid));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: block;
+            transition: transform .4s var(--bouncy);
+        }
+
+        .stat-item:hover .num {
+            transform: scale(1.1);
+        }
+
+        .stat-item .lbl {
+            font-size: .85rem;
+            color: var(--text3);
+            font-weight: 700;
+            margin-top: 6px;
+            display: block;
+        }
+
+        /* ── TIMELINE ── */
+        .timeline {
+            position: relative;
+            padding-left: 32px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 12px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, var(--accent), var(--accent-mid), transparent);
+            border-radius: 3px;
+        }
+
+        .tl-item {
+            position: relative;
+            margin-bottom: 28px;
+            transition: all .4s var(--bouncy);
+            padding: 16px;
+            border-radius: 16px;
+            border: 2px solid transparent;
+        }
+
+        .tl-item:hover {
+            background: var(--surface2);
+            border-color: var(--border);
+            transform: translateX(8px);
+        }
+
+        .tl-dot {
+            position: absolute;
+            left: -40px;
+            top: 22px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 0 4px var(--accent-light);
+            transition: all .4s var(--bouncy);
+        }
+
+        .tl-item:hover .tl-dot {
+            transform: scale(1.4);
+            box-shadow: 0 0 0 6px var(--accent-glow);
+        }
+
+        .tl-item h4 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--text);
+            margin-bottom: 6px;
+        }
+
+        .tl-item p {
+            font-size: .95rem;
+            color: var(--text2);
+            line-height: 1.65;
+        }
+
+        .tl-date {
+            display: inline-block;
+            font-size: .8rem;
+            color: white;
+            background: var(--accent);
+            padding: 4px 12px;
+            border-radius: 100px;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        /* ── CHECKLIST ── */
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 16px 20px;
+            background: var(--surface2);
+            border-radius: 16px;
+            border: 2px solid transparent;
+            transition: all .4s var(--bouncy);
+        }
+
+        .check-item:hover {
+            background: var(--surface);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-md);
+            transform: scale(1.02);
+        }
+
+        .check-box {
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            background: var(--green-l);
+            border: 2px solid rgba(16, 185, 129, .3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+            margin-top: 1px;
+            transition: .3s var(--bouncy);
+        }
+
+        .check-item:hover .check-box {
+            transform: scale(1.15) rotate(5deg);
+            background: var(--green);
+            color: white;
+            border-color: var(--green);
+        }
+
+        .check-item p {
+            font-size: .95rem;
+            color: var(--text2);
+            line-height: 1.6;
+        }
+
+        .check-item p strong {
+            color: var(--text);
+            font-weight: 800;
+        }
+
+        /* ── TABS ── */
+        .tab-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 10px 22px;
+            border-radius: 100px;
+            border: 2px solid var(--border);
+            background: var(--surface2);
+            font-family: inherit;
+            font-size: .9rem;
+            font-weight: 800;
+            color: var(--text2);
+            cursor: pointer;
+            transition: all .4s var(--bouncy);
+        }
+
+        .tab-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 6px 16px var(--accent-glow);
+            transform: scale(1.05);
+        }
+
+        .tab-panel {
+            display: none;
+            animation: popIn 0.5s var(--bouncy) forwards;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        /* ── FOOTER CTA ── */
+        .footer-cta {
+            text-align: center;
+            padding: 60px 24px 80px;
+            max-width: 620px;
+            margin: 0 auto;
+        }
+
+        .footer-cta h2 {
+            font-family: 'Fraunces', serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            margin-bottom: 14px;
+            color: var(--text);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .footer-cta p {
+            color: var(--text2);
+            margin-bottom: 32px;
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .cta-btns {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            padding: 16px 32px;
+            border-radius: 16px;
+            font-size: 1rem;
+            font-weight: 800;
+            text-decoration: none;
+            transition: all .4s var(--bouncy);
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cta-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent-mid));
+            color: #fff;
+            box-shadow: 0 8px 24px var(--accent-glow);
+        }
+
+        .cta-btn.primary:hover {
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: 0 12px 32px var(--accent-glow);
+        }
+
+        .cta-btn.secondary {
+            background: var(--surface);
+            color: var(--text);
+            border: 2px solid var(--border);
+        }
+
+        .cta-btn.secondary:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-4px) scale(1.05);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ── PRINT MODE ── */
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+            }
+
+            .sidebar,
+            .hamburger,
+            .theme-toggle,
+            .search-wrap,
+            #scrollProgress,
+            #backToTop,
+            .footer-cta {
+                display: none !important;
+            }
+
+            .main {
+                margin-left: 0 !important;
+            }
+
+            .content {
+                padding: 0 !important;
+            }
+
+            .card {
+                box-shadow: none !important;
+                border: 1px solid #ccc !important;
+                page-break-inside: avoid;
+                margin-bottom: 30px;
+                opacity: 1 !important;
+                transform: none !important;
+                animation: none !important;
+            }
+
+            .bg-grid {
+                display: none !important;
+            }
+
+            * {
+                transition: none !important;
+                animation: none !important;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <!-- Sinkronisasi Theme Awal untuk Mencegah Flicker -->
+    <script>
+        if (localStorage.getItem('theme') === 'dark') document.documentElement.classList.add('dark');
+    </script>
+</head>
+
+<body onload="document.body.className = localStorage.getItem('theme') === 'dark' ? 'dark' : ''">
+
+    <!-- 1. Loading Skeleton Overlay -->
+    <div id="pageLoader">
+        <div class="spinner-logo">🚀</div>
+    </div>
+
+    <!-- 2. Scroll Progress Bar -->
+    <div id="scrollProgress"></div>
+
+    <div class="bg-grid"></div>
+    <div class="backdrop" id="backdrop" onclick="closeSidebar()"></div>
+
+    <nav class="sidebar" id="sidebar">
+        <div class="logo">QuizNation <button class="logo-close" onclick="closeSidebar()">✕</button></div>
+        <div class="nav-label">Menu Utama</div>
+        <a href="index.html" class="nav-link">🏠 Beranda</a>
+        <a href="statistik.html" class="nav-link">📊 Statistik</a>
+        <a href="evaluasi.html" class="nav-link">🎓 Evaluasi SNBT</a>
+        <a href="pencapaian.html" class="nav-link">🏆 Pencapaian</a>
+        <a href="materi.html" class="nav-link">📚 Materi</a>
+        <a href="library.html" class="nav-link">📖 Library</a>
+        <div class="nav-label" style="margin-top:10px">Bantuan</div>
+        <a href="pengaturan.html" class="nav-link">⚙️ Pengaturan</a>
+        <a href="panduan.html" class="nav-link active">📋 Panduan</a>
+        <a href="feedback.html" class="nav-link">💬 Feedback</a>
+    </nav>
+
+    <button class="hamburger" onclick="openSidebar()">&#9776;</button>
+    <div class="theme-toggle" data-tooltip="Ganti Tema (Alt+T)" onclick="toggleTheme()" id="themeBtn">&#127769;</div>
+
+    <main class="main">
+
+        <section class="hero">
+            <div class="badge-anim"><i>&#128075;</i> Pusat Bantuan QuizNation</div>
+            <h1>Semua yang perlu Anda<br><span class="text-gradient">tahu ada di sini</span></h1>
+            <p>Panduan lengkap untuk memaksimalkan setiap fitur QuizNation — dari modul belajar, evaluasi SNBT,
+                statistik, hingga tips belajar efektif untuk meraih skor impian.</p>
+        </section>
+
+        <!-- 4. Smart Search & 5. Pintasan Keyboard -->
+        <div class="search-wrap">
+            <div class="search-box">
+                <span>🔍</span>
+                <input type="text" id="searchInput" placeholder="Cari panduan... (Tekan '/' untuk mencari)"
+                    oninput="handleSearch(this.value)">
+            </div>
+            <div class="search-results" id="searchResults"></div>
+        </div>
+
+        <div class="content">
+
+            <!-- Card 1: Navigasi -->
+            <div class="card" data-card>
+                <div class="card-header">
+                    <div class="icon-box">🧭</div>
+                    <div>
+                        <div class="card-title">Navigasi Cepat</div>
+                        <div class="card-sub">Langsung ke topik yang Anda butuhkan</div>
+                    </div>
+                    <!-- 14. Mobile Collapse -->
+                    <div class="header-actions">
+                        <button class="mobile-collapse-btn" onclick="toggleCard(this)">▼</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="quick-nav">
+                        <a href="#sec-mulai" class="qnav-card"><span class="qicon">🚀</span>
+                            <h4>Mulai Cepat</h4>
+                            <p>Setup akun & pertama kali</p>
+                        </a>
+                        <a href="#sec-materi" class="qnav-card"><span class="qicon">📚</span>
+                            <h4>Modul Materi</h4>
+                            <p>Cara belajar yang efektif</p>
+                        </a>
+                        <a href="#sec-snbt" class="qnav-card"><span class="qicon">🎓</span>
+                            <h4>Evaluasi SNBT</h4>
+                            <p>Simulasi ujian & Try Out</p>
+                        </a>
+                        <a href="#sec-statistik" class="qnav-card"><span class="qicon">📈</span>
+                            <h4>Statistik</h4>
+                            <p>Pahami metrik performa</p>
+                        </a>
+                        <a href="#sec-pencapaian" class="qnav-card"><span class="qicon">🏆</span>
+                            <h4>Pencapaian</h4>
+                            <p>Badge & reward sistem</p>
+                        </a>
+                        <a href="#sec-library" class="qnav-card"><span class="qicon">📖</span>
+                            <h4>Library</h4>
+                            <p>Koleksi referensi lengkap</p>
+                        </a>
+                        <a href="#sec-tips" class="qnav-card"><span class="qicon">💡</span>
+                            <h4>Tips Belajar</h4>
+                            <p>Strategi skor maksimal</p>
+                        </a>
+                        <a href="#sec-fitur" class="qnav-card"><span class="qicon">✨</span>
+                            <h4>Semua Fitur</h4>
+                            <p>Daftar lengkap fitur</p>
+                        </a>
+                        <a href="#sec-pengaturan" class="qnav-card"><span class="qicon">⚙️</span>
+                            <h4>Pengaturan</h4>
+                            <p>Personalisasi akun Anda</p>
+                        </a>
+                        <a href="#sec-trouble" class="qnav-card"><span class="qicon">🔧</span>
+                            <h4>Troubleshoot</h4>
+                            <p>Solusi masalah umum</p>
+                        </a>
+                        <a href="#sec-faq" class="qnav-card"><span class="qicon">❓</span>
+                            <h4>FAQ</h4>
+                            <p>Pertanyaan populer</p>
+                        </a>
+                        <a href="#sec-update" class="qnav-card"><span class="qicon">🗓️</span>
+                            <h4>Changelog</h4>
+                            <p>Riwayat update terbaru</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Mulai -->
+            <div class="card" data-card id="sec-mulai">
+                <div class="card-header">
+                    <div class="icon-box">🚀</div>
+                    <div>
+                        <div class="card-title">Panduan Mulai Cepat</div>
+                        <div class="card-sub">Dari nol sampai siap belajar dalam 5 menit</div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="bookmark-btn" onclick="toggleBookmark(this, 'sec-mulai')"
+                            data-tooltip="Simpan Seksi">🔖</button>
+                        <button class="mobile-collapse-btn" onclick="toggleCard(this)">▼</button>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="video-placeholder" onclick="alert('Video tutorial segera hadir!')">
+                        <div class="play-btn">▶</div>
+                    </div>
+
+                    <p class="body-text">Selamat datang di <strong>QuizNation</strong>! Platform belajar Bahasa Inggris
+                        &
+                        persiapan SNBT yang dirancang untuk pelajar Indonesia. Ikuti langkah berikut untuk memulai
+                        perjalanan belajar Anda.</p>
+
+                    <div class="step-list">
+                        <div class="step-item">
+                            <div class="step-num">1</div>
+                            <div class="step-content">
+                                <h4>Buat atau Masuk ke Akun Anda</h4>
+                                <p>Klik tombol "Masuk" di halaman Beranda. Anda bisa mendaftar dengan email atau
+                                    melanjutkan
+                                    sebagai Tamu. <strong>Catatan:</strong> Akun tamu tidak menyimpan progres secara
+                                    permanen.</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">2</div>
+                            <div class="step-content">
+                                <h4>Lengkapi Profil & Tujuan Belajar</h4>
+                                <p>Masuk ke <strong>Pengaturan → Profil</strong>. Isi nama, foto, dan pilih tujuan
+                                    belajar
+                                    Anda — apakah untuk SNBT, meningkatkan nilai Bahasa Inggris, atau keduanya. Sistem
+                                    akan
+                                    merekomendasikan jalur belajar yang sesuai.</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">3</div>
+                            <div class="step-content">
+                                <h4>Ikuti Tes Penempatan (Placement Test)</h4>
+                                <p>Di halaman Beranda, klik "Mulai Tes Penempatan". Tes 10 menit ini menentukan level
+                                    awal
+                                    Anda: Pemula, Menengah, atau Mahir. Hasilnya digunakan untuk menyesuaikan tingkat
+                                    kesulitan soal.</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">4</div>
+                            <div class="step-content">
+                                <h4>Mulai Modul Pertama Anda</h4>
+                                <p>Buka halaman <strong>Materi</strong> dari sidebar. Sistem akan menyorot modul yang
+                                    direkomendasikan sesuai level Anda. Klik "Mulai Belajar" untuk memulai sesi pertama.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">5</div>
+                            <div class="step-content">
+                                <h4>Pantau Progres di Dashboard</h4>
+                                <p>Setelah menyelesaikan modul pertama, lihat hasilnya di halaman
+                                    <strong>Statistik</strong>. Skor, waktu belajar, dan streak harian Anda akan
+                                    langsung
+                                    tercatat secara otomatis.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="callout tip" style="margin-top:18px;">
+                        <span class="callout-icon">💡</span>
+                        <p><strong>Tips Awal:</strong> Dedikasikan minimal 15 menit per hari untuk belajar. Konsistensi
+                            kecil jauh lebih efektif daripada sesi marathon yang tidak teratur.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Materi -->
+            <div class="card" data-card id="sec-materi">
+                <div class="card-header">
+                    <div class="icon-box">📚</div>
+                    <div>
+                        <div class="card-title">Menggunakan Modul Materi</div>
+                        <div class="card-sub">Panduan lengkap menjelajahi konten belajar</div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="bookmark-btn" onclick="toggleBookmark(this, 'sec-materi')"
+                            data-tooltip="Simpan Seksi">🔖</button>
+                        <button class="mobile-collapse-btn" onclick="toggleCard(this)">▼</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="body-text">Halaman <strong>Materi</strong> adalah inti dari QuizNation. Di sini tersedia
+                        ratusan konten belajar Bahasa Inggris yang tersusun secara sistematis dan berjenjang.</p>
+
+                    <div class="section-divider"><span>Struktur Materi</span></div>
+                    <div class="tips-grid" style="margin-bottom:20px;">
+                        <div class="tip-card">
+                            <span class="tip-emoji">📖</span>
+                            <h4>Kosakata (Vocabulary)</h4>
+                            <p>Ribuan kata penting dengan contoh penggunaan, pronunciation, dan konteks kalimat.
+                                Dilengkapi
+                                flashcard interaktif untuk latihan mandiri.</p>
+                        </div>
+                        <div class="tip-card">
+                            <span class="tip-emoji">🔤</span>
+                            <h4>Tata Bahasa (Grammar)</h4>
+                            <p>Nouns, Pronouns, Tenses (16 tenses), Modal Verbs, Passive Voice, hingga Conditional
+                                Sentences. Setiap konsep disertai latihan aplikatif.</p>
+                        </div>
+                        <div class="tip-card">
+                            <span class="tip-emoji">👂</span>
+                            <h4>Pemahaman Bacaan</h4>
+                            <p>Teks artikel, narasi, dan wacana dengan pertanyaan comprehension. Melatih kemampuan
+                                membaca
+                                cepat dan memahami konteks.</p>
+                        </div>
+                        <div class="tip-card">
+                            <span class="tip-emoji">✍️</span>
+                            <h4>Penulisan (Writing)</h4>
+                            <p>Panduan menyusun kalimat efektif, paragraf kohesif, dan esai terstruktur. Cocok untuk
+                                persiapan SNBT Literasi Bahasa Inggris.</p>
+                        </div>
+                    </div>
+
+                    <div class="section-divider"><span>Cara Mengerjakan Modul</span></div>
+                    <div class="step-list">
+                        <div class="step-item">
+                            <div class="step-num">1</div>
+                            <div class="step-content">
+                                <h4>Pilih Topik & Level</h4>
+                                <p>Filter materi berdasarkan kategori (Vocabulary, Grammar, Reading) dan level
+                                    (Pemula/Menengah/Mahir). Ikon 🔥 menandai topik yang paling banyak dikerjakan
+                                    pengguna
+                                    lain.</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">2</div>
+                            <div class="step-content">
+                                <h4>Baca Materi & Contoh</h4>
+                                <p>Setiap modul dimulai dengan penjelasan konsep dan minimal 3 contoh kalimat. Gunakan
+                                    tombol 🔊 untuk mendengar pengucapan yang benar dari setiap kata atau frasa.</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">3</div>
+                            <div class="step-content">
+                                <h4>Kerjakan Latihan Soal</h4>
+                                <p>Setiap modul memiliki 5–15 soal latihan dengan tipe bervariasi: pilihan ganda, isian,
+                                    dan
+                                    urut kata. Anda bisa mengulang soal sebanyak yang diinginkan.</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">4</div>
+                            <div class="step-content">
+                                <h4>Tinjau Pembahasan</h4>
+                                <p>Setelah mengerjakan soal, baca pembahasan untuk jawaban yang salah. Fitur
+                                    <strong>"Simpan
+                                        ke Catatan"</strong> memungkinkan Anda menyimpan pembahasan penting ke Library.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="callout warn" style="margin-top:18px;">
+                        <span class="callout-icon">⚠️</span>
+                        <p><strong>Urutan Belajar Rekomendasi:</strong> Kosakata Dasar → Nouns & Pronouns → Simple
+                            Tenses →
+                            Perfect Tenses → Modal Verbs → Reading Comprehension → Essay Writing. Jangan lewatkan
+                            fondasi!
+                        </p>
+                        <!-- 12. Copy Button -->
+                        <button class="copy-btn"
+                            onclick="copyText(this, 'Kosakata Dasar -> Nouns & Pronouns -> Simple Tenses -> Perfect Tenses -> Modal Verbs -> Reading Comprehension -> Essay Writing')"
+                            data-tooltip="Salin Alur">📋</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4: SNBT -->
+            <div class="card" data-card id="sec-snbt">
+                <div class="card-header">
+                    <div class="icon-box">🎓</div>
+                    <div>
+                        <div class="card-title">Panduan Evaluasi SNBT</div>
+                        <div class="card-sub">Simulasi Try Out sekelas ujian asli</div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="bookmark-btn" onclick="toggleBookmark(this, 'sec-snbt')"
+                            data-tooltip="Simpan Seksi">🔖</button>
+                        <button class="mobile-collapse-btn" onclick="toggleCard(this)">▼</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="body-text">Fitur <strong>Evaluasi SNBT</strong> menyediakan simulasi Try Out yang
+                        terstruktur
+                        mirip ujian asli SNBT. Latih diri Anda dalam suasana ujian yang realistis dengan timer dan
+                        pembahasan mendetail.</p>
+
+                    <div class="tab-nav">
+                        <button class="tab-btn active" onclick="switchTab(this,'tab-subjek')">📋 Subjek Ujian</button>
+                        <button class="tab-btn" onclick="switchTab(this,'tab-strategi')">🎯 Strategi</button>
+                        <button class="tab-btn" onclick="switchTab(this,'tab-review')">📊 Review Hasil</button>
+                    </div>
+
+                    <div id="tab-subjek" class="tab-panel active">
+                        <div class="feature-grid">
+                            <div class="feature-card">
+                                <div class="fc-head">
+                                    <div class="fc-icon">🧮</div>
+                                    <h4>Penalaran Matematika</h4>
+                                </div>
+                                <p>Soal numerik, pola barisan, probabilitas, statistik deskriptif, dan logika
+                                    kuantitatif.
+                                    Tersedia 3 level kesulitan: Dasar, Sedang, Tinggi.</p>
+                                <span class="badge badge-hot">🔥 Paling Banyak Dikerjakan</span>
+                            </div>
+                            <div class="feature-card">
+                                <div class="fc-head">
+                                    <div class="fc-icon">🧠</div>
+                                    <h4>Penalaran Umum</h4>
+                                </div>
+                                <p>Silogisme, penalaran deduktif-induktif, analogi verbal, serta pola logis. Melatih
+                                    kemampuan berpikir kritis dan analitis secara terstruktur.</p>
+                                <span class="badge badge-new">✨ Soal Diperbarui</span>
+                            </div>
+                            <div class="feature-card">
+                                <div class="fc-head">
+                                    <div class="fc-icon">🇮🇩</div>
+                                    <h4>Literasi Bahasa Indonesia</h4>
+                                </div>
+                                <p>Pemahaman teks, menemukan ide pokok, inferensi, dan analisis wacana. Berbasis teks
+                                    autentik dari berbagai sumber terpercaya.</p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="fc-head">
+                                    <div class="fc-icon">🇬🇧</div>
+                                    <h4>Literasi Bahasa Inggris</h4>
+                                </div>
+                                <p>Reading comprehension bertingkat, inference, vocabulary in context, dan analisis teks
+                                    ilmiah. Disesuaikan dengan kisi-kisi SNBT terbaru.</p>
+                                <span class="badge badge-hot">🔥 Unggulan QuizNation</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-strategi" class="tab-panel">
+                        <div class="step-list">
+                            <div class="step-item">
+                                <div class="step-num">1</div>
+                                <div class="step-content">
+                                    <h4>Lakukan Diagnostic Test Terlebih Dahulu</h4>
+                                    <p>Kerjakan Try Out pertama tanpa persiapan khusus. Tujuannya untuk mengetahui
+                                        <strong>mata ujian mana yang paling lemah</strong>. Fokuskan latihan pada area
+                                        tersebut.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-num">2</div>
+                                <div class="step-content">
+                                    <h4>Latih Manajemen Waktu</h4>
+                                    <p>Di SNBT asli, rata-rata waktu per soal adalah 60–90 detik. Aktifkan mode timer di
+                                        QuizNation dan biasakan diri untuk tidak menghabiskan lebih dari 2 menit di satu
+                                        soal.</p>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-num">3</div>
+                                <div class="step-content">
+                                    <h4>Gunakan Teknik Eliminasi</h4>
+                                    <p>Untuk soal pilihan ganda yang tidak yakin, eliminasi 2 pilihan yang paling jelas
+                                        salah terlebih dahulu. Ini meningkatkan peluang menjawab benar dari 25% menjadi
+                                        50%.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <div class="step-num">4</div>
+                                <div class="step-content">
+                                    <h4>Review Intensif Soal Salah</h4>
+                                    <p>Setelah sesi Try Out, jangan langsung tutup. Habiskan 10–15 menit membaca
+                                        pembahasan
+                                        soal yang salah. Catat pola kesalahan yang berulang.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-review" class="tab-panel">
+                        <p class="body-text">Setelah menyelesaikan Try Out, Anda akan melihat laporan performa lengkap
+                            yang
+                            berisi:</p>
+                        <div class="checklist">
+                            <div class="check-item">
+                                <div class="check-box">✓</div>
+                                <p><strong>Skor total</strong> dan perbandingan dengan rata-rata pengguna QuizNation</p>
+                            </div>
+                            <div class="check-item">
+                                <div class="check-box">✓</div>
+                                <p><strong>Breakdown per subjek</strong> — persentase benar per kategori soal</p>
+                            </div>
+                            <div class="check-item">
+                                <div class="check-box">✓</div>
+                                <p><strong>Grafik distribusi waktu</strong> — berapa detik Anda habiskan per soal</p>
+                            </div>
+                            <div class="check-item">
+                                <div class="check-box">✓</div>
+                                <p><strong>Soal yang ditandai</strong> — daftar soal yang Anda ragu dan ingin ditinjau
+                                    ulang
+                                </p>
+                            </div>
+                            <div class="check-item">
+                                <div class="check-box">✓</div>
+                                <p><strong>Rekomendasi materi</strong> — modul yang disarankan berdasarkan pola
+                                    kesalahan
+                                </p>
+                            </div>
+                            <div class="check-item">
+                                <div class="check-box">✓</div>
+                                <p><strong>Estimasi peningkatan</strong> — proyeksi skor jika Anda mengerjakan latihan
+                                    yang
+                                    direkomendasikan</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="margin-top:24px;">
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width:0%" id="snbtProgress"></div>
+                        </div>
+                        <div class="progress-label">Penguasaan SNBT Anda: <span id="snbtLabel">0%</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 5: Statistik -->
+            <div class="card" data-card id="sec-statistik">
+                <div class="card-header">
+                    <div class="icon-box">📈</div>
+                    <div>
+                        <div class="card-title">Memahami Metrik Statistik</div>
+                        <div class="card-sub">Baca "rapor pintar" belajar Anda</div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="bookmark-btn" onclick="toggleBookmark(this, 'sec-statistik')"
+                            data-tooltip="Simpan Seksi">🔖</button>
+                        <button class="mobile-collapse-btn" onclick="toggleCard(this)">▼</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="body-text">Halaman <strong>Statistik</strong> adalah cermin perjalanan belajar Anda. Semua
+                        data dihitung secara otomatis berdasarkan aktivitas di QuizNation.</p>
+
+                    <div class="section-divider"><span>Metrik Utama</span></div>
+                    <div class="step-list" style="margin-bottom:22px;">
+                        <div class="step-item" style="align-items:center;">
+                            <div class="icon-box"
+                                style="width:44px;height:44px;font-size:1.2rem;border-radius:12px;flex-shrink:0;">🎯
+                            </div>
+                            <div class="step-content">
+                                <h4>Skor Akurasi</h4>
+                                <p>Persentase jawaban benar dari total soal. <strong>Target: di atas 80%</strong> untuk
+                                    menandai sebuah topik sebagai "dikuasai". Di bawah 60% berarti butuh pengulangan.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="step-item" style="align-items:center;">
+                            <div class="icon-box"
+                                style="width:44px;height:44px;font-size:1.2rem;border-radius:12px;flex-shrink:0;">🔥
+                            </div>
+                            <div class="step-content">
+                                <h4>Streak Harian</h4>
+                                <p>Jumlah hari berturut-turut Anda membuka QuizNation dan menyelesaikan minimal satu
+                                    latihan. Streak hilang jika satu hari penuh terlewat. Gunakan fitur
+                                    <strong>Pengingat
+                                        Harian</strong> agar tidak terputus.</p>
+                            </div>
+                        </div>
+                        <div class="step-item" style="align-items:center;">
+                            <div class="icon-box"
+                                style="width:44px;height:44px;font-size:1.2rem;border-radius:12px;flex-shrink:0;">⏱️
+                            </div>
+                            <div class="step-content">
+                                <h4>Total Waktu Belajar</h4>
+                                <p>Akumulasi menit aktif belajar. QuizNation hanya menghitung waktu saat Anda
+                                    benar-benar
+                                    mengerjakan soal atau membaca materi, bukan saat halaman hanya terbuka.</p>
+                            </div>
+                        </div>
+                        <div class="step-item" style="align-items:center;">
+                            <div class="icon-box"
+                                style="width:44px;height:44px;font-size:1.2rem;border-radius:12px;flex-shrink:0;">📊
+                            </div>
+                            <div class="step-content">
+                                <h4>Grafik Perkembangan Mingguan</h4>
+                                <p>Grafik garis yang menampilkan tren skor Anda dari minggu ke minggu. Ideal digunakan
+                                    untuk
+                                    memantau apakah metode belajar Anda efektif atau perlu disesuaikan.</p>
+                            </div>
+                        </div>
+                        <div class="step-item" style="align-items:center;">
+                            <div class="icon-box"
+                                style="width:44px;height:44px;font-size:1.2rem;border-radius:12px;flex-shrink:0;">🗺️
+                            </div>
+                            <div class="step-content">
+                                <h4>Peta Penguasaan Topik</h4>
+                                <p>Visualisasi heatmap yang menampilkan topik mana yang sudah dikuasai (hijau), sedang
+                                    dipelajari (kuning), dan belum terjamah (abu). Gunakan ini untuk merencanakan sesi
+                                    belajar berikutnya.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="callout info">
+                        <span class="callout-icon">ℹ️</span>
+                        <p><strong>Penting:</strong> Data statistik saat ini tersimpan secara lokal di browser. Jangan
+                            menghapus data browser agar riwayat belajar Anda tidak hilang. Fitur sinkronisasi cloud
+                            segera
+                            hadir!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 6: Pencapaian -->
+            <div class="card" data-card id="sec-pencapaian">
+                <div class="card-header">
+                    <div class="icon-box">🏆</div>
+                    <div>
+                        <div class="card-title">Sistem Pencapaian & Reward</div>
+                        <div class="card-sub">Badge, XP, dan level yang memotivasi</div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="bookmark-btn" onclick="toggleBookmark(this, 'sec-pencapaian')"
+                            data-tooltip="Simpan Seksi">🔖</button>
+                        <button class="mobile-collapse-btn" onclick="toggleCard(this)">▼</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="body-text">QuizNation menggunakan sistem <strong>gamifikasi</strong> untuk menjaga
+                        motivasi
+                        belajar. Setiap aktivitas memberikan XP (poin pengalaman), yang menaikkan level dan membuka
+                        badge
+                        eksklusif.</p>
+
+                    <div class="section-divider"><span>Cara Mendapat XP</span></div>
+                    <div class="checklist" style="margin-bottom:22px;">
+                        <div class="check-item">
+                            <div class="check-box">+5</div>
+                            <p>Menyelesaikan <strong>1 soal latihan</strong> dengan benar pertama kali</p>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-box">+20</div>
+                            <p>Menyelesaikan <strong>satu modul penuh</strong> dengan akurasi ≥ 80%</p>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-box">+50</div>
+                            <p>Menyelesaikan <strong>Try Out SNBT</strong> satu sesi penuh</p>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-box">+10</div>
+                            <p><strong>Login harian</strong> berturut-turut (bonus berlipat setelah 7 hari)</p>
+                        </div>
+                        <div class="check-item">
+                            <div class="check-box">+30</div>
+                            <p>Mempertahankan <strong>streak 30 hari</strong> — bonus sekali per bulan</p>
+                        </div>
+                    </div>
+
+                    <div class="section-divider"><span>Kategori Badge</span></div>
+                    <div class="profile-grid">
+                        <div class="profile-card">
+                            <div class="profile-avatar" style="background:var(--amber-l);">🌱</div>
+                            <h4>Pelajar Baru</h4>
+                            <p>Menyelesaikan modul pertama. Badge awal untuk semua pengguna baru.</p>
+                        </div>
+                        <div class="profile-card">
+                            <div class="profile-avatar" style="background:var(--green-l);">🔥</div>
+                            <h4>Pejuang Streak</h4>
+                            <p>Belajar 7 hari berturut-turut. Simbol konsistensi!</p>
+                        </div>
+                        <div class="profile-card">
+                            <div class="profile-avatar" style="background:var(--accent-light);">🎯</div>
+                            <h4>Ahli Akurasi</h4>
+                            <p>Skor 100% dalam satu sesi Try Out penuh. Sangat langka!</p>
+                        </div>
+                        <div class="profile-card">
+                            <div class="profile-avatar" style="background:var(--rose-l);">🚀</div>
+                            <h4>Speedrun Pro</h4>
+                            <p>Selesaikan 10 soal dalam waktu kurang dari 3 menit dengan akurasi ≥ 90%.</p>
+                        </div>
+                        <div class="profile-card">
+                            <div class="profile-avatar" style="background:var(--amber-l);">📚</div>
+                            <h4>Kutu Buku</h4>
+                            <p>Menyelesaikan semua modul dalam satu kategori materi.</p>
+                        </div>
+                        <div class="profile-card">
+                            <div class="profile-avatar" style="background:var(--green-l);">👑</div>
+                            <h4>QuizNation Master</h4>
+                            <p>Badge paling prestisius. Hanya untuk 1% pengguna terbaik.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 7: Library -->
+            <div class="card" data-card id="sec-library">
+                <div class="card-header">
+                    <div class="icon-box">📖</div>
+                    <div>
+                        <div class="card-title">Menggunakan Library</div>
+                        <div class="card-sub">Pusat referensi dan koleksi pribadi Anda</div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="bookmark-btn" onclick="toggleBookmark(this, 'sec-library')"
+                            data-tooltip="Simpan Seksi">🔖</button>
+                        <button class="mobile-collapse-btn" onclick="toggleCard(this)">▼</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="body-text"><strong>Library</strong> adalah perpustakaan digital personal Anda di
+                        QuizNation.
+                        Simpan materi penting, kumpulkan soal-soal yang ingin diulang, dan akses referensi cepat kapan
+                        saja.
+                    </p>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="fc-head">
+                                <div class="fc-icon">🔖</div>
+                                <h4>Simpan Materi</h4>
+                            </div>
+                            <p>Klik ikon bookmark (🔖) di pojok kanan setiap kartu materi untuk menyimpannya ke Library.
+                                Akses cepat tanpa perlu mencari ulang.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="fc-head">
+                                <div class="fc-icon">📝</div>
+                                <h4>Catatan Pribadi</h4>
+                            </div>
+                            <p>Tambahkan catatan teks di setiap materi yang disimpan. Tulis ringkasan, contoh pribadi,
+                                atau
+                                reminder penting menggunakan kata-kata Anda sendiri.</p>
+                            <span class="badge badge-new">✨ Baru</span>
+                        </div>
+                        <div class="feature-card">
+                            <div class="fc-head">
+                                <div class="fc-icon">🗂️</div>
+                                <h4>Koleksi Soal</h4>
+                            </div>
+                            <p>Tandai soal-soal latihan yang sulit dengan ikon ⭐. Semua soal bertanda terkumpul di
+                                Library
+                                untuk diulang secara khusus.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="fc-head">
+                                <div class="fc-icon">📡</div>
+                                <h4>Konten Terbaru</h4>
+                            </div>
+                            <p>Halaman Library juga menampilkan materi dan soal baru yang baru saja ditambahkan tim
+                                QuizNation. Aktifkan notifikasi untuk tidak ketinggalan update.</p>
+                            <span class="badge badge-soon">🔔 Segera</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 8: Tips -->
+            <div class="card" data-card id="sec-tips">
+                <div class="card-header">
+                    <div class="icon-box">💡</div>
+                    <div>
+                        <div class="card-title">Tips & Trik Belajar Efektif</div>
+                        <div class="card-sub">Strategi berbasis ilmu kognitif untuk hasil maksimal</div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="bookmark-btn" onclick="toggleBookmark(this, 'sec-tips')"
+                            data-tooltip="Simpan Seksi">🔖</button>
+                        <button class="mobile-collapse-btn" onclick="toggleCard(this)">▼</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="tips-grid">
+                        <div class="tip-card">
+                            <button class="copy-btn"
+                                onclick="copyText(this, 'Spaced Repetition: Ulangi materi setelah 1 hari, 3 hari, 7 hari, dan 1 bulan.')"
+                                data-tooltip="Salin">📋</button>
+                            <span class="tip-emoji">🧠</span>
+                            <h4>Spaced Repetition</h4>
+                            <p>Ulangi materi setelah 1 hari, 3 hari, 7 hari, dan 1 bulan. Otak menyimpan informasi jauh
+                                lebih kuat dengan pengulangan berjarak. QuizNation mengingatkan Anda secara otomatis!
+                            </p>
+                        </div>
+                        <div class="tip-card">
+                            <button class="copy-btn"
+                                onclick="copyText(this, 'Active Recall: Tutup catatan Anda, lalu coba jawab soal tanpa melihat.')"
+                                data-tooltip="Salin">📋</button>
+                            <span class="tip-emoji">🎯</span>
+                            <h4>Active Recall</h4>
+                            <p>Tutup catatan Anda, lalu coba jawab soal tanpa melihat. Proses "mengingat paksa" ini jauh
+                                lebih efektif daripada sekedar membaca ulang materi.</p>
+                        </div>
+                        <div class="tip-card">
+                            <button class="copy-btn"
+                                onclick="copyText(this, 'Teknik Pomodoro: Belajar 25 menit -> istirahat 5 menit -> ulangi 4 kali -> istirahat 20 menit.')"
+                                data-tooltip="Salin">📋</button>
+                            <span class="tip-emoji">⏱️</span>
+                            <h4>Teknik Pomodoro</h4>
+                            <p>Belajar 25 menit → istirahat 5 menit → ulangi 4 kali → istirahat panjang 20 menit. Teknik
+                                ini
+                                terbukti meningkatkan fokus dan mencegah kelelahan mental.</p>
+                        </div>
+                        <div class="tip-card">
+                            <button class="copy-btn"
+                                onclick="copyText(this, 'Interleaving Practice: Campur topik yang berbeda dalam satu sesi belajar.')"
+                                data-tooltip="Salin">📋</button>
+                            <span class="tip-emoji">🔄</span>
+                            <h4>Interleaving Practice</h4>
+                            <p>Campur topik yang berbeda dalam satu sesi belajar. Otak bekerja lebih keras dan membangun
+                                koneksi antar konsep yang memperkuat pemahaman jangka panjang.</p>
+                        </div>
+                        <div class="tip-card">
+                            <button class="copy-btn"
+                                onclick="copyText(this, 'Elaborative Interrogation: Selalu tanyakan mengapa untuk setiap konsep baru.')"
+                                data-tooltip="Salin">📋</button>
+                            <span class="tip-emoji">📝</span>
+                            <h4>Elaborative Interrogation</h4>
+                            <p>Selalu tanyakan "mengapa?" untuk setiap konsep baru. Misalnya: "Mengapa kita pakai Past
+                                Perfect dan bukan Simple Past di sini?" Penjelasan mendalam memperkuat memori.</p>
+                        </div>
+                        <div class="tip-card">
+                            <button class="copy-btn"
+                                onclick="copyText(this, 'Teach-Back Method: Jelaskan materi yang baru dipelajari kepada orang lain.')"
+                                data-tooltip="Salin">📋</button>
+                            <span class="tip-emoji">🎙️</span>
+                            <h4>Teach-Back Method</h4>
+                            <p>Jelaskan materi yang baru dipelajari kepada orang lain (atau pura-pura menjelaskan). Jika
+                                Anda bisa menjelaskan dengan mudah, Anda sudah benar-benar memahaminya.</p>
+                        </div>
+                        <div class="tip-card">
+                            <button class="copy-btn"
+                                onclick="copyText(this, 'Tidur Sebelum Ujian: Tidur 7-8 jam sebelum ujian sangat penting.')"
+                                data-tooltip="Salin">📋</button>
+                            <span class="tip-emoji">🌙</span>
+                            <h4>Tidur Sebelum Ujian</h4>
+                            <p>Otak mengkonsolidasi memori saat tidur. Tidur 7–8 jam sebelum ujian jauh lebih berharga
+                                daripada begadang semalam. Belajar ringan sebelum tidur sangat efektif!</p>
+                        </div>
+                        <div class="tip-card">
+                            <button class="copy-btn"
+                                onclick="copyText(this, 'Olahraga Ringan: 10-20 menit olahraga ringan sebelum belajar meningkatkan fokus 20%.')"
+                                data-tooltip="Salin">📋</button>
+                            <span class="tip-emoji">🏃</span>
+                            <h4>Olahraga Ringan</h4>
+                            <p>10–20 menit olahraga ringan sebelum belajar meningkatkan aliran darah ke otak dan
+                                meningkatkan konsentrasi hingga 20%. Coba jalan kaki atau peregangan sebelum sesi
+                                belajar!
+                            </p>
+                        </div>
+                        <div class="tip-card">
+                            <button class="copy-btn"
+                                onclick="copyText(this, 'Fokus Tanpa Distraksi: Aktifkan Do Not Disturb, blokir media sosial.')"
+                                data-tooltip="Salin">📋</button>
+                            <span class="tip-emoji">📵</span>
+                            <h4>Mode Fokus Tanpa Distraksi</h4>
+                            <p>Aktifkan <strong>Do Not Disturb</strong> di HP dan blokir media sosial selama sesi
+                                belajar.
+                                Notifikasi memecah fokus dan butuh 23 menit untuk kembali konsentrasi penuh.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 9: Fitur -->
+            <div class="card" data-card id="sec-fitur">
+                <div class="card-header">
+                    <div class="icon-box">✨</div>
+                    <div>
+                        <div class="card-title">Daftar Lengkap Fitur QuizNation</div>
+                        <div class="card-sub">Eksplorasi semua yang bisa dilakukan</div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="bookmark-btn" onclick="toggleBookmark(this, 'sec-fitur')"
+                            data-tooltip="Simpan Seksi">🔖</button>
+                        <button class="mobile-collapse-btn" onclick="toggleCard(this)">▼</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <!-- 13. Animated Counter -->
+                    <div class="stats-row" style="margin-bottom:24px;">
+                        <div class="stat-item"><span class="num">500+</span><span class="lbl">Soal Latihan</span></div>
+                        <div class="stat-item"><span class="num">12</span><span class="lbl">Modul Utama</span></div>
+                        <div class="stat-item"><span class="num">4</span><span class="lbl">Bidang SNBT</span></div>
+                        <div class="stat-item"><span class="num">30+</span><span class="lbl">Badge Kolektif</span></div>
+                    </div>
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="fc-head">
+                                <div class="fc-icon">🌗</div>
+                                <h4>Dark & Light Mode</h4>
+                            </div>
+                            <p>Tampilan gelap dan terang yang dapat beralih dengan satu klik. Preferensi tersimpan
+                                otomatis
+                                untuk sesi berikutnya.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="fc-head">
+                                <div class="fc-icon">📱</div>
+                                <h4>Desain Mobile-First</h4>
+                            </div>
+                            <p>Dioptimasi penuh untuk smartphone. Semua fitur dapat diakses dengan nyaman di layar kecil
+                                tanpa perlu zoom.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="fc-head">
+                                <div class="fc-icon">🏅</div>
+                                <h4>Leaderboard</h4>
+                            </div>
+                            <p>Bandingkan skor Anda dengan teman dan pengguna lain. Kompetisi sehat sebagai motivasi
+                                tambahan untuk belajar.</p>
+                            <span class="badge badge-soon">🔔 Segera</span>
+                        </div>
+                        <div class="feature-card">
+                            <div class="fc-head">
+                                <div class="fc-icon">🔔</div>
+                                <h4>Pengingat Belajar</h4>
+                            </div>
+                            <p>Atur notifikasi pengingat belajar harian di jam yang Anda pilih. Menjaga streak tetap
+                                berjalan meski hari sibuk.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="fc-head">
+                                <div class="fc-icon">🤖</div>
+                                <h4>Rekomendasi AI</h4>
+                            </div>
+                            <p>Sistem cerdas yang menganalisis pola belajar Anda dan merekomendasikan materi atau soal
+                                yang
+                                paling relevan untuk dipelajari selanjutnya.</p>
+                            <span class="badge badge-soon">🔔 Segera</span>
+                        </div>
+                        <div class="feature-card">
+                            <div class="fc-head">
+                                <div class="fc-icon">📄</div>
+                                <h4>Ekspor Laporan PDF</h4>
+                            </div>
+                            <p>Cetak laporan statistik belajar Anda dalam format PDF. Cocok untuk dokumentasi atau
+                                dilampirkan di portofolio.</p>
+                            <span class="badge badge-new">✨ Baru</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 10: Pengaturan -->
+            <div class="card" data-card id="sec-pengaturan">
+                <div class="card-header">
+                    <div class="icon-box">⚙️</div>
+                    <div>
+                        <div class="card-title">Panduan Pengaturan Akun</div>
+                        <div class="card-sub">Personalisasi pengalaman belajar Anda</div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="bookmark-btn" onclick="toggleBookmark(this, 'sec-pengaturan')"
+                            data-tooltip="Simpan Seksi">🔖</button>
+                        <button class="mobile-collapse-btn" onclick="toggleCard(this)">▼</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <p class="body-text">Halaman <strong>Pengaturan</strong> memungkinkan Anda menyesuaikan QuizNation
+                        sesui kebutuhan pribadi. Dari profil hingga preferensi tampilan, semua ada di sini.</p>
+
+                    <div class="step-list">
+                        <div class="step-item">
+                            <div class="step-num">👤</div>
+                            <div class="step-content">
+                                <h4>Profil & Identitas</h4>
+                                <p>Ubah nama tampilan, foto profil, dan kelas/angkatan. Informasi ini juga digunakan
+                                    untuk
+                                    auto-fill di halaman Feedback.</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">🎯</div>
+                            <div class="step-content">
+                                <h4>Tujuan & Target</h4>
+                                <p>Tetapkan target skor SNBT dan deadline ujian. QuizNation akan menghitung berapa soal
+                                    yang
+                                    perlu dikerjakan per hari untuk mencapai target tersebut.</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">🔔</div>
+                            <div class="step-content">
+                                <h4>Notifikasi & Pengingat</h4>
+                                <p>Atur jam pengingat belajar harian, notifikasi streak hampir putus (⚠️ Streak Alert),
+                                    dan
+                                    newsletter konten baru mingguan.</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">🎨</div>
+                            <div class="step-content">
+                                <h4>Tampilan & Tema</h4>
+                                <p>Pilih antara mode terang, gelap, atau otomatis (mengikuti sistem operasi). Ukuran
+                                    teks
+                                    juga dapat disesuaikan untuk kenyamanan membaca.</p>
+                            </div>
+                        </div>
+                        <div class="step-item">
+                            <div class="step-num">🔒</div>
+                            <div class="step-content">
+                                <h4>Privasi & Data</h4>
+                                <p>Kelola data yang tersimpan: hapus riwayat belajar, ekspor data, atau hapus akun
+                                    sepenuhnya. Semua proses bisa dilakukan mandiri tanpa kontak admin.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-divider"><span>Pintasan Keyboard</span></div>
+                    <div class="kbd-list">
+                        <div class="kbd-row"><span class="kbd-label">Pencarian Cepat</span><span
+                                class="kbd-key"><kbd>/</kbd></span></div>
+                        <div class="kbd-row"><span class="kbd-label">Buka/tutup sidebar</span><span
+                                class="kbd-key"><kbd>Alt</kbd><kbd>M</kbd></span></div>
+                        <div class="kbd-row"><span class="kbd-label">Toggle dark/light mode</span><span
+                                class="kbd-key"><kbd>Alt</kbd><kbd>T</kbd></span></div>
+                        <div class="kbd-row"><span class="kbd-label">Pilihan A / Jawaban 1</span><span
+                                class="kbd-key"><kbd>1</kbd></span></div>
+                        <div class="kbd-row"><span class="kbd-label">Pilihan B / Jawaban 2</span><span
+                                class="kbd-key"><kbd>2</kbd></span></div>
+                        <div class="kbd-row"><span class="kbd-label">Pilihan C / Jawaban 3</span><span
+                                class="kbd-key"><kbd>3</kbd></span></div>
+                        <div class="kbd-row"><span class="kbd-label">Pilihan D / Jawaban 4</span><span
+                                class="kbd-key"><kbd>4</kbd></span></div>
+                        <div class="kbd-row"><span class="kbd-label">Soal berikutnya</span><span
+                                class="kbd-key"><kbd>→</kbd></span></div>
+                        <div class="kbd-row"><span class="kbd-label">Soal sebelumnya</span><span
+                                class="kbd-key"><kbd>←</kbd></span></div>
+                        <div class="kbd-row"><span class="kbd-label">Tandai soal (bintang)</span><span
+                                class="kbd-key"><kbd>S</kbd></span></div>
+                        <div class="kbd-row"><span class="kbd-label">Kembali ke beranda</span><span
+                                class="kbd-key"><kbd>Alt</kbd><kbd>H</kbd></span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 11: Troubleshoot -->
+            <div class="card" data-card id="sec-trouble">
+                <div class="card-header">
+                    <div class="icon-box">🔧</div>
+                    <div>
+                        <div class="card-title">Troubleshooting</div>
+                        <div class="card-sub">Solusi cepat untuk masalah yang sering ditemui</div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="bookmark-btn" onclick="toggleBookmark(this, 'sec-trouble')"
+                            data-tooltip="Simpan Seksi">🔖</button>
+                        <button class="mobile-collapse-btn" onclick="toggleCard(this)">▼</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="trouble-list">
+                        <div class="trouble-item">
+                            <button class="copy-btn"
+                                onclick="copyText(this, 'Tekan Ctrl+Shift+R (hard refresh) atau buka di Incognito mode')"
+                                data-tooltip="Salin Solusi">📋</button>
+                            <h4>⚠️ Halaman tidak loading sempurna</h4>
+                            <p>Koneksi internet tidak stabil atau cache browser penuh bisa menyebabkan ini.</p>
+                            <div class="solve">✅ Solusi: Tekan Ctrl+Shift+R (hard refresh) atau buka di
+                                Incognito/Private mode</div>
+                        </div>
+                        <div class="trouble-item">
+                            <button class="copy-btn"
+                                onclick="copyText(this, 'Selalu gunakan browser yang sama (bukan incognito) dan aktifkan izin penyimpanan situs')"
+                                data-tooltip="Salin Solusi">📋</button>
+                            <h4>⚠️ Statistik tidak terupdate</h4>
+                            <p>Data statistik disimpan di localStorage browser. Incognito mode akan menghapus data ini.
+                            </p>
+                            <div class="solve">✅ Solusi: Selalu gunakan browser yang sama (bukan incognito) dan aktifkan
+                                izin penyimpanan situs</div>
+                        </div>
+                        <div class="trouble-item">
+                            <button class="copy-btn"
+                                onclick="copyText(this, 'Update browser ke versi terbaru. Di Android gunakan Chrome, iPhone gunakan Safari.')"
+                                data-tooltip="Salin Solusi">📋</button>
+                            <h4>⚠️ Tampilan berantakan di HP</h4>
+                            <p>Biasanya terjadi di browser lama. QuizNation dioptimasi untuk versi modern.</p>
+                            <div class="solve">✅ Solusi: Update browser ke versi terbaru. (Chrome ≥ v90 / Safari ≥ v14)
+                            </div>
+                        </div>
+                        <div class="trouble-item">
+                            <button class="copy-btn"
+                                onclick="copyText(this, 'Refresh halaman. Jika lanjut, bersihkan cache browser.')"
+                                data-tooltip="Salin Solusi">📋</button>
+                            <h4>⚠️ Soal tidak muncul atau kosong</h4>
+                            <p>Terjadi karena koneksi internet terputus saat fetch data.</p>
+                            <div class="solve">✅ Solusi: Refresh halaman. Jika masalah berlanjut, bersihkan cache.</div>
+                        </div>
+                    </div>
+
+                    <div class="callout tip" style="margin-top:18px;">
+                        <span class="callout-icon">💬</span>
+                        <p>Masalah tidak ada di daftar di atas? <strong><a href="feedback.html"
+                                    style="color:var(--green);">Laporkan via halaman Feedback</a></strong> dengan
+                            menyertakan nama browser, versi OS, dan tangkapan layar.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 12: FAQ -->
+            <div class="card" data-card id="sec-faq">
+                <div class="card-header">
+                    <div class="icon-box">❓</div>
+                    <div>
+                        <div class="card-title">Pertanyaan Sering Diajukan</div>
+                        <div class="card-sub">Jawaban instan untuk pertanyaan umum</div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="bookmark-btn" onclick="toggleBookmark(this, 'sec-faq')"
+                            data-tooltip="Simpan Seksi">🔖</button>
+                        <button class="mobile-collapse-btn" onclick="toggleCard(this)">▼</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="faq-container">
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFaq(this)">Apakah QuizNation sepenuhnya
+                                gratis?<span class="faq-icon">▼</span></button>
+                            <div class="faq-answer">
+                                <div class="faq-answer-inner">Ya! Semua fitur inti QuizNation — termasuk modul materi,
+                                    latihan soal, evaluasi SNBT, statistik, dan pencapaian — tersedia sepenuhnya
+                                    <strong>gratis tanpa biaya apapun</strong>. Platform ini dibangun dengan semangat
+                                    menjadikan pendidikan berkualitas dapat diakses oleh semua pelajar Indonesia.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFaq(this)">Apakah data belajar saya aman?<span
+                                    class="faq-icon">▼</span></button>
+                            <div class="faq-answer">
+                                <div class="faq-answer-inner">Data statistik dan preferensi Anda saat ini tersimpan
+                                    secara
+                                    <strong>lokal di perangkat Anda</strong> menggunakan localStorage browser. Kami
+                                    tidak
+                                    mengirim data belajar Anda ke server manapun kecuali laporan feedback.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFaq(this)">Apakah bisa digunakan secara
+                                offline?<span class="faq-icon">▼</span></button>
+                            <div class="faq-answer">
+                                <div class="faq-answer-inner">QuizNation dibangun sebagai <strong>Progressive Web App
+                                        (PWA)</strong>. Anda dapat menginstalnya ke layar utama HP. Materi yang sudah
+                                    pernah dibuka dapat diakses offline via cache browser.</div>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFaq(this)">Bisakah saya mengakses dari beberapa
+                                perangkat?<span class="faq-icon">▼</span></button>
+                            <div class="faq-answer">
+                                <div class="faq-answer-inner">Saat ini data tersimpan lokal. <strong>Fitur sinkronisasi
+                                        cloud</strong> sedang dalam pengembangan dan akan segera hadir. Untuk saat ini,
+                                    gunakan satu perangkat utama.</div>
+                            </div>
+                        </div>
+                        <div class="faq-item">
+                            <button class="faq-question" onclick="toggleFaq(this)">Bagaimana cara melihat perkembangan
+                                nilai saya?<span class="faq-icon">▼</span></button>
+                            <div class="faq-answer">
+                                <div class="faq-answer-inner">Buka halaman <strong>Statistik</strong> untuk melihat
+                                    ringkasan
+                                    skor, progres latihan, dan performa per topik secara visual.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 13: Changelog -->
+            <div class="card" data-card id="sec-update">
+                <div class="card-header">
+                    <div class="icon-box">🗓️</div>
+                    <div>
+                        <div class="card-title">Riwayat Update & Changelog</div>
+                        <div class="card-sub">Apa saja yang baru di QuizNation</div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="bookmark-btn" onclick="toggleBookmark(this, 'sec-update')"
+                            data-tooltip="Simpan Seksi">🔖</button>
+                        <button class="mobile-collapse-btn" onclick="toggleCard(this)">▼</button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="timeline">
+                        <div class="tl-item">
+                            <div class="tl-dot"></div>
+                            <div class="tl-date">Versi 2.3 · Maret 2045</div>
+                            <h4>📝 Catatan Pribadi di Library + Ekspor PDF</h4>
+                            <p>Anda kini bisa menambahkan catatan teks di setiap materi yang disimpan di Library. Fitur
+                                ekspor laporan statistik ke PDF juga resmi diluncurkan.</p>
+                        </div>
+                        <div class="tl-item">
+                            <div class="tl-dot"></div>
+                            <div class="tl-date">Versi 2.2 · Februari 2045</div>
+                            <h4>🎓 Soal SNBT Diperbarui Sesuai Kisi-kisi Terbaru</h4>
+                            <p>Bank soal Evaluasi SNBT diperbarui total untuk semua 4 bidang, disesuaikan dengan format
+                                ujian terkini. Ditambah 120+ soal baru.</p>
+                        </div>
+                        <div class="tl-item">
+                            <div class="tl-dot"></div>
+                            <div class="tl-date">Versi 2.1 · Januari 2045</div>
+                            <h4>🏆 Sistem Badge & XP Diluncurkan</h4>
+                            <p>Sistem gamifikasi lengkap dengan 30+ badge kolektif, level XP, dan progress bar
+                                pencapaian.</p>
+                        </div>
+                        <div class="tl-item">
+                            <div class="tl-dot"></div>
+                            <div class="tl-date">Versi 2.0 · Desember 2044</div>
+                            <h4>✨ Desain Ulang Total (QuizNation 2.0)</h4>
+                            <p>Tampilan sepenuhnya didesain ulang dengan UI modern, dark mode, animasi halus, dan
+                                performa loading yang jauh lebih cepat.</p>
+                        </div>
+                    </div>
+
+                    <div class="callout info" style="margin-top:18px;">
+                        <span class="callout-icon">🔔</span>
+                        <p>Punya ide untuk fitur berikutnya? <strong><a href="feedback.html"
+                                    style="color:var(--accent);">Kirimkan saran Anda via Feedback</a></strong> — banyak
+                            fitur di QuizNation lahir dari masukan pengguna setia kami!</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer-cta">
+            <h2>Masih butuh bantuan? 🤝</h2>
+            <p>Tim QuizNation siap membantu Anda. Kirim pertanyaan atau laporan masalah kapan saja melalui halaman
+                Feedback kami.</p>
+            <div class="cta-btns">
+                <a href="feedback.html" class="cta-btn primary">💬 Kirim Feedback</a>
+                <button onclick="window.print()" class="cta-btn secondary">🖨️ Cetak PDF</button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Tombol Back to Top -->
+    <button id="backToTop" onclick="window.scrollTo({top:0, behavior:'smooth'})" data-tooltip="Ke Atas">↑</button>
+
+    <script>
+        // ── 1. Loading Skeleton & Setup Awal ──
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const loader = document.getElementById('pageLoader');
+                loader.classList.add('hidden');
+                setTimeout(() => loader.remove(), 600);
+            }, 300); // Simulasi delay cantik
+
+            // 8. Hitung Estimasi Waktu Baca Per Section
+            document.querySelectorAll('.card').forEach(card => {
+                const text = card.innerText;
+                const wordCount = text.trim().split(/\s+/).length;
+                const readingTime = Math.max(1, Math.ceil(wordCount / 200)); // asumsi 200 kata/menit
+                const sub = card.querySelector('.card-sub');
+                if (sub && !sub.innerText.includes('menit baca')) {
+                    sub.innerHTML += `<span style="margin-left:8px; padding-left:8px; border-left:1px solid var(--border);">⏱️ Est. ${readingTime} menit baca</span>`;
+                }
+            });
+
+            // Sinkronisasi status Bookmark
+            document.querySelectorAll('.bookmark-btn').forEach(btn => {
+                const sectionId = btn.closest('.card').id;
+                if (localStorage.getItem('bm_' + sectionId)) {
+                    btn.classList.add('saved');
+                    btn.innerHTML = '⭐';
+                }
+            });
+        });
+
+        // ── Theme ──
+        function toggleTheme() {
+            if (typeof window.__quizNationApplyGlobalPreferences === 'function') { window.__quizNationApplyGlobalPreferences(); }
+            const isDark = document.body.classList.toggle('dark');
+            document.documentElement.classList.toggle('dark', isDark);
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+            const btn = document.getElementById('themeBtn');
+            btn.innerHTML = isDark ? '&#9728;&#65039;' : '&#127769;';
+            btn.style.transform = 'scale(0.7) rotate(-120deg)';
+            setTimeout(() => btn.style.transform = '', 250);
+        }
+        // Pastikan icon button sesuai saat dimuat
+        if (localStorage.getItem('theme') === 'dark') {
+            document.getElementById('themeBtn').innerHTML = '&#9728;&#65039;';
+        }
+
+        // ── Sidebar & Swipe Logic (15) ──
+        function openSidebar() { document.getElementById('sidebar').classList.add('open'); document.getElementById('backdrop').classList.add('open'); }
+        function closeSidebar() { document.getElementById('sidebar').classList.remove('open'); document.getElementById('backdrop').classList.remove('open'); }
+
+        let touchStartX = 0;
+        document.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, { passive: true });
+        document.addEventListener('touchend', e => {
+            const touchEndX = e.changedTouches[0].screenX;
+            if (touchEndX - touchStartX > 100 && touchStartX < 50) openSidebar();
+            if (touchStartX - touchEndX > 100) closeSidebar();
+        }, { passive: true });
+
+        // ── 2 & 3 & 7. Scroll Events (Progress Bar, BackToTop, Auto-active Nav) ──
+        const navLinks = document.querySelectorAll('.sidebar .nav-link');
+        const sections = document.querySelectorAll('.card[id]');
+
+        window.addEventListener('scroll', () => {
+            // Progress Bar
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + '%';
+
+            // Back to Top
+            const btt = document.getElementById('backToTop');
+            if (winScroll > 400) btt.classList.add('show'); else btt.classList.remove('show');
+
+            // Auto Active Sidebar (Alternative fallback to IntersectionObserver)
+            let current = '';
+            sections.forEach(sec => {
+                const secTop = sec.offsetTop;
+                if (pageYOffset >= secTop - 150) current = sec.getAttribute('id');
+            });
+
+            if (current) {
+                navLinks.forEach(l => {
+                    l.classList.remove('active');
+                    if (l.getAttribute('href') === `#${current}`) l.classList.add('active');
+                });
+                // 10. Terakhir Dilihat
+                localStorage.setItem('recentViewed', current);
+            }
+        }, { passive: true });
+
+        // ── 13. Animated Counter Intersection Observer ──
+        const counterObs = new IntersectionObserver((entries, observer) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    const el = e.target;
+                    const targetText = el.innerText;
+                    const suffix = targetText.replace(/[0-9]/g, '');
+                    const target = parseInt(targetText.replace(/\D/g, ''));
+                    let count = 0;
+                    const speed = target / 40;
+                    const update = () => {
+                        count += speed;
+                        if (count < target) {
+                            el.innerText = Math.ceil(count) + suffix;
+                            requestAnimationFrame(update);
+                        } else {
+                            el.innerText = target + suffix;
+                        }
+                    };
+                    update();
+                    observer.unobserve(el);
+                }
+            });
+        }, { threshold: 0.5 });
+        document.querySelectorAll('.stat-item .num').forEach(num => counterObs.observe(num));
+
+        // PopIn Card Scroll Animation
+        const popObs = new IntersectionObserver((entries, observer) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => entry.target.classList.add('visible'), i * 80);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+        document.querySelectorAll('[data-card]').forEach(c => popObs.observe(c));
+
+        // ── 16. Smooth FAQ (Kalkulasi Berbasis scrollHeight) ──
+        function toggleFaq(btn) {
+            const item = btn.parentElement;
+            const answer = item.querySelector('.faq-answer');
+            const isActive = item.classList.contains('active');
+
+            // Tutup semua
+            document.querySelectorAll('.faq-item').forEach(f => {
+                f.classList.remove('active');
+                f.querySelector('.faq-answer').style.maxHeight = null;
+            });
+
+            // Buka yang di-klik jika sebelumnya tidak aktif
+            if (!isActive) {
+                item.classList.add('active');
+                answer.style.maxHeight = answer.scrollHeight + 'px';
+            }
+        }
+
+        // ── Tabs ──
+        function switchTab(btn, panelId) {
+            btn.closest('.card').querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            btn.closest('.card').querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+
+            const targetPanel = document.getElementById(panelId);
+            targetPanel.style.animation = 'none';
+            targetPanel.offsetHeight; /* trigger reflow */
+            targetPanel.style.animation = null;
+            targetPanel.classList.add('active');
+        }
+
+        // ── SNBT Progress Bar ──
+        const progObs = new IntersectionObserver((entries) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) {
+                    const val = parseInt(localStorage.getItem('snbtMastery') || '35');
+                    setTimeout(() => {
+                        document.getElementById('snbtProgress').style.width = val + '%';
+                        document.getElementById('snbtLabel').textContent = val + '%';
+                    }, 300);
+                    progObs.unobserve(e.target);
+                }
+            });
+        }, { threshold: 0.3 });
+        const progEl = document.getElementById('sec-snbt');
+        if (progEl) progObs.observe(progEl);
+
+        // ── 4 & 5. Smart Search & No Result State ──
+        const searchData = [
+            { title: 'Panduan Mulai Cepat', anchor: '#sec-mulai', keywords: 'mulai cepat akun daftar masuk placement test setup pertama' },
+            { title: 'Menggunakan Modul Materi', anchor: '#sec-materi', keywords: 'materi modul vocabulary grammar tenses belajar kosakata tata bahasa' },
+            { title: 'Evaluasi SNBT', anchor: '#sec-snbt', keywords: 'snbt try out ujian simulasi penalaran literasi matematika' },
+            { title: 'Memahami Statistik', anchor: '#sec-statistik', keywords: 'statistik akurasi skor streak harian waktu belajar grafik' },
+            { title: 'Sistem Pencapaian & Badge', anchor: '#sec-pencapaian', keywords: 'pencapaian badge xp reward gamifikasi level achievement' },
+            { title: 'Menggunakan Library', anchor: '#sec-library', keywords: 'library simpan bookmark catatan koleksi referensi' },
+            { title: 'Tips Belajar Efektif', anchor: '#sec-tips', keywords: 'tips belajar efektif spaced repetition pomodoro active recall interleaving' },
+            { title: 'Daftar Lengkap Fitur', anchor: '#sec-fitur', keywords: 'fitur dark mode mobile pwa leaderboard notifikasi ai rekomendasi' },
+            { title: 'Panduan Pengaturan Akun', anchor: '#sec-pengaturan', keywords: 'pengaturan profil target notifikasi privasi data tema keyboard shortcut' },
+            { title: 'Troubleshooting & Error', anchor: '#sec-trouble', keywords: 'error bug masalah loading statistik dark mode audio badge tidak muncul' },
+            { title: 'FAQ - Pertanyaan Umum', anchor: '#sec-faq', keywords: 'faq gratis offline ios android reset progres update sinkronisasi' },
+            { title: 'Changelog & Update Terbaru', anchor: '#sec-update', keywords: 'update changelog versi baru rilis fitur terbaru history' },
+        ];
+
+        function handleSearch(query) {
+            const container = document.getElementById('searchResults');
+            if (!query.trim()) { container.classList.remove('show'); container.innerHTML = ''; return; }
+            const q = query.toLowerCase();
+            const results = searchData.filter(d => d.title.toLowerCase().includes(q) || d.keywords.includes(q));
+
+            if (!results.length) {
+                // 19. No Result State Proper
+                container.innerHTML = `
+                    <div class="search-result-item" style="color:var(--rose); cursor:default; justify-content:center; flex-direction:column; padding: 24px; border-style:dashed;">
+                        <span style="font-size:2rem; margin-bottom:8px">🕵️‍♂️</span>
+                        <div style="text-align:center">Maaf, panduan untuk "<b style="color:var(--text)">${query}</b>" tidak ditemukan.</div>
+                        <div style="font-size:0.85rem; color:var(--text3); font-weight:500;">Coba gunakan kata kunci yang lebih umum.</div>
+                    </div>`;
+            } else {
+                container.innerHTML = results.map(r => {
+                    // Smart Search Highlight Match
+                    const regex = new RegExp(`(${query})`, 'gi');
+                    const highlighted = r.title.replace(regex, '<mark>$1</mark>');
+                    return `<a href="${r.anchor}" class="search-result-item" onclick="document.getElementById('searchInput').value='';document.getElementById('searchResults').classList.remove('show')">📋 ${highlighted}</a>`;
+                }).join('');
+            }
+            container.classList.add('show');
+        }
+
+        // Close search on outside click
+        document.addEventListener('click', e => {
+            if (!e.target.closest('.search-wrap')) {
+                document.getElementById('searchResults').classList.remove('show');
+            }
+        });
+
+        // ── 6 & 20. Keyboard Shortcuts & Easter Egg ──
+        let easterEggSequence = '';
+        document.addEventListener('keydown', e => {
+            // Shortcut Search '/'
+            if (e.key === '/' && document.activeElement !== document.getElementById('searchInput')) {
+                e.preventDefault();
+                document.getElementById('searchInput').focus();
+            }
+
+            // Easter Egg Logic
+            if (e.key.length === 1) {
+                easterEggSequence += e.key.toLowerCase();
+                if (easterEggSequence.includes('quiznation')) {
+                    alert('🎉 WOW! Anda menemukan rahasia tersembunyi! Teruslah belajar bersama QuizNation!');
+                    document.body.style.animation = 'wobble 2s';
+                    easterEggSequence = '';
+                }
+                if (easterEggSequence.length > 20) easterEggSequence = easterEggSequence.slice(-10);
+            }
+        });
+
+        // ── 9. Bookmark System ──
+        function toggleBookmark(btn, sectionId) {
+            const isSaved = btn.classList.toggle('saved');
+            if (isSaved) {
+                btn.innerHTML = '⭐';
+                localStorage.setItem('bm_' + sectionId, 'true');
+            } else {
+                btn.innerHTML = '🔖';
+                localStorage.removeItem('bm_' + sectionId);
+            }
+            btn.style.transform = 'scale(1.2)';
+            setTimeout(() => btn.style.transform = '', 200);
+        }
+
+        // ── 12. Copy to Clipboard ──
+        function copyText(btn, text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const originIcon = btn.innerHTML;
+                btn.innerHTML = '✔️';
+                btn.classList.add('copied');
+                btn.setAttribute('data-tooltip', 'Disalin!');
+                setTimeout(() => {
+                    btn.innerHTML = originIcon;
+                    btn.classList.remove('copied');
+                    btn.setAttribute('data-tooltip', 'Salin');
+                }, 2000);
+            });
+        }
+
+        // ── 14. Mobile Collapse Logic ──
+        function toggleCard(btn) {
+            const card = btn.closest('.card');
+            card.classList.toggle('collapsed');
+        }
+    </script>
+</body>
+
+</html>

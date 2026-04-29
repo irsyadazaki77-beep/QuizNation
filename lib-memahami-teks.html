@@ -1,0 +1,638 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Memahami Teks & Ide Pokok - Library SNBT 2025</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Mobile Optimization */
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --accent: #2563eb;
+            --accent2: #06b6d4;
+            --bg: #f0f2f8;
+            --surface: rgba(255, 255, 255, 0.72);
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #1a1a2e;
+            --text2: #4b5563;
+            --text3: #9ca3af;
+            --glow: rgba(124, 58, 237, 0.18);
+            --radius: 20px
+        }
+
+        body.dark {
+            --bg: #050a15;
+            --surface: rgba(255, 255, 255, 0.055);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #f0edff;
+            --text2: rgba(240, 237, 255, 0.65);
+            --text3: rgba(240, 237, 255, 0.35);
+            --glow: rgba(124, 58, 237, 0.28)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: .35
+        }
+
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            gap: 16px
+        }
+
+        .topnav a {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .2s
+        }
+
+        .topnav a:hover {
+            gap: 10px
+        }
+
+        .topnav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-left: auto
+        }
+
+        .theme-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: grid;
+            place-items: center;
+            transition: all .2s;
+            margin-left: 8px
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent)
+        }
+
+        .wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px 80px;
+            position: relative;
+            z-index: 1
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(251, 146, 60, .12);
+            color: #f59e0b;
+            border: 1px solid rgba(251, 146, 60, .25);
+            border-radius: 30px;
+            padding: 5px 14px;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.15;
+            margin-bottom: 14px
+        }
+
+        .page-title .grad {
+            background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .page-desc {
+            font-size: 1.05rem;
+            color: var(--text2);
+            line-height: 1.8;
+            margin-bottom: 40px;
+            max-width: 700px
+        }
+
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 40px
+        }
+
+        .toc-title {
+            font-weight: 800;
+            font-size: .9rem;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .toc ol {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .toc li {
+            color: var(--text2);
+            font-size: .88rem
+        }
+
+        .toc a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color .2s
+        }
+
+        .toc a:hover {
+            color: var(--accent2)
+        }
+
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: all .3s
+        }
+
+        .section:hover {
+            box-shadow: 0 10px 40px var(--glow);
+            border-color: rgba(124, 58, 237, .2)
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px
+        }
+
+        .section h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 20px 0 10px
+        }
+
+        .section p,
+        .section li {
+            font-size: .92rem;
+            color: var(--text2);
+            line-height: 1.85
+        }
+
+        .section ul,
+        .section ol {
+            padding-left: 20px;
+            margin: 10px 0
+        }
+
+        .section li {
+            margin-bottom: 6px
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+            font-size: 0.88rem;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--border);
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background: rgba(124, 58, 237, 0.05);
+            color: var(--text);
+            font-weight: 700;
+        }
+
+        td {
+            color: var(--text2);
+        }
+
+        .example {
+            background: rgba(124, 58, 237, .06);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .example strong {
+            color: var(--text)
+        }
+
+        .tip {
+            background: rgba(6, 182, 212, .08);
+            border-left: 3px solid var(--accent2);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .tip strong {
+            color: var(--accent2)
+        }
+
+        .warning {
+            background: rgba(244, 63, 94, .08);
+            border-left: 3px solid #f43f5e;
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .warning strong {
+            color: #f43f5e
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 14px;
+            margin-top: 40px;
+            flex-wrap: wrap
+        }
+
+        .nav-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all .3s
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px var(--glow);
+            transform: translateY(-2px)
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, .4)
+        }
+
+        .nav-btn.primary:hover {
+            box-shadow: 0 8px 28px rgba(124, 58, 237, .5);
+            transform: translateY(-3px)
+        }
+
+        .nav-btn-label {
+            font-size: .7rem;
+            color: var(--text3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .nav-btn.primary .nav-btn-label {
+            color: rgba(255, 255, 255, .7)
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text3);
+            font-size: .8rem;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px
+        }
+
+        @media(max-width:768px) {
+            .topnav {
+                padding: 14px 16px
+            }
+
+            .wrapper {
+                padding: 24px 16px 60px
+            }
+
+            .section {
+                padding: 20px
+            }
+
+            .nav-buttons {
+                flex-direction: column
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">? Kembali ke Library</a>
+        <span class="topnav-title">Memahami Isi Teks</span>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">Literasi Bahasa Indonesia</div>
+        <h1 class="page-title">Panduan Lengkap: <span class="grad">Teks & Ide Pokok</span></h1>
+        <p class="page-desc">Kuasai teknik menemukan gagasan utama, memahami informasi tersirat, hingga meretas pola
+            soal SNBT dengan cepat dan akurat.</p>
+
+        <div class="toc">
+            <div class="toc-title">📑 Daftar Isi 10 Jurus Literasi</div>
+            <ol>
+                <li><a href="#jenis">Mengenali Jenis Teks & Ciri-cirinya</a></li>
+                <li><a href="#ide">Cara Cepat Menemukan Ide Pokok</a></li>
+                <li><a href="#tersirat">Membedakan Makna Tersurat & Tersirat</a></li>
+                <li><a href="#simpulan">Teknik Menarik Simpulan Teks</a></li>
+                <li><a href="#tujuan">Menentukan Tujuan Penulis</a></li>
+                <li><a href="#fakta">Membedakan Fakta dan Opini/Bias</a></li>
+                <li><a href="#hubungan">Analisis Hubungan Antar Paragraf</a></li>
+                <li><a href="#rujukan">Menguasai Kata Rujukan</a></li>
+                <li><a href="#makna">Menebak Makna Kata Sesuai Konteks</a></li>
+                <li><a href="#tips">Strategi Emas Menjawab Soal SNBT</a></li>
+            </ol>
+        </div>
+
+        <div class="section" id="jenis">
+            <h2>🔹 1. Mengenali Jenis Teks & Ciri-cirinya</h2>
+            <p>Dalam tes Literasi Bahasa Indonesia, langkah pertama adalah mengenali jenis wacana. Mengetahui jenis teks
+                akan membantumu memprediksi ke mana arah pertanyaan akan dibawa.</p>
+            <table>
+                <tr>
+                    <th>Jenis Teks</th>
+                    <th>Tujuan & Ciri Utama</th>
+                    <th>Fokus Pertanyaan SNBT</th>
+                </tr>
+                <tr>
+                    <td><strong>Eksposisi</strong></td>
+                    <td>Memaparkan informasi logis dan ilmiah. Penuh dengan data dan fakta.</td>
+                    <td>Ide pokok, simpulan, informasi spesifik.</td>
+                </tr>
+                <tr>
+                    <td><strong>Argumentasi</strong></td>
+                    <td>Meyakinkan pembaca dengan opini yang didukung bukti kuat.</td>
+                    <td>Kelemahan argumen, opini penulis, keberpihakan.</td>
+                </tr>
+                <tr>
+                    <td><strong>Deskripsi</strong></td>
+                    <td>Menggambarkan objek secara visual/indrawi seolah pembaca merasakannya.</td>
+                    <td>Detail rincian objek, kesan umum.</td>
+                </tr>
+                <tr>
+                    <td><strong>Narasi / Sastra</strong></td>
+                    <td>Cerita fiksi/non-fiksi yang memiliki tokoh, latar, dan alur konflik.</td>
+                    <td>Watak tokoh, amanat cerita, nilai moral.</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="section" id="ide">
+            <h2>🔹 2. Cara Cepat Menemukan Ide Pokok</h2>
+            <p><strong>Ide Pokok / Gagasan Utama</strong> adalah inti permasalahan yang dibahas dalam suatu paragraf.
+                Ingat: Ide pokok bukanlah seluruh isi kalimat utama, melainkan <em>ringkasan</em> dari kalimat utama
+                tersebut.</p>
+
+            <ul>
+                <li><strong>Paragraf Deduktif (Awal):</strong> Umumnya wacana SNBT bersifat deduktif. Cek kalimat
+                    pertama! Jika kalimat kedua mengulang subjek kalimat pertama, berarti ide pokoknya di awal.</li>
+                <li><strong>Paragraf Induktif (Akhir):</strong> Terletak di akhir paragraf. Ciri khasnya didahului
+                    konjungsi penyimpulan seperti: <em>Oleh karena itu, Dengan demikian, Jadi, Kesimpulannya.</em></li>
+            </ul>
+            <div class="example">
+                <strong>Contoh Soal:</strong><br>
+                <em>"Penggunaan plastik sekali pakai secara masif telah mengakibatkan pencemaran laut yang parah.
+                    Berbagai biota laut mati karena menelan serpihan plastik. Selain itu, mikroplastik kini mulai masuk
+                    ke rantai makanan manusia."</em><br><br>
+                <strong>Cara Mengerjakan:</strong> Kalimat 2 dan 3 adalah penjelas dari kalimat 1. Maka kalimat utamanya
+                adalah kalimat 1.<br>
+                <strong>Ide Pokok:</strong> Dampak negatif penggunaan plastik sekali pakai.
+            </div>
+        </div>
+
+        <div class="section" id="tersirat">
+            <h2>🔹 3. Membedakan Makna Tersurat & Tersirat</h2>
+            <p>Pembuat soal SNBT sering menjebak peserta dengan pilihan ganda yang kata-katanya sangat mirip dengan teks
+                aslinya, namun maknanya diputarbalikkan.</p>
+            <ul>
+                <li><strong>Tersurat (Eksplisit):</strong> Jawabannya persis ada di dalam teks. Gunakan teknik
+                    <em>scanning</em> (mencari kata kunci spesifik) pada soal, lalu temukan kata tersebut di teks.</li>
+                <li><strong>Tersirat (Implisit):</strong> Jawabannya <strong>tidak tertulis langsung</strong>. Kamu
+                    harus menghubungkan premis (informasi sebab-akibat) di dalam teks untuk menghasilkan pemahaman baru.
+                </li>
+            </ul>
+            <div class="warning">
+                <strong>🔹 Jebakan Opsi Tersurat:</strong> Opsi yang panjang biasanya terdiri dari dua klausa. Terkadang
+                klausa pertama benar sesuai teks, tapi klausa keduanya salah/dibuat-buat. Baca opsi secara utuh hingga
+                titik!
+            </div>
+        </div>
+
+        <div class="section" id="simpulan">
+            <h2>🔹 4. Teknik Menarik Simpulan Teks</h2>
+            <p>Simpulan <strong>bukanlah</strong> sekadar ringkasan (gabungan ide pokok awal dan akhir). Simpulan adalah
+                hasil akhir dari sebuah analisis atau pembuktian di dalam teks.</p>
+            <div class="tip">
+                <strong>Cara Mengerjakan:</strong> Gunakan rumus <strong>Sebab + Akibat = Simpulan</strong>. Jika teks
+                membahas "Penyebab banjir" dan paragraf terakhir membahas "Kerugian akibat banjir", maka simpulannya
+                adalah "Banjir yang disebabkan oleh faktor X menimbulkan kerugian Y." Cari opsi yang merangkum
+                keseluruhan proses tersebut secara logis.
+            </div>
+        </div>
+
+        <div class="section" id="tujuan">
+            <h2>🔹 5. Menentukan Tujuan Penulis</h2>
+            <p>Soal "Apa tujuan penulis menulis teks tersebut?" sangat sering muncul. Jawabannya sangat bergantung pada
+                <strong>jenis teks</strong> (kembali ke poin 1).</p>
+            <ul>
+                <li>Jika teks penuh data statistik ? <strong>Memaparkan / Menginformasikan / Menjelaskan</strong>.</li>
+                <li>Jika teks menyoroti masalah lingkungan ? <strong>Mengimbau / Mengajak / Menyebarkan
+                        kesadaran</strong>.</li>
+                <li>Jika teks berisi kritikan terhadap kebijakan ? <strong>Mengkritik / Membuktikan /
+                        Meyakinkan</strong>.</li>
+            </ul>
+        </div>
+
+        <div class="section" id="fakta">
+            <h2>🔹 6. Membedakan Fakta dan Opini/Bias</h2>
+            <p>Kemampuan ini diuji untuk melihat apakah kamu pembaca yang kritis. Penulis sering menyelipkan opini
+                subjektif di tengah data objektif.</p>
+            <ul>
+                <li><strong>Fakta:</strong> Bisa dibuktikan kebenarannya, berisi data angka, tanggal, tempat, atau
+                    kejadian yang sudah terjadi.</li>
+                <li><strong>Opini:</strong> Berupa prediksi, saran, pandangan pribadi. Ciri katanya: <em>seharusnya,
+                        mungkin, diperkirakan, sangat, lebih baik.</em></li>
+            </ul>
+            <div class="example">
+                <strong>Fakta:</strong> Suhu bumi naik 1,2 derajat celcius pada tahun 2023.<br>
+                <strong>Opini:</strong> Kenaikan suhu ini <em>sangat mengerikan</em> dan <em>mungkin</em> memusnahkan
+                umat manusia.
+            </div>
+        </div>
+
+        <div class="section" id="hubungan">
+            <h2>🔹 7. Analisis Hubungan Antar Paragraf</h2>
+            <p>Soal biasanya berbunyi: "Bagaimana hubungan antara paragraf 1 dan paragraf 2?". Cara termudah adalah
+                membaca kalimat pertama paragraf ke-2.</p>
+            <ul>
+                <li>Jika paragraf 2 diawali dengan "Selain itu..." ? <strong>Menambahkan informasi</strong>.</li>
+                <li>Jika diawali dengan "Sebaliknya / Namun..." ? <strong>Mempertentangkan</strong>.</li>
+                <li>Jika berisi contoh kasus dari teori di paragraf 1 ? <strong>Memberikan ilustrasi / contoh</strong>.
+                </li>
+            </ul>
+        </div>
+
+        <div class="section" id="rujukan">
+            <h2>🔹 8. Menguasai Kata Rujukan</h2>
+            <p>Kata rujukan (demonstrativa) seperti <em>ini, itu, tersebut, dia, mereka</em>, digunakan agar teks tidak
+                mengulang-ulang kata yang sama.</p>
+            <div class="tip">
+                <strong>Cara Mengerjakan:</strong> Jika ditanya "Kata <em>tersebut</em> pada paragraf 2 merujuk
+                pada...", jangan baca ke depan! Bacalah <strong>satu kalimat tepat sebelum</strong> kalimat yang
+                mengandung kata rujukan itu. Subjek utama dari kalimat sebelumnya adalah jawabannya.
+            </div>
+        </div>
+
+        <div class="section" id="makna">
+            <h2>🔹 9. Menebak Makna Kata Sesuai Konteks</h2>
+            <p>Seringkali kamu ditanya arti sebuah istilah asing atau kata kiasan. Jangan panik jika kamu tidak tahu
+                arti kamusnya!</p>
+            <p>Cara mengerjakannya adalah dengan teknik <strong>Substitusi (Penggantian)</strong>. Cobalah ganti kata
+                yang ditanyakan dengan pilihan jawaban (A, B, C, D, E) ke dalam kalimat aslinya. Pilihan yang membuat
+                kalimat tersebut tetap masuk akal dan nyambung secara konteks adalah jawaban yang benar.</p>
+        </div>
+
+        <div class="section" id="tips">
+            <h2>🔹 10. Strategi Emas Menjawab Soal SNBT</h2>
+            <p>Manajemen waktu adalah kunci. Jangan habiskan waktu membaca teks panjang seperti membaca novel.</p>
+            <ol>
+                <li><strong>Jangan baca teksnya dulu!</strong> Langsung tuju bagian akhir teks untuk membaca
+                    pertanyaannya.</li>
+                <li><strong>Identifikasi Tipe Soal:</strong> Apakah soal menanyakan Ide Pokok (butuh baca keseluruhan
+                    sekilas), atau menanyakan Makna Kata / Rujukan (hanya butuh baca 1 kalimat terkait)?</li>
+                <li><strong>Gunakan Teknik Skimming:</strong> Baca kalimat pertama dan terakhir setiap paragraf untuk
+                    mendapatkan gambaran besar wacana dalam 30 detik.</li>
+                <li><strong>Waspadai Diksi Absolut:</strong> Hati-hati dengan opsi jawaban yang memuat kata <em>semua,
+                        seluruh, selalu, pasti, tidak pernah, hanya</em>. Seringkali opsi yang terlalu mutlak seperti
+                    ini adalah jawaban yang salah (kecuali teks benar-benar menyatakannya).</li>
+            </ol>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="library.html" class="nav-btn">
+                <div>
+                    <div class="nav-btn-label">? Kembali</div>Library SNBT
+                </div>
+            </a>
+            <a href="lib-analisis-argumen.html" class="nav-btn primary">
+                <div>
+                    <div class="nav-btn-label">Materi Selanjutnya &rarr;</div>Analisis Argumen & Opini
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>- 2025 QuizNation - Library SNBT 2025</footer>
+    <script>if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark')</script>
+</body>
+
+</html>

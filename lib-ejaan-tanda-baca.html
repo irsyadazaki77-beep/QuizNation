@@ -1,0 +1,1155 @@
+﻿<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta name="theme-color" content="#0a1120" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Mastery PUEBI & Literasi - Library SNBT 2026</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300;400;600;700;800&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Mobile Optimization */
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+        }
+
+        * {
+            -webkit-tap-highlight-color: transparent !important;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        :root {
+            --accent: #2563eb;
+            --accent2: #06b6d4;
+            --bg: #f0f2f8;
+            --surface: rgba(255, 255, 255, 0.72);
+            --border: rgba(0, 0, 0, 0.08);
+            --text: #1a1a2e;
+            --text2: #4b5563;
+            --text3: #9ca3af;
+            --glow: rgba(124, 58, 237, 0.18);
+            --radius: 20px
+        }
+
+        body.dark {
+            --bg: #050a15;
+            --surface: rgba(255, 255, 255, 0.055);
+            --border: rgba(255, 255, 255, 0.09);
+            --text: #f0edff;
+            --text2: rgba(240, 237, 255, 0.65);
+            --text3: rgba(240, 237, 255, 0.35);
+            --glow: rgba(124, 58, 237, 0.28)
+        }
+
+        html {
+            scroll-behavior: smooth
+        }
+
+        body {
+            font-family: 'Bricolage Grotesque', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            transition: background .4s, color .4s;
+            overflow-x: hidden
+        }
+
+        .noise-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: .35
+        }
+
+        /* Top Nav */
+        .topnav {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: var(--surface);
+            backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 40px;
+            display: flex;
+            align-items: center;
+            gap: 16px
+        }
+
+        .topnav a {
+            text-decoration: none;
+            color: var(--accent);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all .2s
+        }
+
+        .topnav a:hover {
+            gap: 10px
+        }
+
+        .topnav-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-left: auto
+        }
+
+        .theme-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            width: 36px;
+            height: 36px;
+            cursor: pointer;
+            font-size: 1rem;
+            display: grid;
+            place-items: center;
+            transition: all .2s;
+            margin-left: 8px
+        }
+
+        .theme-btn:hover {
+            border-color: var(--accent)
+        }
+
+        /* Content */
+        .wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 30px 80px;
+            position: relative;
+            z-index: 1
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(251, 146, 60, .12);
+            color: #f59e0b;
+            border: 1px solid rgba(251, 146, 60, .25);
+            border-radius: 30px;
+            padding: 5px 14px;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 16px
+        }
+
+        .page-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 800;
+            color: var(--text);
+            line-height: 1.15;
+            margin-bottom: 14px
+        }
+
+        .page-title .grad {
+            background: linear-gradient(135deg, var(--accent), #60a5fa, var(--accent2));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent
+        }
+
+        .page-desc {
+            font-size: 1.05rem;
+            color: var(--text2);
+            line-height: 1.8;
+            margin-bottom: 40px;
+            max-width: 700px
+        }
+
+        /* TOC */
+        .toc {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 24px 28px;
+            margin-bottom: 40px
+        }
+
+        .toc-title {
+            font-weight: 800;
+            font-size: .9rem;
+            color: var(--text);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .toc ol {
+            padding-left: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px
+        }
+
+        .toc li {
+            color: var(--text2);
+            font-size: .88rem
+        }
+
+        .toc a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color .2s
+        }
+
+        .toc a:hover {
+            color: var(--accent2)
+        }
+
+        /* Sections */
+        .section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px;
+            margin-bottom: 24px;
+            transition: all .3s
+        }
+
+        .section:hover {
+            box-shadow: 0 10px 40px var(--glow);
+            border-color: rgba(124, 58, 237, .2)
+        }
+
+        .section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 2px solid rgba(124, 58, 237, 0.1);
+            padding-bottom: 12px;
+        }
+
+        .section h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent);
+            margin: 24px 0 12px
+        }
+
+        .section p,
+        .section li {
+            font-size: .92rem;
+            color: var(--text2);
+            line-height: 1.85
+        }
+
+        .section ul,
+        .section ol {
+            padding-left: 20px;
+            margin: 10px 0
+        }
+
+        .section li {
+            margin-bottom: 6px
+        }
+
+        /* Example Box */
+        .example {
+            background: rgba(124, 58, 237, .06);
+            border-left: 3px solid var(--accent);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .example strong {
+            color: var(--text)
+        }
+
+        /* Tip Box */
+        .tip {
+            background: rgba(6, 182, 212, .08);
+            border-left: 3px solid var(--accent2);
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        .tip strong {
+            color: var(--accent2)
+        }
+
+        /* Warning */
+        .warning {
+            background: rgba(244, 63, 94, .08);
+            border-left: 3px solid #f43f5e;
+            border-radius: 0 12px 12px 0;
+            padding: 16px 20px;
+            margin: 16px 0;
+            font-size: .88rem;
+            color: var(--text2);
+            line-height: 1.75
+        }
+
+        /* Quiz Card / Soal Ornaments */
+        .quiz-card {
+            background: linear-gradient(145deg, var(--surface), rgba(124, 58, 237, 0.03));
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 24px 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quiz-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--accent), var(--accent2));
+        }
+
+        .quiz-card h4 {
+            color: var(--text);
+            margin-bottom: 12px;
+            font-size: 1.05rem;
+            font-weight: 700;
+        }
+
+        .quiz-options {
+            list-style: none !important;
+            padding: 0 !important;
+            margin: 16px 0 !important;
+        }
+
+        .quiz-options li {
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: var(--surface);
+            transition: all 0.2s;
+            cursor: pointer;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .quiz-options li:hover {
+            border-color: var(--accent);
+            background: rgba(124, 58, 237, 0.04);
+            transform: translateX(4px);
+        }
+
+        .quiz-options .opt-letter {
+            font-weight: 700;
+            color: var(--accent);
+            background: rgba(124, 58, 237, 0.1);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            min-width: 28px;
+            text-align: center;
+        }
+
+        .solution-box {
+            background: rgba(16, 185, 129, 0.08);
+            border-left: 3px solid #10b981;
+            border-radius: 0 12px 12px 0;
+            padding: 20px;
+            margin-top: 20px;
+            font-size: .9rem;
+        }
+
+        .solution-box h5 {
+            color: #059669;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        body.dark .solution-box h5 {
+            color: #34d399;
+        }
+
+        body.dark .solution-box {
+            border-left-color: #34d399;
+        }
+
+        /* Nav buttons */
+        .nav-buttons {
+            display: flex;
+            gap: 14px;
+            margin-top: 40px;
+            flex-wrap: wrap
+        }
+
+        .nav-btn {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 24px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 700;
+            font-size: .9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all .3s
+        }
+
+        .nav-btn:hover {
+            border-color: var(--accent);
+            box-shadow: 0 8px 24px var(--glow);
+            transform: translateY(-2px)
+        }
+
+        .nav-btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            color: white;
+            border: none;
+            box-shadow: 0 4px 16px rgba(124, 58, 237, .4)
+        }
+
+        .nav-btn.primary:hover {
+            box-shadow: 0 8px 28px rgba(124, 58, 237, .5);
+            transform: translateY(-3px)
+        }
+
+        .nav-btn-label {
+            font-size: .7rem;
+            color: var(--text3);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: .5px
+        }
+
+        .nav-btn.primary .nav-btn-label {
+            color: rgba(255, 255, 255, .7)
+        }
+
+        footer {
+            text-align: center;
+            color: var(--text3);
+            font-size: .8rem;
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px
+        }
+
+        @media(max-width:768px) {
+            .topnav {
+                padding: 14px 16px
+            }
+
+            .wrapper {
+                padding: 24px 16px 60px
+            }
+
+            .section {
+                padding: 20px
+            }
+
+            .nav-buttons {
+                flex-direction: column
+            }
+
+            .quiz-options li {
+                flex-direction: column;
+                gap: 6px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="android-optimized.css">
+    <script src="android-optimized.js" defer></script>
+</head>
+
+<body>
+    <div class="noise-overlay"></div>
+    <nav class="topnav">
+        <a href="library.html">? Kembali ke Library</a>
+        <span class="topnav-title">Mega Library: PUEBI & Literasi</span>
+        <button class="theme-btn" onclick="toggleTheme()">🌙</button>
+    </nav>
+
+    <div class="wrapper">
+        <div class="hero-badge">Edisi Ekstensif SNBT 2026</div>
+        <h1 class="page-title">Ensiklopedia <span class="grad">Ejaan & Kalimat</span></h1>
+        <p class="page-desc">Modul terlengkap yang membedah anatomi ejaan, tanda baca, kalimat efektif, hingga struktur
+            paragraf. Dirancang khusus untuk mengeliminasi distractor pada soal Literasi Bahasa Indonesia.</p>
+
+        <div class="toc">
+            <div class="toc-title">📑 Daftar Isi Komprehensif</div>
+            <ol>
+                <li><a href="#kapital">Huruf Kapital, Miring & Tebal</a></li>
+                <li><a href="#kata">Morfologi: Penulisan Gabungan & Imbuhan</a></li>
+                <li><a href="#koma">Navigasi Tanda Koma ( , ) & Titik ( . )</a></li>
+                <li><a href="#titik">Tanda Hubung (-), Pisah (-) & Petik (" ")</a></li>
+                <li><a href="#angka">Penulisan Angka, Bilangan & Singkatan</a></li>
+                <li><a href="#efektif">Anatomi Kalimat Efektif & SPOK</a></li>
+                <li><a href="#paragraf">Kepaduan Paragraf (Kohesi & Koherensi)</a></li>
+                <li><a href="#makna">Semantik: Makna Kata, Frasa & Istilah</a></li>
+                <li><a href="#idepokok">Menentukan Ide Pokok & Simpulan</a></li>
+                <li><a href="#tips">Grand Strategy UTBK SNBT</a></li>
+            </ol>
+        </div>
+
+        <div class="section" id="kapital">
+            <h2>🔹 1. Huruf Kapital, Miring & Tebal</h2>
+            <p>Penggunaan huruf kapital dan miring adalah fondasi paling mendasar yang selalu muncul dalam teks panjang
+                sebagai jebakan mata.</p>
+
+            <h3>A. Kedalaman Aturan Huruf Kapital</h3>
+            <ul>
+                <li><strong>Nama Geografi Terikat vs Bebas:</strong> Dikapitalisasi jika merupakan nama spesifik. Tidak
+                    dikapitalisasi jika merujuk pada jenis atau tidak diikuti nama spesifik.<br>
+                    <em>Benar:</em> Gunung Merapi, Selat Sunda, mendaki gunung, menyeberangi selat.<br>
+                    <em>Benar:</em> gula jawa, kacang bogor, kunci inggris, jeruk bali, pisang ambon (ini nama jenis,
+                    bukan asal daerah).
+                </li>
+                <li><strong>Arah Mata Angin:</strong> Dikapitalisasi HANYA jika menjadi bagian dari nama wilayah
+                    administratif atau geografis.<br>
+                    <em>Benar:</em> Jawa Barat, Asia Tenggara, Kabupaten Timor Tengah Selatan.<br>
+                    <em>Salah:</em> Ia berlayar ke arah Timur (seharusnya timur).
+                </li>
+                <li><strong>Gelar & Jabatan:</strong> Dikapitalisasi jika diikuti nama instansi, nama tempat, atau nama
+                    orang.<br>
+                    <em>Benar:</em> Presiden Joko Widodo, Gubernur Jawa Tengah, Profesor Budi.<br>
+                    <em>Benar:</em> Siap, Jenderal! (Sebagai sapaan langsung).<br>
+                    <em>Salah:</em> Dia baru saja dilantik menjadi bupati (karena tidak diikuti nama).
+                </li>
+                <li><strong>Peristiwa Sejarah:</strong> Dikapitalisasi utuh jika merujuk kejadian spesifik.<br>
+                    <em>Benar:</em> Perang Dunia II, Proklamasi Kemerdekaan Indonesia.<br>
+                    <em>Salah:</em> perlombaan senjata membawa risiko pecahnya perang dunia (tidak spesifik).
+                </li>
+            </ul>
+
+            <h3>B. Kedalaman Aturan Huruf Miring & Tebal</h3>
+            <ul>
+                <li><strong>Judul Karya:</strong> Huruf miring untuk nama buku, majalah, dan surat kabar (cetak/digital)
+                    yang <em>dikutip dalam kalimat</em>.<br>
+                    <em>Benar:</em> Ia membaca berita di harian <i>Kompas</i>.
+                </li>
+                <li><strong>Istilah Asing/Daerah:</strong> Wajib miring jika belum diserap sepenuhnya ke dalam ejaan
+                    bahasa Indonesia.<br>
+                    <em>Benar:</em> Kebijakan <i>lockdown</i> diterapkan. (Bandingkan dengan: Kebijakan karantina
+                    wilayah diterapkan).
+                </li>
+                <li><strong>Huruf Tebal:</strong> Dipakai untuk menegaskan bagian tulisan yang sudah ditulis miring,
+                    atau untuk judul bab/subbab (jarang diujikan di soal perbaikan ejaan, lebih ke format makalah).</li>
+            </ul>
+
+            <div class="warning">
+                <strong>🔹 Jebakan SNBT: Judul Karangan vs Buku</strong><br>
+                Judul BUKU dimiringkan. Namun, judul ARTIKEL, PUISI, atau BAB BUKU diapit <strong>tanda petik ganda
+                    ("...")</strong>, BUKAN dimiringkan.<br>
+                <em>Contoh:</em> Makalah berjudul "Pemanasan Global" dimuat dalam majalah <i>Tempo</i>.
+            </div>
+
+            <div class="quiz-card">
+                <h4>🔹 Uji Taktik 1.1</h4>
+                <p>Penulisan huruf kapital yang <strong>salah</strong> terdapat pada kalimat...</p>
+                <ul class="quiz-options">
+                    <li><span class="opt-letter">A</span> Paman membeli kunci inggris di toko perkakas bangunan.</li>
+                    <li><span class="opt-letter">B</span> Hari ini, Presiden meresmikan jalan tol baru di Pulau
+                        Sumatera.</li>
+                    <li><span class="opt-letter">C</span> Penduduk desa itu banyak yang menanam pisang Ambon di
+                        kebunnya.</li>
+                    <li><span class="opt-letter">D</span> Suku Dani menetap di wilayah pegunungan Provinsi Papua
+                        Pegunungan.</li>
+                    <li><span class="opt-letter">E</span> Tahun ini, adik akan masuk ke Fakultas Ilmu Komputer
+                        Universitas Indonesia.</li>
+                </ul>
+                <div class="solution-box">
+                    <h5>🔹 Analisis & Resolusi:</h5>
+                    <p><strong>Jawaban: C</strong><br>
+                        <strong>Eksekusi Logika:</strong> Lakukan eliminasi opsi.<br>
+                        - A: "kunci inggris" adalah nama jenis, ditulis huruf kecil. (Benar)<br>
+                        - B: "Presiden" tanpa nama bisa dikapitalisasi jika merujuk pada pimpinan spesifik (substitusi
+                        jabatan) dan "Pulau Sumatera" kapital karena nama geografi. (Benar)<br>
+                        - C: "pisang ambon" adalah nama <strong>jenis pisang</strong>, bukan nama geografi asal. Kata
+                        "ambon" <strong>harus huruf kecil</strong>. (Salah)<br>
+                        - D: "Suku Dani" dan "Provinsi Papua Pegunungan" dikapitalisasi sesuai aturan nama suku dan
+                        administratif. (Benar)<br>
+                        - E: Nama lembaga formal dikapitalisasi setiap awal kata. (Benar)
+                    </p>
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <h4>🔹 Uji Taktik 1.2</h4>
+                <p>Kalimat manakah yang menerapkan penulisan huruf miring dengan tepat?</p>
+                <ul class="quiz-options">
+                    <li><span class="opt-letter">A</span> Ia sedang membaca puisi <i>Hujan Bulan Juni</i> karya Sapardi.
+                    </li>
+                    <li><span class="opt-letter">B</span> Penyakit <i>diabetes melitus</i> memerlukan penanganan khusus.
+                    </li>
+                    <li><span class="opt-letter">C</span> Istilah <i>download</i> padanannya adalah <i>unduh</i>.</li>
+                    <li><span class="opt-letter">D</span> Buku yang berjudul <i>Sejarah Modern</i> telah terbit.</li>
+                    <li><span class="opt-letter">E</span> Semua siswa harus memiliki <i>Kamus Besar Bahasa
+                            Indonesia</i>.</li>
+                </ul>
+                <div class="solution-box">
+                    <h5>🔹 Analisis & Resolusi:</h5>
+                    <p><strong>Jawaban: D</strong><br>
+                        <strong>Eksekusi Logika:</strong><br>
+                        - A: Puisi harusnya dipetik ganda ("Hujan Bulan Juni"), bukan dimiringkan.<br>
+                        - B: Nama ilmiah taksa (seperti nama latin hewan/tumbuhan) dimiringkan, tapi nama penyakit umum
+                        yang sudah diserap tidak perlu dimiringkan kecuali murni asing.<br>
+                        - C: "unduh" sudah bahasa Indonesia baku, tidak boleh dimiringkan. Yang dimiringkan hanya
+                        "download".<br>
+                        - D: Judul BUKU dimiringkan. Ini adalah <strong>jawaban paling tepat dan aman</strong>.<br>
+                        - E: Walaupun KBBI adalah buku, jika merujuk institusi/program kadang tidak miring, namun D
+                        lebih pasti kesalahannya tidak ada.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="kata">
+            <h2>🔹 2. Morfologi: Penulisan Gabungan & Imbuhan</h2>
+            <p>Membedakan kapan spasi digunakan dan kapan kata harus direkatkan sering kali membingungkan saat menatap
+                layar komputer UTBK.</p>
+
+            <h3>A. Preposisi (Kata Depan) vs Imbuhan</h3>
+            <ul>
+                <li><strong>Fungsi Arah/Tempat (DI PISAH):</strong> Jika <em>di</em> dan <em>ke</em> menunjukkan lokasi,
+                    arah, atau waktu, mereka dipisah.<br>
+                    <em>Contoh:</em> di kantor, ke pasar, di mana, ke luar (lawan dari ke dalam), di samping.
+                </li>
+                <li><strong>Fungsi Pasif/Verba (DIGABUNG):</strong> Jika <em>di-</em> dan <em>ke-</em> adalah awalan
+                    untuk kata kerja/benda, mereka dirangkai.<br>
+                    <em>Contoh:</em> ditulis, dikelola, keluar (lawan masuk), ketua, kekasih.
+                </li>
+            </ul>
+
+            <h3>B. Gabungan Kata Dasar (Konfiks & Afiks)</h3>
+            <ul>
+                <li><strong>Satu Imbuhan (Dipisah):</strong> Jika gabungan kata hanya mendapat awalan ATAU akhiran,
+                    tetap dipisah.<br>
+                    <em>Contoh:</em> bertepuk tangan, anak tirikan, garis bawahi.
+                </li>
+                <li><strong>Dua Imbuhan / Konfiks (Digabung):</strong> Jika mendapat awalan dan akhiran sekaligus,
+                    gabungan kata dirangkai utuh.<br>
+                    <em>Contoh:</em> tanggung jawab ? <strong>pertanggungjawaban</strong>.<br>
+                    <em>Contoh:</em> hancur lebur ? <strong>menghancurleburkan</strong>.
+                </li>
+                <li><strong>Bentuk Terikat (Selalu Digabung):</strong> Kata-kata seperti pasca, anti, pro, non, ekstra,
+                    intra, maha, sub, supra wajib menempel pada kata berikutnya.<br>
+                    <em>Contoh:</em> pascasarjana, antikekerasan, nonaktif, mahatahu.<br>
+                    <em>Pengecualian:</em> Jika diikuti kata berawalan huruf kapital, pakai tanda hubung:
+                    <strong>non-Indonesia</strong>, <strong>pro-Barat</strong>.
+                </li>
+            </ul>
+
+            <div class="example">
+                <strong>🔹 Eksekusi Partikel (pun, lah, kah, tah):</strong><br>
+                Partikel <em>-lah, -kah,</em> dan <em>-tah</em> <strong>selalu serangkai</strong> (apakah, bacalah).<br>
+                Partikel <em>pun</em> <strong>selalu dipisah</strong> (apa pun, malam pun, satu kali pun).<br>
+                <strong>Kecuali 12 Konjungsi Terpadu (Hafalkan!):</strong><br>
+                <em>meskipun, walaupun, biarpun, kendatipun, adapun, maupun, ataupun, bagaimanapun, kalaupun, sekalipun
+                    (jika bermakna 'walaupun'), sungguhpun, andaipun.</em>
+            </div>
+
+            <div class="quiz-card">
+                <h4>🔹 Uji Taktik 2.1</h4>
+                <p>Penulisan gabungan kata di bawah ini yang sepenuhnya benar adalah...</p>
+                <ul class="quiz-options">
+                    <li><span class="opt-letter">A</span> Pihak berwajib segera menguji-cobakan perangkat tersebut.</li>
+                    <li><span class="opt-letter">B</span> Panitia meminta kami untuk menanda tangani daftar hadir.</li>
+                    <li><span class="opt-letter">C</span> Proyek tersebut harus segera dipertanggungjawabkan kepada
+                        publik.</li>
+                    <li><span class="opt-letter">D</span> Tolong beritahu saya jika jadwal rapat telah berubah.</li>
+                    <li><span class="opt-letter">E</span> Mereka bekerja sama untuk memporak porandakan markas musuh.
+                    </li>
+                </ul>
+                <div class="solution-box">
+                    <h5>🔹 Analisis & Resolusi:</h5>
+                    <p><strong>Jawaban: C</strong><br>
+                        <strong>Eksekusi Logika:</strong><br>
+                        - A: <em>menguji-cobakan</em> salah. Karena konfiks me-kan, harusnya tanpa tanda hubung:
+                        <strong>mengujicobakan</strong>.<br>
+                        - B: <em>menanda tangani</em> salah. Konfiks me-i, harus digabung utuh:
+                        <strong>menandatangani</strong>.<br>
+                        - C: <em>dipertanggungjawabkan</em> (tanggung jawab + konfiks di-kan). Penulisan serangkai
+                        adalah <strong>Benar</strong>.<br>
+                        - D: <em>beritahu</em> salah. Jika tidak ada konfiks, kata dasar tetap dipisah: <strong>beri
+                            tahu</strong>.<br>
+                        - E: <em>memporak porandakan</em> salah. Konfiks me-kan, harus utuh:
+                        <strong>memporakporandakan</strong>.
+                    </p>
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <h4>🔹 Uji Taktik 2.2</h4>
+                <p>Penggunaan partikel <i>pun</i> yang tepat terdapat pada kalimat...</p>
+                <ul class="quiz-options">
+                    <li><span class="opt-letter">A</span> Apapun yang terjadi, kita harus tetap semangat.</li>
+                    <li><span class="opt-letter">B</span> Jangankan berjalan, berdiri pun ia tak sanggup.</li>
+                    <li><span class="opt-letter">C</span> Walau pun hari hujan, ia tetap berangkat sekolah.</li>
+                    <li><span class="opt-letter">D</span> Sekali pun ia belum pernah mengunjungi tempat itu.</li>
+                    <li><span class="opt-letter">E</span> Ada pun alasan keterlambatannya tidak dapat diterima.</li>
+                </ul>
+                <div class="solution-box">
+                    <h5>🔹 Analisis & Resolusi:</h5>
+                    <p><strong>Jawaban: B</strong><br>
+                        <strong>Eksekusi Logika:</strong> Ingat aturan dasar: "pun" dipisah, kecuali pada konjungsi
+                        lazim.<br>
+                        - A: "Apapun" harusnya <strong>apa pun</strong> (dipisah, bukan konjungsi).<br>
+                        - B: "berdiri pun" dipisah. <strong>Benar</strong>.<br>
+                        - C: "Walau pun" harusnya <strong>walaupun</strong> (konjungsi terpadu).<br>
+                        - D: "Sekali pun" dalam konteks ini bermakna "satu kali jua", jadi dipisah (sekali pun). TAPI
+                        kalimatnya ambigu, kalau maknanya walaupun harusnya disambung (sekalipun). Namun B sudah mutlak
+                        benar.<br>
+                        - E: "Ada pun" harusnya <strong>adapun</strong> (konjungsi terpadu).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="koma">
+            <h2>🔹 3. Navigasi Tanda Koma ( , ) & Titik ( . )</h2>
+            <p>Tanda koma adalah pengendali nafas dan logika dalam kalimat majemuk. Kesalahan koma bisa mengubah makna
+                secara fatal.</p>
+
+            <h3>A. Tanda Koma WAJIB (Harus Ada)</h3>
+            <ol>
+                <li><strong>Perincian (3 unsur atau lebih):</strong> Koma mengapit setiap rincian, dan
+                    <strong>wajib</strong> ada sebelum konjungsi terakhir (dan, atau).<br>
+                    <em>Contoh:</em> Ibu membeli sayur, beras, <strong>dan</strong> lauk-pauk.
+                </li>
+                <li><strong>Kalimat Majemuk Setara Pertentangan:</strong> Wajib ada koma SEBELUM kata: <strong>tetapi,
+                        melainkan, sedangkan.</strong><br>
+                    <em>Contoh:</em> Ia miskin<strong>, tetapi</strong> baik hati.
+                </li>
+                <li><strong>Anak Kalimat Mendahului Induk:</strong> Jika konjungsi subordinatif (karena, jika, ketika)
+                    berada di AWAL kalimat, koma dipakai di akhir anak kalimat.<br>
+                    <em>Contoh:</em> <strong>Karena</strong> hujan deras<strong>,</strong> kami batal pergi. <br>
+                    <em>(Jika dibalik, TANPA KOMA: Kami batal pergi karena hujan deras).</em>
+                </li>
+                <li><strong>Konjungsi Antarkalimat:</strong> Wajib ada koma SETELAH kata hubung di awal kalimat baru
+                    (Oleh karena itu, Dengan demikian, Namun, Akan tetapi, Jadi, Meskipun demikian).</li>
+                <li><strong>Pemisah Gelar:</strong> Memisahkan nama dari gelar, dan antar-gelar. <br>
+                    <em>Contoh:</em> Dr. Ahmad Yani<strong>,</strong> S.E.<strong>,</strong> M.M.
+                </li>
+            </ol>
+
+            <h3>B. Tanda Koma HARAM (Tidak Boleh Ada)</h3>
+            <ul>
+                <li>Sebelum konjungsi tujuan/sebab intrakalimat: <strong>bahwa, karena, sehingga, agar, untuk, supaya,
+                        maka.</strong><br>
+                    <em>Salah:</em> Pria itu lari ketakutan, sehingga menabrak tembok. (Hapus koma).
+                </li>
+                <li>Di antara subjek dan predikat yang panjang (ini sering menjebak!).<br>
+                    <em>Salah:</em> Mahasiswa yang lulus dengan predikat cumlaude tahun ini, akan diberikan beasiswa.
+                    (Hapus koma).
+                </li>
+            </ul>
+
+            <div class="quiz-card">
+                <h4>🔹 Uji Taktik 3.1</h4>
+                <p>Pemakaian tanda koma yang TIDAK sesuai dengan PUEBI terdapat pada kalimat...</p>
+                <ul class="quiz-options">
+                    <li><span class="opt-letter">A</span> Oleh karena itu, kita harus senantiasa menjaga kebersihan.
+                    </li>
+                    <li><span class="opt-letter">B</span> Mahasiswa tersebut rajin belajar, sehingga ia mendapat IPK
+                        sempurna.</li>
+                    <li><span class="opt-letter">C</span> Karena tidak diundang, ia enggan datang ke pesta itu.</li>
+                    <li><span class="opt-letter">D</span> Saya ingin membeli kamera baru, tetapi uang tabungan belum
+                        cukup.</li>
+                    <li><span class="opt-letter">E</span> Buku, majalah, dan jurnal tersedia lengkap di perpustakaan.
+                    </li>
+                </ul>
+                <div class="solution-box">
+                    <h5>🔹 Analisis & Resolusi:</h5>
+                    <p><strong>Jawaban: B</strong><br>
+                        <strong>Eksekusi Logika:</strong><br>
+                        - A: Setelah "Oleh karena itu" wajib koma. (Benar)<br>
+                        - B: Koma <strong>sebelum "sehingga"</strong> adalah kesalahan gramatikal fatal. Konjungsi
+                        intrakalimat penanda akibat tidak membutuhkan koma. (Ini yang <strong>SALAH</strong>).<br>
+                        - C: Anak kalimat (Karena...) di depan, wajib dipisah koma. (Benar)<br>
+                        - D: Koma sebelum "tetapi" wajib. (Benar)<br>
+                        - E: Rincian > 2 unsur, wajib koma sebelum "dan". (Benar)
+                    </p>
+                </div>
+            </div>
+
+            <div class="quiz-card">
+                <h4>🔹 Uji Taktik 3.2</h4>
+                <p>Penulisan gelar akademis yang benar adalah...</p>
+                <ul class="quiz-options">
+                    <li><span class="opt-letter">A</span> Prof. Dr. Budi Santoso S.H. M.Hum.</li>
+                    <li><span class="opt-letter">B</span> Prof, Dr. Budi Santoso, S.H, M.Hum.</li>
+                    <li><span class="opt-letter">C</span> Prof. Dr. Budi Santoso, S.H., M.Hum.</li>
+                    <li><span class="opt-letter">D</span> Prof. Dr. Budi Santoso, SH., M.Hum.</li>
+                    <li><span class="opt-letter">E</span> Prof. Dr. Budi Santoso, S.H.; M.Hum.</li>
+                </ul>
+                <div class="solution-box">
+                    <h5>🔹 Analisis & Resolusi:</h5>
+                    <p><strong>Jawaban: C</strong><br>
+                        <strong>Eksekusi Logika:</strong><br>
+                        Aturan gelar:<br>
+                        1. Singkatan gelar di depan nama diakhiri titik tanpa koma pemisah (Prof. Dr. Budi...).<br>
+                        2. Antara nama dan gelar di belakang dipisah koma (Budi Santoso, S.H.).<br>
+                        3. Singkatan gelar hukum/humaniora: S.H., M.Hum. (setiap unsur huruf kapital singkatan gelar
+                        diberi titik).<br>
+                        4. Antara gelar satu dan lainnya dipisah koma (..., S.H., M.Hum.). Titik koma (;) hanya dipakai
+                        memisahkan gelar dari orang yang berbeda dalam satu baris (misal: Budi, S.E.; Andi, S.T.).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="titik">
+            <h2>🔹 4. Tanda Hubung (-), Pisah (-) & Petik (" ")</h2>
+            <p>Sering disepelekan, namun pembuat soal UTBK gemar memanipulasi tanda pisah (-) dan hubung (-) untuk
+                mengecoh kandidat.</p>
+
+            <h3>A. Tanda Hubung (-) vs Tanda Pisah (-)</h3>
+            <ul>
+                <li><strong>Tanda Hubung (Pendek):</strong> Dipakai untuk menyambung suku kata, kata ulang (lari-lari),
+                    dan <strong>merangkai unsur beda jenis</strong>.<br>
+                    <em>Rumus Merangkai:</em> se- + kapital (se-Indonesia), ke- + angka (ke-2), angka + -an (1990-an),
+                    imbuhan + kata asing (di-<i>smash</i>).
+                </li>
+                <li><strong>Tanda Pisah (Panjang):</strong> Diketik dengan dua strip (--) di Word. Berfungsi untuk:
+                    <ol>
+                        <li>Membatasi penyisipan kata/kalimat yang memberi penjelasan (seperti fungsi kurung).<br>
+                            <em>Contoh:</em> Kesuksesan itu-saya sangat yakin-akan segera tercapai.
+                        </li>
+                        <li>Berarti "sampai dengan" atau "sampai ke" untuk waktu, tanggal, dan jarak.<br>
+                            <em>Contoh:</em> Pukul 08.00-10.00 WIB, Tanggal 5-10 April, Perjalanan Jakarta-Bandung.
+                        </li>
+                    </ol>
+                </li>
+            </ul>
+
+            <h3>B. Tanda Petik Tunggal vs Ganda</h3>
+            <ul>
+                <li><strong>Ganda ("..."):</strong> Untuk petikan langsung lisan, judul artikel/sajak/makalah/bab, dan
+                    kata yang mempunyai arti khusus/sindiran.<br>
+                    <em>Contoh:</em> "Jangan bergerak!" gertak polisi. Makalah "Limbah Medis" selesai disusun.
+                </li>
+                <li><strong>Tunggal ('...'):</strong> Untuk mengapit makna terjemahan kata asing, atau kutipan di dalam
+                    kutipan.<br>
+                    <em>Contoh:</em> Kata <i>policy</i> bermakna 'kebijakan'. "Kudengar teriak 'Tolong!' dari luar,"
+                    katanya.
+                </li>
+            </ul>
+
+            <div class="quiz-card">
+                <h4>🔹 Uji Taktik 4.1</h4>
+                <p>Penggunaan tanda baca yang tepat terdapat pada kalimat...</p>
+                <ul class="quiz-options">
+                    <li><span class="opt-letter">A</span> Pameran komputer itu berlangsung tanggal 12-15 Maret 2024.
+                    </li>
+                    <li><span class="opt-letter">B</span> Kita harus mem-back up data sebelum melakukan format ulang.
+                    </li>
+                    <li><span class="opt-letter">C</span> Peringkat ke dua berhasil diraih oleh kontingen dari Bali.
+                    </li>
+                    <li><span class="opt-letter">D</span> Revolusi industri tahun 1980an membawa perubahan besar.</li>
+                    <li><span class="opt-letter">E</span> Dia dinobatkan sebagai siswa "teladan" karena sering membolos.
+                    </li>
+                </ul>
+                <div class="solution-box">
+                    <h5>🔹 Analisis & Resolusi:</h5>
+                    <p><strong>Jawaban: E</strong><br>
+                        <strong>Eksekusi Logika:</strong><br>
+                        - A: Tanggal "sampai dengan" harus menggunakan <strong>tanda pisah (-)</strong>, bukan hubung
+                        (-).<br>
+                        - B: "mem-back up" salah. Imbuhan + kata asing harus diiringi cetak miring kata asingnya:
+                        <strong>mem-<i>back up</i></strong>.<br>
+                        - C: "ke dua" dipisah adalah salah. Angka teks dirangkai utuh (kedua), angka arab pakai hubung
+                        (ke-2).<br>
+                        - D: "1980an" salah. Angka + imbuhan -an wajib dipisah tanda hubung:
+                        <strong>1980-an</strong>.<br>
+                        - E: Tanda petik ganda dipakai untuk mengapit kata yang bermakna sindiran/kiasan (teladan tapi
+                        membolos). Ini <strong>Benar</strong>.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="angka">
+            <h2>🔹 5. Penulisan Angka, Bilangan & Singkatan</h2>
+            <p>Aturan kuantitas sangat sering menjebak dalam teks bacaan yang penuh dengan data statistik atau sejarah.
+            </p>
+
+            <h3>A. Angka & Bilangan</h3>
+            <ul>
+                <li><strong>Satu atau Dua Kata:</strong> Bilangan yang dapat dinyatakan dengan satu atau dua kata
+                    ditulis dengan <strong>huruf</strong>.<br>
+                    <em>Benar:</em> dua belas, satu juta, tiga ribu.<br>
+                    <em>Salah:</em> 12, 1.000.000 (jika berdiri sendiri dalam kalimat non-rincian).
+                </li>
+                <li><strong>Lebih dari Dua Kata:</strong> Ditulis dengan angka arab.<br>
+                    <em>Benar:</em> 155 orang, Rp45.500,00.
+                </li>
+                <li><strong>Awal Kalimat:</strong> Angka <strong>HARAM</strong> berada di awal kalimat. Harus dieja
+                    dengan huruf. Jika terlalu panjang, struktur kalimatnya harus diubah.<br>
+                    <em>Salah:</em> 250 orang tewas dalam insiden itu.<br>
+                    <em>Benar:</em> Dua ratus lima puluh orang tewas... ATAU Dalam insiden itu, 250 orang tewas.
+                </li>
+                <li><strong>Rincian Berurutan:</strong> Walau bisa dieja 1-2 kata, jika dipakai untuk rincian statistik,
+                    pakai angka semua agar seragam.<br>
+                    <em>Benar:</em> Di lemari terdapat 15 buku, 3 pensil, dan 2 penghapus.
+                </li>
+            </ul>
+
+            <h3>B. Singkatan & Akronim</h3>
+            <ul>
+                <li><strong>Akronim Nama Diri (Kapital Awal Saja):</strong> Jika terdiri dari suku kata dan merupakan
+                    nama institusi, huruf awalnya saja kapital.<br>
+                    <em>Benar:</em> Bappenas, Bulog, Kemenag, Unpad.
+                </li>
+                <li><strong>Singkatan Huruf (Kapital Semua):</strong> Jika dibaca per huruf.<br>
+                    <em>Benar:</em> UI, UGM, DPR, KPK.
+                </li>
+                <li><strong>Akronim Bukan Nama Diri (Kecil Semua):</strong><br>
+                    <em>Benar:</em> pemilu, rapim, rudal, sinetron.
+                </li>
+            </ul>
+
+            <div class="quiz-card">
+                <h4>🔹 Uji Taktik 5.1</h4>
+                <p>Kalimat yang memuat kesalahan penulisan bilangan adalah...</p>
+                <ul class="quiz-options">
+                    <li><span class="opt-letter">A</span> Pembangunan gedung itu menelan biaya hingga lima triliun
+                        rupiah.</li>
+                    <li><span class="opt-letter">B</span> Dua puluh lima siswa SMA Taruna berhasil lolos beasiswa.</li>
+                    <li><span class="opt-letter">C</span> Proyek tersebut melibatkan 3 mandor, 15 tukang, dan 100
+                        pekerja kasar.</li>
+                    <li><span class="opt-letter">D</span> 15 unit mobil pemadam kebakaran dikerahkan ke lokasi.</li>
+                    <li><span class="opt-letter">E</span> Harga bahan pokok naik sebesar dua belas persen bulan ini.
+                    </li>
+                </ul>
+                <div class="solution-box">
+                    <h5>🔹 Analisis & Resolusi:</h5>
+                    <p><strong>Jawaban: D</strong><br>
+                        <strong>Eksekusi Logika:</strong><br>
+                        Aturan mutlak: Angka numerik tidak boleh menjadi kata pertama pembuka kalimat. Opsi D diawali
+                        dengan "15". Harusnya dieja "Lima belas unit mobil..." atau diubah strukturnya menjadi "Sebanyak
+                        15 unit mobil...". Opsi lainnya sudah sesuai dengan kaidah satu/dua kata huruf vs angka.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="efektif">
+            <h2>🔹 6. Anatomi Kalimat Efektif & SPOK</h2>
+            <p>Pertanyaan "Kalimat manakah yang tidak efektif?" adalah soal favorit UTBK. Kalimat efektif harus ringkas,
+                jelas SPOK-nya, dan tidak ambigu.</p>
+
+            <h3>Syarat Mutlak Kalimat Efektif:</h3>
+            <ol>
+                <li><strong>Kesepadanan Struktur (Ada S & P yang Jelas):</strong><br>
+                    Subjek TIDAK BOLEH didahului preposisi (bagi, untuk, dalam, kepada, pada, di, ke). Predikat TIDAK
+                    BOLEH didahului kata "yang".<br>
+                    <em>Salah:</em> <strong>Bagi</strong> peserta ujian dilarang membawa HP. (Kata "bagi" menghapus
+                    subjek).<br>
+                    <em>Benar:</em> Peserta ujian dilarang membawa HP.<br>
+                    <em>Salah:</em> Kucing itu <strong>yang</strong> tidur di sofa. (Kata "yang" melebur predikat
+                    menjadi frasa).<br>
+                    <em>Benar:</em> Kucing itu tidur di sofa.
+                </li>
+                <li><strong>Kehematan Kata (Pleonasme):</strong> Hindari pemborosan kata bersinonim atau jamak
+                    ganda.<br>
+                    <em>Salah:</em> Banyak para tamu-tamu datang. ("Banyak", "para", dan "tamu-tamu" semuanya berarti
+                    jamak. Pilih satu!).<br>
+                    <em>Benar:</em> Banyak tamu datang. ATAU Para tamu datang.<br>
+                    <em>Salah:</em> Ia mundur ke belakang. (Mundur pasti ke belakang).
+                </li>
+                <li><strong>Keparalelan Bentuk (Kesejajaran Imbuhan):</strong> Rincian harus memiliki awalan yang
+                    seragam.<br>
+                    <em>Salah:</em> Tahapannya adalah <strong>me</strong>nyusun, <strong>peng</strong>editan, dan
+                    <strong>me</strong>nyebarkan. (Me-, Peng-, Me-).<br>
+                    <em>Benar:</em> Tahapannya adalah <strong>peny</strong>usunan, <strong>peng</strong>editan, dan
+                    <strong>peny</strong>ebaran.
+                </li>
+                <li><strong>Kelogisan (Masuk Akal):</strong><br>
+                    <em>Salah:</em> Waktu dan tempat kami persilakan. (Yang dipersilakan itu orangnya, bukan
+                    waktu/tempatnya).<br>
+                    <em>Benar:</em> Bapak Kepala Sekolah kami persilakan.
+                </li>
+            </ol>
+
+            <div class="quiz-card">
+                <h4>🔹 Uji Taktik 6.1</h4>
+                <p>Manakah kalimat di bawah ini yang tergolong kalimat tidak efektif karena tidak memiliki subjek?</p>
+                <ul class="quiz-options">
+                    <li><span class="opt-letter">A</span> Peningkatan harga BBM memicu inflasi di berbagai sektor.</li>
+                    <li><span class="opt-letter">B</span> Untuk penyusunan laporan keuangan membutuhkan ketelitian
+                        tinggi.</li>
+                    <li><span class="opt-letter">C</span> Pembangunan tol laut dinilai dapat menurunkan disparitas
+                        harga.</li>
+                    <li><span class="opt-letter">D</span> Pemerintah merencanakan pemindahan ibu kota sejak lama.</li>
+                    <li><span class="opt-letter">E</span> Investasi asing memberikan dampak positif bagi ekonomi makro.
+                    </li>
+                </ul>
+                <div class="solution-box">
+                    <h5>🔹 Analisis & Resolusi:</h5>
+                    <p><strong>Jawaban: B</strong><br>
+                        <strong>Eksekusi Logika:</strong> Terapkan trik preposisi. Kalimat B diawali dengan kata depan
+                        "Untuk". Hal ini mengubah status "penyusunan laporan keuangan" dari Subjek menjadi Keterangan
+                        Tujuan. Sehingga kalimat tersebut hanya memiliki Keterangan (Untuk...) dan Predikat
+                        (membutuhkan), kehilangan Subjek. <br>
+                        <em>Perbaikan:</em> Hapus kata "Untuk". ? Penyusunan laporan keuangan membutuhkan ketelitian
+                        tinggi.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="paragraf">
+            <h2>🔹 7. Kepaduan Paragraf (Kohesi & Koherensi)</h2>
+            <p>Paragraf yang baik tidak hanya memiliki satu ide pokok, tetapi kalimat-kalimat di dalamnya harus saling
+                mengait (kohesi) dan masuk akal (koherensi).</p>
+
+            <h3>A. Kohesi (Keterpaduan Bentuk)</h3>
+            <p>Ditandai dengan penggunaan alat gramatikal yang menghubungkan antar-kalimat:</p>
+            <ul>
+                <li><strong>Kata Ganti (Pronomina):</strong> ini, itu, tersebut, dia, mereka, -nya. Menggantikan objek
+                    di kalimat sebelumnya agar tidak repetitif.</li>
+                <li><strong>Konjungsi Antarkalimat:</strong> Selain itu, namun, sebaliknya, dengan demikian.</li>
+                <li><strong>Repetisi Taktis:</strong> Mengulang kata kunci dari kalimat sebelumnya untuk menegaskan
+                    fokus bahasan.</li>
+            </ul>
+
+            <h3>B. Koherensi (Keterpaduan Makna)</h3>
+            <p>Kalimat sumbang adalah kalimat yang keluar dari alur logika ide pokok paragraf. Untuk mencari kalimat
+                sumbang (tidak padu):</p>
+            <ol>
+                <li>Temukan kalimat utamanya (biasanya di awal atau akhir paragraf).</li>
+                <li>Cari kalimat yang tiba-tiba membahas subjek atau waktu yang berbeda drastis.</li>
+                <li>Cari kalimat yang memutus rantai "Kata Ganti" (pronomina).</li>
+            </ol>
+
+            <div class="tip">
+                <strong>🔹 Trik Cepat Kalimat Sumbang:</strong><br>
+                Jika kalimat (1) membahas A, kalimat (2) membahas rincian A, kalimat (3) tiba-tiba membahas B, dan
+                kalimat (4) kembali membahas A. Maka kalimat (3) adalah kalimat sumbang.
+            </div>
+        </div>
+
+        <div class="section" id="makna">
+            <h2>🔹? 8. Semantik: Makna Kata, Frasa & Istilah</h2>
+            <p>Soal literasi SNBT sering menanyakan makna kata. Jangan gunakan definisi hafalan kamus murni, gunakan
+                <strong>Makna Kontekstual</strong> (makna kata sesuai posisinya di dalam teks).</p>
+
+            <ul>
+                <li><strong>Makna Leksikal:</strong> Makna dasar/kamus. (contoh: "mata" = organ penglihatan).</li>
+                <li><strong>Makna Gramatikal:</strong> Makna yang muncul karena imbuhan atau penggabungan. (contoh:
+                    "matahari", "mata rantai").</li>
+                <li><strong>Makna Rujukan (Pronomina):</strong> Soal berbunyi <em>"Kata 'tersebut' pada kalimat (4)
+                        merujuk pada..."</em>. Solusinya, baca kalimat (3). Jawaban selalu berada di frasa objek atau
+                    subjek dari kalimat tepat sebelum pronomina itu muncul.</li>
+                <li><strong>Analogi/Padanan Kata:</strong> Soal "Kata X dalam teks memiliki makna yang sama dengan kata
+                    Y pada kalimat...". Carilah fungsi dan konteks positif/negatif yang setara.</li>
+            </ul>
+        </div>
+
+        <div class="section" id="idepokok">
+            <h2>🔹 9. Menentukan Ide Pokok & Simpulan</h2>
+            <p>Ini adalah inti dari penalaran <i>Reading Comprehension</i>. Perbedaan utama: Ide Pokok adalah "Apa yang
+                sedang dibahas?", sedangkan Simpulan adalah "Hasil akhir/penilaian dari apa yang dibahas".</p>
+
+            <h3>A. Anatomi Ide Pokok / Gagasan Utama</h3>
+            <p>Ide pokok selalu bersembunyi di dalam <strong>Kalimat Utama</strong>. Jenis paragraf:</p>
+            <ul>
+                <li><strong>Deduktif (Awal):</strong> Umum ke Khusus. Kalimat (1) adalah pernyataan umum, kalimat (2)
+                    dan seterusnya adalah rincian, data, atau contoh.</li>
+                <li><strong>Induktif (Akhir):</strong> Khusus ke Umum. Kalimat (1)-(3) berisi data/rincian, lalu ditutup
+                    di akhir dengan kata "Oleh karena itu...", "Kesimpulannya...", "Dengan demikian...".</li>
+                <li><strong>Campuran:</strong> Ditegaskan di awal, dan diulang dengan struktur berbeda di akhir.</li>
+            </ul>
+
+            <h3>B. Trik Mencari Simpulan Teks</h3>
+            <p>Simpulan yang benar HARUS mencakup keseluruhan isi teks, bukan hanya mewakili satu paragraf saja.
+                Simpulan yang baik: <strong>Sebab + Akibat Pokok</strong> dari permasalahan di dalam teks.</p>
+
+            <div class="warning">
+                <strong>🔹 Jebakan SNBT: Opsi "Fakta Spesifik"</strong><br>
+                Opsi jawaban yang berisi data angka/statistik yang sangat persis dengan teks biasanya BUKAN ide pokok
+                atau simpulan. Itu hanyalah "Gagasan Penjelas". Ide pokok harus bersifat makro/umum.
+            </div>
+        </div>
+
+        <div class="section" id="tips">
+            <h2>🔹 10. Grand Strategy UTBK SNBT Literasi</h2>
+            <p>Waktu adalah musuh terbesarmu. Jangan membaca teks seperti membaca novel. Gunakan metode pembacaan
+                analitis (Scanning & Skimming).</p>
+
+            <ol>
+                <li><strong>Baca Pertanyaan Terlebih Dahulu:</strong> Jangan sentuh teks sebelum tahu apa senjatamu.
+                    Apakah soal menanyakan "Ide Pokok", "Perbaikan Ejaan", atau "Kalimat Sumbang"?</li>
+                <li><strong>Taktik "Scanning Terbalik" untuk PUEBI:</strong> Jika soal meminta memperbaiki kata/ejaan,
+                    lihat langsung opsi A-E. Cari letak kata tersebut di teks (scanning), lalu perbaiki tanpa perlu
+                    memahami isi ceritanya.</li>
+                <li><strong>Taktik Paragraf 1 dan Terakhir untuk Gagasan:</strong> Ide pokok teks makro (keseluruhan
+                    wacana) biasanya merupakan penggabungan ide pokok paragraf pertama dan paragraf terakhir.</li>
+                <li><strong>Abaikan Kosakata Asing:</strong> Jika menemukan kata sulit/akademik yang tidak kamu ketahui,
+                    jangan panik. Baca konteks kalimat sebelum dan sesudahnya, kamu akan mendapat gambaran maknanya
+                    secara umum.</li>
+            </ol>
+        </div>
+
+        <div class="nav-buttons">
+            <a href="library.html" class="nav-btn">
+                <div>
+                    <div class="nav-btn-label">? Kembali ke Dashboard</div>Library Utama SNBT
+                </div>
+            </a>
+            <a href="lib-reading-comprehension.html" class="nav-btn primary">
+                <div>
+                    <div class="nav-btn-label">Modul Selanjutnya &rarr;</div>Penalaran & Literasi Bhs. Inggris
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        - 2026 Zaki Irsyada Putra - Telkom University (Sistem Informasi)<br>
+        Mega Library SNBT 2026 | Curriculum Excellence v3.0
+    </footer>
+    <script>if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark')</script>
+</body>
+
+</html>
